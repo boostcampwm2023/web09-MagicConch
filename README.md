@@ -32,10 +32,10 @@
   <th>J072</th>
   <th>J165</th>
   <tr>
-    <td><img src="https://github.com/kimyu0218.png" width="180" height="180"/></td>
-    <td><img src="https://github.com/iQuQi.png" width="180" height="180"/></td>
-    <td><img src="https://github.com/Doosies.png" width="180" height="180"/></td>
-    <td><img src="https://github.com/HeoJiye.png" width="180" height="180"/></td>
+    <td><img src="https://github.com/kimyu0218.png" width="100px" max-width="100px"/></td>
+    <td><img src="https://github.com/iQuQi.png" width="100px" max-width="100px"/></td>
+    <td><img src="https://github.com/Doosies.png" width="100px" max-width="100px"/></td>
+    <td><img src="https://github.com/HeoJiye.png" width="100px" max-width="100px"/></td>
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/kimyu0218">김유정</a>
