@@ -11,8 +11,21 @@
   <div style="display:flex; align-items: center; gap: 20px;">
   <img width="15%" src="https://github.com/boostcampwm2023/web09-MagicConch/assets/78946499/9cd198bb-9692-48f1-82f0-2712fb643442">
   <div>
-    <li><a href="https://season-broccoli-784.notion.site/Team-note-9d1bcc23f7ba463384fae13743f42c16?pvs=4">Notion</a></li>
-    <li><a href="https://www.figma.com/file/mG05301Mt21mIKJsKfinQo/%EB%A7%88%EB%B2%95%EC%9D%98-%EC%86%8C%EB%9D%BC%EA%B3%A0%EB%91%A5?type=design&node-id=0%3A1&mode=design&t=l5EMlyi9zZUJd3K3-1">Figma</a></li>  
+    <li>
+        <a href="https://season-broccoli-784.notion.site/Team-note-9d1bcc23f7ba463384fae13743f42c16?pvs=4">
+            팀 노트 ( Notion )
+        </a>
+    </li>
+    <li>
+        <a href="https://www.figma.com/file/mG05301Mt21mIKJsKfinQo/%EB%A7%88%EB%B2%95%EC%9D%98-%EC%86%8C%EB%9D%BC%EA%B3%A0%EB%91%A5?type=design&node-id=0%3A1&mode=design&t=l5EMlyi9zZUJd3K3-1">
+            디자인 ( Figma )
+        </a>    
+    </li>  
+    <li>
+        <a href="https://www.figma.com/file/0fv1lWfZ5W4zncvXAMTfh9/Component-%EC%84%A4%EA%B3%84?type=whiteboard&node-id=0%3A1&t=2VM3UFiJcQ14ggZO-1">
+            Component 설계 ( Figjam )
+        </a>
+    </li>  
   </div>
 </div>
 
