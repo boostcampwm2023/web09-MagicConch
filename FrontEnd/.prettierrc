@@ -14,5 +14,6 @@
   "extends": ["airbnb", "prettier"],
   "plugins": ["@trivago/prettier-plugin-sort-imports"],
   "importOrderSeparation": true,
-  "importOrderSortSpecifiers": true
+  "importOrderSortSpecifiers": true,
+  "importOrder": ["^@pages/(.*)$", "^@components/(.*)$", "^@assets/(.*)$", "^[./]"]
 }
