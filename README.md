@@ -26,8 +26,18 @@
             Component 설계 ( Figjam )
         </a>
     </li>  
+    <li>
+        <a href="https://github.com/orgs/boostcampwm2023/projects/19">
+            Project 관리 (GitHub Projects)
+        </a>
+    </li> 
   </div>
 </div>
+
+
+
+
+
 
 <br>
 
