@@ -1,0 +1,49 @@
+# @format
+
+# issue에서 convert 됐을 때
+# 1. project에 추가
+# 2. issue에 label 추가
+
+name: Add to Project
+
+on:
+  issues:
+    types:
+      - opened
+
+jobs:
+  title-to-label:
+    name: Add title to labels
+    runs-on: ubuntu-latest
+    steps:
+      - uses: fregante/title-to-labels-action@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.ADD_TO_PROJECT_PAT }}
+          keywords: |
+            🔮
+            epic
+          labels: |
+            epic
+      - uses: fregante/title-to-labels-action@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.ADD_TO_PROJECT_PAT }}
+          keywords: |
+            📗
+          labels: |
+            story
+      - uses: fregante/title-to-labels-action@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.ADD_TO_PROJECT_PAT }}
+          keywords: |
+            ✅
+          labels: |
+            feature
+
+  add-to-project:
+    name: Add issue to project
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/add-to-project@v0.5.0
+        with:
+          project-url: https://github.com/orgs/boostcampwm2023/projects/19/views/1
+          github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
