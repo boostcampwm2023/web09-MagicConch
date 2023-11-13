@@ -16,5 +16,5 @@ jobs:
           # to the issue
           project-url: https://github.com/orgs/boostcampwm2023/projects/19
           github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
-          # labeled: feature
-          # label-operator: OR
+          labeled:
+          label-operator: OR
