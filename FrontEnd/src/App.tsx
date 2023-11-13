@@ -1,19 +1,36 @@
-import './App.css';
-import Item from './Item';
-import reactLogo from './assets/react.svg';
-import viteLogo from './assets/vite.svg';
-import { useState } from 'react';
+import { Route, Routes } from 'react-router-dom';
+
+import AIChatPage from './pages/AIChatPage';
+import HomePage from './pages/HomePage';
+import HumanChatPage from './pages/HumanChatPage';
+import ReaderListPage from './pages/ReaderListPage';
+import ResultSharePage from './pages/ResultSharePage';
 
 function App() {
-  // const [count, setCount] = useState(0);
-
-  const inctrement10 = () => {
-    console.log('!!!');
-  };
-
   return (
     <>
-      <Item onClick={inctrement10} />
+      <Routes>
+        <Route
+          path="/"
+          element={<HomePage />}
+        />
+        <Route
+          path="/ai/:id"
+          element={<AIChatPage />}
+        />
+        <Route
+          path="/human/:id"
+          element={<HumanChatPage />}
+        />
+        <Route
+          path="/readers"
+          element={<ReaderListPage />}
+        />
+        <Route
+          path="/result"
+          element={<ResultSharePage />}
+        />
+      </Routes>
     </>
   );
 }
