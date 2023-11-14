@@ -7,7 +7,14 @@ const meta = {
   component: Header,
   parameters: {
     layout: 'fullscreen',
+    backgrounds: {
+      default: 'colored',
+      values: [
+        { name: 'colored', value: '#181818' },
+      ],
+    },
   },
+
   tags: ['autodocs'],
 } satisfies Meta<typeof Header>;
 
