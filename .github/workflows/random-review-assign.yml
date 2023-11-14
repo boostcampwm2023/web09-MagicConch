@@ -7,11 +7,9 @@ on:
 jobs:
   assign:
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4.1.1
-        with:
-          ref: dev
+      - uses: actions/checkout@v4.1.1
         
       - name: pick_random_reviwer
         id: pick_random_reviwer
@@ -22,7 +20,7 @@ jobs:
             const myNickname = context.actor;
             const all = ['kimyu0218', 'iQuQi', 'Doosies', 'HeoJiye'];
             const candidate = all.filter((nickname) => nickname !== myNickname);
-            const reviewers = candidate.sort(() => Math.random() - 0.5).slice(0, 2);
+            const reviewers = candidate.sort(() => Math.random() - 0.5).slice(0, 2).join(', ');
             core.setOutput('reviewers', reviewers);
 
       - uses: hkusu/review-assign-action@v1.3.1
