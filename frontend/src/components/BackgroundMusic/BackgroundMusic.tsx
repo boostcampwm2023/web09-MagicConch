@@ -25,7 +25,7 @@ function BackgroundMusic() {
           size="l"
           children={
             <Icon
-              className="text-[26px]"
+              className="text-26"
               icon={playing ? 'ic:baseline-music-note' : 'ic:baseline-music-off'}
             />
           }

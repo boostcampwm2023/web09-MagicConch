@@ -18,6 +18,7 @@ export default {
       padding: px0_100,
       margin: px0_2000,
       lineHeight: px0_100,
+      fontSize: px0_100,
       keyframes: {
         shining: {
           '0%': { filter: 'drop-shadow(0px 0px 25px rgba(255, 255, 255, 0.8))' },
