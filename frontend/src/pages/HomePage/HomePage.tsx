@@ -1,7 +1,13 @@
+import BackgroundMusic from '@/components/BackgroundMusic';
+
 interface HomePageProps {}
 
 const HomePage = ({}: HomePageProps) => {
-  return <></>;
+  return (
+    <>
+      <BackgroundMusic />
+    </>
+  );
 };
 
 export default HomePage;
