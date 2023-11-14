@@ -29,12 +29,13 @@ jobs:
             const issue_data = issue.data;
             const issue_body = issue_data.body;
 
-            const issue_nums = 
-              issue_body
+            const issue_nums = [issue_num];
+
+            issue_body
               ?.match(/#(\d+)/g)
-              ?.map((num) => num.replace('#', ''));
-            // 브랜치 이름에 포함된 이슈 번호도 추가해줌
-            issue_nums.push(issue_num);
+              ?.forEach(issue => {
+                issue_nums.push(issue.replace('#', ''))
+              });
 
             // 이슈들을 닫아줌.
             issue_nums?.forEach(issue_num => {
