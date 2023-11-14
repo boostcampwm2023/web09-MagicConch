@@ -8,6 +8,11 @@ jobs:
   assign:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: dev
+        
       - name: pick_random_reviwer
         id: pick_random_reviwer
         uses: actions/github-script@v6
