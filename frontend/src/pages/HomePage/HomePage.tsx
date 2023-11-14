@@ -1,8 +1,6 @@
 import CustomButton from "@components/CustomButton";
 
-interface HomePageProps {}
-
-const HomePage = ({}: HomePageProps) => {
+const HomePage = () => {
   return (
     <div className="w-[100vw] h-[100vh] flex flex-col justify-center items-center gap-[80px]">
       <img className="absolute w-full h-full object-cover z-[-1]" src="/bg.png" />
