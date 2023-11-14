@@ -2,7 +2,17 @@
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
-    extend: {},
+    extend: {
+      keyframes: {
+        'shining': {
+          '0%': { 'filter': 'drop-shadow(0px 0px 25px rgba(255, 255, 255, 0.8))' },
+          '100%': {'filter': 'drop-shadow(0px 0px 50px rgba(255, 255, 255, 0.8))' },
+        },
+      },
+      animation: {
+        'shining': 'shining 2s ease-in-out infinite alternate',
+      },
+    },
   },
   plugins: [
     require('daisyui'),
