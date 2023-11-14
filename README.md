@@ -26,6 +26,11 @@
             Component 설계 ( Figjam )
         </a>
     </li>  
+    <li>
+        <a href="https://github.com/orgs/boostcampwm2023/projects/19">
+            Project 관리 (GitHub Projects)
+        </a>
+    </li> 
   </div>
 </div>
 
@@ -36,8 +41,8 @@
 - main(기본) - dev(개발) - feature branch
 - 이슈 별로 브랜치 파기
 - 브랜치 네이밍 규칙
-    - `feature/{issue-number}-{feature-name}`
-    - husky로 commit message 이슈 연결 자동화
+  - `feature/{issue-number}-{feature-name}`
+  - husky로 commit message 이슈 연결 자동화
 - PR merge할 때, squash & merge
 - merge된 브랜치는 삭제
 
@@ -94,3 +99,5 @@
     </td>
   </tr>
 </table>
+
+test teest testtttt

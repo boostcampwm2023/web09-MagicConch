@@ -1,0 +1,28 @@
+name: Random Review Assign
+
+on:
+  pull_request:
+    types: [opened, ready_for_review, synchronize, reopened]
+
+jobs:
+  assign:
+    runs-on: ubuntu-latest
+    steps:
+      - name: pick_random_reviwer
+        id: pick_random_reviwer
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
+          script: |
+            const myNickname = context.actor;
+            const all = ['kimyu0218', 'iQuQi', 'Doosies', 'HeoJiye'];
+            const candidate = all.filter((nickname) => nickname !== myNickname);
+            const reviewers = candidate.sort(() => Math.random() - 0.5).slice(0, 2);
+            core.setOutput('reviewers', reviewers);
+
+      - uses: hkusu/review-assign-action@v1.3.1
+        with:
+          github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
+          assignees: ${{ github.actor }}
+          reviewers: ${{ steps.pick_random_reviwer.outputs.reviewers }}
+          max-num-of-reviewers: 2
