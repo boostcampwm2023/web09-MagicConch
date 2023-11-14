@@ -17,15 +17,15 @@ export default {
       gap: px0_100,
       padding: px0_100,
       margin: px0_2000,
-      zIndex: px0_100,
+      lineHeight: px0_100,
       keyframes: {
-        'shining': {
-          '0%': { 'filter': 'drop-shadow(0px 0px 25px rgba(255, 255, 255, 0.8))' },
-          '100%': {'filter': 'drop-shadow(0px 0px 50px rgba(255, 255, 255, 0.8))' },
+        shining: {
+          '0%': { filter: 'drop-shadow(0px 0px 25px rgba(255, 255, 255, 0.8))' },
+          '100%': { filter: 'drop-shadow(0px 0px 50px rgba(255, 255, 255, 0.8))' },
         },
       },
       animation: {
-        'shining': 'shining 2s ease-in-out infinite alternate',
+        shining: 'shining 2s ease-in-out infinite alternate',
       },
     },
   },
