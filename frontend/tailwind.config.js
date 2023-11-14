@@ -6,19 +6,40 @@ export default {
   },
   plugins: [
     ({ addComponents }) => {
+      const themeBase = {
+        bold_L: { fontWeight: '700', fontSize: '24px' },
+        bold_M: { fontWeight: '700', fontSize: '16px' },
+        bold_R: { fontWeight: '700', fontSize: '14px' },
+        bold_S: { fontWeight: '700', fontSize: '12px' },
+        medium_M: { fontWeight: '500', fontSize: '16px' },
+        medium_R: { fontWeight: '500', fontSize: '14px' },
+        medium_S: { fontWeight: '500', fontSize: '12px' },
+      };
+      
       const textTheme = {
         '.text-strong': { color: '#14212B' },
         '.text-bold': { color: '#4B5966' },
         '.text-default': { color: '#5E6E76' },
         '.text-weak': { color: '#879298' },
         '.text-white-default': { color: '#FFFFFF' },
-        '.bold24': { fontWeight: '700', fontSize: '24px' },
-        '.bold16': { fontWeight: '700', fontSize: '16px' },
-        '.bold14': { fontWeight: '700', fontSize: '14px' },
-        '.bold12': { fontWeight: '700', fontSize: '12px' },
-        '.medium16': { fontWeight: '500', fontSize: '16px' },
-        '.medium14': { fontWeight: '500', fontSize: '14px' },
-        '.medium12': { fontWeight: '500', fontSize: '12px' }
+        '.display-bold24': themeBase.bold_L,
+        '.display-bold16': themeBase.bold_M,
+        '.display-bold14': themeBase.bold_R,
+        '.display-bold12': themeBase.bold_S,
+        '.display-medium16': themeBase.medium_M,
+        '.display-medium14': themeBase.medium_R,
+        '.display-medium12': themeBase.medium_S,
+        '.available-medium16': themeBase.medium_M,
+        '.available-medium14': themeBase.medium_R,
+        '.available-medium12': themeBase.medium_S,
+        '.hover-medium16': {
+          ...themeBase.medium_M,
+          textDecoration: 'underline'
+        },
+        '.hover-medium14': {
+          ...themeBase.medium_R,
+          textDecoration: 'underline'
+        }
       };
       addComponents(textTheme);
     },
