@@ -11,29 +11,32 @@ function BackgroundMusic() {
   const [backgroundMusicURL, setBackgroundMusicURL] = useState('');
   const [playing, setPlaying] = useState(false);
 
-  useEffect(() => {
+  useEffect(() => getBackgroundURL(), []);
+
+  const getBackgroundURL = () => {
     axios.get(GET_BGM_API).then(res => setBackgroundMusicURL(res.data.url));
-  }, []);
+  };
 
   return (
-    <div className="w-10 h-10 overflow-hidden relative">
-      <div className="absolute -top-2 -left-4">
+    <div className="w-16 h-16 overflow-hidden fixed bottom-10 right-12">
+      <div className="absolute top-0 left-0">
         <CustomButton
-          color="transparent"
-          size="s"
+          color={playing ? 'active' : 'disabled'}
+          size="m"
           children={
             <Icon
-              className="text-[36px]"
+              className="text-[24px]"
               icon={playing ? 'ic:baseline-music-note' : 'ic:baseline-music-off'}
             />
           }
         />
       </div>
       <audio
-        className="opacity-0 absolute -top-3 -left-2"
+        className="opacity-0 absolute -top-6 left-1 h-20"
         loop
         controls
         src={backgroundMusicURL}
+        onError={getBackgroundURL}
         onPause={() => setPlaying(false)}
         onPlay={() => setPlaying(true)}
       />
