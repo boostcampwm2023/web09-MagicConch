@@ -11,7 +11,7 @@ const colorMap: Record<string, string> = {
   cancel: 'text-weak text-white',
   disabled: 'surface-disabled',
   sub: 'surface-alt text-white',
-  transparent: 'bg-transparent border-transparent',
+  transparent: 'bg-transparent',
 };
 
 const sizeMap: Record<string, string> = {
