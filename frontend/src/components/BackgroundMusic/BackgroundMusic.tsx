@@ -18,21 +18,21 @@ function BackgroundMusic() {
   };
 
   return (
-    <div className="w-16 h-16 overflow-hidden fixed bottom-10 right-12">
+    <div className="w-63 h-60 overflow-hidden fixed bottom-10 right-12">
       <div className="absolute top-0 left-0">
         <CustomButton
           color={playing ? 'active' : 'disabled'}
-          size="m"
+          size="l"
           children={
             <Icon
-              className="text-[24px]"
+              className="text-[26px]"
               icon={playing ? 'ic:baseline-music-note' : 'ic:baseline-music-off'}
             />
           }
         />
       </div>
       <audio
-        className="opacity-0 absolute -top-6 left-1 h-20"
+        className="opacity-0 absolute -top-5 left-1 h-80"
         loop
         controls
         src={backgroundMusicURL}
