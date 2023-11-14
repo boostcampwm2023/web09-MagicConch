@@ -14,14 +14,9 @@ const HomePage = () => {
         alt="빛나는 마법의 소라 고둥"
       />
       <div className="flex gap-36 mb-128 z-1">
+        <CustomButton children="AI에게 타로보기" />
         <CustomButton
-          color="active"
-          size="m"
-          children="AI에게 타로보기"
-        />
-        <CustomButton
-          color="sub"
-          size="m"
+          color="dark"
           children=" 채팅방 개설하기"
         />
       </div>

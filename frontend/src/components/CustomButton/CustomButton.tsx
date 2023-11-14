@@ -1,5 +1,5 @@
 interface ButtonProps {
-  color?: 'active' | 'cancel' | 'disabled' | 'sub' | 'transparent';
+  color?: 'active' | 'cancel' | 'disabled' | 'dark' | 'transparent';
   size?: 's' | 'm' | 'l';
   disabled?: boolean;
   children?: React.ReactNode;
@@ -8,9 +8,9 @@ interface ButtonProps {
 
 const colorMap: Record<string, string> = {
   active: 'surface-point-alt text-white',
-  cancel: 'text-weak text-white',
-  disabled: 'surface-disabled',
-  sub: 'surface-alt text-white',
+  cancel: 'surface-disabled text-white',
+  disabled: 'surface-box text-weak',
+  dark: 'surface-alt text-white',
   transparent: 'bg-transparent',
 };
 
