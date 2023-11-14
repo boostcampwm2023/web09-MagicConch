@@ -23,7 +23,7 @@ function BackgroundMusic() {
           size="s"
           children={
             <Icon
-              style={{ fontSize: '36px' }}
+              className="text-[36px]"
               icon={played ? 'ic:baseline-music-note' : 'ic:baseline-music-off'}
             />
           }
