@@ -14,18 +14,8 @@ jobs:
         with:
           github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
           script: |
-            // pr_num 으로 해당 pr 받아오기
-            const pr = await github.rest.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.payload.pull_request.number
-            });
-
-            const pr_data = pr.data;
-            const title = pr_data.title;
-
             // 현재 pr 날린 브랜치 이름
-            const branch_name = pr_data.head.ref;
+            const branch_name = context.payload.pull_request.head;
             // 브랜치 이름에 포함된 이슈 번호
             const issue_num = branch_name.match(/#(\d+)/)[1];
 
