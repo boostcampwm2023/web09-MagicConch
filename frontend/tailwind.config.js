@@ -5,6 +5,7 @@ export default {
     extend: {},
   },
   plugins: [
+    require('daisyui'),
     ({ addComponents }) => {
       const themeBase = {
         bold_L: { fontWeight: '700', fontSize: '24px' },
@@ -15,7 +16,7 @@ export default {
         medium_R: { fontWeight: '500', fontSize: '14px' },
         medium_S: { fontWeight: '500', fontSize: '12px' },
       };
-      
+
       const textTheme = {
         '.text-strong': { color: '#14212B' },
         '.text-bold': { color: '#4B5966' },
@@ -34,12 +35,12 @@ export default {
         '.available-medium12': themeBase.medium_S,
         '.hover-medium16': {
           ...themeBase.medium_M,
-          textDecoration: 'underline'
+          textDecoration: 'underline',
         },
         '.hover-medium14': {
           ...themeBase.medium_R,
-          textDecoration: 'underline'
-        }
+          textDecoration: 'underline',
+        },
       };
       addComponents(textTheme);
     },
@@ -69,6 +70,6 @@ export default {
         '.shadow-popup': { boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)' },
       };
       addComponents(shadowTheme);
-    }
+    },
   ],
 };
