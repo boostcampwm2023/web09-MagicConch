@@ -1,0 +1,57 @@
+name: Close Issue When PR Closed
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  close-issue:
+    name: close issue automatically
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
+          script: |
+            // pr_num 으로 해당 pr 받아오기
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number
+            });
+
+            const pr_data = pr.data;
+            const title = pr_data.title;
+
+            // 현재 pr 날린 브랜치 이름
+            const branch_name = pr_data.head.ref;
+            // 브랜치 이름에 포함된 이슈 번호
+            const issue_num = branch_name.match(/#(\d+)/)[1];
+
+            // 이슈 번호로 해당 이슈 받아오기
+            const issue = await github.rest.issues.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue_num
+            });
+
+            const issue_data = issue.data;
+            const issue_body = issue_data.body;
+
+            const issue_nums = 
+              issue_body
+              .match(/#(\d+)/g)
+              .map((num) => num.replace('#', ''));
+            // 브랜치 이름에 포함된 이슈 번호도 추가해줌
+            issue_nums.push(issue_num);
+
+            // 이슈들을 닫아줌.
+            issue_nums.forEach(issue_num => {
+              github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue_num,
+                state: 'closed'
+              });
+            });
