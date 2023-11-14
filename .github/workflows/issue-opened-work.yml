@@ -16,7 +16,7 @@ jobs:
           script: |
             const issueTitle = context.payload.issue.title;
             const keywords = ['🔮', '📗', '✅'];
-            const labels = ['epic', 'story', 'task'];
+            const labels = ['epic', 'story', 'feature'];
 
             for (let i=0; i<3; i++) {
               if (issueTitle.indexOf(keywords[i]) > -1) {
@@ -36,5 +36,5 @@ jobs:
     steps:
       - uses: actions/add-to-project@v0.5.0
         with:
-          project-url: https://github.com/users/Doosies/projects/8
+          project-url: https://github.com/orgs/boostcampwm2023/projects/19
           github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
