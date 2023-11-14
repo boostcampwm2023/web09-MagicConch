@@ -3,5 +3,5 @@ interface HeaderRightProps {
 }
 
 export default function HeaderRight(props: HeaderRightProps) {
-  return <div>{props.items}</div>;
+  return <div className="flex gap-[16px]">{props.items}</div>;
 };
