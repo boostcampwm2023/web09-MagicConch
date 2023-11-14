@@ -9,7 +9,7 @@ const GET_BGM_API =
 
 function BackgroundMusic() {
   const [backgroundMusicURL, setBackgroundMusicURL] = useState('');
-  const [played, setPlayed] = useState(false);
+  const [playing, setPlaying] = useState(false);
 
   useEffect(() => {
     axios.get(GET_BGM_API).then(res => setBackgroundMusicURL(res.data.url));
@@ -24,7 +24,7 @@ function BackgroundMusic() {
           children={
             <Icon
               className="text-[36px]"
-              icon={played ? 'ic:baseline-music-note' : 'ic:baseline-music-off'}
+              icon={playing ? 'ic:baseline-music-note' : 'ic:baseline-music-off'}
             />
           }
         />
@@ -34,8 +34,8 @@ function BackgroundMusic() {
         loop
         controls
         src={backgroundMusicURL}
-        onPause={() => setPlayed(false)}
-        onPlay={() => setPlayed(true)}
+        onPause={() => setPlaying(false)}
+        onPlay={() => setPlaying(true)}
       />
     </div>
   );
