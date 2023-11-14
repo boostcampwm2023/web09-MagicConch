@@ -1,5 +1,6 @@
-import { Route, Routes } from 'react-router-dom';
+import { Link, Route, Routes } from 'react-router-dom';
 
+import BackgroundMusic from './components/BackgroundMusic';
 import AIChatPage from './pages/AIChatPage';
 import HomePage from './pages/HomePage';
 import HumanChatPage from './pages/HumanChatPage';
@@ -9,6 +10,7 @@ import ResultSharePage from './pages/ResultSharePage';
 function App() {
   return (
     <>
+      <BackgroundMusic />
       <Routes>
         <Route
           path="/"
