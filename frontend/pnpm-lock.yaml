@@ -55,6 +55,9 @@ devDependencies:
   '@types/react-router-dom':
     specifier: ^5.3.3
     version: 5.3.3
+  '@types/tailwindcss':
+    specifier: ^3.1.0
+    version: 3.1.0
   '@typescript-eslint/eslint-plugin':
     specifier: ^6.9.0
     version: 6.10.0(@typescript-eslint/parser@6.10.0)(eslint@8.53.0)(typescript@5.2.2)
@@ -3946,6 +3949,15 @@ packages:
       '@types/http-errors': 2.0.4
       '@types/mime': 3.0.4
       '@types/node': 18.18.9
+    dev: true
+
+  /@types/tailwindcss@3.1.0:
+    resolution: {integrity: sha512-JxPzrm609hzvF4nmOI3StLjbBEP3WWQxDDJESqR1nh94h7gyyy3XSl0hn5RBMJ9mPudlLjtaXs5YEBtLw7CnPA==}
+    deprecated: This is a stub types definition. tailwindcss provides its own type definitions, so you do not need this installed.
+    dependencies:
+      tailwindcss: 3.3.5
+    transitivePeerDependencies:
+      - ts-node
     dev: true
 
   /@types/unist@2.0.10:

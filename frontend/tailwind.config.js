@@ -1,8 +1,23 @@
 /** @type {import('tailwindcss').Config} */
+
+const px0_100 = { ...Array.from(Array(101)).map((_, i) => `${i * 0.06}rem`) };
+const px0_2000 = { ...Array.from(Array(2001)).map((_, i) => `${i * 0.06}rem`) };
+
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      width: px0_2000,
+      height: px0_2000,
+      maxWidth: px0_2000,
+      maxHeight: px0_2000,
+      minWidth: px0_2000,
+      minHeight: px0_2000,
+      borderWidth: px0_100,
+      gap: px0_100,
+      padding: px0_100,
+      margin: px0_2000,
+      zIndex: px0_100,
       keyframes: {
         'shining': {
           '0%': { 'filter': 'drop-shadow(0px 0px 25px rgba(255, 255, 255, 0.8))' },
