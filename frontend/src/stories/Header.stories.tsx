@@ -1,6 +1,9 @@
-import { Icon } from '@iconify/react';
 import type { Meta, StoryObj } from '@storybook/react';
+
+import { Icon } from '@iconify/react';
+
 import Header from '@components/Header';
+import CustomButton from '@components/CustomButton';
 
 const meta = {
   title: 'components/Header',
@@ -22,9 +25,23 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const AIChatHeader: Story = {
-  args: { rightItems: [<Icon icon="octicon:sidebar-expand-24" />] }
+  args: {
+  rightItems: [
+    <CustomButton color="transparent" size="s">
+      <Icon icon="octicon:sidebar-expand-24" />
+    </CustomButton>
+  ]}
 };
 
 export const HumanChatHeader: Story = {
-  args: { rightItems: [<Icon icon="basil:chat-outline" />]}
+  args: {
+  rightItems: [
+    <CustomButton color="active" size="s">
+      상담 종료
+    </CustomButton>
+    ,
+    <CustomButton color="transparent" size="s">
+      <Icon icon="basil:chat-outline" />
+    </CustomButton>
+  ]}
 };
