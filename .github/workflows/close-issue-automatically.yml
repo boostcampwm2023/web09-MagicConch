@@ -15,7 +15,7 @@ jobs:
           github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
           script: |
             // 현재 pr 날린 브랜치 이름
-            const branch_name = context.payload.pull_request.head;
+            const branch_name = context.payload.pull_request.head.ref;
             // 브랜치 이름에 포함된 이슈 번호
             const issue_num = branch_name.match(/#(\d+)/)[1];
 
