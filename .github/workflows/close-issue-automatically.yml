@@ -31,13 +31,13 @@ jobs:
 
             const issue_nums = 
               issue_body
-              .match(/#(\d+)/g)
-              .map((num) => num.replace('#', ''));
+              ?.match(/#(\d+)/g)
+              ?.map((num) => num.replace('#', ''));
             // 브랜치 이름에 포함된 이슈 번호도 추가해줌
             issue_nums.push(issue_num);
 
             // 이슈들을 닫아줌.
-            issue_nums.forEach(issue_num => {
+            issue_nums?.forEach(issue_num => {
               github.rest.issues.update({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
