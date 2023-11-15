@@ -1,4 +1,4 @@
-import { Link, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import BackgroundMusic from './components/BackgroundMusic';
 import AIChatPage from './pages/AIChatPage';
