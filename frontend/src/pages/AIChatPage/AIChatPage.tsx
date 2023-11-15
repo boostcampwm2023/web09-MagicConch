@@ -12,6 +12,7 @@ const AIChatPage = ({}: AIChatPageProps) => {
           <CustomButton
             color="transparent"
             size="s"
+            key="side-panel-close"
           >
             <Icon
               className="w-22 h-22"
