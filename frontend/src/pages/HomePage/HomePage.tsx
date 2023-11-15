@@ -1,3 +1,4 @@
+import { connect } from '@/socket';
 import { useNavigate } from 'react-router-dom';
 
 import CustomButton from '@components/CustomButton';
@@ -6,6 +7,7 @@ const HomePage = () => {
   const navigate = useNavigate();
 
   const moveAiChat = () => {
+    connect();
     navigate('/chat/ai');
   };
 
