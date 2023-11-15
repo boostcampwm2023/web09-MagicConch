@@ -7,12 +7,12 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class TaroResult {
+export class TarotResult {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ type: 'binary', length: 32 })
-  taroResult: string;
+  tarotResult: string;
 
   @CreateDateColumn()
   createdAt: Date;

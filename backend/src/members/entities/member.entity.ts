@@ -1,5 +1,5 @@
 import { ChattingRoom } from 'src/chat/entities/chatting-room.entity';
-import { TaroCard } from 'src/taro/entities/taro-card.entity';
+import { TarotCard } from 'src/tarot/entities/tarot-card.entity';
 import {
   Column,
   CreateDateColumn,
@@ -32,6 +32,6 @@ export class Member {
   @OneToMany(() => ChattingRoom, (chattingRoom) => chattingRoom.participant)
   chattingRooms: ChattingRoom[];
 
-  @OneToMany(() => TaroCard, (taroCard) => taroCard.owner)
-  taroCards: TaroCard[];
+  @OneToMany(() => TarotCard, (tarotCard) => tarotCard.owner)
+  tarotCards: TarotCard[];
 }

@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class TaroCard {
+export class TarotCard {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -31,6 +31,6 @@ export class TaroCard {
   @Column({ nullable: true })
   deletedAt: Date;
 
-  @ManyToOne(() => Member, (member) => member.taroCards)
+  @ManyToOne(() => Member, (member) => member.tarotCards)
   owner: Member;
 }
