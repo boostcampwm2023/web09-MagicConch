@@ -13,7 +13,7 @@ const HomePage = () => {
         alt="밤 하늘의 배경 이미지"
       />
       <img
-        className="w-214 h-214 animate-shining"
+        className="w-285 h-285 animate-shining"
         src="/moon.png"
         alt="빛나는 마법의 소라 고둥"
       />
