@@ -7,7 +7,7 @@ interface HeaderProps {
 
 export default function Header({ rightItems }: HeaderProps) {
   return (
-    <div className="flex justify-between items-center surface-content text-default pr-28 pl-28 pt-12 pb-12">
+    <div className="fixed top-0 w-full flex justify-between items-center surface-content text-default px-8 py-5">
       <HeaderLeft />
       <HeaderRight items={rightItems} />
     </div>
