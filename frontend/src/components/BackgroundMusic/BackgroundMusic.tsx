@@ -23,13 +23,12 @@ function BackgroundMusic() {
         <CustomButton
           color={playing ? 'active' : 'disabled'}
           size="l"
-          children={
-            <Icon
-              className="text-26"
-              icon={playing ? 'ic:baseline-music-note' : 'ic:baseline-music-off'}
-            />
-          }
-        />
+        >
+          <Icon
+            className="text-26"
+            icon={playing ? 'ic:baseline-music-note' : 'ic:baseline-music-off'}
+          />
+        </CustomButton>
       </div>
       <audio
         className="opacity-0 absolute -top-5 left-1 h-80"
