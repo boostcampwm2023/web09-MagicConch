@@ -17,11 +17,11 @@ function App() {
           element={<HomePage />}
         />
         <Route
-          path="/ai/:id"
+          path="/chat/ai/:id"
           element={<AIChatPage />}
         />
         <Route
-          path="/human/:id"
+          path="/chat/human/:id"
           element={<HumanChatPage />}
         />
         <Route
