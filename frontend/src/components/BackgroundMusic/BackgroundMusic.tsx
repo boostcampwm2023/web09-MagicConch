@@ -18,7 +18,7 @@ function BackgroundMusic() {
   };
 
   return (
-    <div className="w-63 h-60 overflow-hidden fixed bottom-10 right-12">
+    <div className="w-63 h-60 overflow-hidden fixed bottom-40 left-48">
       <div className="absolute top-0 left-0">
         <CustomButton
           color={playing ? 'active' : 'disabled'}
@@ -31,7 +31,7 @@ function BackgroundMusic() {
         </CustomButton>
       </div>
       <audio
-        className="opacity-0 absolute -top-5 left-1 h-80"
+        className="opacity-0 absolute -top-20 left-4 h-80"
         loop
         controls
         src={backgroundMusicURL}
