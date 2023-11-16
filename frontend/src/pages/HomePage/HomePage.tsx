@@ -11,8 +11,6 @@ const HomePage = () => {
   const moveAiChat = () => {
     connect();
 
-    // 테스트를 위한 부분
-    setMessageEventListener(message => alert(message));
     navigate('/chat/ai');
   };
 
