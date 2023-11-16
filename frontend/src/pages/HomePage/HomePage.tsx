@@ -1,4 +1,4 @@
-import { connect } from '@/socket';
+import { connect } from '@business/services/socket';
 import { useNavigate } from 'react-router-dom';
 
 import CustomButton from '@components/CustomButton';
