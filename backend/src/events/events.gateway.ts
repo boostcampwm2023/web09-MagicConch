@@ -11,8 +11,8 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
-@WebSocketGateway(3000, {
-  namespace: 'chat',
+@WebSocketGateway({
+  // namespace: 'chat',
   cors: { origin: 'http://localhost:5173' },
 })
 export class EventsGateway
