@@ -25,7 +25,7 @@ function ChatInput({ size = '760', disabled, sendChatMessage }: ChatInputProps) 
   };
 
   return (
-    <div className={`form-control absolute bottom-15 flex flex-row w-${size}`}>
+    <div className={`form-control absolute bottom-45 flex flex-row w-${size}`}>
       <input
         ref={inputRef}
         onKeyUp={detectEnter}
