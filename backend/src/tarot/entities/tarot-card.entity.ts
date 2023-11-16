@@ -16,6 +16,10 @@ export class TarotCard {
   @Column('int')
   cardNo: number;
 
+  /**
+   * TODO : 추후 개선 사항
+   * cardPack은 사용자가 지정한 타로 카드팩 이름
+   */
   @Column({ length: 20 })
   cardPack: string;
 

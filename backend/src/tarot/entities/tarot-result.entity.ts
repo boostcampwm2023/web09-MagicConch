@@ -11,8 +11,11 @@ export class TarotResult {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'binary', length: 32 })
-  tarotResult: string;
+  @Column({ length: 255 })
+  cardUrl: string;
+
+  @Column({ type: 'text' })
+  message: string;
 
   @CreateDateColumn()
   createdAt: Date;

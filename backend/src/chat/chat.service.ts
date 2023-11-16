@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Member } from 'src/members/entities/member.entity';
 import { Repository } from 'typeorm';
@@ -89,6 +93,7 @@ export class ChatService {
 
   async updateRoom(
     id: string,
+    memberId: string,
     updateChattingRoomDto: UpdateChattingRoomDto,
   ): Promise<void> {
     const room: ChattingRoom | null =
@@ -96,15 +101,28 @@ export class ChatService {
     if (!room) {
       throw new NotFoundException();
     }
-    room.title = updateChattingRoomDto.title;
+    if (room.participant.id !== memberId) {
+      throw new ForbiddenException();
+    }
     try {
-      await this.chattingRoomRepository.save(room);
+      await this.chattingRoomRepository.update(
+        { id },
+        { title: updateChattingRoomDto.title },
+      );
     } catch (err: unknown) {
       throw err;
     }
   }
 
-  async removeRoom(id: string): Promise<void> {
+  async removeRoom(id: string, memberId: string): Promise<void> {
+    const room: ChattingRoom | null =
+      await this.chattingRoomRepository.findOneBy({ id });
+    if (!room) {
+      throw new NotFoundException();
+    }
+    if (room.participant.id !== memberId) {
+      throw new ForbiddenException();
+    }
     try {
       await this.chattingRoomRepository.softDelete({ id });
     } catch (err: unknown) {
