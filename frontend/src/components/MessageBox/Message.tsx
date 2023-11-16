@@ -16,7 +16,9 @@ const Message = ({ type, message, profile }: MessageProps) => {
             />
           </div>
         </div>
-        <div className={`chat-bubble ${type == 'left' ? 'surface-content text-default' : 'surface-point-alt'}`}>
+        <div
+          className={`chat-bubble max-w-none ${type == 'left' ? 'surface-content text-default' : 'surface-point-alt'}`}
+        >
           {message}
         </div>
       </div>
