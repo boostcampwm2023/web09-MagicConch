@@ -43,7 +43,6 @@ export class EventsGateway
 
     setTimeout(() => {
       sendMessage(welcomeMessage);
-      console.log('ss');
     }, 2000);
 
     client.on('message', async (message) => {
