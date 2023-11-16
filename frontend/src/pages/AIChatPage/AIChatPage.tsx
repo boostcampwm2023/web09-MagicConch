@@ -11,11 +11,13 @@ import { sendMessage, setMessageEventListener } from '@business/services/socket'
 
 interface AIChatPageProps {}
 
-const AIChatPage = ({}: AIChatPageProps) => {
+function AIChatPage({}: AIChatPageProps) {
   const [messages, setMessages] = useState<Message[]>([]);
 
   const addMessage = (type: 'left' | 'right', message: string) => {
-    setMessages(messages => [...messages, { type, message }]);
+    const profile = type == 'left' ? '/moon.png' : '/sponge.png';
+    const tarotId = String(Math.floor(Math.random() * 22)).padStart(2, '0');
+    setMessages(messages => [...messages, { type, message, profile, tarotId }]);
   };
 
   const onSubmitMessage = (message: string) => {
@@ -44,16 +46,18 @@ const AIChatPage = ({}: AIChatPageProps) => {
         ]}
       />
 
-      {/* TEST */}
-      <ChatList messages={messages} />
+      <div className="w-700 absolute top-95 h-3/4">
+        {/* TEST */}
+        <ChatList messages={messages} />
 
-      {/* // TODO 서버에서 AI 데이터를 받아오고 있는 동안 disabled 하기 */}
-      <ChatInput
-        disabled={false}
-        sendChatMessage={onSubmitMessage}
-      />
+        {/* // TODO 서버에서 AI 데이터를 받아오고 있는 동안 disabled 하기 */}
+        <ChatInput
+          disabled={false}
+          sendChatMessage={onSubmitMessage}
+        />
+      </div>
     </Background>
   );
-};
+}
 
 export default AIChatPage;
