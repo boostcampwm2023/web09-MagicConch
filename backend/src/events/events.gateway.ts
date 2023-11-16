@@ -17,10 +17,10 @@ import { Server, Socket } from 'socket.io';
 export class EventsGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-  constructor() {}
+  @WebSocketServer()
+  server: Server;
 
-  @WebSocketServer() server: Server;
-  private logger: Logger = new Logger('EventsGateway');
+  private readonly logger: Logger = new Logger('EventsGateway');
 
   @SubscribeMessage('events')
   handleEvent(@MessageBody() data: string): string {
