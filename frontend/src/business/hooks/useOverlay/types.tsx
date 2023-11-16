@@ -1,1 +1,1 @@
-export type CreateOverlayElement = (props: { opened: boolean; close: () => void; exit: () => void }) => JSX.Element;
+export type CreateOverlayElement = (props: { opened: boolean; close: () => void }) => JSX.Element;
