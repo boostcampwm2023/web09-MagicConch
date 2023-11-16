@@ -1,11 +1,12 @@
 import { Route, Routes } from 'react-router-dom';
 
-import BackgroundMusic from './components/BackgroundMusic';
 import AIChatPage from './pages/AIChatPage';
 import HomePage from './pages/HomePage';
 import HumanChatPage from './pages/HumanChatPage';
 import ReaderListPage from './pages/ReaderListPage';
 import ResultSharePage from './pages/ResultSharePage';
+
+import BackgroundMusic from './components/BackgroundMusic';
 
 function App() {
   return (
@@ -28,7 +29,7 @@ function App() {
           element={<ReaderListPage />}
         />
         <Route
-          path="/result"
+          path="/result/:id"
           element={<ResultSharePage />}
         />
       </Routes>
