@@ -1,8 +1,10 @@
+import { Icon } from '@iconify/react';
+
+import Background from '@/components/Background';
 import ChatInput from '@/components/ChatInput';
 import CustomButton from '@/components/CustomButton';
 import Header from '@/components/Header';
 import MessageBox from '@/components/MessageBox';
-import { Icon } from '@iconify/react';
 
 interface AIChatPageProps {}
 
@@ -11,18 +13,7 @@ const messageTest =
 
 const AIChatPage = ({}: AIChatPageProps) => {
   return (
-    <div className="w-screen h-screen flex flex-col justify-center items-center gap-80">
-      <img
-        className="absolute w-full h-full object-cover -z-10"
-        src="/bg.png"
-        alt="밤 하늘의 배경 이미지"
-      />
-      <img
-        className="w-285 h-285 animate-shining relative bottom-130"
-        src="/moon.png"
-        alt="빛나는 마법의 소라 고둥"
-      />
-      <div className="absolute w-full h-full bg-black/75 animate-fadeIn" />
+    <Background type="dynamic">
       <Header
         rightItems={[
           <CustomButton
@@ -60,7 +51,7 @@ const AIChatPage = ({}: AIChatPageProps) => {
           console.log(message);
         }}
       />
-    </div>
+    </Background>
   );
 };
 
