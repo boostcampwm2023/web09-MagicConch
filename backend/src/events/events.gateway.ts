@@ -10,6 +10,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { createTarotReading } from './clova';
 
 @WebSocketGateway({
   cors: { origin: 'http://localhost:5173' },
@@ -21,12 +22,6 @@ export class EventsGateway
   server: Server;
 
   private readonly logger: Logger = new Logger('EventsGateway');
-
-  @SubscribeMessage('message')
-  handleEvent(@MessageBody() data: string): string {
-    this.logger.log(`Client Message : ${data}`);
-    return data;
-  }
 
   afterInit(server: Server) {
     this.logger.log('웹소켓 서버 초기화 ✅');
@@ -49,5 +44,12 @@ export class EventsGateway
     setTimeout(() => {
       sendMessage(welcomeMessage);
     }, 1000);
+
+    client.on('message', async (message) => {
+      this.logger.log(`Client Message : ${message}`);
+      const result = await createTarotReading(message, '0번 바보 카드');
+      this.logger.log(`Tarot Reading : ${result}`);
+      client.emit('message', result);
+    });
   }
 }
