@@ -7,7 +7,7 @@ import { TarotResultResponseDto } from './dto/tarot-result-response.dto';
 import { TarotCard } from './entities/tarot-card.entity';
 import { TarotResult } from './entities/tarot-result.entity';
 
-const objectStorageUrl = 'https://kr.object.ncloudstorage.com/magicconch';
+const bucketUrl = 'https://kr.object.ncloudstorage.com/magicconch';
 
 @Injectable()
 export class TarotService {
@@ -44,7 +44,7 @@ export class TarotService {
       throw new NotFoundException();
     }
     const cardDto = new TarotCardResponseDto();
-    const url: string = `${objectStorageUrl}/basic/${id}.jpg`;
+    const url: string = `${bucketUrl}/basic/${id}${tarotCard.ext}`;
     cardDto.cardUrl = url;
     return cardDto;
   }
