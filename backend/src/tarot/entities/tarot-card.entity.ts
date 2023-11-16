@@ -16,6 +16,9 @@ export class TarotCard {
   @Column('int')
   cardNo: number;
 
+  @Column({ length: 10 })
+  ext: string;
+
   @CreateDateColumn()
   createdAt: Date;
 
