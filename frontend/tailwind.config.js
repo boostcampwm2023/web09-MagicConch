@@ -104,5 +104,14 @@ export default {
       };
       addComponents(shadowTheme);
     },
+    ({ addUtilities }) => {
+      const flexUtils = {
+        '.flex-all-center': {
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+      };
+      addUtilities(flexUtils);
+    },
   ],
 };
