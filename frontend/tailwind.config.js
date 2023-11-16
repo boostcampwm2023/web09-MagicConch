@@ -1,7 +1,8 @@
-/** @type {import('tailwindcss').Config} */
+const ROOT_PX = 16;
+const px0_100 = { ...Array.from(Array(101)).map((_, i) => `${i / ROOT_PX}rem`) };
+const px0_2000 = { ...Array.from(Array(2001)).map((_, i) => `${i / ROOT_PX}rem`) };
 
-const px0_100 = { ...Array.from(Array(101)).map((_, i) => `${i * 0.06}rem`) };
-const px0_2000 = { ...Array.from(Array(2001)).map((_, i) => `${i * 0.06}rem`) };
+/** @type {import('tailwindcss').Config} */
 
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
