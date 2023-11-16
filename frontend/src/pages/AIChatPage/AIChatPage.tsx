@@ -1,8 +1,9 @@
-import ChatInput from '@/components/ChatInput';
-import ChatList from '@/components/ChatList/ChatList';
-import CustomButton from '@/components/CustomButton';
-import Header from '@/components/Header';
 import { Icon } from '@iconify/react';
+
+import ChatInput from '@components/ChatInput';
+import ChatList from '@components/ChatList/ChatList';
+import CustomButton from '@components/CustomButton';
+import Header from '@components/Header';
 
 interface AIChatPageProps {}
 
