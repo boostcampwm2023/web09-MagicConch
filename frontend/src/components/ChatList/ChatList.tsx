@@ -13,8 +13,9 @@ interface ChatListProps {
   messages: Message[];
 }
 
+// TODO: tarotId 올바르게 교체
 function ChatList({ messages }: ChatListProps) {
-  const messagesRef = useRef<HTMLUListElement>(null); // 메시지 엘리먼트를 저장
+  const messagesRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
     messagesRef.current!.scrollTop = messagesRef.current!.scrollHeight;

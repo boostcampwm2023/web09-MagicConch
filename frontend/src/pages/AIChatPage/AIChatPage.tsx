@@ -16,6 +16,7 @@ function AIChatPage({}: AIChatPageProps) {
 
   const addMessage = (type: 'left' | 'right', message: string) => {
     const profile = type == 'left' ? '/moon.png' : '/sponge.png';
+    // 임시로 랜덤으로 타로 카드 뽑기
     const tarotId = String(Math.floor(Math.random() * 22)).padStart(2, '0');
     setMessages(messages => [...messages, { type, message, profile, tarotId }]);
   };

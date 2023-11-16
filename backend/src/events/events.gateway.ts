@@ -47,6 +47,8 @@ export class EventsGateway
 
     client.on('message', async (message) => {
       this.logger.log(`Client Message : ${message}`);
+
+      // 임시로 랜덤으로 타로 카드 뽑기
       const random = Math.floor(Math.random() * 22);
       const tarotName= ['바보','마법사','여사제','여황제','황제','교황','연인','전차','힘','은둔자','운명의 수레바퀴','정의','매달린 남자','죽음','절제','악마','탑','별','달','태양','심판','세계' ]
       const result = await createTarotReading(message, `${random}번 ${tarotName[random]}카드`);
