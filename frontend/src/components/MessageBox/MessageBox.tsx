@@ -15,9 +15,11 @@ interface MessageBoxProps {
 // TODO: 프로필 이미지 설정
 
 const MessageBox = ({ tarotId, type, message, profile = '/sponge.png' }: MessageBoxProps) => {
+  const recievedResult = tarotId && type == 'left';
+
   return (
     <div className="relative">
-      {tarotId && type == 'left' && (
+      {recievedResult && (
         <img
           className="w-120 h-200 relative left-72"
           src="../../../__tests__/mocks/cards/00.jpg"
@@ -30,7 +32,7 @@ const MessageBox = ({ tarotId, type, message, profile = '/sponge.png' }: Message
           message={message}
           profile={profile}
         />
-        {tarotId && type == 'left' && (
+        {recievedResult && (
           <div className="absolute bottom-15 -right-50">
             <CustomButton
               color="transparent"
