@@ -1,7 +1,9 @@
+import Background from "@/components/Background";
+
 interface HumanChatPageProps {}
 
 const HumanChatPage = ({}: HumanChatPageProps) => {
-  return <></>;
+  return <Background type="dynamic"></Background>;
 };
 
 export default HumanChatPage;
