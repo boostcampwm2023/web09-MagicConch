@@ -10,13 +10,13 @@ export function useOverflowTextBoxCenter() {
 
     const { scrollHeight, clientHeight, scrollWidth, clientWidth } = textBoxRef.current;
 
-    const isScrollableWidth = scrollWidth > clientWidth;
-    const isScrollableHeight = scrollHeight > clientHeight;
+    const scrollableWidth = scrollWidth > clientWidth;
+    const scrollableHeight = scrollHeight > clientHeight;
 
-    if (isScrollableWidth) {
+    if (scrollableWidth) {
       textBoxRef.current.classList.remove('justify-center');
     }
-    if (isScrollableHeight) {
+    if (scrollableHeight) {
       textBoxRef.current.classList.remove('items-center');
     }
   }, []);
