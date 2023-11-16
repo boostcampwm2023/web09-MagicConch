@@ -15,7 +15,7 @@ function ChatList({size = "760", messages}: ChatListProps) {
   return (
     <ul className={`absolute w-${size} h-3/4 overflow-auto`}>
       {messages.map(({type, message, profile}) => 
-      <li className={`flex pr-20 pb-40 ${type == 'right' ?  'justify-end' : ''}`}>
+      <li key={`${type}-${message}`} className={`flex pr-20 pb-40 ${type == 'right' ?  'justify-end' : ''}`}>
         <MessageBox
           type={type}
           message={message}
