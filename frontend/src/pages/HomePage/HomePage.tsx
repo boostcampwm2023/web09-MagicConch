@@ -19,7 +19,7 @@ const HomePage = () => {
 
   return (
     <Background>
-      <div className="flex gap-36 mb-128 z-1">
+      <div className="relative top-75 flex gap-36 z-1">
         <CustomButton handleButtonClicked={moveAiChat}>AI에게 타로보기</CustomButton>
         <CustomButton
           handleButtonClicked={moveHumanChat}

@@ -1,6 +1,5 @@
-import { useMemo } from 'react';
-
 import MessageBox from '../MessageBox';
+import { useMemo } from 'react';
 
 interface Message {
   type: 'left' | 'right';
