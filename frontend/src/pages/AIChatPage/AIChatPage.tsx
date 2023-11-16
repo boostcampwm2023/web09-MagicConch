@@ -1,3 +1,4 @@
+import ChatInput from '@/components/ChatInput';
 import CustomButton from '@/components/CustomButton';
 import Header from '@/components/Header';
 import MessageBox from '@/components/MessageBox';
@@ -36,9 +37,8 @@ const AIChatPage = ({}: AIChatPageProps) => {
           </CustomButton>,
         ]}
       />
-
       {/* 테스트용 임시 ul */}
-      <ul className="absolute w-800 m-auto">
+      <ul className="absolute w-760 m-auto">
         <li>
           <MessageBox
             type="left"
@@ -52,6 +52,14 @@ const AIChatPage = ({}: AIChatPageProps) => {
           />
         </li>
       </ul>
+      {/* // TODO 서버에서 AI 데이터를 받아오고 있는 동안 disabled 하기 */}
+      <ChatInput
+        disabled={false}
+        sendChatMessage={message => {
+          // TODO: 서버로 메시지 전송 & 화면에 메시지 컴포넌트 그리기
+          console.log(message);
+        }}
+      />
     </div>
   );
 };
