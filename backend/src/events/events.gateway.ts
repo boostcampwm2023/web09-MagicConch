@@ -37,5 +37,16 @@ export class EventsGateway
 
   handleConnection(client: Socket, ...args: any[]) {
     this.logger.log(`Client Connected : ${client.id}`);
+
+    const sendMessage = (message: string) => {
+      client.emit('message', message);
+    };
+
+    const greetingMessage =
+      '안녕, 나는 어떤 고민이든지 들어주는 마법의 소라고둥이야!\n고민이 있으면 말해줘!';
+
+    setTimeout(() => {
+      sendMessage(greetingMessage);
+    }, 1000);
   }
 }

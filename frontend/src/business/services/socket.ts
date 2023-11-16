@@ -14,3 +14,7 @@ export function connect() {
 export function getSocket() {
   return socket;
 }
+
+export function setMessageEventListener(listener: (message: string) => void) {
+  socket.on('message', listener);
+}
