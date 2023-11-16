@@ -6,12 +6,12 @@ import {
   Param,
   ParseUUIDPipe,
   Patch,
-  Post,
   Req,
   UseGuards,
 } from '@nestjs/common';
 import {
   ApiBody,
+  ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -25,7 +25,6 @@ import { AuthGuard } from 'src/common/auth/auth.guard';
 import { ChatService } from './chat.service';
 import { ChattingMessageResponseDto } from './dto/chatting-messag-response.dto';
 import { ChattingRoomResponseDto } from './dto/chatting-room-response.dto';
-import { CreateChattingMessageDto } from './dto/create-chatting-message.dto';
 import { UpdateChattingRoomDto } from './dto/update-chatting-room.dto';
 
 @UseGuards(AuthGuard)
@@ -59,40 +58,37 @@ export class ChatController {
     return await this.chatService.findMessagesById(id);
   }
 
-  @Post('ai/:id')
-  @ApiOperation({ summary: '채팅 메시지 생성 API' })
-  @ApiParam({ type: 'uuid', name: 'id' })
-  @ApiBody({ type: [CreateChattingMessageDto] })
-  @ApiOkResponse({ description: '채팅 메시지 생성 성공' })
-  @ApiUnauthorizedResponse({ description: '인증 받지 않은 사용자' })
-  @ApiInternalServerErrorResponse()
-  async createMessages(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() CreateChattingMessageDto: CreateChattingMessageDto[],
-  ): Promise<void> {
-    return await this.chatService.createMessage(id, CreateChattingMessageDto);
-  }
-
   @Patch('ai/:id')
   @ApiOperation({ summary: '채팅방 제목 수정 API' })
   @ApiParam({ type: 'uuid', name: 'id' })
   @ApiBody({ type: UpdateChattingRoomDto })
   @ApiOkResponse({ description: '채팅방 제목 수정 성공' })
+  @ApiForbiddenResponse({ description: '인가 받지 않은 사용자' })
   @ApiNotFoundResponse({ description: '존재하지 않는 채팅방 ID' })
   @ApiInternalServerErrorResponse()
   async updateRoom(
     @Param('id', ParseUUIDPipe) id: string,
+    @Req() req: Request,
     @Body() updateChattingRoomDto: UpdateChattingRoomDto,
   ): Promise<void> {
-    await this.chatService.updateRoom(id, updateChattingRoomDto);
+    await this.chatService.updateRoom(
+      id,
+      req.cookies.magicConch,
+      updateChattingRoomDto,
+    );
   }
 
   @Delete('ai/:id')
   @ApiOperation({ summary: '채팅방 삭제 API' })
   @ApiParam({ type: 'uuid', name: 'id' })
   @ApiOkResponse({ description: '채팅방 삭제 성공' })
+  @ApiForbiddenResponse({ description: '인가 받지 않은 사용자' })
+  @ApiNotFoundResponse({ description: '존재하지 않는 채팅방 ID' })
   @ApiInternalServerErrorResponse()
-  async removeRoom(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
-    await this.chatService.removeRoom(id);
+  async removeRoom(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Req() req: Request,
+  ): Promise<void> {
+    await this.chatService.removeRoom(id, req.cookies.magicConch);
   }
 }
