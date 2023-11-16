@@ -5,6 +5,8 @@ import ChatList from '@components/ChatList/ChatList';
 import CustomButton from '@components/CustomButton';
 import Header from '@components/Header';
 
+import { sendMessage } from '@business/services/socket';
+
 interface AIChatPageProps {}
 
 const AIChatPage = ({}: AIChatPageProps) => {
@@ -57,7 +59,7 @@ const AIChatPage = ({}: AIChatPageProps) => {
         disabled={false}
         sendChatMessage={message => {
           // TODO: 서버로 메시지 전송 & 화면에 메시지 컴포넌트 그리기
-          console.log(message);
+          sendMessage(message);
         }}
       />
     </div>
