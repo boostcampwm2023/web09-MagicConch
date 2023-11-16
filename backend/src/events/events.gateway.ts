@@ -43,13 +43,13 @@ export class EventsGateway
 
     setTimeout(() => {
       sendMessage(welcomeMessage);
-    }, 1000);
+    }, 2000);
 
     client.on('message', async (message) => {
       this.logger.log(`Client Message : ${message}`);
       const result = await createTarotReading(message, '0번 바보 카드');
       this.logger.log(`Tarot Reading : ${result}`);
-      client.emit('message', result);
+      sendMessage(result);
     });
   }
 }
