@@ -12,7 +12,6 @@ import {
 import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({
-  // namespace: 'chat',
   cors: { origin: 'http://localhost:5173' },
 })
 export class EventsGateway
