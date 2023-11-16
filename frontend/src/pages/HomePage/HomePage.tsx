@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-import Background from '@/components/Background';
+import Background from '@components/Background';
 import CustomButton from '@components/CustomButton';
 
 import { connect } from '@business/services/socket';
