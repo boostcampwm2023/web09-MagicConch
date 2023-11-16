@@ -17,7 +17,7 @@ interface MessageBoxProps {
 const MessageBox = ({ tarotId, type, message, profile = '/sponge.png' }: MessageBoxProps) => {
   return (
     <div className="relative">
-      {!tarotId && type == 'left' && (
+      {tarotId && type == 'left' && (
         <img
           className="w-120 h-200 relative left-72"
           src="../../../__tests__/mocks/cards/00.jpg"
@@ -30,7 +30,7 @@ const MessageBox = ({ tarotId, type, message, profile = '/sponge.png' }: Message
           message={message}
           profile={profile}
         />
-        {!tarotId && type == 'left' && (
+        {tarotId && type == 'left' && (
           <div className="absolute bottom-15 -right-50">
             <CustomButton
               color="transparent"
