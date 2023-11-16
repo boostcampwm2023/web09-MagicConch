@@ -10,11 +10,11 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
       useFactory: (configService: ConfigService) => {
         return {
           type: 'mysql',
-          host: configService.get('db_host'),
-          port: configService.get<number>('db_port'),
-          username: configService.get('db_username'),
-          password: configService.get('db_password'),
-          database: configService.get('db_database'),
+          host: configService.get('DB_HOST'),
+          port: configService.get<number>('DB_PORT'),
+          username: configService.get('DB_USERNAME'),
+          password: configService.get('DB_PASSWORD'),
+          database: configService.get('DB_DATABASE'),
           entities: [],
           synchronize: true,
           autoLoadEntities: true,
