@@ -11,9 +11,9 @@ interface ResultSharePageProps {}
 
 // TODO: API 연결되면 제거
 const mockUrl = '../../../__tests__/mocks/cards';
-const ICON_SIZE = 18;
+const ICON_SIZE = 25;
 
-const ResultSharePage = ({}: ResultSharePageProps) => {
+function ResultSharePage({}: ResultSharePageProps) {
   // TODO: param에서 id를 가져오도록 수정해야함.
   const { imageId, text } = shareUrlMock[shareUrlMockUrl];
 
@@ -21,7 +21,7 @@ const ResultSharePage = ({}: ResultSharePageProps) => {
 
   return (
     <>
-      <div className="w-screen h-full flex flex-all-center gap-80 display-medium16 text-strong p-20 ">
+      <div className="w-screen h-full flex flex-all-center gap-80 display-medium16 surface-alt text-strong p-20 ">
         <div className="w-384 h-640 rounded-2xl flex flex-all-center">
           <img
             className="rounded-2xl"
@@ -32,7 +32,7 @@ const ResultSharePage = ({}: ResultSharePageProps) => {
         <div className="w-664 h-640 flex flex-col rounded-2xl surface-box">
           <div
             ref={textBoxRef}
-            className="w-full flex-1 flex justify-center items-center overflow-y-scroll p-20"
+            className="w-full flex-1 flex justify-center rounded-2xl items-center overflow-auto border-t-50 border-transparent px-70"
           >
             {text}
           </div>
@@ -42,6 +42,7 @@ const ResultSharePage = ({}: ResultSharePageProps) => {
               <li>
                 <CustomButton
                   key={id}
+                  size="l"
                   color="cancel"
                 >
                   {icon ? (
@@ -61,6 +62,6 @@ const ResultSharePage = ({}: ResultSharePageProps) => {
       </div>
     </>
   );
-};
+}
 
 export default ResultSharePage;
