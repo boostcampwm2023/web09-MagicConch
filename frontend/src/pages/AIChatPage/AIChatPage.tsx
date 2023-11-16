@@ -1,13 +1,10 @@
 import ChatInput from '@/components/ChatInput';
+import ChatList from '@/components/ChatList/ChatList';
 import CustomButton from '@/components/CustomButton';
 import Header from '@/components/Header';
-import MessageBox from '@/components/MessageBox';
 import { Icon } from '@iconify/react';
 
 interface AIChatPageProps {}
-
-const messageTest =
-  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. ";
 
 const AIChatPage = ({}: AIChatPageProps) => {
   return (
@@ -37,21 +34,23 @@ const AIChatPage = ({}: AIChatPageProps) => {
           </CustomButton>,
         ]}
       />
-      {/* 테스트용 임시 ul */}
-      <ul className="absolute w-760 m-auto">
-        <li>
-          <MessageBox
-            type="left"
-            message={messageTest}
-          />
-        </li>
-        <li>
-          <MessageBox
-            type="right"
-            message={messageTest}
-          />
-        </li>
-      </ul>
+
+      {/* TEST */}
+      <ChatList
+        messages={[
+          { type: 'left', message: '안녕 만나서 반가워 친구야' },
+          {
+            type: 'right',
+            message:
+              '고민이 있는데 들어주겠니? 배가너무 고픈데 뭘 먹어야할지 모르겠어. 답을 알려줘 마법의 소라고둥!고민이 있는데 들어주겠니? 배가너무 고픈데 뭘 먹어야할지 모르겠어. 답을 알려줘 마법의 소라고둥!',
+          },
+          {
+            type: 'left',
+            message: '사케동은 어때?? 담백하고 부드러워서 언제먹어도 질리지 않아!',
+          },
+        ]}
+      />
+
       {/* // TODO 서버에서 AI 데이터를 받아오고 있는 동안 disabled 하기 */}
       <ChatInput
         disabled={false}
