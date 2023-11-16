@@ -3,13 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import Background from '@components/Background';
 import CustomButton from '@components/CustomButton';
 
-import { connect } from '@business/services/socket';
+import { connect, setMessageEventListener } from '@business/services/socket';
 
 const HomePage = () => {
   const navigate = useNavigate();
 
   const moveAiChat = () => {
     connect();
+
+    // 테스트를 위한 부분
+    setMessageEventListener(message => alert(message));
     navigate('/chat/ai');
   };
 
