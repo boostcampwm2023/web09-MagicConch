@@ -1,8 +1,7 @@
+import CustomButton from '../CustomButton';
 import { Icon } from '@iconify/react';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-
-import CustomButton from '../CustomButton';
 
 const GET_BGM_API =
   'https://www.viodio.io/_api/v1/musics/627c8e78715664b72b9bee90/audios/dcbfe1206d7b4410a7e71963bc9e2e4d?auto_play=true';
@@ -18,7 +17,7 @@ function BackgroundMusic() {
   };
 
   return (
-    <div className="w-63 h-60 overflow-hidden fixed bottom-40 left-48">
+    <div className="w-63 h-60 overflow-hidden fixed bottom-30 left-35">
       <div className="absolute top-0 left-0">
         <CustomButton
           color={playing ? 'active' : 'disabled'}
