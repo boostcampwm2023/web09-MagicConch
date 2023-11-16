@@ -29,7 +29,7 @@ const messageContent = `
 이별이라는 불안한 생각보다는 앞으로의 관계를 더 좋게 만들어갈 수 있다고 믿어봐. 물론 쉽지 않겠지만, 조금씩 노력하면 분명 좋은 결과가 있을 거야.
 ###`;
 
-export async function createTarotReading(tarotName: string, message: string) {
+export async function createTarotReading(message: string,tarotName: string) {
   const response = await fetch(CLOVA_URL, {
     method: 'POST',
     headers: {
