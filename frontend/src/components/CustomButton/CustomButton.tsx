@@ -15,7 +15,7 @@ const colorMap: Record<string, string> = {
 };
 
 const sizeMap: Record<string, string> = {
-  s: 'h-40 display-bold14 leading-18 p-12 min-h-0',
+  s: 'h-40 display-bold14 leading-18 p-8 min-h-0',
   m: 'h-50 display-bold16 leading-20 p-16',
   l: 'h-60 display-bold16 leading-30 p-16',
 };

@@ -19,14 +19,20 @@ export default {
       margin: px0_2000,
       lineHeight: px0_100,
       fontSize: px0_100,
+      inset: px0_2000,
       keyframes: {
         shining: {
           '0%': { filter: 'drop-shadow(0px 0px 25px rgba(255, 255, 255, 0.8))' },
           '100%': { filter: 'drop-shadow(0px 0px 50px rgba(255, 255, 255, 0.8))' },
         },
+        fadeIn: {
+          '0%': { opacity: 0 },
+          '100%': { opacity: 1 },
+        },
       },
       animation: {
         shining: 'shining 2s ease-in-out infinite alternate',
+        fadeIn: 'fadeIn 1.5s ease-in-out',
       },
     },
   },

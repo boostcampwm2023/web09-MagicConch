@@ -10,14 +10,13 @@ import ResultSharePage from './pages/ResultSharePage';
 function App() {
   return (
     <>
-      <BackgroundMusic />
       <Routes>
         <Route
           path="/"
           element={<HomePage />}
         />
         <Route
-          path="/chat/ai/:id"
+          path="/chat/ai/:id?"
           element={<AIChatPage />}
         />
         <Route
@@ -33,6 +32,7 @@ function App() {
           element={<ResultSharePage />}
         />
       </Routes>
+      <BackgroundMusic />
     </>
   );
 }
