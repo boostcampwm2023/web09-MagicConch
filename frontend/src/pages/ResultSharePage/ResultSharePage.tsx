@@ -29,7 +29,7 @@ const ResultSharePage = ({}: ResultSharePageProps) => {
           />
         </div>
 
-        <div className="w-664  h-660 flex flex-col rounded-2xl surface-box">
+        <div className="w-664 h-640 flex flex-col rounded-2xl surface-box">
           <div
             ref={textBoxRef}
             className="w-full flex-1 flex justify-center items-center overflow-y-scroll p-20"
