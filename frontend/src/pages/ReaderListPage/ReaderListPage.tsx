@@ -1,6 +1,6 @@
 interface ReaderListPageProps {}
 
-const ReaderListPage = ({}: ReaderListPageProps) => {
+function ReaderListPage({}: ReaderListPageProps){
   return <></>;
 };
 

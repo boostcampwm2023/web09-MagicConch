@@ -1,6 +1,6 @@
 interface ProfileSettingOverlayProps {}
 
-const ProfileSettingOverlay = ({}: ProfileSettingOverlayProps) => {
+function ProfileSettingOverlay({}: ProfileSettingOverlayProps){
   return <></>;
 };
 

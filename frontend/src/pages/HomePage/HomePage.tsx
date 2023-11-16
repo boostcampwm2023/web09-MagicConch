@@ -5,7 +5,7 @@ import CustomButton from '@components/CustomButton';
 
 import { connect } from '@business/services/socket';
 
-const HomePage = () => {
+function HomePage() {
   const navigate = useNavigate();
 
   const moveAiChat = () => {
@@ -31,6 +31,6 @@ const HomePage = () => {
       </div>
     </Background>
   );
-};
+}
 
 export default HomePage;
