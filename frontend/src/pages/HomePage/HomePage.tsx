@@ -1,4 +1,4 @@
-import { connect } from '@business/services/socket';
+import { connect, sendMessage, setMessageEventListener } from '@business/services/socket';
 import { useNavigate } from 'react-router-dom';
 
 import CustomButton from '@components/CustomButton';
@@ -8,6 +8,13 @@ const HomePage = () => {
 
   const moveAiChat = () => {
     connect();
+
+    // 테스트를 위한 부분
+    setMessageEventListener(message => alert(message));
+    setTimeout(() => {
+      sendMessage('안녕, 곧 수능인데 내가 수능을 잘 볼 수 있을까?');
+    }, 3000);
+
     navigate('/chat/ai');
   };
 

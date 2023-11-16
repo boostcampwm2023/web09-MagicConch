@@ -18,3 +18,7 @@ export function getSocket() {
 export function setMessageEventListener(listener: (message: string) => void) {
   socket.on('message', listener);
 }
+
+export function sendMessage(message: string) {
+  socket.emit('message', message);
+}

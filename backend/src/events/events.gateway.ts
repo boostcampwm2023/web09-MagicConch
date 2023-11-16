@@ -22,8 +22,9 @@ export class EventsGateway
 
   private readonly logger: Logger = new Logger('EventsGateway');
 
-  @SubscribeMessage('events')
+  @SubscribeMessage('message')
   handleEvent(@MessageBody() data: string): string {
+    this.logger.log(`Client Message : ${data}`);
     return data;
   }
 
@@ -42,11 +43,11 @@ export class EventsGateway
       client.emit('message', message);
     };
 
-    const greetingMessage =
+    const welcomeMessage =
       '안녕, 나는 어떤 고민이든지 들어주는 마법의 소라고둥이야!\n고민이 있으면 말해줘!';
 
     setTimeout(() => {
-      sendMessage(greetingMessage);
+      sendMessage(welcomeMessage);
     }, 1000);
   }
 }
