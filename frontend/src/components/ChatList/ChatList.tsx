@@ -1,8 +1,7 @@
+import MessageBox from '../MessageBox';
 import { useMemo } from 'react';
 
-import MessageBox from '../MessageBox';
-
-interface Message {
+export interface Message {
   type: 'left' | 'right';
   message: string;
   profile?: string;
