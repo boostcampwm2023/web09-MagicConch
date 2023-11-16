@@ -25,7 +25,10 @@
       "@/*": ["*"],
       "@pages/*": ["pages/*"],
       "@components/*": ["components/*"],
-      "@business/*": ["business/*"]
+      "@business/*": ["business/*"],
+      "@stores/*": ["stores/*"],
+      "@constants/*": ["constants/*"],
+      "@assets/*": ["assets/*"]
     }
   },
   "include": ["src", "vite-env.d.ts"],
