@@ -18,7 +18,7 @@ function MessageBox({ tarotId, type, message, profile }: MessageBoxProps) {
   const recievedResult = tarotId && type == 'left';
 
   return (
-    <div className="relative">
+    <div className="relative max-w-[70%]">
       {recievedResult && (
         <img
           className="w-120 h-200 relative left-72 rounded-lg"

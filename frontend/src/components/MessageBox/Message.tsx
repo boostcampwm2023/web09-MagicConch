@@ -17,7 +17,7 @@ function Message({ type, message, profile }: MessageProps) {
 
   return (
     <>
-      <div className={`max-w-600 chat ${chatStyle.box}`}>
+      <div className={`chat ${chatStyle.box}`}>
         <div className="chat-image avatar">
           <div className="w-60 rounded-full">
             <img
