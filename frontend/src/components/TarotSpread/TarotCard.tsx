@@ -17,7 +17,7 @@ export default function TarotCard({ backImg, onClick }: TarotCardProps) {
 
   return (
     <img
-      className={`w-144 h-240`}
+      className={`w-288 h-480`}
       src={img}
       alt="타로 카드 이미지"
       onClick={() => onClick(flipCard())}

@@ -16,7 +16,7 @@ interface AIChatPageProps {}
 function AIChatPage({}: AIChatPageProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const { open } = useOverlay();
-  const [btnDisabled, setBtnDisabled] = useState(true); // TODO: test
+  const [btnDisabled, setBtnDisabled] = useState(true); // TODO: 테스트용
 
   const addMessage = (type: 'left' | 'right', message: string) => {
     const profile = type == 'left' ? '/moon.png' : '/sponge.png';
@@ -30,7 +30,7 @@ function AIChatPage({}: AIChatPageProps) {
     sendMessage(message);
   };
 
-  // TODO: 아래 두개 모두 테스트용
+  // TODO: 테스트용
   const pickCard = (idx: number) => {
     setMessages(messages => [
       ...messages,
@@ -51,7 +51,7 @@ function AIChatPage({}: AIChatPageProps) {
   useEffect(() => {
     setMessageEventListener(message => {
       addMessage('left', message);
-      setBtnDisabled(false); // TODO: test
+      setBtnDisabled(false); // TODO: 테스트용
     });
   }, []);
 
