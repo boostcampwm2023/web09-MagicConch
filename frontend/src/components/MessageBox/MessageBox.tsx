@@ -33,10 +33,10 @@ function MessageBox({ tarotId, type, message, profile }: MessageBoxProps) {
           profile={profile}
         />
         {recievedResult && (
-          <div className="absolute bottom-15 -right-50">
+          <div className="absolute bottom-10 -right-50">
             <CustomButton
               color="transparent"
-              size="s"
+              circle
             >
               <Icon
                 icon="ion:share"

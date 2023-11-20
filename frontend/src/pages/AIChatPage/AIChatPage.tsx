@@ -1,41 +1,24 @@
 import { Icon } from '@iconify/react';
-import { useEffect, useState } from 'react';
 
 import Background from '@components/Background';
 import ChatInput from '@components/ChatInput';
-import ChatList, { Message } from '@components/ChatList/ChatList';
+import ChatList from '@components/ChatList/ChatList';
 import CustomButton from '@components/CustomButton';
 import Header from '@components/Header';
 import TarotSpread from '@components/TarotSpread';
 
 import useOverlay from '@business/hooks/useOverlay';
-import { sendMessage, setMessageEventListener } from '@business/services/socket';
+import { useAiChat } from '@business/hooks/useAiChat';
 
 interface AIChatPageProps {}
 
 function AIChatPage({}: AIChatPageProps) {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const { messages, messageStreaming, onSubmitMessage } = useAiChat();
   const { open } = useOverlay();
-  const [btnDisabled, setBtnDisabled] = useState(true); // TODO: 테스트용
-
-  const addMessage = (type: 'left' | 'right', message: string) => {
-    const profile = type == 'left' ? '/moon.png' : '/sponge.png';
-    // 임시로 랜덤으로 타로 카드 뽑기
-    const tarotId = String(Math.floor(Math.random() * 22)).padStart(2, '0');
-    setMessages(messages => [...messages, { type, message, profile, tarotId }]);
-  };
-
-  const onSubmitMessage = (message: string) => {
-    addMessage('right', message);
-    sendMessage(message);
-  };
 
   // TODO: 테스트용
   const pickCard = (idx: number) => {
-    setMessages(messages => [
-      ...messages,
-      { type: 'left', message: '테스트', profile: '/moon.png', tarotId: (idx % 22).toString().padStart(2, '0') },
-    ]);
+    console.log(idx);
   };
 
   const openTarotSpread = () => {
@@ -48,24 +31,17 @@ function AIChatPage({}: AIChatPageProps) {
     ));
   };
 
-  useEffect(() => {
-    setMessageEventListener(message => {
-      addMessage('left', message);
-      setBtnDisabled(false); // TODO: 테스트용
-    });
-  }, []);
-
   return (
     <Background type="dynamic">
       <Header
         rightItems={[
           <CustomButton
             color="transparent"
-            size="s"
+            circle
             key="side-panel-close"
           >
             <Icon
-              className="w-22 h-22"
+              className="text-25"
               icon="carbon:side-panel-close"
             />
           </CustomButton>,
@@ -75,7 +51,6 @@ function AIChatPage({}: AIChatPageProps) {
       {/* TEST 테스트용*/}
       <div className="absolute top-80 left-40">
         <CustomButton
-          disabled={btnDisabled}
           size="m"
           color="dark"
           handleButtonClicked={openTarotSpread}
@@ -89,7 +64,7 @@ function AIChatPage({}: AIChatPageProps) {
 
         {/* // TODO 서버에서 AI 데이터를 받아오고 있는 동안 disabled 하기 */}
         <ChatInput
-          disabled={false}
+          disabled={messageStreaming}
           sendChatMessage={onSubmitMessage}
         />
       </div>
