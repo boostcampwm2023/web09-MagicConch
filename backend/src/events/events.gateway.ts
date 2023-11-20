@@ -78,10 +78,31 @@ export class EventsGateway
         message,
         `${random}번 ${tarotName[random]}카드`,
       );
-      this.logger.log(`Tarot Reading : ${tarotName[random]}, ${result}`);
       if (result) {
-        sendMessage(result);
+        readStreamAndSend(client, result.getReader());
       }
     });
   }
+}
+
+function readStreamAndSend(
+  socket: Socket,
+  reader: ReadableStreamDefaultReader<Uint8Array>,
+) {
+  let message = '';
+  const readStream = () => {
+    reader?.read().then(({ done, value }: any) => {
+      if (done) {
+        this.logger.log(`Tarot Reading : ${message}}`);
+        return socket.emit('streamEnd');
+      }
+
+      message += new TextDecoder().decode(value);
+      console.log(message);
+      socket.emit('streamData', message);
+
+      return readStream();
+    });
+  };
+  readStream();
 }

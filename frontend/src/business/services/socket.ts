@@ -9,6 +9,9 @@ export function connect() {
     socket.disconnect();
   }
   socket = io(URL);
+
+  socket.on('streamData', message => console.log(message));
+  socket.on('streamEnd', () => console.log('streamEnd'));
 }
 
 export function getSocket() {
@@ -16,28 +19,7 @@ export function getSocket() {
 }
 
 export function setMessageEventListener(listener: (message: string | ReadableStream<string>) => void) {
-  socket.on('message', message => {
-    if (typeof message === 'string') {
-      listener(message);
-      return;
-    }
-    console.log(message);
-    const reader = message?.getReader();
-
-    let content = '';
-
-    const readStream = () => {
-      reader?.read().then(({ done, value }: any) => {
-        if (done) return console.log('done');
-
-        content += new TextDecoder().decode(value);
-        console.log(content);
-
-        return readStream();
-      });
-    };
-    readStream();
-  });
+  socket.on('message', listener);
 }
 
 export function sendMessage(message: string) {
