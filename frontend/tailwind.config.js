@@ -30,10 +30,15 @@ export default {
           '0%': { opacity: 0 },
           '100%': { opacity: 1 },
         },
+        fadeOut: {
+          '0%': { opacity: 1 },
+          '100%': { opacity: 0 },
+        },
       },
       animation: {
         shining: 'shining 2s ease-in-out infinite alternate',
         fadeIn: 'fadeIn 1.5s ease-in-out',
+        fadeOut: 'fadeOut 1.5s ease-in-out forwards',
       },
     },
   },
