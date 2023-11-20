@@ -1,9 +1,11 @@
 import MessageBox from '../MessageBox';
+import { useEffect, useRef } from 'react';
 
 export interface Message {
   type: 'left' | 'right';
   message: string;
-  profile?: string;
+  profile: string;
+  tarotId?: string;
 }
 
 interface ChatListProps {
@@ -11,21 +13,34 @@ interface ChatListProps {
   messages: Message[];
 }
 
-function ChatList({ size = '760', messages }: ChatListProps) {
+// TODO: tarotId 올바르게 교체
+function ChatList({ messages }: ChatListProps) {
+  const messagesRef = useRef<HTMLUListElement>(null);
+
+  useEffect(() => {
+    messagesRef.current!.scrollTop = messagesRef.current!.scrollHeight;
+  }, [messages]);
+
   return (
-    <ul className={`absolute w-${size} h-3/4 overflow-auto`}>
-      {messages.map(({ type, message, profile }) => (
-        <li
-          key={`${type}-${message}`}
-          className={`flex pr-20 pb-40 ${type == 'right' && 'justify-end'}`}
-        >
-          <MessageBox
-            type={type}
-            message={message}
-            profile={profile}
-          />
-        </li>
-      ))}
+    <ul
+      ref={messagesRef}
+      className={`w-full h-full mb-20 overflow-auto scroll-smooth`}
+    >
+      {messages.map(({ type, message, profile, tarotId }, index) => {
+        return (
+          <li
+            key={`${type}-${message}`}
+            className={`flex pr-20 ${index != 0 && 'mt-40'} ${type == 'right' && 'justify-end'}`}
+          >
+            <MessageBox
+              tarotId={index == 0 ? undefined : tarotId}
+              type={type}
+              message={message}
+              profile={profile}
+            />
+          </li>
+        );
+      })}
     </ul>
   );
 }

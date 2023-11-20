@@ -2,7 +2,7 @@ import Background from "@/components/Background";
 
 interface HumanChatPageProps {}
 
-const HumanChatPage = ({}: HumanChatPageProps) => {
+function HumanChatPage ({}: HumanChatPageProps){
   return <Background type="dynamic"></Background>;
 };
 

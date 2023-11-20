@@ -1,15 +1,13 @@
+import CustomButton from '../CustomButton';
 import { Icon } from '@iconify/react';
 import { useRef } from 'react';
 
-import CustomButton from '../CustomButton';
-
 interface ChatInputProps {
-  size?: string;
   disabled: boolean;
   sendChatMessage: (message: string) => void;
 }
 
-function ChatInput({ size = '760', disabled, sendChatMessage }: ChatInputProps) {
+function ChatInput({ disabled, sendChatMessage }: ChatInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const submitMessage = () => {
@@ -25,14 +23,14 @@ function ChatInput({ size = '760', disabled, sendChatMessage }: ChatInputProps) 
   };
 
   return (
-    <div className={`form-control absolute bottom-45 flex flex-row w-${size}`}>
+    <div className={`form-control flex flex-row w-full`}>
       <input
         ref={inputRef}
         onKeyUp={detectEnter}
         disabled={disabled}
         type="text"
-        placeholder="Type here"
-        className="input input-bordered input-md w-full"
+        placeholder="Type Here"
+        className="input input-bordered input-md w-full display-medium16"
       />
       <CustomButton
         color="transparent"

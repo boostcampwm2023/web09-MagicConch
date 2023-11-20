@@ -7,22 +7,22 @@ interface MessageBoxProps {
   tarotId?: string;
   type: 'left' | 'right';
   message: string;
-  profile?: string;
+  profile: string;
 }
 
 // TODO: tarotId로 서버에서 타로 카드 이미지 정보를 받아와서 src와 alt 채워주기
 // TODO: 조건식 !tarotId -> tarotId로 변경
 // TODO: 프로필 이미지 설정
 
-const MessageBox = ({ tarotId, type, message, profile = '/sponge.png' }: MessageBoxProps) => {
+function MessageBox({ tarotId, type, message, profile }: MessageBoxProps) {
   const recievedResult = tarotId && type == 'left';
 
   return (
-    <div className="relative">
+    <div className="relative max-w-[70%]">
       {recievedResult && (
         <img
-          className="w-120 h-200 relative left-72"
-          src="../../../__tests__/mocks/cards/00.jpg"
+          className="w-120 h-200 relative left-72 rounded-lg"
+          src={`../../../__tests__/mocks/cards/${tarotId}.jpg`}
           alt="테스트용 이미지"
         />
       )}
@@ -48,6 +48,6 @@ const MessageBox = ({ tarotId, type, message, profile = '/sponge.png' }: Message
       </div>
     </div>
   );
-};
+}
 
 export default MessageBox;
