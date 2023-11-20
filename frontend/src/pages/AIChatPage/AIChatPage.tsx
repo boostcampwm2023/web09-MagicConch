@@ -1,14 +1,14 @@
 import { Icon } from '@iconify/react';
 import { useEffect, useState } from 'react';
 
-import TarotSpread from '@/components/TarotSpread';
 import Background from '@components/Background';
 import ChatInput from '@components/ChatInput';
 import ChatList, { Message } from '@components/ChatList/ChatList';
 import CustomButton from '@components/CustomButton';
 import Header from '@components/Header';
+import TarotSpread from '@components/TarotSpread';
 
-import useOverlay from '@/business/hooks/useOverlay';
+import useOverlay from '@business/hooks/useOverlay';
 import { sendMessage, setMessageEventListener } from '@business/services/socket';
 
 interface AIChatPageProps {}
