@@ -1,13 +1,11 @@
 import { Suspense } from 'react';
-import { useParams } from 'react-router-dom';
 
 import CustomButton from '@components/CustomButton';
 
 import { useOverflowTextBoxCenter } from '@/business/hooks/useOverflowTextBoxCenter';
+import { useShareButtons } from '@/business/hooks/useShareButtons';
 
 import { getResultShareQuery } from '@/stores/queries/getResultShareQuery';
-
-import { shareButtons } from '@/constants/shareButtons';
 
 import { Icon } from '@iconify/react';
 
@@ -16,10 +14,11 @@ interface ResultSharePageProps {}
 const ICON_SIZE = 25;
 
 function ResultSharePage({}: ResultSharePageProps) {
-  const { id } = useParams();
-  const { data } = getResultShareQuery(id as string);
+  const { data } = getResultShareQuery();
 
   const { textBoxRef } = useOverflowTextBoxCenter();
+
+  const { shareButtons } = useShareButtons({ card_url: data.card_url });
 
   return (
     <Suspense fallback={<div>loading...</div>}>
@@ -40,12 +39,13 @@ function ResultSharePage({}: ResultSharePageProps) {
           </div>
 
           <ul className="w-full h-110 rounded-b-2xl flex flex-all-center gap-12">
-            {shareButtons.map(({ id, icon, color }) => (
+            {shareButtons.map(({ id, icon, color, handler }) => (
               <li key={id}>
                 <CustomButton
                   key={id}
                   size="l"
                   color="cancel"
+                  handleButtonClicked={handler}
                 >
                   {icon ? (
                     <Icon
