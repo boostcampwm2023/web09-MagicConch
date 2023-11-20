@@ -36,6 +36,7 @@ export async function createTarotReading(message: string, tarotName: string) {
       'X-NCP-CLOVASTUDIO-API-KEY': X_NCP_CLOVASTUDIO_API_KEY,
       'X-NCP-APIGW-API-KEY': X_NCP_APIGW_API_KEY,
       'Content-Type': 'application/json',
+      Accept: 'text/event-stream',
     },
     body: JSON.stringify({
       topK: 0,
@@ -57,7 +58,76 @@ export async function createTarotReading(message: string, tarotName: string) {
       topP: 0.8,
     }),
   });
-  const data = await response.json();
-  if (data.error) throw new Error(data.error.message);
-  return data.result.message.content;
+  const reader = response.body?.getReader();
+
+  let content = '';
+  let prevEvent: string = '';
+
+  reader?.read().then(function print({ done, value }) {
+    if (done) return console.log('done');
+
+    const strs = new TextDecoder().decode(value).split('\n\n');
+    if (prevEvent) {
+      strs[0] = prevEvent + strs[0];
+      prevEvent = '';
+    }
+
+    strs.forEach((str) => {
+      const data = streamEventParse(str);
+      if (data === undefined) {
+        prevEvent += str;
+        return;
+      }
+      if (data.event === 'token') {
+        content += data.data.message.content;
+        console.log(content);
+      }
+    });
+
+    reader.read().then(print);
+  });
+  return 'tmpppp';
+}
+
+type StreamEvent = {
+  id: string;
+  event: string;
+  data: {
+    message: {
+      role: string;
+      content: string;
+    };
+  };
+};
+
+function streamEventParse(str: string): StreamEvent | undefined {
+  const event: any = {};
+
+  str.split('\n').forEach((line: string) => {
+    const splitIdx = line.indexOf(':');
+    const [key, value] = [line.slice(0, splitIdx), line.slice(splitIdx + 1)];
+
+    if (key === 'id' || key === 'event') {
+      event[key] = value;
+    } else if (key === 'data') {
+      try {
+        event[key] = JSON.parse(value);
+      } catch (e) {}
+    }
+  });
+
+  return isStreamEvent(event) ? (event as StreamEvent) : undefined;
+}
+
+function isStreamEvent(object: any): object is StreamEvent {
+  return (
+    typeof object === 'object' &&
+    object !== null &&
+    'id' in object &&
+    'event' in object &&
+    'data' in object &&
+    'message' in object.data &&
+    'role' in object.data.message &&
+    'content' in object.data.message
+  );
 }
