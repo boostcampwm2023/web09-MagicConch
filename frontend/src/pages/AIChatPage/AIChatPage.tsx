@@ -34,7 +34,7 @@ function AIChatPage({}: AIChatPageProps) {
   const pickCard = (idx: number) => {
     setMessages(messages => [
       ...messages,
-      { type: 'left', message: '테스트', profile: '/moon.png', tarotId: idx.toString().padStart(2, '0') },
+      { type: 'left', message: '테스트', profile: '/moon.png', tarotId: (idx % 22).toString().padStart(2, '0') },
     ]);
   };
 
@@ -77,10 +77,10 @@ function AIChatPage({}: AIChatPageProps) {
         <CustomButton
           disabled={btnDisabled}
           size="m"
-          color="active"
+          color="dark"
           handleButtonClicked={openTarotSpread}
         >
-          타로 카드 뽑기
+          타로 카드
         </CustomButton>
       </div>
 
