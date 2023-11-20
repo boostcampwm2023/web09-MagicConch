@@ -7,6 +7,8 @@ import { TarotResultResponseDto } from './dto/tarot-result-response.dto';
 import { TarotCard } from './entities/tarot-card.entity';
 import { TarotResult } from './entities/tarot-result.entity';
 
+const bucketUrl = 'https://kr.object.ncloudstorage.com/magicconch';
+
 @Injectable()
 export class TarotService {
   constructor(
@@ -16,10 +18,6 @@ export class TarotService {
     private readonly tarotResultRepository: Repository<TarotResult>,
   ) {}
 
-  /**
-   * TODO
-   * 추후 Object Storage 도입으로 DTO 변동 가능성 있음
-   */
   async createTarotResult(
     createTarotResultDto: CreateTarotResultDto,
   ): Promise<void> {
@@ -34,21 +32,20 @@ export class TarotService {
   }
 
   /**
-   * TODO
-   * 추후 Object Storage에 접근하는 로직으로 변경
-   * 타로 카드팩이 커스텀이 가능한 경우, 전체적인 로직 수정 필요
+   * TODO : 추후 타로 카드팩이 커스텀이 가능한 경우, 전체적인 로직 수정 필요
    */
   async findTarotCardById(id: number): Promise<TarotCardResponseDto> {
     const tarotCard: TarotCard | null =
       await this.tarotCardRepository.findOneBy({
         cardNo: id,
-        owner: undefined,
+        cardPack: undefined,
       });
     if (!tarotCard) {
       throw new NotFoundException();
     }
     const cardDto = new TarotCardResponseDto();
-    cardDto.cardUrl = tarotCard.cardUrl;
+    const url: string = `${bucketUrl}/basic/${id}${tarotCard.ext}`;
+    cardDto.cardUrl = url;
     return cardDto;
   }
 

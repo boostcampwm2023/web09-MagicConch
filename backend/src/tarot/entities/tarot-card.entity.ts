@@ -1,4 +1,3 @@
-import { Member } from 'src/members/entities/member.entity';
 import {
   Column,
   CreateDateColumn,
@@ -7,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { TarotCardPack } from './tarot-card-pack.entity';
 
 @Entity()
 export class TarotCard {
@@ -16,15 +16,8 @@ export class TarotCard {
   @Column('int')
   cardNo: number;
 
-  /**
-   * TODO : 추후 개선 사항
-   * cardPack은 사용자가 지정한 타로 카드팩 이름
-   */
-  @Column({ length: 20 })
-  cardPack: string;
-
-  @Column({ length: 255 })
-  cardUrl: string;
+  @Column({ length: 10 })
+  ext: string;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -35,6 +28,6 @@ export class TarotCard {
   @Column({ nullable: true })
   deletedAt: Date;
 
-  @ManyToOne(() => Member, (member) => member.tarotCards)
-  owner: Member;
+  @ManyToOne(() => TarotCardPack, (tarotCardPack) => tarotCardPack.tarotCards)
+  cardPack: TarotCardPack;
 }
