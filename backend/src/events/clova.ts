@@ -12,19 +12,12 @@ export type Chat = {
   content: string;
 };
 
-export async function createTalk(chatLog: Chat[], message: string) {
-  if (chatLog.length === 0) {
-    chatLog.push(
-      { role: 'system', content: talkSystemMessage },
-      {
-        role: 'assistant',
-        content:
-          '안녕, 나는 어떤 고민이든지 들어주는 마법의 소라고둥이야!\n고민이 있으면 말해줘!',
-      },
-    );
-  }
-  chatLog.push({ role: 'user', content: message });
+export function initChatLog(): Chat[] {
+  return [{ role: 'system', content: talkSystemMessage }];
+}
 
+export async function createTalk(chatLog: Chat[], message: string) {
+  chatLog.push({ role: 'user', content: message });
   return fetchClovaAPI(chatLog);
 }
 

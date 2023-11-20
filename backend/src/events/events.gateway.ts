@@ -8,7 +8,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { Chat, createTalk, createTarotReading } from './clova';
+import { Chat, createTalk, createTarotReading, initChatLog } from './clova';
 
 interface MySocket extends Socket {
   chatLog: Chat[];
@@ -37,19 +37,15 @@ export class EventsGateway
   handleConnection(client: MySocket, ...args: any[]) {
     this.logger.log(`Client Connected : ${client.id}`);
 
-    client.chatLog = [];
+    client.chatLog = initChatLog();
     client.chatCount = Math.floor(Math.random() * (5 - 3 + 1)) + 3;
-    console.log((client as any).chatCount);
-
-    const sendMessage = (message: string | ReadableStream<Uint8Array>) => {
-      client.emit('message', message);
-    };
 
     const welcomeMessage =
       '안녕, 나는 어떤 고민이든지 들어주는 마법의 소라고둥이야!\n고민이 있으면 말해줘!';
 
     setTimeout(() => {
-      sendMessage(welcomeMessage);
+      client.emit('message', welcomeMessage);
+      client.chatLog.push({ role: 'assistant', content: welcomeMessage });
     }, 2000);
 
     client.on('message', async (message) => {
