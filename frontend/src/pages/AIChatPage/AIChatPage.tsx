@@ -1,18 +1,22 @@
 import { Icon } from '@iconify/react';
 import { useEffect, useState } from 'react';
 
+import TarotSpread from '@/components/TarotSpread';
 import Background from '@components/Background';
 import ChatInput from '@components/ChatInput';
 import ChatList, { Message } from '@components/ChatList/ChatList';
 import CustomButton from '@components/CustomButton';
 import Header from '@components/Header';
 
+import useOverlay from '@/business/hooks/useOverlay';
 import { sendMessage, setMessageEventListener } from '@business/services/socket';
 
 interface AIChatPageProps {}
 
 function AIChatPage({}: AIChatPageProps) {
   const [messages, setMessages] = useState<Message[]>([]);
+  const { open } = useOverlay();
+  const [btnDisabled, setBtnDisabled] = useState(true); // TODO: test
 
   const addMessage = (type: 'left' | 'right', message: string) => {
     const profile = type == 'left' ? '/moon.png' : '/sponge.png';
@@ -26,8 +30,29 @@ function AIChatPage({}: AIChatPageProps) {
     sendMessage(message);
   };
 
+  // TODO: 아래 두개 모두 테스트용
+  const pickCard = (idx: number) => {
+    setMessages(messages => [
+      ...messages,
+      { type: 'left', message: '테스트', profile: '/moon.png', tarotId: idx.toString().padStart(2, '0') },
+    ]);
+  };
+
+  const openTarotSpread = () => {
+    open(({ opened, close }) => (
+      <TarotSpread
+        opened={opened}
+        close={close}
+        pickCard={pickCard}
+      />
+    ));
+  };
+
   useEffect(() => {
-    setMessageEventListener(message => addMessage('left', message));
+    setMessageEventListener(message => {
+      addMessage('left', message);
+      setBtnDisabled(false); // TODO: test
+    });
   }, []);
 
   return (
@@ -47,8 +72,19 @@ function AIChatPage({}: AIChatPageProps) {
         ]}
       />
 
+      {/* TEST 테스트용*/}
+      <div className="absolute top-80 left-40">
+        <CustomButton
+          disabled={btnDisabled}
+          size="m"
+          color="active"
+          handleButtonClicked={openTarotSpread}
+        >
+          타로 카드 뽑기
+        </CustomButton>
+      </div>
+
       <div className="w-700 absolute top-95 h-3/4">
-        {/* TEST */}
         <ChatList messages={messages} />
 
         {/* // TODO 서버에서 AI 데이터를 받아오고 있는 동안 disabled 하기 */}

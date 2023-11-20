@@ -1,29 +1,26 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 interface TarotCardProps {
-  idx?: number; // undefined면 뒷면을 의미함
-  onClick?: () => void;
+  backImg: string;
+  onClick: (idx: number) => void;
 }
 
-export default function TarotCard({ idx, onClick }: TarotCardProps) {
-  const [img, setImg] = useState<string>('');
+export default function TarotCard({ backImg, onClick }: TarotCardProps) {
+  const [img, setImg] = useState<string>(backImg);
 
-  useEffect(() => {
-    // ToDo: react-query api로 이미지를 가져오도록 수정해야 함
-    async function fetchCardImg() {
-      const cardName = idx === undefined ? 'back' : idx.toString().padStart(2, '0');
-      const res = await import(`../../mocks/cards/${cardName}.jpg`);
-      setImg(res.default);
-    }
-    fetchCardImg();
-  }, []);
+  const flipCard = () => {
+    // TODO: react-query api로 이미지를 가져오도록 수정해야 함
+    const picked = Math.floor(Math.random() * 22);
+    setImg(`../../../__tests__/mocks/cards/${picked.toString().padStart(2, '0')}.jpg`);
+    return picked;
+  };
 
   return (
     <img
-      className="w-288 h-480 absolute"
+      className={`w-144 h-240`}
       src={img}
       alt="타로 카드 이미지"
-      onClick={onClick}
+      onClick={() => onClick(flipCard())}
     />
   );
 }
