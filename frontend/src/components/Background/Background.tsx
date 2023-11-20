@@ -1,11 +1,15 @@
 interface BackgroundProps {
   children?: React.ReactNode;
-  type?: 'default' | 'static' | 'dynamic';
+  type?: 'default' | 'open' | 'close' | 'dynamic';
 }
 
 function Background({ children, type = 'default' }: BackgroundProps) {
   return (
-    <div className="w-screen h-screen flex flex-col justify-center items-center gap-80">
+    <div
+      className={`w-screen h-screen flex flex-col justify-center items-center gap-80 ${
+        type == 'open' && 'animate-fadeIn'
+      } ${type == 'close' && 'animate-fadeOut'}`}
+    >
       <img
         className="absolute w-full h-full object-cover -z-10"
         src="/bg.png"

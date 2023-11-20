@@ -29,7 +29,7 @@ function ChatList({ messages }: ChatListProps) {
       {messages.map(({ type, message, profile, tarotId }, index) => {
         return (
           <li
-            key={`${type}-${message}`}
+            key={new Date().getTime() + index}
             className={`flex pr-20 ${index != 0 && 'mt-40'} ${type == 'right' && 'justify-end'}`}
           >
             <MessageBox
