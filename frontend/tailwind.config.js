@@ -21,6 +21,9 @@ export default {
       lineHeight: px0_100,
       fontSize: px0_100,
       inset: px0_2000,
+      translate: px0_2000,
+      rotate: px0_2000,
+      skew: px0_2000,
       keyframes: {
         shining: {
           '0%': { filter: 'drop-shadow(0px 0px 25px rgba(255, 255, 255, 0.8))' },
@@ -34,11 +37,21 @@ export default {
           '0%': { opacity: 1 },
           '100%': { opacity: 0 },
         },
+        tarotHovering: {
+          '0%': { transform: 'translateY(-1000px)' },
+          '100%': { transform: 'scale(1.02) translateY(-1000px)' },
+        },
+        tarotLeaving: {
+          '0%': { transform: 'scale(1.02) translateY(-1000px)' },
+          '100%': { transform: 'translateY(-1000x)' },
+        },
       },
       animation: {
         shining: 'shining 2s ease-in-out infinite alternate',
         fadeIn: 'fadeIn 1.5s ease-in-out',
         fadeOut: 'fadeOut 1.5s ease-in-out forwards',
+        tarotHovering: 'tarotHovering 1s ease-in-out forwards',
+        tarotLeaving: 'tarotLeaving 1s ease-in-out forwards',
       },
     },
   },
