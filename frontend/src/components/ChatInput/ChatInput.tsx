@@ -34,7 +34,7 @@ function ChatInput({ disabled, sendChatMessage }: ChatInputProps) {
       />
       <CustomButton
         color="transparent"
-        size="s"
+        circle
         handleButtonClicked={submitMessage}
       >
         <Icon

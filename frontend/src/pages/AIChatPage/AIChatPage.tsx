@@ -36,11 +36,11 @@ function AIChatPage({}: AIChatPageProps) {
         rightItems={[
           <CustomButton
             color="transparent"
-            size="s"
+            circle
             key="side-panel-close"
           >
             <Icon
-              className="w-22 h-22"
+              className="text-25"
               icon="carbon:side-panel-close"
             />
           </CustomButton>,

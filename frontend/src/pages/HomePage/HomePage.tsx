@@ -21,9 +21,15 @@ function HomePage() {
   return (
     <Background>
       <div className="relative top-75 flex gap-36 z-1">
-        <CustomButton handleButtonClicked={moveAiChat}>AI에게 타로보기</CustomButton>
+        <CustomButton
+          size="m"
+          handleButtonClicked={moveAiChat}
+        >
+          AI에게 타로보기
+        </CustomButton>
         <CustomButton
           handleButtonClicked={moveHumanChat}
+          size="m"
           color="dark"
         >
           채팅방 개설하기
