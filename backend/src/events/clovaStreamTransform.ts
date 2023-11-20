@@ -20,7 +20,7 @@ export function createTransformer() {
         prevChunk = '';
       }
 
-      const newChunks: string[] = splitedChunk
+      const newChunks: (string | undefined)[] = splitedChunk
         .map((chunk) => {
           const streamEvent = streamEventParse(chunk);
           if (streamEvent === undefined) {
@@ -32,12 +32,14 @@ export function createTransformer() {
           }
           return undefined;
         })
-        .filter((chunk) => typeof chunk === 'string') as string[];
+        .filter((chunk) => typeof chunk === 'string');
 
       const encoder = new TextEncoder();
-      newChunks.forEach((content) =>
-        controller.enqueue(encoder.encode(content)),
-      );
+      newChunks.forEach((content) => {
+        if (content) {
+          controller.enqueue(encoder.encode(content));
+        }
+      });
     },
   });
 }
