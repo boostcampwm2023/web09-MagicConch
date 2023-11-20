@@ -18,6 +18,12 @@ export function getSocket() {
 export function setMessageEventListener(listener: (message: string) => void) {
   socket.on('message', listener);
 }
+export function setMessageUpdateEventListener(listener: (message: string) => void) {
+  socket.on('messageUpdate', listener);
+}
+export function setStreamEndEventListener(listener: () => void) {
+  socket.on('streamEnd', listener);
+}
 
 export function sendMessage(message: string) {
   socket.emit('message', message);
