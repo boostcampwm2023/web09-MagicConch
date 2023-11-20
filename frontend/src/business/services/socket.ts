@@ -9,17 +9,20 @@ export function connect() {
     socket.disconnect();
   }
   socket = io(URL);
-
-  socket.on('streamData', message => console.log(message));
-  socket.on('streamEnd', () => console.log('streamEnd'));
 }
 
 export function getSocket() {
   return socket;
 }
 
-export function setMessageEventListener(listener: (message: string | ReadableStream<string>) => void) {
+export function setMessageEventListener(listener: (message: string) => void) {
   socket.on('message', listener);
+}
+export function setMessageUpdateEventListener(listener: (message: string) => void) {
+  socket.on('messageUpdate', listener);
+}
+export function setStreamEndEventListener(listener: () => void) {
+  socket.on('streamEnd', listener);
 }
 
 export function sendMessage(message: string) {
