@@ -28,7 +28,8 @@
       "@business/*": ["business/*"],
       "@stores/*": ["stores/*"],
       "@constants/*": ["constants/*"],
-      "@assets/*": ["assets/*"]
+      "@assets/*": ["assets/*"],
+      "@mocks/*": ["mocks/*"]
     }
   },
   "include": ["src", "vite-env.d.ts"],
