@@ -8,7 +8,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { createTarotReading } from './clova';
+import { createTalk, createTarotReading } from './clova';
 
 @WebSocketGateway({
   cors: { origin: 'http://localhost:5173' },
@@ -32,6 +32,10 @@ export class EventsGateway
   handleConnection(client: Socket, ...args: any[]) {
     this.logger.log(`Client Connected : ${client.id}`);
 
+    (client as any).chatLog = [];
+    (client as any).chatCount = Math.floor(Math.random() * (5 - 3 + 1)) + 3;
+    console.log((client as any).chatCount);
+
     const sendMessage = (message: string | ReadableStream<Uint8Array>) => {
       client.emit('message', message);
     };
@@ -44,37 +48,26 @@ export class EventsGateway
     }, 2000);
 
     client.on('message', async (message) => {
-      this.logger.log(`Client Message : ${message}`);
+      this.logger.log(`message: ${message}`);
+      (client as any).chatCount -= 1;
 
-      // 임시로 랜덤으로 타로 카드 뽑기
-      const random = Math.floor(Math.random() * 22);
-      const tarotName = [
-        '바보',
-        '마법사',
-        '여사제',
-        '여황제',
-        '황제',
-        '교황',
-        '연인',
-        '전차',
-        '힘',
-        '은둔자',
-        '운명의 수레바퀴',
-        '정의',
-        '매달린 남자',
-        '죽음',
-        '절제',
-        '악마',
-        '탑',
-        '별',
-        '달',
-        '태양',
-        '심판',
-        '세계',
-      ];
+      const result = await createTalk((client as any).chatLog, message);
+      if (result) {
+        readStreamAndSend(client, result.getReader(), () => {
+          if ((client as any).chatCount <= 0) {
+            client.emit('message', '이제 타로를 뽑아 볼까?');
+            client.emit('tarotCard');
+          }
+        });
+      }
+    });
+
+    client.on('tarotRead', async (cardName) => {
+      this.logger.log(`requestTarotReading`);
+
       const result = await createTarotReading(
-        message,
-        `${random}번 ${tarotName[random]}카드`,
+        (client as any).chatLog,
+        cardName,
       );
       if (result) {
         readStreamAndSend(client, result.getReader());
@@ -86,6 +79,7 @@ export class EventsGateway
 function readStreamAndSend(
   socket: Socket,
   reader: ReadableStreamDefaultReader<Uint8Array>,
+  callback?: () => void,
 ) {
   let message = '';
   socket.emit('message', message);
@@ -93,7 +87,11 @@ function readStreamAndSend(
   const readStream = () => {
     reader?.read().then(({ done, value }) => {
       if (done) {
+        (socket as any).chatLog.push({ role: 'assistant', content: message });
         socket.emit('streamEnd');
+        if (callback) {
+          callback();
+        }
         return;
       }
       message += new TextDecoder().decode(value);

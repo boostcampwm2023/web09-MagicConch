@@ -8,10 +8,12 @@ import CustomButton from '@components/CustomButton';
 import Header from '@components/Header';
 
 import {
+  requestTarotRead,
   sendMessage,
   setMessageEventListener,
   setMessageUpdateEventListener,
   setStreamEndEventListener,
+  setTarotCardEventListener,
 } from '@business/services/socket';
 
 interface AIChatPageProps {}
@@ -19,6 +21,7 @@ interface AIChatPageProps {}
 function AIChatPage({}: AIChatPageProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [messageStreaming, setMessageStreaming] = useState(false);
+  const [activeTarotCard, setActiveTarotCard] = useState(false);
 
   const addMessage = (type: 'left' | 'right', message: string) => {
     const profile = type == 'left' ? '/moon.png' : '/sponge.png';
@@ -34,13 +37,43 @@ function AIChatPage({}: AIChatPageProps) {
 
   const onSubmitMessage = (message: string) => {
     addMessage('right', message);
-    sendMessage(message);
+    if (activeTarotCard) {
+      const random = Math.floor(Math.random() * 22);
+      const tarotName = [
+        '바보',
+        '마법사',
+        '여사제',
+        '여황제',
+        '황제',
+        '교황',
+        '연인',
+        '전차',
+        '힘',
+        '은둔자',
+        '운명의 수레바퀴',
+        '정의',
+        '매달린 남자',
+        '죽음',
+        '절제',
+        '악마',
+        '탑',
+        '별',
+        '달',
+        '태양',
+        '심판',
+        '세계',
+      ];
+      requestTarotRead(`${random}번 ${tarotName[random]}카드`);
+    } else {
+      sendMessage(message);
+    }
   };
 
   useEffect(() => {
     setMessageEventListener(message => addMessage('left', message));
     setMessageUpdateEventListener(message => updateMessage(message));
     setStreamEndEventListener(() => setMessageStreaming(false));
+    setTarotCardEventListener(() => setActiveTarotCard(true));
   }, []);
 
   return (
