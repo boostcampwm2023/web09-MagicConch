@@ -18,7 +18,7 @@ export async function createTarotReading(message: string, tarotName: string) {
     body: JSON.stringify({
       topK: 0,
       includeAiFilters: true,
-      maxTokens: 10,
+      maxTokens: 500,
       temperature: 0.28,
       messages: [
         ...baseMessages,
