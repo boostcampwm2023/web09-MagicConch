@@ -38,7 +38,7 @@ export class EventsGateway
     this.logger.log(`Client Connected : ${client.id}`);
 
     client.chatLog = initChatLog();
-    client.chatCount = Math.floor(Math.random() * (5 - 3 + 1)) + 3;
+    client.chatCount = Math.floor(Math.random() * 3) + 3;
 
     const welcomeMessage =
       '안녕, 나는 어떤 고민이든지 들어주는 마법의 소라고둥이야!\n고민이 있으면 말해줘!';
