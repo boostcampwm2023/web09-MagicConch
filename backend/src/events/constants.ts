@@ -37,3 +37,6 @@ user와 친근한 반말로 상황에 맞게 대화를 이어서 하시오.
 
 30토큰 이하로 답변하시오.
 `;
+
+export const minChatCount = 3;
+export const maxChatCount = 5;

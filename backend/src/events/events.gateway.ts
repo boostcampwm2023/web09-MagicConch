@@ -8,7 +8,9 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { reamdomWithRange } from 'src/common/utils/ramdomWithRange';
 import { Chat, createTalk, createTarotReading, initChatLog } from './clova';
+import { maxChatCount, minChatCount } from './constants';
 
 interface MySocket extends Socket {
   chatLog: Chat[];
@@ -38,7 +40,7 @@ export class EventsGateway
     this.logger.log(`Client Connected : ${client.id}`);
 
     client.chatLog = initChatLog();
-    client.chatCount = Math.floor(Math.random() * 3) + 3;
+    client.chatCount = reamdomWithRange(minChatCount, maxChatCount);
 
     const welcomeMessage =
       '안녕, 나는 어떤 고민이든지 들어주는 마법의 소라고둥이야!\n고민이 있으면 말해줘!';
@@ -52,7 +54,7 @@ export class EventsGateway
       this.logger.log(`message: ${message}`);
       client.chatCount -= 1;
 
-      const result = await createTalk(clien.chatLog, message);
+      const result = await createTalk(client.chatLog, message);
       if (result) {
         readStreamAndSend(client, result.getReader(), () => {
           if (client.chatCount <= 0) {
