@@ -88,16 +88,16 @@ function readStreamAndSend(
   reader: ReadableStreamDefaultReader<Uint8Array>,
 ) {
   let message = '';
+  socket.emit('message', message);
+
   const readStream = () => {
     reader?.read().then(({ done, value }: any) => {
       if (done) {
-        this.logger.log(`Tarot Reading : ${message}}`);
-        return socket.emit('streamEnd');
+        socket.emit('streamEnd');
+        return;
       }
-
       message += new TextDecoder().decode(value);
-      console.log(message);
-      socket.emit('streamData', message);
+      socket.emit('messageUpdate', message);
 
       return readStream();
     });
