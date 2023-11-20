@@ -37,7 +37,6 @@ export async function createTarotReading(chatLog: Chat[], tarotName: string) {
 }
 
 async function fetchClovaAPI(chatLog: Chat[], isTarotReading = false) {
-  console.log(chatLog);
   const response = await fetch(CLOVA_URL, {
     method: 'POST',
     headers: {
