@@ -8,7 +8,14 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { createTarotReading } from './clova';
+import { reamdomWithRange } from 'src/common/utils/ramdomWithRange';
+import { Chat, createTalk, createTarotReading, initChatLog } from './clova';
+import { maxChatCount, minChatCount } from './constants';
+
+interface MySocket extends Socket {
+  chatLog: Chat[];
+  chatCount: number;
+}
 
 @WebSocketGateway({
   cors: { origin: 'http://localhost:5173' },
@@ -29,53 +36,39 @@ export class EventsGateway
     this.logger.log(`Client Disconnected : ${client.id}`);
   }
 
-  handleConnection(client: Socket, ...args: any[]) {
+  handleConnection(client: MySocket, ...args: any[]) {
     this.logger.log(`Client Connected : ${client.id}`);
 
-    const sendMessage = (message: string | ReadableStream<Uint8Array>) => {
-      client.emit('message', message);
-    };
+    client.chatLog = initChatLog();
+    client.chatCount = reamdomWithRange(minChatCount, maxChatCount);
 
     const welcomeMessage =
       '안녕, 나는 어떤 고민이든지 들어주는 마법의 소라고둥이야!\n고민이 있으면 말해줘!';
 
     setTimeout(() => {
-      sendMessage(welcomeMessage);
+      client.emit('message', welcomeMessage);
+      client.chatLog.push({ role: 'assistant', content: welcomeMessage });
     }, 2000);
 
     client.on('message', async (message) => {
-      this.logger.log(`Client Message : ${message}`);
+      this.logger.log(`message: ${message}`);
+      client.chatCount -= 1;
 
-      // 임시로 랜덤으로 타로 카드 뽑기
-      const random = Math.floor(Math.random() * 22);
-      const tarotName = [
-        '바보',
-        '마법사',
-        '여사제',
-        '여황제',
-        '황제',
-        '교황',
-        '연인',
-        '전차',
-        '힘',
-        '은둔자',
-        '운명의 수레바퀴',
-        '정의',
-        '매달린 남자',
-        '죽음',
-        '절제',
-        '악마',
-        '탑',
-        '별',
-        '달',
-        '태양',
-        '심판',
-        '세계',
-      ];
-      const result = await createTarotReading(
-        message,
-        `${random}번 ${tarotName[random]}카드`,
-      );
+      const result = await createTalk(client.chatLog, message);
+      if (result) {
+        readStreamAndSend(client, result.getReader(), () => {
+          if (client.chatCount <= 0) {
+            client.emit('message', '이제 타로를 뽑아 볼까?');
+            client.emit('tarotCard');
+          }
+        });
+      }
+    });
+
+    client.on('tarotRead', async (cardName) => {
+      this.logger.log(`requestTarotReading`);
+
+      const result = await createTarotReading(client.chatLog, cardName);
       if (result) {
         readStreamAndSend(client, result.getReader());
       }
@@ -84,8 +77,9 @@ export class EventsGateway
 }
 
 function readStreamAndSend(
-  socket: Socket,
+  socket: MySocket,
   reader: ReadableStreamDefaultReader<Uint8Array>,
+  callback?: () => void,
 ) {
   let message = '';
   socket.emit('message', message);
@@ -93,7 +87,11 @@ function readStreamAndSend(
   const readStream = () => {
     reader?.read().then(({ done, value }) => {
       if (done) {
+        socket.chatLog.push({ role: 'assistant', content: message });
         socket.emit('streamEnd');
+        if (callback) {
+          callback();
+        }
         return;
       }
       message += new TextDecoder().decode(value);
