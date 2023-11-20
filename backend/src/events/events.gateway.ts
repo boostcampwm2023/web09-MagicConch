@@ -50,12 +50,12 @@ export class EventsGateway
 
     client.on('message', async (message) => {
       this.logger.log(`message: ${message}`);
-      (client as any).chatCount -= 1;
+      client.chatCount -= 1;
 
-      const result = await createTalk((client as any).chatLog, message);
+      const result = await createTalk(clien.chatLog, message);
       if (result) {
         readStreamAndSend(client, result.getReader(), () => {
-          if ((client as any).chatCount <= 0) {
+          if (client.chatCount <= 0) {
             client.emit('message', '이제 타로를 뽑아 볼까?');
             client.emit('tarotCard');
           }
