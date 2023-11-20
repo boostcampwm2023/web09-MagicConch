@@ -15,8 +15,29 @@ export function getSocket() {
   return socket;
 }
 
-export function setMessageEventListener(listener: (message: string) => void) {
-  socket.on('message', listener);
+export function setMessageEventListener(listener: (message: string | ReadableStream<string>) => void) {
+  socket.on('message', message => {
+    if (typeof message === 'string') {
+      listener(message);
+      return;
+    }
+    console.log(message);
+    const reader = message?.getReader();
+
+    let content = '';
+
+    const readStream = () => {
+      reader?.read().then(({ done, value }: any) => {
+        if (done) return console.log('done');
+
+        content += new TextDecoder().decode(value);
+        console.log(content);
+
+        return readStream();
+      });
+    };
+    readStream();
+  });
 }
 
 export function sendMessage(message: string) {
