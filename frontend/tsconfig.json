@@ -32,6 +32,8 @@
       "@mocks/*": ["mocks/*"]
     }
   },
-  "include": ["src", "vite-env.d.ts"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["src", "vite-env.d.ts", "@types"],
+  "references": [{ "path": "./tsconfig.node.json" }],
+
+  "typeRoots": ["./node_modules/@types", "./src/@types"]
 }
