@@ -91,7 +91,7 @@ function readStreamAndSend(
   socket.emit('message', message);
 
   const readStream = () => {
-    reader?.read().then(({ done, value }: any) => {
+    reader?.read().then(({ done, value }) => {
       if (done) {
         socket.emit('streamEnd');
         return;
