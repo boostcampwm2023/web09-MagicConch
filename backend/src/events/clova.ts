@@ -7,7 +7,7 @@ import {
   tarotReadingSystemMessage,
 } from './constants';
 
-type Chat = {
+export type Chat = {
   role: 'user' | 'system' | 'assistant';
   content: string;
 };

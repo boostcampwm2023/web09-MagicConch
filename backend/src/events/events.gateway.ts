@@ -8,7 +8,12 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { createTalk, createTarotReading } from './clova';
+import { Chat, createTalk, createTarotReading } from './clova';
+
+interface MySocket extends Socket {
+  chatLog: Chat[];
+  chatCount: number;
+}
 
 @WebSocketGateway({
   cors: { origin: 'http://localhost:5173' },
@@ -29,11 +34,11 @@ export class EventsGateway
     this.logger.log(`Client Disconnected : ${client.id}`);
   }
 
-  handleConnection(client: Socket, ...args: any[]) {
+  handleConnection(client: MySocket, ...args: any[]) {
     this.logger.log(`Client Connected : ${client.id}`);
 
-    (client as any).chatLog = [];
-    (client as any).chatCount = Math.floor(Math.random() * (5 - 3 + 1)) + 3;
+    client.chatLog = [];
+    client.chatCount = Math.floor(Math.random() * (5 - 3 + 1)) + 3;
     console.log((client as any).chatCount);
 
     const sendMessage = (message: string | ReadableStream<Uint8Array>) => {
@@ -65,10 +70,7 @@ export class EventsGateway
     client.on('tarotRead', async (cardName) => {
       this.logger.log(`requestTarotReading`);
 
-      const result = await createTarotReading(
-        (client as any).chatLog,
-        cardName,
-      );
+      const result = await createTarotReading(client.chatLog, cardName);
       if (result) {
         readStreamAndSend(client, result.getReader());
       }
@@ -77,7 +79,7 @@ export class EventsGateway
 }
 
 function readStreamAndSend(
-  socket: Socket,
+  socket: MySocket,
   reader: ReadableStreamDefaultReader<Uint8Array>,
   callback?: () => void,
 ) {
@@ -87,7 +89,7 @@ function readStreamAndSend(
   const readStream = () => {
     reader?.read().then(({ done, value }) => {
       if (done) {
-        (socket as any).chatLog.push({ role: 'assistant', content: message });
+        socket.chatLog.push({ role: 'assistant', content: message });
         socket.emit('streamEnd');
         if (callback) {
           callback();
