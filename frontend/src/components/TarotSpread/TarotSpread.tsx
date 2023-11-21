@@ -1,7 +1,8 @@
 import Background from '../Background';
 import TarotCard from './TarotCard';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
 import { shuffledArray } from '@utils/array';
-import { useEffect, useMemo, useState } from 'react';
 
 import { rotation } from '@constants/tarotCard';
 
@@ -17,15 +18,34 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
   // TODO: react-query api로 사용자 정의 뒷면 기본 이미지 들고오기
   const [closing, setClosing] = useState<boolean>(!opened);
   const [picked, setPicked] = useState<number>();
+  const [dragging, setDragging] = useState<boolean>(false);
+
+  const prevMouseXRef = useRef<number>(0);
+  const tarotSpreadRef = useRef<HTMLDivElement>(null);
+  const rotationRef = useRef<number>(0);
 
   const backImg = useMemo(() => `../../../__tests__/mocks/cards/back.png`, []);
   const shuffledCard = useMemo(() => shuffledArray(Array.from({ length: TAROT_COUNT }, (_, idx) => idx)), []);
 
   useEffect(() => {
-    addEventListener('animationend', event => {
-      if (event.animationName == 'fadeOut') close();
-    });
+    addEventListener('wheel', ({ deltaX }: WheelEvent) => rotateTarotSpread(deltaX > 0 ? 'left' : 'right'));
+    addEventListener('animationend', ({ animationName }: AnimationEvent) => animationName == 'fadeOut' && close());
   }, []);
+
+  const dragTarotSpread = (pageX: number) => {
+    if (dragging) rotateTarotSpread(prevMouseXRef.current < pageX ? 'right' : 'left');
+    prevMouseXRef.current = pageX;
+  };
+
+  const rotateTarotSpread = (direction: 'right' | 'left') => {
+    const target = tarotSpreadRef.current;
+    if (!target) return;
+
+    const rotateIndex = rotationRef.current;
+    const nextRotateIndex = direction == 'right' ? rotateIndex + 1 : rotateIndex - 1;
+    target.style.transform = `translateX(-50%) rotate(${nextRotateIndex * 0.5}deg)`;
+    rotationRef.current = nextRotateIndex;
+  };
 
   const clickCard = (id: number) => {
     pickCard(id);
@@ -35,7 +55,14 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
 
   return (
     <Background type={`${closing ? 'close' : 'open'}`}>
-      <div className="absolute w-220 h-400 origin-center top-1200 left-[50%] translate-x-[-50%]">
+      <div
+        ref={tarotSpreadRef}
+        onMouseMove={({ pageX }) => dragTarotSpread(pageX)}
+        onMouseDown={() => setDragging(true)}
+        onMouseLeave={() => setDragging(false)}
+        onMouseUp={() => setDragging(false)}
+        className="transition-all ease-out absolute w-220 h-400 origin-center top-1200 left-[50%] translate-x-[-50%]"
+      >
         {shuffledCard.map((id: number, idx: number) => (
           <div
             key={id}
@@ -43,6 +70,7 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
                         absolute w-full h-full`}
           >
             <TarotCard
+              dragging={dragging}
               index={id}
               backImg={backImg}
               onClick={() => clickCard(id)}

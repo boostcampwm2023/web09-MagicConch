@@ -1,12 +1,13 @@
 import { useState } from 'react';
 
 interface TarotCardProps {
+  dragging: boolean;
   index: number;
   backImg: string;
   onClick: () => void;
 }
 
-export default function TarotCard({ index, backImg, onClick }: TarotCardProps) {
+export default function TarotCard({ dragging, index, backImg, onClick }: TarotCardProps) {
   const [img, setImg] = useState<string>(backImg);
 
   const getFlippedCard = () => {
@@ -21,7 +22,7 @@ export default function TarotCard({ index, backImg, onClick }: TarotCardProps) {
 
   return (
     <img
-      className={`hover:animate-tarotHovering animate-tarotLeaving w-full h-full -translate-y-1000`}
+      className={`${!dragging && 'hover:animate-tarotHovering'} animate-tarotLeaving w-full h-full -translate-y-1000`}
       src={img}
       alt="타로 카드 이미지"
       onClick={clickCard}
