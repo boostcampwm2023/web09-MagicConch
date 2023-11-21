@@ -1,3 +1,5 @@
+import exp from 'constants';
+
 export {
   X_NCP_APIGW_API_KEY,
   X_NCP_CLOVASTUDIO_API_KEY,
@@ -5,6 +7,11 @@ export {
 
 export const CLOVA_URL =
   'https://clovastudio.stream.ntruss.com/testapp/v1/chat-completions/HCX-002';
+
+export const askTarotCardMessage = '타로 카드를 뽑아볼까?';
+
+export const chatEndMessage =
+  '이번 상담은 어땠어?\n피드백을 남겨주면 내가 더 발전할 수 있어!';
 
 export const tarotReadingSystemMessage = `
 사용자가 말한 고민에 대해 공감성 멘트로 친근한 반말로 타로 카드를 해설하시오.
@@ -28,8 +35,6 @@ export const tarotReadingSystemMessage = `
 
 이별이라는 불안한 생각보다는 앞으로의 관계를 더 좋게 만들어갈 수 있다고 믿어봐. 물론 쉽지 않겠지만, 조금씩 노력하면 분명 좋은 결과가 있을 거야.
 ###`;
-
-export const askTarotCardMessage = '타로 카드를 뽑아볼까?';
 
 export const talkSystemMessage = `
 user는 타로 상담을 하러 온 사람이고, assistant는 타로 상담을 하는 사람이다.

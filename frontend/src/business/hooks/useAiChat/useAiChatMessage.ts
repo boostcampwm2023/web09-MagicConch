@@ -4,6 +4,7 @@ import { Message } from '@components/ChatList/ChatList';
 
 import {
   sendMessage,
+  setChatEndEventListener,
   setMessageEventListener,
   setMessageUpdateEventListener,
   setStreamEndEventListener,
@@ -35,6 +36,7 @@ export function useAiChatMessage(tarotCardId: React.MutableRefObject<string | un
     setMessageEventListener(message => addMessage('left', message));
     setMessageUpdateEventListener(message => updateMessage(message));
     setStreamEndEventListener(() => setMessageStreaming(false));
+    setChatEndEventListener(message => addMessage('left', message));
   }, []);
 
   return { messages, messageStreaming, onSubmitMessage };

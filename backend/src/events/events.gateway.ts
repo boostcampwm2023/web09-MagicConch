@@ -10,7 +10,12 @@ import {
 import { Server, Socket } from 'socket.io';
 import { reamdomWithRange } from 'src/common/utils/ramdomWithRange';
 import { Chat, createTalk, createTarotReading, initChatLog } from './clova';
-import { askTarotCardMessage, maxChatCount, minChatCount } from './constants';
+import {
+  askTarotCardMessage,
+  chatEndMessage,
+  maxChatCount,
+  minChatCount,
+} from './constants';
 
 interface MySocket extends Socket {
   chatLog: Chat[];
@@ -73,7 +78,7 @@ export class EventsGateway
 
       const result = await createTarotReading(client.chatLog, cardName);
       if (result) {
-        const chatEndEvent = () => client.emit('chatEnd');
+        const chatEndEvent = () => client.emit('chatEnd', chatEndMessage);
         readStreamAndSend(client, result.getReader(), chatEndEvent);
       }
     });
@@ -100,7 +105,7 @@ function readStreamAndSend(
         }
 
         if (callback) {
-          callback();
+          setTimeout(callback, 3000);
         }
         return;
       }
