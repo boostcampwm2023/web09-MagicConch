@@ -7,12 +7,15 @@ interface TarotCardProps {
   onClick: () => void;
 }
 
+const flipSound = new Audio('../../../public/flipCard.mp3');
+
 export default function TarotCard({ dragging, index, backImg, onClick }: TarotCardProps) {
   const [img, setImg] = useState<string>(backImg);
 
   const getFlippedCard = () => {
     // TODO: react-query api로 이미지를 가져오도록 수정해야 함 & 78개 이미지로 수정
-    setImg(`../../../__tests__/mocks/cards/${(index % 22).toString().padStart(2, '0')}.jpg`);
+    flipSound.play();
+    setTimeout(() => setImg(`../../../__tests__/mocks/cards/${(index % 22).toString().padStart(2, '0')}.jpg`), 500);
   };
 
   const clickCard = () => {

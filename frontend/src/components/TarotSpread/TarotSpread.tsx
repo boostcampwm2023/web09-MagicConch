@@ -1,6 +1,6 @@
 import Background from '../Background';
 import TarotCard from './TarotCard';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { shuffledArray } from '@utils/array';
 
@@ -13,6 +13,7 @@ interface TarotSpreadProps {
 }
 
 const TAROT_COUNT = 78;
+const spreadSound = new Audio('../../../public/spreadCards.mp3');
 
 export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProps) {
   // TODO: react-query api로 사용자 정의 뒷면 기본 이미지 들고오기
@@ -28,6 +29,7 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
   const shuffledCard = useMemo(() => shuffledArray(Array.from({ length: TAROT_COUNT }, (_, idx) => idx)), []);
 
   useEffect(() => {
+    spreadSound.play();
     addEventListener('wheel', ({ deltaX }: WheelEvent) => rotateTarotSpread(deltaX > 0 ? 'left' : 'right'));
     addEventListener('animationend', ({ animationName }: AnimationEvent) => animationName == 'fadeOut' && close());
   }, []);
