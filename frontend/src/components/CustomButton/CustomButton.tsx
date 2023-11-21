@@ -1,10 +1,13 @@
+export type ButtonColor = 'active' | 'cancel' | 'disabled' | 'dark' | 'transparent';
+export type ButtonSize = 's' | 'm' | 'l';
+
 interface ButtonProps {
-  color?: 'active' | 'cancel' | 'disabled' | 'dark' | 'transparent';
-  size?: 's' | 'm' | 'l';
+  color?: ButtonColor;
+  size?: ButtonSize;
   circle?: boolean;
   disabled?: boolean;
   children?: React.ReactNode;
-  handleButtonClicked?: () => void;
+  onClick?: () => void;
 }
 
 const colorMap: Record<string, string> = {
@@ -21,20 +24,13 @@ const sizeMap: Record<string, string> = {
   l: 'h-60 display-bold16 leading-30 p-16',
 };
 
-function CustomButton({
-  size,
-  color = 'active',
-  circle = false,
-  disabled = false,
-  children,
-  handleButtonClicked,
-}: ButtonProps) {
+function CustomButton({ size, color = 'active', circle = false, disabled = false, children, onClick }: ButtonProps) {
   return (
     <button
       disabled={disabled}
       className={`btn rounded-full border-transparent hover:scale-110 
       ${circle && 'btn-circle'}  ${colorMap[color]} ${size && !circle && sizeMap[size]}`}
-      onClick={handleButtonClicked}
+      onClick={onClick}
     >
       {children}
     </button>

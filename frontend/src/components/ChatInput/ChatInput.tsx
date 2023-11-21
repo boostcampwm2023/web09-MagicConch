@@ -1,6 +1,7 @@
 import CustomButton from '../CustomButton';
-import { Icon } from '@iconify/react';
 import { useRef } from 'react';
+
+import { Icon } from '@iconify/react';
 
 interface ChatInputProps {
   disabled: boolean;
@@ -35,7 +36,7 @@ function ChatInput({ disabled, sendChatMessage }: ChatInputProps) {
       <CustomButton
         color="transparent"
         circle
-        handleButtonClicked={submitMessage}
+        onClick={submitMessage}
       >
         <Icon
           icon="ion:send"

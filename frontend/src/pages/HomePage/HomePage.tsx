@@ -23,12 +23,12 @@ function HomePage() {
       <div className="relative top-75 flex gap-36 z-1">
         <CustomButton
           size="m"
-          handleButtonClicked={moveAiChat}
+          onClick={moveAiChat}
         >
           AI에게 타로보기
         </CustomButton>
         <CustomButton
-          handleButtonClicked={moveHumanChat}
+          onClick={moveHumanChat}
           size="m"
           color="dark"
         >

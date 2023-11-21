@@ -1,5 +1,6 @@
-import { loadScript } from './loadScript';
-import { KAKAO_SDK_INTERGRITY, KAKAO_SDK_URL } from 'constants/kakao';
+import { loadScript } from '@utils/loadScript';
+
+import { KAKAO_SDK_INTERGRITY, KAKAO_SDK_URL } from '@constants/kakao';
 
 async function init() {
   await loadScript(KAKAO_SDK_URL, KAKAO_SDK_INTERGRITY, 'anonymous');
@@ -19,7 +20,7 @@ export const Kakao = {
     await init();
   },
 
-  shareSendDefault: async ({ card_url, id }: { id: string; card_url: string }) => {
+  shareSendDefault: async ({ cardUrl, id }: { id: string; cardUrl: string }) => {
     if (!window.Kakao || !window.Kakao) {
       await init();
     }
@@ -32,7 +33,7 @@ export const Kakao = {
       content: {
         title: '마법의 소라고둥',
         description: 'AI 타로 플랫폼, 마법의 소라고둥',
-        imageUrl: card_url,
+        imageUrl: cardUrl,
         link: {
           mobileWebUrl: `${BASE_URL}/result/${id}`,
           webUrl: `${BASE_URL}/result/${id}`,
