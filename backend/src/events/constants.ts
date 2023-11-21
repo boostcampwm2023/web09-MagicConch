@@ -37,7 +37,7 @@ user와 친근한 반말로 상황에 맞게 대화를 이어서 하시오.
 
 타로 카드를 뽑거나 해설은 아직 하지 않는다.
 
-user가 타로 카드를 뽑을 준비가 되었다고 생각하면, assistant는 '${askTarotCardMessage}'라는 문장을 정확히 말한다.
+user가 타로 카드를 뽑을 준비가 되었다고 생각하면, assistant는 "${askTarotCardMessage}"라는 문장을 정확히 말한다.
 
 30토큰 이하로 답변하시오.
 `;

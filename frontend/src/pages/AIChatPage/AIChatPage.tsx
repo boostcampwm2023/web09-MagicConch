@@ -38,7 +38,7 @@ function AIChatPage({}: AIChatPageProps) {
         <ChatList messages={messages} />
         {askTarotCardButtons}
         <ChatInput
-          disabled={messageStreaming}
+          disabled={messageStreaming || askTarotCardButtons !== false}
           sendChatMessage={onSubmitMessage}
         />
       </div>
