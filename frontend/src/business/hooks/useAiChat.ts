@@ -49,7 +49,10 @@ export function useAiChat() {
     setMessageEventListener(message => addMessage('left', message));
     setMessageUpdateEventListener(message => updateMessage(message));
     setStreamEndEventListener(() => setMessageStreaming(false));
-    setTarotCardEventListener(() => setActiveTarotCard(true));
+    setTarotCardEventListener(() => {
+      alert('야생의 타로 카드 스프레드가 나타났다!');
+      setActiveTarotCard(true);
+    });
   }, []);
 
   return { messages, messageStreaming, onSubmitMessage };

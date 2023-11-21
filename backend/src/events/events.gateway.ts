@@ -10,7 +10,7 @@ import {
 import { Server, Socket } from 'socket.io';
 import { reamdomWithRange } from 'src/common/utils/ramdomWithRange';
 import { Chat, createTalk, createTarotReading, initChatLog } from './clova';
-import { maxChatCount, minChatCount } from './constants';
+import { askTarotCardMessage, maxChatCount, minChatCount } from './constants';
 
 interface MySocket extends Socket {
   chatLog: Chat[];
@@ -54,14 +54,14 @@ export class EventsGateway
       this.logger.log(`message: ${message}`);
       client.chatCount -= 1;
 
+      if (client.chatCount <= 0) {
+        client.emit('message', '이제 타로를 뽑아 볼까?');
+        setTimeout(() => client.emit('tarotCard'), 1000);
+        return;
+      }
       const result = await createTalk(client.chatLog, message);
       if (result) {
-        readStreamAndSend(client, result.getReader(), () => {
-          if (client.chatCount <= 0) {
-            client.emit('message', '이제 타로를 뽑아 볼까?');
-            client.emit('tarotCard');
-          }
-        });
+        readStreamAndSend(client, result.getReader());
       }
     });
 
@@ -79,7 +79,6 @@ export class EventsGateway
 function readStreamAndSend(
   socket: MySocket,
   reader: ReadableStreamDefaultReader<Uint8Array>,
-  callback?: () => void,
 ) {
   let message = '';
   socket.emit('message', message);
@@ -89,8 +88,10 @@ function readStreamAndSend(
       if (done) {
         socket.chatLog.push({ role: 'assistant', content: message });
         socket.emit('streamEnd');
-        if (callback) {
-          callback();
+
+        if (message.includes(askTarotCardMessage)) {
+          socket.chatCount = 0;
+          setTimeout(() => socket.emit('tarotCard'), 1000);
         }
         return;
       }
