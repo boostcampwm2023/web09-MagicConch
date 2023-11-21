@@ -28,12 +28,20 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
   const shuffledCard = useMemo(() => shuffledArray(Array.from({ length: TAROT_COUNT }, (_, idx) => idx)), []);
 
   useEffect(() => {
-    addEventListener('wheel', ({ deltaX }: WheelEvent) => rotateTarotSpread(deltaX > 0 ? 'left' : 'right'));
-    addEventListener('animationend', ({ animationName }: AnimationEvent) => animationName == 'fadeOut' && close());
-    setTimeout(() => spreadTarotCards());
+    const rotateSpread = ({ deltaX }: WheelEvent) => rotateTarotSpread(deltaX > 0 ? 'left' : 'right');
+    const closeWithFadeOut = ({ animationName }: AnimationEvent) => animationName == 'fadeOut' && close();
+
+    addEventListener('wheel', rotateSpread);
+    addEventListener('animationend', closeWithFadeOut);
+    setTimeout(spreadTarotCards);
+
+    return () => {
+      removeEventListener('wheel', rotateSpread);
+      removeEventListener('animationend', closeWithFadeOut);
+    };
   }, []);
 
-  const dragTarotSpread = (pageX: number) => {
+  const dragTarotSpread = ({ pageX }: React.MouseEvent<HTMLDivElement>) => {
     if (dragging) rotateTarotSpread(prevMouseXRef.current < pageX ? 'right' : 'left');
     prevMouseXRef.current = pageX;
   };
@@ -72,7 +80,7 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
     <Background type={`${closing ? 'close' : 'open'}`}>
       <div
         ref={tarotSpreadRef}
-        onMouseMove={({ pageX }) => dragTarotSpread(pageX)}
+        onMouseMove={dragTarotSpread}
         onMouseDown={() => setDragging(true)}
         onMouseLeave={() => setDragging(false)}
         onMouseUp={() => setDragging(false)}
