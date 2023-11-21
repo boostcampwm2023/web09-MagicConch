@@ -37,7 +37,7 @@ export function useAiChatMessage(tarotCardId: React.MutableRefObject<string | un
     setMessageUpdateEventListener(message => updateMessage(message));
     setStreamEndEventListener(() => setMessageStreaming(false));
 
-    const button = { content: '피드백하기', onClick: () => alert('피드백하기') };
+    const button = { content: '피드백하기', onClick: () => alert('👩‍🔧') };
     setChatEndEventListener(message => addMessage('left', message, button));
   }, []);
 
