@@ -1,11 +1,17 @@
 import MessageBox from '../MessageBox';
 import { useEffect, useRef } from 'react';
 
+export interface MessageButton {
+  content: string;
+  onClick: () => void;
+}
+
 export interface Message {
   type: 'left' | 'right';
   message: string;
   profile: string;
   tarotId?: string;
+  button?: MessageButton;
 }
 
 interface ChatListProps {
@@ -26,7 +32,7 @@ function ChatList({ messages }: ChatListProps) {
       ref={messagesRef}
       className={`w-full h-full mb-20 overflow-auto scroll-smooth`}
     >
-      {messages.map(({ type, message, profile, tarotId }, index) => {
+      {messages.map(({ type, message, profile, tarotId, button }, index) => {
         return (
           <li
             key={new Date().getTime() + index}
@@ -37,6 +43,7 @@ function ChatList({ messages }: ChatListProps) {
               type={type}
               message={message}
               profile={profile}
+              button={button}
             />
           </li>
         );

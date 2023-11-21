@@ -11,10 +11,6 @@ export function connect() {
   socket = io(URL);
 }
 
-export function getSocket() {
-  return socket;
-}
-
 export function setMessageEventListener(listener: (message: string) => void) {
   socket.on('message', listener);
 }
@@ -26,6 +22,9 @@ export function setStreamEndEventListener(listener: () => void) {
 }
 export function setTarotCardEventListener(listener: () => void) {
   socket.on('tarotCard', listener);
+}
+export function setChatEndEventListener(listener: (message: string) => void) {
+  socket.on('chatEnd', listener);
 }
 
 export function sendMessage(message: string) {
