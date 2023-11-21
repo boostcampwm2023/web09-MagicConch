@@ -36,7 +36,7 @@ function Message({ type, message, profile, button }: MessageProps) {
             <CustomButton
               size="s"
               color="active"
-              handleButtonClicked={button.onClick}
+              onClick={button.onClick}
             >
               {button.content}
             </CustomButton>

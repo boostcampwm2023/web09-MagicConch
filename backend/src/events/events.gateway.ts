@@ -8,18 +8,16 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { reamdomWithRange } from 'src/common/utils/ramdomWithRange';
 import { Chat, createTalk, createTarotReading, initChatLog } from './clova';
 import {
   askTarotCardMessage,
   chatEndMessage,
-  maxChatCount,
-  minChatCount,
+  welcomeMessage,
 } from './constants';
 
 interface MySocket extends Socket {
   chatLog: Chat[];
-  chatCount: number;
+  chatEnd: boolean;
 }
 
 @WebSocketGateway({
@@ -45,43 +43,31 @@ export class EventsGateway
     this.logger.log(`Client Connected : ${client.id}`);
 
     client.chatLog = initChatLog();
-    client.chatCount = reamdomWithRange(minChatCount, maxChatCount);
-
-    const welcomeMessage =
-      '안녕, 나는 어떤 고민이든지 들어주는 마법의 소라고둥이야!\n고민이 있으면 말해줘!';
+    client.chatEnd = false;
 
     setTimeout(() => {
       client.emit('message', welcomeMessage);
       client.chatLog.push({ role: 'assistant', content: welcomeMessage });
     }, 2000);
 
-    client.on('message', async (message) => {
-      this.logger.log(`message: ${message}`);
-      client.chatCount -= 1;
+    const messageEventHandler = async (message: string) => {
+      if (client.chatEnd) return;
 
-      if (client.chatCount === 0) {
-        client.chatLog.push({ role: 'user', content: message });
-
-        client.emit('message', `그럼 ${askTarotCardMessage}`);
-        setTimeout(() => client.emit('tarotCard'), 1000);
-
-        return;
-      }
       const result = await createTalk(client.chatLog, message);
       if (result) {
         readStreamAndSend(client, result.getReader());
       }
-    });
-
-    client.on('tarotRead', async (cardName) => {
-      this.logger.log(`requestTarotReading`);
-
+    };
+    const tarotReadEventHandler = async (cardName: string) => {
       const result = await createTarotReading(client.chatLog, cardName);
       if (result) {
         const chatEndEvent = () => client.emit('chatEnd', chatEndMessage);
         readStreamAndSend(client, result.getReader(), chatEndEvent);
       }
-    });
+    };
+
+    client.on('message', messageEventHandler);
+    client.on('tarotRead', tarotReadEventHandler);
   }
 }
 
@@ -96,12 +82,12 @@ function readStreamAndSend(
   const readStream = () => {
     reader?.read().then(({ done, value }) => {
       if (done) {
-        socket.chatLog.push({ role: 'assistant', content: message });
         socket.emit('streamEnd');
+        socket.chatLog.push({ role: 'assistant', content: message });
 
         if (message.includes(askTarotCardMessage)) {
-          socket.chatCount = 0;
-          setTimeout(() => socket.emit('tarotCard'), 1000);
+          socket.chatEnd = true;
+          socket.emit('tarotCard');
         }
 
         if (callback) {

@@ -6,7 +6,7 @@ import ChatList from '@components/ChatList';
 import CustomButton from '@components/CustomButton';
 import Header from '@components/Header';
 
-import { useAiChatMessage, useAiChatTarot } from '@business/hooks/useAiChat';
+import { useAiChatMessage, useTarotSpread } from '@business/hooks/useAiChat';
 
 
 import { Icon } from '@iconify/react';
@@ -16,8 +16,8 @@ interface AIChatPageProps {}
 function AIChatPage({}: AIChatPageProps) {
   const tarotCardId = useRef<string>();
 
-  const { AskTarotCardButtons, TarotSpreadButton, displayAskTarotCardButtons } = useAiChatTarot(tarotCardId);
-  const { messages, messageStreaming, onSubmitMessage } = useAiChatMessage(tarotCardId);
+  useTarotSpread(tarotCardId);
+  const { messages, inputDisabled, onSubmitMessage } = useAiChatMessage(tarotCardId);
 
   return (
     <Background type="dynamic">
@@ -37,13 +37,11 @@ function AIChatPage({}: AIChatPageProps) {
       />
       <div className="w-700 absolute top-95 h-3/4">
         <ChatList messages={messages} />
-        <AskTarotCardButtons />
         <ChatInput
-          disabled={messageStreaming || displayAskTarotCardButtons}
+          disabled={inputDisabled}
           sendChatMessage={onSubmitMessage}
         />
       </div>
-      <TarotSpreadButton />
     </Background>
   );
 }

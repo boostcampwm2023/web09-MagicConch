@@ -8,11 +8,12 @@ import {
   setMessageEventListener,
   setMessageUpdateEventListener,
   setStreamEndEventListener,
+  setTarotCardEventListener,
 } from '@business/services/socket';
 
 export function useAiChatMessage(tarotCardId: React.MutableRefObject<string | undefined>) {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [messageStreaming, setMessageStreaming] = useState(false);
+  const [inputDisabled, setInputDisabled] = useState(false);
 
   const addMessage = (type: 'left' | 'right', message: string, button?: MessageButton) => {
     const tarotId = tarotCardId.current;
@@ -23,7 +24,7 @@ export function useAiChatMessage(tarotCardId: React.MutableRefObject<string | un
   };
 
   const updateMessage = (message: string) => {
-    setMessageStreaming(true);
+    setInputDisabled(true);
     setMessages(messages => [...messages.slice(0, -1), { ...messages[messages.length - 1], message }]);
   };
 
@@ -35,11 +36,12 @@ export function useAiChatMessage(tarotCardId: React.MutableRefObject<string | un
   useEffect(() => {
     setMessageEventListener(message => addMessage('left', message));
     setMessageUpdateEventListener(message => updateMessage(message));
-    setStreamEndEventListener(() => setMessageStreaming(false));
+    setStreamEndEventListener(() => setInputDisabled(false));
+    setTarotCardEventListener(() => setInputDisabled(true));
 
     const button = { content: '피드백하기', onClick: () => alert('👩‍🔧') };
     setChatEndEventListener(message => addMessage('left', message, button));
   }, []);
 
-  return { messages, messageStreaming, onSubmitMessage };
+  return { messages, inputDisabled, onSubmitMessage };
 }
