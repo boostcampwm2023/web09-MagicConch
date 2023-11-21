@@ -22,7 +22,6 @@
 
     "baseUrl": "src",
     "paths": {
-      "@/*": ["*"],
       "@pages/*": ["pages/*"],
       "@components/*": ["components/*"],
       "@business/*": ["business/*"],

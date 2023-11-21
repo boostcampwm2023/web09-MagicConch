@@ -1,11 +1,8 @@
 import { RefObject } from 'react';
-import { useParams } from 'react-router-dom';
 
 import IconButton from '@components/IconButton';
 
-import { Kakao } from '@business/services/Kakao';
-
-import { downloadImage } from '@utils/downloadImage';
+import { useShareButtons } from '@business/hooks/useShareButtons';
 
 import { RESULT_SHARE_ICON_SIZE } from '@constants/sizes';
 
@@ -15,44 +12,22 @@ interface ShareButtonListProps {
 }
 
 export function ShareButtonList({ cardUrl, resultSharePageRef }: ShareButtonListProps) {
-  const { id } = useParams<{ id: string }>();
-
-  const share = {
-    kakao: {
-      text: '카카오톡 공유',
-      icon: 'simple-icons:kakaotalk',
-      iconColor: '#FEE500',
-      onClick: async () => {
-        await Kakao.init();
-        await Kakao.shareSendDefault({ cardUrl, id: id as string });
-      },
-    },
-    download: {
-      text: '다운로드',
-      icon: 'ic:round-download',
-      iconColor: '',
-      onClick: () => {
-        downloadImage(resultSharePageRef);
-      },
-    },
-    copyLink: {
-      text: 'copyLink',
-      icon: 'bxs:copy',
-      iconColor: '',
-      onClick: () => {},
-    },
-  };
+  const { shareButtons } = useShareButtons({ cardUrl, resultSharePageRef });
 
   return (
     <ul className="w-full h-110 rounded-b-2xl flex flex-all-center gap-12 ignore-html2canvas">
-      {Object.entries(share).map(([key, value]) => (
-        <li key={key}>
+      {Object.entries(shareButtons).map(([key, { icon, iconColor, onClick, text, tooltip }]) => (
+        <li
+          key={key}
+          className={tooltip && 'tooltip'}
+          data-tip={tooltip}
+        >
           <IconButton
-            text={value.text}
-            icon={value.icon}
-            iconColor={value.iconColor}
+            text={text}
+            icon={icon}
+            iconColor={iconColor}
             iconSize={RESULT_SHARE_ICON_SIZE}
-            onClick={value.onClick}
+            onClick={onClick}
           />
         </li>
       ))}
