@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { Message, MessageButton } from '@components/ChatList/ChatList';
+import { Message, MessageButton } from '@components/ChatList';
 
 import {
   sendMessage,

@@ -2,7 +2,7 @@ import { useRef } from 'react';
 
 import Background from '@components/Background';
 import ChatInput from '@components/ChatInput';
-import ChatList from '@components/ChatList/ChatList';
+import ChatList from '@components/ChatList';
 import CustomButton from '@components/CustomButton';
 import Header from '@components/Header';
 
