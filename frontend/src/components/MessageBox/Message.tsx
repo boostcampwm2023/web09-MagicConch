@@ -1,12 +1,15 @@
 import { useMemo } from 'react';
 
+import CustomButton from '@components/CustomButton';
+
 interface MessageProps {
   type: 'left' | 'right';
   message: string;
   profile: string;
+  feedback?: boolean;
 }
 
-function Message({ type, message, profile }: MessageProps) {
+function Message({ type, message, profile, feedback }: MessageProps) {
   const chatStyle = useMemo(
     () => ({
       box: type == 'left' ? 'chat-start' : 'chat-end',
@@ -26,7 +29,20 @@ function Message({ type, message, profile }: MessageProps) {
             />
           </div>
         </div>
-        <div className={`chat-bubble max-w-none shadow-chat ${chatStyle.bubble}`}>{message}</div>
+        <div className={`chat-bubble max-w-none shadow-chat ${chatStyle.bubble}`}>
+          {message}
+          {feedback && (
+            <div className="p-8">
+              <CustomButton
+                size="m"
+                color="active"
+                handleButtonClicked={() => alert('피드백')}
+              >
+                피드백하기
+              </CustomButton>
+            </div>
+          )}
+        </div>
       </div>
     </>
   );

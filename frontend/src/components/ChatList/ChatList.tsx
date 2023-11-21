@@ -6,6 +6,7 @@ export interface Message {
   message: string;
   profile: string;
   tarotId?: string;
+  feedback?: boolean;
 }
 
 interface ChatListProps {
@@ -26,7 +27,8 @@ function ChatList({ messages }: ChatListProps) {
       ref={messagesRef}
       className={`w-full h-full mb-20 overflow-auto scroll-smooth`}
     >
-      {messages.map(({ type, message, profile, tarotId }, index) => {
+      {messages.map(({ type, message, profile, tarotId, feedback }, index) => {
+        console.log({ type, message, profile, tarotId, feedback });
         return (
           <li
             key={new Date().getTime() + index}
@@ -37,6 +39,7 @@ function ChatList({ messages }: ChatListProps) {
               type={type}
               message={message}
               profile={profile}
+              feedback={feedback}
             />
           </li>
         );
