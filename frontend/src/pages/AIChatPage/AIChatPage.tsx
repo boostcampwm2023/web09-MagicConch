@@ -1,5 +1,3 @@
-import { Icon } from '@iconify/react';
-
 import Background from '@components/Background';
 import ChatInput from '@components/ChatInput';
 import ChatList from '@components/ChatList/ChatList';
@@ -7,8 +5,10 @@ import CustomButton from '@components/CustomButton';
 import Header from '@components/Header';
 import TarotSpread from '@components/TarotSpread';
 
-import useOverlay from '@business/hooks/useOverlay';
 import { useAiChat } from '@business/hooks/useAiChat';
+import useOverlay from '@business/hooks/useOverlay';
+
+import { Icon } from '@iconify/react';
 
 interface AIChatPageProps {}
 
@@ -53,7 +53,7 @@ function AIChatPage({}: AIChatPageProps) {
         <CustomButton
           size="m"
           color="dark"
-          handleButtonClicked={openTarotSpread}
+          onClick={openTarotSpread}
         >
           타로 카드
         </CustomButton>

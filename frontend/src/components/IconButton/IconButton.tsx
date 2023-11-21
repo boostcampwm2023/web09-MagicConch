@@ -31,7 +31,7 @@ export default function IconButton({
     <CustomButton
       size={buttonSize}
       color={buttonColor}
-      handleButtonClicked={onClick}
+      onClick={onClick}
     >
       <Icon
         icon={icon}
