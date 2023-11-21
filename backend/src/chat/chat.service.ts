@@ -46,9 +46,10 @@ export class ChatService {
     roomId: string,
     createChattingMessageDto: CreateChattingMessageDto[],
   ): Promise<void> {
-    const room = await this.chattingRoomRepository.findOneBy({
-      id: roomId,
-    });
+    const room: ChattingRoom | null =
+      await this.chattingRoomRepository.findOneBy({
+        id: roomId,
+      });
     if (!room) {
       throw new NotFoundException();
     }
