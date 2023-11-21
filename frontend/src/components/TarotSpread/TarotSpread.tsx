@@ -58,16 +58,14 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
 
   const unSpreadTarotCards = () => {
     spreadSound.play();
-    tarotCardRefs.current.forEach(ref => (ref.style.transform = `rotate(270deg)`));
+    setTimeout(() => tarotCardRefs.current.forEach(ref => (ref.style.transform = `rotate(270deg)`)), 500);
   };
 
   const clickCard = (id: number) => {
     pickCard(id);
     setPicked(id);
-    setTimeout(() => {
-      setClosing(true);
-      unSpreadTarotCards();
-    }, 2000);
+    setTimeout(() => unSpreadTarotCards(), 1500);
+    setTimeout(() => setClosing(true), 2000);
   };
 
   return (
