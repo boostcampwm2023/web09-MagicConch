@@ -57,7 +57,7 @@ export class EventsGateway
       if (client.chatCount === 0) {
         client.chatLog.push({ role: 'user', content: message });
 
-        client.emit('message', '이제 타로를 뽑아 볼까?');
+        client.emit('message', askTarotCardMessage);
         setTimeout(() => client.emit('tarotCard'), 1000);
 
         return;
@@ -93,7 +93,7 @@ function readStreamAndSend(
         socket.emit('streamEnd');
 
         if (message.includes(askTarotCardMessage)) {
-          socket.chatCount = -1;
+          socket.chatCount = 0;
           setTimeout(() => socket.emit('tarotCard'), 1000);
         }
         return;
