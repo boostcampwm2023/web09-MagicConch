@@ -1,7 +1,8 @@
 import Background from '../Background';
 import TarotCard from './TarotCard';
+import { useEffect, useMemo, useRef, useState } from 'react';
+
 import { shuffledArray } from '@utils/array';
-import { useEffect, useMemo, useState, useRef } from 'react';
 
 interface TarotSpreadProps {
   opened: boolean;
@@ -29,7 +30,7 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
   useEffect(() => {
     addEventListener('wheel', ({ deltaX }: WheelEvent) => rotateTarotSpread(deltaX > 0 ? 'left' : 'right'));
     addEventListener('animationend', ({ animationName }: AnimationEvent) => animationName == 'fadeOut' && close());
-    setTimeout(() => spreadTarotCards(), 100);
+    setTimeout(() => spreadTarotCards());
   }, []);
 
   const dragTarotSpread = (pageX: number) => {
@@ -50,14 +51,14 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
   const spreadTarotCards = () => {
     spreadSound.play();
     tarotCardRefs.current.forEach((ref, idx) => {
-      ref.style.transform = `rotate(${idx * 4.6}deg)`;
-      ref.style.transition = 'transform 1s ease-in-out';
+      ref.style.transform = `rotate(${270 + idx * 4.6}deg)`;
+      ref.style.transition = 'transform 1s ease-out';
     });
   };
 
   const unSpreadTarotCards = () => {
     spreadSound.play();
-    tarotCardRefs.current.forEach(ref => (ref.style.transform = `rotate(0deg)`));
+    tarotCardRefs.current.forEach(ref => (ref.style.transform = `rotate(270deg)`));
   };
 
   const clickCard = (id: number) => {
@@ -66,7 +67,7 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
     setTimeout(() => {
       setClosing(true);
       unSpreadTarotCards();
-    }, 1500);
+    }, 2000);
   };
 
   return (
@@ -77,7 +78,7 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
         onMouseDown={() => setDragging(true)}
         onMouseLeave={() => setDragging(false)}
         onMouseUp={() => setDragging(false)}
-        className="transition-all ease-out absolute w-400 h-220 origin-center top-1200 left-[50%] translate-x-[-50%]"
+        className="transition-all ease-out absolute w-220 h-400 origin-center top-1200 left-[50%] translate-x-[-50%]"
       >
         {shuffledCard.map((id: number, idx: number) => (
           <div

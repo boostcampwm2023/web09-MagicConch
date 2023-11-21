@@ -25,7 +25,7 @@ export default function TarotCard({ dragging, index, backImg, onClick }: TarotCa
 
   return (
     <img
-      className={`${!dragging && 'hover:animate-tarotHovering'} animate-tarotLeaving w-full h-full -translate-x-1000`}
+      className={`${!dragging && 'hover:animate-tarotHovering'} animate-tarotLeaving w-full h-full -translate-y-1000`}
       src={img}
       alt="타로 카드 이미지"
       onClick={clickCard}

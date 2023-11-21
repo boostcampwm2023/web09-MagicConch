@@ -38,12 +38,12 @@ export default {
           '100%': { opacity: 0 },
         },
         tarotHovering: {
-          '0%': { transform: 'translateX(-1000px)' },
-          '100%': { transform: 'scale(1.02) translateX(-1000px)' },
+          '0%': { transform: 'translateY(-1000px)' },
+          '100%': { transform: 'scale(1.02) translateY(-1000px)' },
         },
         tarotLeaving: {
-          '0%': { transform: 'scale(1.02) translateX(-1000px)' },
-          '100%': { transform: 'translateX(-1000x)' },
+          '0%': { transform: 'scale(1.02) translateY(-1000px)' },
+          '100%': { transform: 'translateY(-1000px)' },
         },
       },
       animation: {
