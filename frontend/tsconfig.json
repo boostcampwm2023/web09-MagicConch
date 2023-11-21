@@ -26,8 +26,8 @@
       "@components/*": ["components/*"],
       "@business/*": ["business/*"],
       "@stores/*": ["stores/*"],
-      "@utils/*": ["utils/*"],
       "@constants/*": ["constants/*"],
+      "@utils/*": ["utils/*"],
       "@mocks/*": ["mocks/*"]
     }
   },
