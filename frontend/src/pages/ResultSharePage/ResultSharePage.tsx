@@ -2,10 +2,10 @@ import { Suspense } from 'react';
 
 import CustomButton from '@components/CustomButton';
 
-import { useOverflowTextBoxCenter } from '@/business/hooks/useOverflowTextBoxCenter';
-import { useShareButtons } from '@/business/hooks/useShareButtons';
+import { useOverflowTextBoxCenter } from '@business/hooks/useOverflowTextBoxCenter';
+import { useShareButtons } from '@business/hooks/useShareButtons';
 
-import { getResultShareQuery } from '@/stores/queries/getResultShareQuery';
+import { getResultShareQuery } from '@stores/queries/getResultShareQuery';
 
 import { Icon } from '@iconify/react';
 
