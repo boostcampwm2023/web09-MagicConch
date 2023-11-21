@@ -8,14 +8,17 @@ interface MessageBoxProps {
   type: 'left' | 'right';
   message: string;
   profile: string;
-  feedback?: boolean;
+  button?: {
+    content: string;
+    onClick: () => void;
+  };
 }
 
 // TODO: tarotId로 서버에서 타로 카드 이미지 정보를 받아와서 src와 alt 채워주기
 // TODO: 조건식 !tarotId -> tarotId로 변경
 // TODO: 프로필 이미지 설정
 
-function MessageBox({ tarotId, type, message, profile, feedback }: MessageBoxProps) {
+function MessageBox({ tarotId, type, message, profile, button }: MessageBoxProps) {
   const recievedResult = tarotId && type == 'left';
 
   return (
@@ -32,7 +35,7 @@ function MessageBox({ tarotId, type, message, profile, feedback }: MessageBoxPro
           type={type}
           message={message}
           profile={profile}
-          feedback={feedback}
+          button={button}
         />
         {recievedResult && (
           <div className="absolute bottom-10 -right-50">

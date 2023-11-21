@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { Message } from '@components/ChatList/ChatList';
+import { Message, MessageButton } from '@components/ChatList/ChatList';
 
 import {
   sendMessage,
@@ -14,12 +14,12 @@ export function useAiChatMessage(tarotCardId: React.MutableRefObject<string | un
   const [messages, setMessages] = useState<Message[]>([]);
   const [messageStreaming, setMessageStreaming] = useState(false);
 
-  const addMessage = (type: 'left' | 'right', message: string) => {
+  const addMessage = (type: 'left' | 'right', message: string, button?: MessageButton) => {
     const tarotId = tarotCardId.current;
     tarotCardId.current = undefined;
 
     const profile = type == 'left' ? '/moon.png' : '/sponge.png';
-    setMessages(messages => [...messages, { type, message, profile, tarotId }]);
+    setMessages(messages => [...messages, { type, message, profile, tarotId, button }]);
   };
 
   const updateMessage = (message: string) => {
@@ -36,7 +36,9 @@ export function useAiChatMessage(tarotCardId: React.MutableRefObject<string | un
     setMessageEventListener(message => addMessage('left', message));
     setMessageUpdateEventListener(message => updateMessage(message));
     setStreamEndEventListener(() => setMessageStreaming(false));
-    setChatEndEventListener(message => addMessage('left', message));
+
+    const button = { content: '피드백하기', onClick: () => alert('피드백하기') };
+    setChatEndEventListener(message => addMessage('left', message, button));
   }, []);
 
   return { messages, messageStreaming, onSubmitMessage };
