@@ -8,6 +8,8 @@ export {
 export const CLOVA_URL =
   'https://clovastudio.stream.ntruss.com/testapp/v1/chat-completions/HCX-002';
 
+export const welcomeMessage =
+  '안녕, 나는 어떤 고민이든지 들어주는 마법의 소라고둥이야!\n고민이 있으면 말해줘!';
 export const askTarotCardMessage = '타로 카드를 뽑아볼까?';
 
 export const chatEndMessage =
@@ -43,6 +45,3 @@ user와 친근한 반말로 상황에 맞게 대화를 이어나가되,
 - 타로 카드 해설에 대한 system 메세지가 오기 전까지, 타로 해설은 하지 않습니다.
 - assistant의 답변은 30토큰 이하로 제한되며, 간결하게 표현합니다.
 `;
-
-export const minChatCount = 5;
-export const maxChatCount = 10;
