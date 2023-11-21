@@ -45,15 +45,15 @@ function ResultSharePage({}: ResultSharePageProps) {
             {shareButtons
               .map((button, idx) => insertOnclick(button, handlers[idx]))
               .map(({ id, text, icon, iconColor, onClick }) => (
-                <IconButton
-                  key={id}
-                  id={id}
-                  text={text}
-                  icon={icon}
-                  iconColor={iconColor}
-                  onClick={onClick}
-                  iconSize={RESULT_SHARE_ICON_SIZE}
-                />
+                <li key={id}>
+                  <IconButton
+                    text={text}
+                    icon={icon}
+                    iconColor={iconColor}
+                    onClick={onClick}
+                    iconSize={RESULT_SHARE_ICON_SIZE}
+                  />
+                </li>
               ))}
           </ul>
         </div>

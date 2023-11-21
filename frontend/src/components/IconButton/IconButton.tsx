@@ -4,7 +4,7 @@ import { ButtonColor, ButtonSize } from '@components/CustomButton/CustomButton';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 export interface IconButton {
-  id: string;
+  id?: string;
   text: string;
   icon: string;
   iconColor: string;
@@ -19,7 +19,6 @@ interface IconButtonProps {
 }
 
 export default function IconButton({
-  id,
   text,
   icon,
   iconColor,
@@ -29,20 +28,17 @@ export default function IconButton({
   onClick,
 }: IconButtonProps & IconButton) {
   return (
-    <li key={id}>
-      <CustomButton
-        key={id}
-        size={buttonSize}
-        color={buttonColor}
-        handleButtonClicked={onClick}
-      >
-        <Icon
-          icon={icon}
-          color={iconColor}
-          fontSize={iconSize}
-        />
-        {text && <span>{text}</span>}
-      </CustomButton>
-    </li>
+    <CustomButton
+      size={buttonSize}
+      color={buttonColor}
+      handleButtonClicked={onClick}
+    >
+      <Icon
+        icon={icon}
+        color={iconColor}
+        fontSize={iconSize}
+      />
+      {text && <span>{text}</span>}
+    </CustomButton>
   );
 }
