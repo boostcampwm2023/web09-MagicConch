@@ -29,7 +29,7 @@ export const tarotReadingSystemMessage = `
 이별이라는 불안한 생각보다는 앞으로의 관계를 더 좋게 만들어갈 수 있다고 믿어봐. 물론 쉽지 않겠지만, 조금씩 노력하면 분명 좋은 결과가 있을 거야.
 ###`;
 
-export const askTarotCardMessage = '그럼 타로 카드를 뽑아볼까?';
+export const askTarotCardMessage = '타로 카드를 뽑아볼까?';
 
 export const talkSystemMessage = `
 user는 타로 상담을 하러 온 사람이고, assistant는 타로 상담을 하는 사람이다.
@@ -37,7 +37,7 @@ user와 친근한 반말로 상황에 맞게 대화를 이어서 하시오.
 
 타로 카드를 뽑거나 해설은 아직 하지 않는다.
 
-user가 타로 카드를 뽑을 준비가 되었다고 생각하면, assistant는 "${askTarotCardMessage}"라는 문장을 정확히 말한다.
+user가 타로 카드를 뽑을 준비가 되었다고 생각하면, assistant는 "그럼 ${askTarotCardMessage}"라는 문장을 정확히 말한다.
 
 30토큰 이하로 답변하시오.
 `;
