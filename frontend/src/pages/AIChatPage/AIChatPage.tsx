@@ -34,18 +34,14 @@ function AIChatPage({}: AIChatPageProps) {
           </CustomButton>,
         ]}
       />
-
       <div className="w-700 absolute top-95 h-3/4">
         <ChatList messages={messages} />
-
-        {/* // TODO 서버에서 AI 데이터를 받아오고 있는 동안 disabled 하기 */}
         {askTarotCardButtons}
         <ChatInput
           disabled={messageStreaming}
           sendChatMessage={onSubmitMessage}
         />
       </div>
-
       {tarotSpreadButton}
     </Background>
   );
