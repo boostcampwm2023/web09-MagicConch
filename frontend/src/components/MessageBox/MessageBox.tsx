@@ -1,8 +1,8 @@
-import { MessageButton } from '@components/ChatList';
-import CustomButton from '@components/CustomButton';
-import Message from '@components/MessageBox/Message';
+import { Link } from 'react-router-dom';
 
-import { Icon } from '@iconify/react/dist/iconify.js';
+import { MessageButton } from '@components/ChatList';
+import IconButton from '@components/IconButton';
+import Message from '@components/MessageBox/Message';
 
 interface MessageBoxProps {
   tarotId?: string;
@@ -18,6 +18,9 @@ interface MessageBoxProps {
 
 function MessageBox({ tarotId, type, message, profile, button }: MessageBoxProps) {
   const recievedResult = tarotId && type == 'left';
+
+  // TODO: 공유하기 페이지 아이디를 서버에서 받아와야함.
+  const resultSharePageId = '1';
 
   return (
     <div className="relative max-w-[70%]">
@@ -37,15 +40,19 @@ function MessageBox({ tarotId, type, message, profile, button }: MessageBoxProps
         />
         {recievedResult && (
           <div className="absolute bottom-10 -right-50">
-            <CustomButton
-              color="transparent"
-              circle
+            <Link
+              to={`/result/${resultSharePageId}`}
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <Icon
+              <IconButton
+                buttonColor="transparent"
+                iconColor="textWhite"
                 icon="ion:share"
-                className="text-white text-28"
+                iconSize={28}
+                circle
               />
-            </CustomButton>
+            </Link>
           </div>
         )}
       </div>
