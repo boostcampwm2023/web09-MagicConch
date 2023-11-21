@@ -54,9 +54,12 @@ export class EventsGateway
       this.logger.log(`message: ${message}`);
       client.chatCount -= 1;
 
-      if (client.chatCount <= 0) {
+      if (client.chatCount === 0) {
+        client.chatLog.push({ role: 'user', content: message });
+
         client.emit('message', '이제 타로를 뽑아 볼까?');
         setTimeout(() => client.emit('tarotCard'), 1000);
+
         return;
       }
       const result = await createTalk(client.chatLog, message);
@@ -90,7 +93,7 @@ function readStreamAndSend(
         socket.emit('streamEnd');
 
         if (message.includes(askTarotCardMessage)) {
-          socket.chatCount = 0;
+          socket.chatCount = -1;
           setTimeout(() => socket.emit('tarotCard'), 1000);
         }
         return;
