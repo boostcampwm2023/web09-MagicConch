@@ -1,35 +1,23 @@
+import { useRef } from 'react';
+
 import Background from '@components/Background';
 import ChatInput from '@components/ChatInput';
 import ChatList from '@components/ChatList/ChatList';
 import CustomButton from '@components/CustomButton';
 import Header from '@components/Header';
-import TarotSpread from '@components/TarotSpread';
 
-import { useAiChat } from '@business/hooks/useAiChat';
-import useOverlay from '@business/hooks/useOverlay';
+import { useAiChatMessage, useAiChatTarot } from '@business/hooks/useAiChat';
+
 
 import { Icon } from '@iconify/react';
 
 interface AIChatPageProps {}
 
 function AIChatPage({}: AIChatPageProps) {
-  const { messages, messageStreaming, onSubmitMessage } = useAiChat();
-  const { open } = useOverlay();
+  const tarotCardId = useRef<string>();
 
-  // TODO: 테스트용
-  const pickCard = (idx: number) => {
-    console.log(idx);
-  };
-
-  const openTarotSpread = () => {
-    open(({ opened, close }) => (
-      <TarotSpread
-        opened={opened}
-        close={close}
-        pickCard={pickCard}
-      />
-    ));
-  };
+  const { AskTarotCardButtons, TarotSpreadButton, displayAskTarotCardButtons } = useAiChatTarot(tarotCardId);
+  const { messages, messageStreaming, onSubmitMessage } = useAiChatMessage(tarotCardId);
 
   return (
     <Background type="dynamic">
@@ -47,27 +35,15 @@ function AIChatPage({}: AIChatPageProps) {
           </CustomButton>,
         ]}
       />
-
-      {/* TEST 테스트용*/}
-      <div className="absolute top-80 left-40">
-        <CustomButton
-          size="m"
-          color="dark"
-          onClick={openTarotSpread}
-        >
-          타로 카드
-        </CustomButton>
-      </div>
-
       <div className="w-700 absolute top-95 h-3/4">
         <ChatList messages={messages} />
-
-        {/* // TODO 서버에서 AI 데이터를 받아오고 있는 동안 disabled 하기 */}
+        <AskTarotCardButtons />
         <ChatInput
-          disabled={messageStreaming}
+          disabled={messageStreaming || displayAskTarotCardButtons}
           sendChatMessage={onSubmitMessage}
         />
       </div>
+      <TarotSpreadButton />
     </Background>
   );
 }
