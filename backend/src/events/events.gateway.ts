@@ -87,7 +87,7 @@ function readStreamAndSend(
 
         if (message.includes(askTarotCardMessage)) {
           socket.chatEnd = true;
-          setTimeout(() => socket.emit('tarotCard'), 1000);
+          socket.emit('tarotCard');
         }
 
         if (callback) {
