@@ -38,18 +38,18 @@ export default {
           '100%': { opacity: 0 },
         },
         tarotHovering: {
-          '0%': { transform: 'translateY(-1000px)' },
-          '100%': { transform: 'scale(1.02) translateY(-1000px)' },
+          '0%': { transform: 'translateX(-1000px)' },
+          '100%': { transform: 'scale(1.02) translateX(-1000px)' },
         },
         tarotLeaving: {
-          '0%': { transform: 'scale(1.02) translateY(-1000px)' },
-          '100%': { transform: 'translateY(-1000x)' },
+          '0%': { transform: 'scale(1.02) translateX(-1000px)' },
+          '100%': { transform: 'translateX(-1000x)' },
         },
       },
       animation: {
         shining: 'shining 2s ease-in-out infinite alternate',
         fadeIn: 'fadeIn 1.5s ease-in-out',
-        fadeOut: 'fadeOut 1.5s ease-in-out forwards',
+        fadeOut: 'fadeOut 2.5s ease-in-out forwards',
         tarotHovering: 'tarotHovering 1s ease-in-out forwards',
         tarotLeaving: 'tarotLeaving 1s ease-in-out forwards',
       },
