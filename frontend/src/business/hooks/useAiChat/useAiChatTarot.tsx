@@ -56,17 +56,18 @@ export function useAiChatTarot(tarotCardId: React.MutableRefObject<string | unde
       </div>
     );
 
-  const TarotSpreadButton = () => (
-    <div className="absolute top-80 left-40">
-      <CustomButton
-        size="m"
-        color="dark"
-        handleButtonClicked={openTarotSpread}
-      >
-        타로 카드
-      </CustomButton>
-    </div>
-  );
+  const TarotSpreadButton = () =>
+    displayTarotSpreadButton && (
+      <div className="absolute top-80 left-40">
+        <CustomButton
+          size="m"
+          color="dark"
+          handleButtonClicked={openTarotSpread}
+        >
+          타로 카드
+        </CustomButton>
+      </div>
+    );
 
   useEffect(() => {
     setTarotCardEventListener(() => setDisplayAskTarotCardButtons(true));
