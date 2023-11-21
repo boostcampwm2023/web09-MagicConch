@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import { Kakao } from '@business/services/Kakao';
 
-import { downloadImage } from '@/utils/downloadImage';
+import { downloadImage } from '@utils/downloadImage';
 
 export function useShareButtons({
   cardUrl,
@@ -23,7 +23,9 @@ export function useShareButtons({
     downloadImage(resultSharePageRef);
   };
 
-  const copyLink = () => {};
+  const copyLink = () => {
+    navigator.clipboard.writeText(`${import.meta.env.VITE_BASE_URL}/result/${id}`);
+  };
 
   const shareButtons = {
     kakao: {
