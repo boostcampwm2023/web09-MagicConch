@@ -40,7 +40,11 @@ function MessageBox({ tarotId, type, message, profile, button }: MessageBoxProps
         />
         {recievedResult && (
           <div className="absolute bottom-10 -right-50">
-            <Link to={`/result/${resultSharePageId}`}>
+            <Link
+              to={`/result/${resultSharePageId}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <IconButton
                 buttonColor="transparent"
                 iconColor="textWhite"
