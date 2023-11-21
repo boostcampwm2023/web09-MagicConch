@@ -32,20 +32,18 @@ function Message({ type, message, profile, button }: MessageProps) {
             />
           </div>
         </div>
-        <div className={`chat-bubble max-w-none shadow-chat ${chatStyle.bubble}`}>
-          {message}
-          {button && (
-            <div className="p-8 pt-12">
-              <CustomButton
-                size="m"
-                color="active"
-                handleButtonClicked={button.onClick}
-              >
-                {button.content}
-              </CustomButton>
-            </div>
-          )}
-        </div>
+        <div className={`chat-bubble max-w-none shadow-chat ${chatStyle.bubble}`}>{message}</div>
+        {button && (
+          <div className="p-8 pt-12">
+            <CustomButton
+              size="s"
+              color="active"
+              handleButtonClicked={button.onClick}
+            >
+              {button.content}
+            </CustomButton>
+          </div>
+        )}
       </div>
     </>
   );
