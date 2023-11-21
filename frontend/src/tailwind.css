@@ -13,7 +13,15 @@
 html,
 body,
 #root {
+  overscroll-behavior-x: none;
   font-size: 16px;
   width: 100vw;
   height: 100vh;
+}
+
+img {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
 }
