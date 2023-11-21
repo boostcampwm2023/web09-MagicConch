@@ -1,6 +1,9 @@
+export type ButtonColor = 'active' | 'cancel' | 'disabled' | 'dark' | 'transparent';
+export type ButtonSize = 's' | 'm' | 'l';
+
 interface ButtonProps {
-  color?: 'active' | 'cancel' | 'disabled' | 'dark' | 'transparent';
-  size?: 's' | 'm' | 'l';
+  color?: ButtonColor;
+  size?: ButtonSize;
   circle?: boolean;
   disabled?: boolean;
   children?: React.ReactNode;
