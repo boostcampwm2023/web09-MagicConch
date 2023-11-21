@@ -1,15 +1,13 @@
 import { useMemo } from 'react';
 
+import { MessageButton } from '@components/ChatList';
 import CustomButton from '@components/CustomButton';
 
 interface MessageProps {
   type: 'left' | 'right';
   message: string;
   profile: string;
-  button?: {
-    content: string;
-    onClick: () => void;
-  };
+  button?: MessageButton;
 }
 
 function Message({ type, message, profile, button }: MessageProps) {

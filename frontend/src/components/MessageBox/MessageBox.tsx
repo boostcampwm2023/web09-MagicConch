@@ -1,3 +1,4 @@
+import { MessageButton } from '@components/ChatList';
 import CustomButton from '@components/CustomButton';
 import Message from '@components/MessageBox/Message';
 
@@ -8,10 +9,7 @@ interface MessageBoxProps {
   type: 'left' | 'right';
   message: string;
   profile: string;
-  button?: {
-    content: string;
-    onClick: () => void;
-  };
+  button?: MessageButton;
 }
 
 // TODO: tarotId로 서버에서 타로 카드 이미지 정보를 받아와서 src와 alt 채워주기
