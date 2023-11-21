@@ -1,6 +1,5 @@
 import { loadScript } from './loadScript';
-
-import { KAKAO_SDK_INTERGRITY, KAKAO_SDK_URL } from '@/constants/kakao';
+import { KAKAO_SDK_INTERGRITY, KAKAO_SDK_URL } from 'constants/kakao';
 
 async function init() {
   await loadScript(KAKAO_SDK_URL, KAKAO_SDK_INTERGRITY, 'anonymous');

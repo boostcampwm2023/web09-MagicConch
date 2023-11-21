@@ -1,9 +1,9 @@
 import Background from '../Background';
 import TarotCard from './TarotCard';
-import { shuffledArray } from '@/utils/array';
+import { shuffledArray } from '@utils/array';
 import { useEffect, useMemo, useState } from 'react';
 
-import { rotation } from '@/constants/tarotCard';
+import { rotation } from '@constants/tarotCard';
 
 interface TarotSpreadProps {
   opened: boolean;
