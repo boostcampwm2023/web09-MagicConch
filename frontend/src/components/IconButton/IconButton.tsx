@@ -5,9 +5,9 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 
 export interface IconButton {
   id?: string;
-  text: string;
-  icon: string;
-  iconColor: string;
+  text?: string;
+  icon?: string;
+  iconColor?: string;
   onClick?: () => void;
 }
 
@@ -33,11 +33,13 @@ export default function IconButton({
       color={buttonColor}
       onClick={onClick}
     >
-      <Icon
-        icon={icon}
-        color={iconColor}
-        fontSize={iconSize}
-      />
+      {icon && (
+        <Icon
+          icon={icon}
+          color={iconColor}
+          fontSize={iconSize}
+        />
+      )}
       {text && <span>{text}</span>}
     </CustomButton>
   );
