@@ -1,6 +1,14 @@
 import { Kakao } from '../services/Kakao';
 import { useParams } from 'react-router-dom';
 
+interface ShareButton {
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
+  handler: () => void;
+}
+
 export function useShareButtons({ card_url }: { card_url: string }) {
   const { id } = useParams();
 
@@ -13,20 +21,27 @@ export function useShareButtons({ card_url }: { card_url: string }) {
 
   const downloadImage = () => {};
 
-  const shareButtons = [
+  const shareButtons: ShareButton[] = [
     {
       id: 'kakao',
+      name: '카카오톡 공유',
       icon: 'simple-icons:kakaotalk',
       color: '#FEE500',
       handler: shareKakao,
     },
     {
-      id: 'url',
-      handler: shareUrl,
+      id: 'download',
+      name: '다운로드',
+      icon: 'ic:round-download',
+      color: '',
+      handler: downloadImage,
     },
     {
-      id: 'download',
-      handler: downloadImage,
+      id: 'copyLink',
+      name: 'copyLink',
+      icon: 'bxs:copy',
+      color: '',
+      handler: shareUrl,
     },
   ];
 

@@ -11,7 +11,7 @@ import { Icon } from '@iconify/react';
 
 interface ResultSharePageProps {}
 
-const ICON_SIZE = 25;
+const ICON_SIZE = 20;
 
 function ResultSharePage({}: ResultSharePageProps) {
   const { data } = getResultShareQuery();
@@ -39,23 +39,20 @@ function ResultSharePage({}: ResultSharePageProps) {
           </div>
 
           <ul className="w-full h-110 rounded-b-2xl flex flex-all-center gap-12">
-            {shareButtons.map(({ id, icon, color, handler }) => (
+            {shareButtons.map(({ id, name, icon, color, handler }) => (
               <li key={id}>
                 <CustomButton
                   key={id}
-                  size="l"
+                  size="m"
                   color="cancel"
                   handleButtonClicked={handler}
                 >
-                  {icon ? (
-                    <Icon
-                      icon={icon}
-                      color={color}
-                      fontSize={ICON_SIZE}
-                    />
-                  ) : (
-                    id
-                  )}
+                  <Icon
+                    icon={icon}
+                    color={color}
+                    fontSize={ICON_SIZE}
+                  />
+                  <span>{name}</span>
                 </CustomButton>
               </li>
             ))}
