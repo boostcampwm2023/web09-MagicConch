@@ -1,6 +1,8 @@
+import useOverlay from './useOverlay';
 import { useEffect, useRef, useState } from 'react';
 
 import { Message } from '@components/ChatList/ChatList';
+import TarotSpread from '@components/TarotSpread';
 
 import {
   requestTarotRead,
@@ -14,11 +16,29 @@ import {
 import { tarotCardNames } from '@constants/tarotCardNames';
 
 export function useAiChat() {
+  const { open } = useOverlay();
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [messageStreaming, setMessageStreaming] = useState(false);
-  const [activeTarotCard, setActiveTarotCard] = useState(false);
 
   const tarotCardId = useRef<string | undefined>(undefined);
+
+  const pickCard = (idx: number) => {
+    console.log(idx);
+    const random = Math.floor(Math.random() * tarotCardNames.length);
+    requestTarotRead(`${random}번 ${tarotCardNames[random]}카드`);
+    tarotCardId.current = random.toString().padStart(2, '0');
+  };
+
+  const openTarotSpread = () => {
+    open(({ opened, close }) => (
+      <TarotSpread
+        opened={opened}
+        close={close}
+        pickCard={pickCard}
+      />
+    ));
+  };
 
   const addMessage = (type: 'left' | 'right', message: string) => {
     const tarotId = tarotCardId.current;
@@ -35,24 +55,14 @@ export function useAiChat() {
 
   const onSubmitMessage = (message: string) => {
     addMessage('right', message);
-
-    if (activeTarotCard) {
-      const random = Math.floor(Math.random() * tarotCardNames.length);
-      requestTarotRead(`${random}번 ${tarotCardNames[random]}카드`);
-      tarotCardId.current = random.toString().padStart(2, '0');
-    } else {
-      sendMessage(message);
-    }
+    sendMessage(message);
   };
 
   useEffect(() => {
     setMessageEventListener(message => addMessage('left', message));
     setMessageUpdateEventListener(message => updateMessage(message));
     setStreamEndEventListener(() => setMessageStreaming(false));
-    setTarotCardEventListener(() => {
-      alert('야생의 타로 카드 스프레드가 나타났다!');
-      setActiveTarotCard(true);
-    });
+    setTarotCardEventListener(() => openTarotSpread());
   }, []);
 
   return { messages, messageStreaming, onSubmitMessage };
