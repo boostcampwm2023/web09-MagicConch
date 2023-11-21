@@ -23,6 +23,10 @@ describe('ChatService', () => {
   const roomId = uuidv4();
   const messageId = uuidv4();
 
+  const nonMemberId = uuidv4();
+  const diffMemberId = uuidv4();
+  const nonRoomId = uuidv4();
+
   const memberMock = new Member();
   memberMock.id = memberId;
 
@@ -85,13 +89,19 @@ describe('ChatService', () => {
       await service.createRoom(memberId);
 
       expect(findOneByMock).toHaveBeenCalledWith({ id: memberId });
-      expect(saveMock).toHaveBeenCalledWith(expect.any(ChattingRoom));
+      expect(saveMock).toHaveBeenCalledWith({ participant: memberMock });
     });
 
     it('should throw NotFoundException when member is not found', async () => {
-      jest.spyOn(membersRepository, 'findOneBy').mockResolvedValueOnce(null);
+      const findOneByMock = jest
+        .spyOn(membersRepository, 'findOneBy')
+        .mockResolvedValueOnce(null);
 
-      expect(service.createRoom(memberId)).rejects.toThrow(NotFoundException);
+      await expect(service.createRoom(nonMemberId)).rejects.toThrow(
+        NotFoundException,
+      );
+
+      expect(findOneByMock).toHaveBeenCalledWith({ id: nonMemberId });
     });
   });
 
@@ -114,22 +124,23 @@ describe('ChatService', () => {
 
       expect(findOneByMock).toHaveBeenCalledWith({ id: roomId });
 
-      expect(saveMock).toHaveBeenCalledWith(
-        expect.objectContaining({
-          roomId: expect.any(ChattingRoom),
-          isHost: createChattingMessageDto.isHost,
-          message: createChattingMessageDto.message,
-        }),
-      );
+      expect(saveMock).toHaveBeenCalledWith({
+        roomId: expect.any(ChattingRoom),
+        isHost: createChattingMessageDto.isHost,
+        message: createChattingMessageDto.message,
+      });
     });
 
     it('should throw NotFoundException when room is not found', async () => {
-      jest.spyOn(membersRepository, 'findOneBy').mockResolvedValueOnce(null);
+      const findOneByMock = jest
+        .spyOn(chattingRoomRepository, 'findOneBy')
+        .mockResolvedValueOnce(null);
 
-      const memberId = 'invalidMemberId';
-      await expect(service.createRoom(memberId)).rejects.toThrow(
+      await expect(service.createMessage(nonRoomId, [])).rejects.toThrow(
         NotFoundException,
       );
+
+      expect(findOneByMock).toHaveBeenCalledWith({ id: nonRoomId });
     });
   });
 
@@ -194,6 +205,7 @@ describe('ChatService', () => {
       ).resolves.not.toThrow();
 
       expect(findOneByMock).toHaveBeenCalledWith({ id: roomId });
+
       expect(updateMock).toHaveBeenCalledWith(
         { id: roomId },
         { title: updateChattingRoomDto.title },
@@ -217,8 +229,6 @@ describe('ChatService', () => {
         .spyOn(chattingRoomRepository, 'findOneBy')
         .mockResolvedValueOnce(roomMock);
 
-      const diffMemberId = uuidv4();
-
       await expect(
         service.updateRoom(roomId, diffMemberId, updateChattingRoomDto),
       ).rejects.toThrow(ForbiddenException);
@@ -239,6 +249,7 @@ describe('ChatService', () => {
       await expect(service.removeRoom(roomId, memberId)).resolves.not.toThrow();
 
       expect(findOneByMock).toHaveBeenCalledWith({ id: roomId });
+
       expect(softDeleteMock).toHaveBeenCalledWith({ id: roomId });
     });
 
@@ -258,8 +269,6 @@ describe('ChatService', () => {
       const findOneByMock = jest
         .spyOn(chattingRoomRepository, 'findOneBy')
         .mockResolvedValueOnce(roomMock);
-
-      const diffMemberId = uuidv4();
 
       await expect(service.removeRoom(roomId, diffMemberId)).rejects.toThrow(
         ForbiddenException,
