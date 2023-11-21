@@ -15,7 +15,7 @@ interface AIChatPageProps {}
 function AIChatPage({}: AIChatPageProps) {
   const tarotCardId = useRef<string>();
 
-  const { askTarotCardButtons, tarotSpreadButton } = useAiChatTarot(tarotCardId);
+  const { AskTarotCardButtons, TarotSpreadButton, displayAskTarotCardButtons } = useAiChatTarot(tarotCardId);
   const { messages, messageStreaming, onSubmitMessage } = useAiChatMessage(tarotCardId);
 
   return (
@@ -36,13 +36,13 @@ function AIChatPage({}: AIChatPageProps) {
       />
       <div className="w-700 absolute top-95 h-3/4">
         <ChatList messages={messages} />
-        {askTarotCardButtons}
+        <AskTarotCardButtons />
         <ChatInput
-          disabled={messageStreaming || askTarotCardButtons !== false}
+          disabled={messageStreaming || displayAskTarotCardButtons}
           sendChatMessage={onSubmitMessage}
         />
       </div>
-      {tarotSpreadButton}
+      <TarotSpreadButton />
     </Background>
   );
 }

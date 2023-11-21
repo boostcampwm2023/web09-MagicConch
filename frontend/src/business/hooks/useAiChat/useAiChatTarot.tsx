@@ -36,40 +36,42 @@ export function useAiChatTarot(tarotCardId: React.MutableRefObject<string | unde
     ));
   };
 
-  const askTarotCardButtons = displayAskTarotCardButtons && (
-    <div className="absolute right-50 bottom-0 flex gap-16">
-      <CustomButton
-        size="s"
-        color="dark"
-        handleButtonClicked={continueChat}
-      >
-        아니, 더 이야기 나눌래
-      </CustomButton>
-      <CustomButton
-        size="s"
-        color="active"
-        handleButtonClicked={openTarotSpread}
-      >
-        좋아, 타로 카드를 뽑을래
-      </CustomButton>
-    </div>
-  );
+  const AskTarotCardButtons = () =>
+    displayAskTarotCardButtons && (
+      <div className="absolute right-50 bottom-0 flex gap-16">
+        <CustomButton
+          size="s"
+          color="dark"
+          handleButtonClicked={continueChat}
+        >
+          아니, 더 이야기 나눌래
+        </CustomButton>
+        <CustomButton
+          size="s"
+          color="active"
+          handleButtonClicked={openTarotSpread}
+        >
+          좋아, 타로 카드를 뽑을래
+        </CustomButton>
+      </div>
+    );
 
-  const tarotSpreadButton = displayTarotSpreadButton && (
-    <div className="absolute top-80 left-40">
-      <CustomButton
-        size="m"
-        color="dark"
-        handleButtonClicked={openTarotSpread}
-      >
-        타로 카드
-      </CustomButton>
-    </div>
-  );
+  const TarotSpreadButton = () =>
+    displayTarotSpreadButton && (
+      <div className="absolute top-80 left-40">
+        <CustomButton
+          size="m"
+          color="dark"
+          handleButtonClicked={openTarotSpread}
+        >
+          타로 카드
+        </CustomButton>
+      </div>
+    );
 
   useEffect(() => {
     setTarotCardEventListener(() => setDisplayAskTarotCardButtons(true));
   }, []);
 
-  return { askTarotCardButtons, tarotSpreadButton };
+  return { AskTarotCardButtons, TarotSpreadButton, displayAskTarotCardButtons };
 }
