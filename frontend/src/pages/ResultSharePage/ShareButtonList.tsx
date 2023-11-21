@@ -20,7 +20,7 @@ export function ShareButtonList({ cardUrl, resultSharePageRef }: ShareButtonList
         <li
           key={key}
           className={tooltip && 'tooltip'}
-          data-tip={tooltip}
+          data-tip={tooltip && tooltip}
         >
           <IconButton
             text={text}
