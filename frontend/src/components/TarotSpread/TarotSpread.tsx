@@ -11,7 +11,7 @@ interface TarotSpreadProps {
 }
 
 const TAROT_COUNT = 78;
-const spreadSound = new Audio('../../../public/spreadCards.mp3');
+const spreadSound = new Audio('/spreadCards.mp3');
 
 export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProps) {
   const [closing, setClosing] = useState<boolean>(!opened);

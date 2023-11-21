@@ -7,7 +7,7 @@ interface TarotCardProps {
   onClick: () => void;
 }
 
-const flipSound = new Audio('../../../public/flipCard.mp3');
+const flipSound = new Audio('/flipCard.mp3');
 
 export default function TarotCard({ dragging, index, backImg, onClick }: TarotCardProps) {
   const [img, setImg] = useState<string>(backImg);
