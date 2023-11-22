@@ -1,11 +1,13 @@
 type ClovaEvent = {
   id: string;
   event: string;
-  data: {
-    message: {
-      role: string;
-      content: string;
-    };
+  data: ClovaEventData;
+};
+
+type ClovaEventData = {
+  message: {
+    role: string;
+    content: string;
   };
 };
 
@@ -14,6 +16,40 @@ export function convertClovaEventStream2TokenStream(
 ): ReadableStream<Uint8Array> {
   const transformer = createTransformer();
   return clovaEventStream.pipeThrough(transformer);
+}
+
+type tokenStreamHandlers = {
+  onStreaming: (token: string) => void;
+  onStreamEnd: (completeMessage: string) => void;
+};
+
+export function readTokenStream(
+  stream: ReadableStream<Uint8Array>,
+  { onStreaming, onStreamEnd }: tokenStreamHandlers,
+) {
+  let message = '';
+  const reader = stream.getReader();
+
+  const readStream = () => {
+    reader?.read().then(({ done, value }) => {
+      if (done) {
+        onStreamEnd(message);
+        return;
+      }
+      const token = new TextDecoder().decode(value);
+      message += token;
+
+      onStreaming(token);
+      return readStream();
+    });
+  };
+  readStream();
+}
+
+export function string2TokenStream(string: string): ReadableStream<Uint8Array> {
+  const uint8Array = stringToUint8Array(string);
+  const stream = uint8ArrayToStream(uint8Array);
+  return stream;
 }
 
 function createTransformer(): TransformStream<Uint8Array, Uint8Array> {
@@ -39,8 +75,6 @@ function createTransformer(): TransformStream<Uint8Array, Uint8Array> {
         }
         return streamEvent.data.message.content;
       };
-      const isString = (object: any): object is string =>
-        typeof object === 'string';
 
       const newChunks = splitedChunk.map(extractToken).filter(isString);
 
@@ -52,6 +86,10 @@ function createTransformer(): TransformStream<Uint8Array, Uint8Array> {
   };
 
   return new TransformStream<Uint8Array, Uint8Array>(transformer);
+}
+
+function isString(object: any): object is string {
+  return typeof object === 'string';
 }
 
 function streamEventParse(str: string): ClovaEvent | undefined {
@@ -84,4 +122,22 @@ function isStreamEvent(object: any): object is ClovaEvent {
     'role' in object.data.message &&
     'content' in object.data.message
   );
+}
+
+function stringToUint8Array(string: string): Uint8Array {
+  const encoder = new TextEncoder();
+  return encoder.encode(string);
+}
+
+function uint8ArrayToStream(
+  uint8Array: Uint8Array,
+): ReadableStream<Uint8Array> {
+  const readableStream = new ReadableStream({
+    start(controller) {
+      controller.enqueue(uint8Array);
+      controller.close();
+    },
+  });
+
+  return readableStream;
 }

@@ -22,6 +22,7 @@ import {
   tarotCardNames,
   welcomeMessage,
 } from './constants';
+import { readTokenStream, string2TokenStream } from './stream';
 
 const bucketUrl: string = 'https://kr.object.ncloudstorage.com/magicconch';
 
@@ -99,10 +100,14 @@ export class EventsGateway
       createRoom();
     }
 
-    setTimeout(() => {
-      client.emit('message', welcomeMessage);
-      client.chatLog.push({ role: 'assistant', content: welcomeMessage });
-    }, 2000);
+    setTimeout(() => this.#welcome(client), 2000);
+  }
+
+  #welcome(client: MySocket) {
+    client.emit('streamStart');
+
+    const stream = string2TokenStream(welcomeMessage);
+    this.#streamMessage(client, stream);
   }
 
   @SubscribeMessage('message')
@@ -110,9 +115,16 @@ export class EventsGateway
     this.logger.log(`🚀 Received a message from ${client.id}: ${message}`);
     if (client.chatEnd) return;
 
-    const result = await this.clovaStudio.createTalk(client.chatLog, message);
-    if (result) {
-      this.readStreamAndSend(client, result.getReader());
+    client.emit('streamStart');
+
+    const stream = await this.clovaStudio.createTalk(client.chatLog, message);
+    if (stream) {
+      const onDone = (generatedMessage: string) => {
+        if (generatedMessage.includes(askTarotCardMessage)) {
+          client.emit('tarotCard');
+        }
+      };
+      this.#streamMessage(client, stream, onDone);
     }
   }
 
@@ -122,15 +134,30 @@ export class EventsGateway
       `🚀 TarotRead request received from ${client.id}: ${cardIdx}번 ${tarotCardNames[cardIdx]}`,
     );
 
-    const result = await this.clovaStudio.createTarotReading(
+    client.emit('streamStart');
+
+    const stream = await this.clovaStudio.createTarotReading(
       client.chatLog,
       tarotCardNames[cardIdx],
     );
-    if (result) {
-      this.readStreamAndSend(client, result.getReader(), () =>
-        this.chatEndEvent(client, cardIdx),
-      );
+    if (stream) {
+      const onDone = () => this.chatEndEvent(client, cardIdx);
+      this.#streamMessage(client, stream, onDone);
     }
+  }
+
+  #streamMessage(
+    client: MySocket,
+    stream: ReadableStream<Uint8Array>,
+    onDone = (generatedMessage: string) => {},
+  ) {
+    const onStreaming = (token: string) => client.emit('streaming', token);
+    const onStreamEnd = (completeMessage: string) => {
+      client.emit('streamEnd');
+      this.logger.log(`🚀 Send a message to client: ${completeMessage}`);
+      onDone(completeMessage);
+    };
+    readTokenStream(stream, { onStreaming, onStreamEnd });
   }
 
   chatEndEvent(client: MySocket, cardIdx: Number) {
@@ -182,40 +209,5 @@ export class EventsGateway
 
     const totalMsgCnt: number = chatLog.length;
     makeTarotResult(chatLog[totalMsgCnt - 1].content);
-  }
-
-  readStreamAndSend(
-    client: MySocket,
-    reader: ReadableStreamDefaultReader<Uint8Array>,
-    callback?: () => void,
-  ) {
-    let message = '';
-    client.emit('message', message);
-
-    const readStream = () => {
-      reader?.read().then(({ done, value }) => {
-        if (done) {
-          client.emit('streamEnd');
-          client.chatLog.push({ role: 'assistant', content: message });
-
-          this.logger.log(`🚀 Message sent to ${client.id}: ${message}`);
-
-          if (message.includes(askTarotCardMessage)) {
-            client.chatEnd = true;
-            client.emit('tarotCard');
-          }
-
-          if (callback) {
-            setTimeout(callback, 3000);
-          }
-          return;
-        }
-        message += new TextDecoder().decode(value);
-        client.emit('messageUpdate', message);
-
-        return readStream();
-      });
-    };
-    readStream();
   }
 }
