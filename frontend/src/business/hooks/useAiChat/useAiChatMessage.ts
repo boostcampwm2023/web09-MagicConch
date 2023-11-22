@@ -38,8 +38,9 @@ export function useAiChatMessage(tarotCardId: React.MutableRefObject<string | un
     const requsetFeedbackMessage = '이번 상담은 어땠어?\n피드백을 남겨주면 내가 더 발전할 수 있어!';
     const button = { content: '피드백하기', onClick: () => alert('👩‍🔧') };
 
-    aiSocketOn('chatEnd', shareLinkId => {
-      console.log(shareLinkId);
+    aiSocketOn('chatEnd', id => {
+      const shareLinkId: string = id as string;
+      setMessages(messages => [...messages.slice(0, -1), { ...messages[messages.length - 1], shareLinkId }]);
       setTimeout(() => addMessage('left', requsetFeedbackMessage, button), 5000);
     });
   }, []);

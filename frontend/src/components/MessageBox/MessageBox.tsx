@@ -10,21 +10,17 @@ interface MessageBoxProps {
   message: string;
   profile: string;
   button?: MessageButton;
+  shareLinkId?: string;
 }
 
 // TODO: tarotId로 서버에서 타로 카드 이미지 정보를 받아와서 src와 alt 채워주기
 // TODO: 조건식 !tarotId -> tarotId로 변경
 // TODO: 프로필 이미지 설정
 
-function MessageBox({ tarotId, type, message, profile, button }: MessageBoxProps) {
-  const recievedResult = tarotId && type == 'left';
-
-  // TODO: 공유하기 페이지 아이디를 서버에서 받아와야함.
-  const resultSharePageId = '1';
-
+function MessageBox({ tarotId, type, message, profile, button, shareLinkId }: MessageBoxProps) {
   return (
     <div className="relative max-w-[70%]">
-      {recievedResult && (
+      {tarotId && (
         <img
           className="w-120 h-200 relative left-72 rounded-lg"
           src={`../../../__tests__/mocks/cards/${tarotId}.jpg`}
@@ -38,10 +34,10 @@ function MessageBox({ tarotId, type, message, profile, button }: MessageBoxProps
           profile={profile}
           button={button}
         />
-        {recievedResult && (
+        {shareLinkId && (
           <div className="absolute bottom-10 -right-50">
             <Link
-              to={`/result/${resultSharePageId}`}
+              to={`/result/${shareLinkId}`}
               target="_blank"
               rel="noopener noreferrer"
             >
