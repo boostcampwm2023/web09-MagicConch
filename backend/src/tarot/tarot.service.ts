@@ -20,12 +20,14 @@ export class TarotService {
 
   async createTarotResult(
     createTarotResultDto: CreateTarotResultDto,
-  ): Promise<void> {
+  ): Promise<string> {
     const tarotResult: TarotResult = new TarotResult();
     tarotResult.cardUrl = createTarotResultDto.cardUrl;
     tarotResult.message = createTarotResultDto.message;
     try {
-      this.tarotResultRepository.save(tarotResult);
+      const savedResult: TarotResult =
+        await this.tarotResultRepository.save(tarotResult);
+      return savedResult.id;
     } catch (err: unknown) {
       throw err;
     }
