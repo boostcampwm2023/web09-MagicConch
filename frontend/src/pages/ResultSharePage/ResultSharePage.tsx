@@ -1,4 +1,4 @@
-import { Suspense, useRef } from 'react';
+import { useRef } from 'react';
 
 import { getResultShareQuery } from '@stores/queries/getResultShareQuery';
 
