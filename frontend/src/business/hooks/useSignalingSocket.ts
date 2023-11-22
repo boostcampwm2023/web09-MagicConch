@@ -1,11 +1,11 @@
 import { connectSocket, socketEmit, socketOn } from '@business/services/socket';
 
-interface useSignalingSocketArgs {
+interface useSignalingSocketProps {
   roomName: string;
   peerConnectionRef: React.MutableRefObject<RTCPeerConnection | undefined>;
 }
 
-export function useSignalingSocket({ roomName, peerConnectionRef }: useSignalingSocketArgs) {
+export function useSignalingSocket({ roomName, peerConnectionRef }: useSignalingSocketProps) {
   const initSignalingSocket = () => {
     connectSocket();
 
