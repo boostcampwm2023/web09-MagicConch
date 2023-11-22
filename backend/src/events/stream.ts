@@ -78,7 +78,7 @@ function createTransformer(): TransformStream<Uint8Array, Uint8Array> {
       const encoder = new TextEncoder();
       newChunks
         .map((token) => encoder.encode(token))
-        .forEach(controller.enqueue);
+        .forEach((encodeedToken) => controller.enqueue(encodeedToken));
     },
   };
 
