@@ -1,4 +1,3 @@
-import { createTransformer } from './clovaStreamTransform';
 import {
   CLOVA_URL,
   chatMaxTokens,
@@ -6,6 +5,7 @@ import {
   tarotMaxTokens,
   tarotReadingSystemMessage,
 } from './constants';
+import { convertClovaEventStream2TokenStream } from './stream';
 
 export type Chat = {
   role: 'user' | 'system' | 'assistant';
@@ -59,14 +59,12 @@ class ClovaStudio {
       }),
     });
 
-    if (!response.ok) {
+    if (!response.ok || !response.body) {
       throw new Error('FATCH ERROR!!!');
     }
 
-    const transformer = createTransformer();
-    const messageStream = response.body?.pipeThrough(transformer);
-
-    return messageStream;
+    const tokenStream = convertClovaEventStream2TokenStream(response.body);
+    return tokenStream;
   }
 }
 
