@@ -13,6 +13,7 @@
 html,
 body,
 #root {
+  cursor: none;
   overscroll-behavior-x: none;
   font-size: 16px;
   width: 100vw;
@@ -24,4 +25,10 @@ img {
   -khtml-user-drag: none;
   -moz-user-drag: none;
   -o-user-drag: none;
+}
+
+button:hover,
+input:hover,
+a:hover {
+  cursor: none;
 }

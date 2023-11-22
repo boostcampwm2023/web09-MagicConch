@@ -122,6 +122,29 @@ export default {
       };
       addComponents(shadowTheme);
     },
+    ({ addComponents }) => {
+      const cursorTheme = {
+        '.cursor': {
+          width: '1.5rem',
+          height: '1.5rem',
+          borderRadius: '50%',
+          position: 'absolute',
+          zIndex: 9999,
+          transform: 'translate(-50%, -50%)',
+          transformOrigin: 'center',
+          pointerEvents: 'none',
+          willChange: 'transform',
+          mixBlendMode: 'difference',
+          background: '#fff',
+        },
+        '.cursor:has(~ div button:hover), .cursor:has(~ div input:hover), .cursor:has(~ div a:hover), .cursor:has(~ div audio:hover)':
+          {
+            transition: 'transform 0.1s ease-in-out',
+            transform: 'translate(-50%, -50%) scale(2)',
+          },
+      };
+      addComponents(cursorTheme);
+    },
     ({ addUtilities }) => {
       const flexUtils = {
         '.flex-all-center': {
