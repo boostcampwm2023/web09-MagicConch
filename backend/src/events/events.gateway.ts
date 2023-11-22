@@ -89,25 +89,10 @@ export class EventsGateway
 
     // 채팅방 INSERT
     if (!__DEV__) {
-      const createRoom = async () => {
-        const chattingInfo: ChattingInfo = await this.chatService.createRoom(
-          client.id,
-        );
-        client.memberId = chattingInfo.memeberId;
-        client.chatRoomId = chattingInfo.roomId;
-      };
-
-      createRoom();
+      this.#createRoom(client);
     }
 
     setTimeout(() => this.#welcome(client), 2000);
-  }
-
-  #welcome(client: MySocket) {
-    client.emit('streamStart');
-
-    const stream = string2TokenStream(welcomeMessage);
-    this.#streamMessage(client, stream);
   }
 
   @SubscribeMessage('message')
@@ -144,6 +129,21 @@ export class EventsGateway
       const onDone = () => this.chatEndEvent(client, cardIdx);
       this.#streamMessage(client, stream, onDone);
     }
+  }
+
+  async #createRoom(client: MySocket) {
+    const chattingInfo: ChattingInfo = await this.chatService.createRoom(
+      client.id,
+    );
+    client.memberId = chattingInfo.memeberId;
+    client.chatRoomId = chattingInfo.roomId;
+  }
+
+  #welcome(client: MySocket) {
+    client.emit('streamStart');
+
+    const stream = string2TokenStream(welcomeMessage);
+    this.#streamMessage(client, stream);
   }
 
   #streamMessage(
