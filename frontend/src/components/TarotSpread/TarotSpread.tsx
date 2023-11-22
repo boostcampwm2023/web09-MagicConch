@@ -104,7 +104,7 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
           <div
             key={idx}
             ref={ref => (tarotCardRefs.current[idx] = ref!)}
-            className="absolute w-full h-full"
+            className="absolute w-h-full"
             onClick={() => flipCard(id, tarotCardRefs.current[idx])}
           >
             <TarotCard
