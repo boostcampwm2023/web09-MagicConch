@@ -1,8 +1,9 @@
 import Background from '../Background';
-import TarotCard from './TarotCard';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { shuffledArray } from '@utils/array';
+
+import TarotCard from './TarotCard';
 
 interface TarotSpreadProps {
   opened: boolean;
@@ -33,7 +34,7 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
 
     addEventListener('wheel', rotateSpread);
     addEventListener('animationend', closeWithFadeOut);
-    setTimeout(spreadTarotCards);
+    setTimeout(spreadTarotCards, 100);
 
     return () => {
       removeEventListener('wheel', rotateSpread);
