@@ -13,12 +13,12 @@ type ShareButton = {
   tooltip?: string;
 };
 
-interface useShareButtonArgs {
+interface useShareButtonProps {
   cardUrl: string;
   resultSharePageRef: RefObject<HTMLDivElement>;
 }
 
-export function useShareButtons({ cardUrl, resultSharePageRef }: useShareButtonArgs) {
+export function useShareButtons({ cardUrl, resultSharePageRef }: useShareButtonProps) {
   const { id } = useParams<{ id: string }>();
 
   const share2Kakao = async () => {

@@ -33,3 +33,22 @@ export function sendMessage(message: string) {
 export function requestTarotRead(tarotCard: number) {
   socket.emit('tarotRead', tarotCard);
 }
+
+type SocketEventName = 'welcome' | 'offer' | 'answer' | 'candidate' | 'room_full' | 'join_room';
+
+export function socketOn<T>(eventName: SocketEventName, eventListener: (args: T) => void) {
+  socket.on(eventName, eventListener);
+}
+export function socketEmit(eventName: SocketEventName, ...eventArgs: unknown[]) {
+  socket.emit(eventName, ...eventArgs);
+}
+
+export function connectSocket() {
+  if (socket) {
+    return;
+  }
+  socket = io(URL);
+}
+export function disconnectSocket() {
+  socket.disconnect();
+}

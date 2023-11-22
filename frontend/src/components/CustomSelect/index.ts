@@ -1,4 +1,4 @@
-import { CustomSelectOptions, OnChangeSelectArgs } from './CustomSelect';
+import { CustomSelectOptions, OnChangeSelectFunction } from './CustomSelect';
 
 export { default } from './CustomSelect';
-export type { CustomSelectOptions, OnChangeSelectArgs };
+export type { CustomSelectOptions, OnChangeSelectFunction };

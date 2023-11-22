@@ -1,18 +1,17 @@
-export interface CustomSelectOptions {
+export interface OnChangeSelectFunction {
   value: string;
   label: string;
-  selected?: boolean;
 }
-export interface OnChangeSelectArgs {
-  value: string;
-  label: string;
+
+export interface CustomSelectOptions extends OnChangeSelectFunction {
+  selected?: boolean;
 }
 
 interface CustomSelectProps {
   options: CustomSelectOptions[];
   required?: boolean;
   autoFocus?: boolean;
-  onChange?: ({ value, label }: OnChangeSelectArgs) => void;
+  onChange?: ({ value, label }: OnChangeSelectFunction) => void;
 }
 
 export default function CustomSelect({ options, required, autoFocus, onChange }: CustomSelectProps) {
