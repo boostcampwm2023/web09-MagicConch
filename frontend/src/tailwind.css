@@ -27,8 +27,7 @@ img {
   -o-user-drag: none;
 }
 
-button:hover,
-input:hover,
-a:hover {
+*:hover,
+*::-webkit-media-controls-play-button {
   cursor: none;
 }
