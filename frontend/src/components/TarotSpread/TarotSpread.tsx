@@ -34,7 +34,7 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
 
     addEventListener('wheel', rotateSpread);
     addEventListener('animationend', closeWithFadeOut);
-    setTimeout(spreadTarotCards, 100);
+    setTimeout(spreadTarotCards, 10);
 
     return () => {
       removeEventListener('wheel', rotateSpread);
