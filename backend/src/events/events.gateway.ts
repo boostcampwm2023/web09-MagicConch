@@ -1,11 +1,11 @@
 import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ModuleRef } from '@nestjs/core';
-import { InjectRepository } from '@nestjs/typeorm';
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
   OnGatewayInit,
+  SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
@@ -40,6 +40,8 @@ export class EventsGateway
 {
   chatService: ChatService;
   tarotService: TarotService;
+  X_NCP_APIGW_API_KEY: any;
+  X_NCP_CLOVASTUDIO_API_KEY: any;
 
   constructor(
     private readonly configService: ConfigService,
@@ -51,6 +53,11 @@ export class EventsGateway
       this.chatService = await this.moduleRef.create(ChatService);
       this.tarotService = await this.moduleRef.create(TarotService);
     }
+
+    this.X_NCP_APIGW_API_KEY = this.configService.get('X_NCP_APIGW_API_KEY');
+    this.X_NCP_CLOVASTUDIO_API_KEY = this.configService.get(
+      'X_NCP_CLOVASTUDIO_API_KEY',
+    );
   }
 
   @WebSocketServer()
@@ -86,132 +93,123 @@ export class EventsGateway
       createRoom();
     }
 
-    const X_NCP_APIGW_API_KEY = this.configService.get('X_NCP_APIGW_API_KEY');
-    const X_NCP_CLOVASTUDIO_API_KEY = this.configService.get(
-      'X_NCP_CLOVASTUDIO_API_KEY',
-    );
-
     setTimeout(() => {
       client.emit('message', welcomeMessage);
       client.chatLog.push({ role: 'assistant', content: welcomeMessage });
     }, 2000);
-
-    const messageEventHandler = async (message: string) => {
-      if (client.chatEnd) return;
-
-      const result = await createTalk(
-        client.chatLog,
-        message,
-        X_NCP_APIGW_API_KEY,
-        X_NCP_CLOVASTUDIO_API_KEY,
-      );
-      if (result) {
-        readStreamAndSend(client, result.getReader());
-      }
-    };
-
-    const chatEndEvent = (cardIdx: Number) => {
-      client.emit('chatEnd', chatEndMessage);
-
-      if (__DEV__) return;
-
-      const chatLog: Chat[] = client.chatLog;
-
-      const makeMessageDto = (
-        message: Chat,
-      ): CreateChattingMessageDto | undefined => {
-        const messageDto = new CreateChattingMessageDto();
-        if (message.role === 'system') {
-          return undefined;
-        }
-        messageDto.isHost = message.role === 'assistant';
-        messageDto.message = message.content;
-        return messageDto;
-      };
-
-      const isCreateChattingMessageDto = (
-        message: CreateChattingMessageDto | undefined,
-      ): message is CreateChattingMessageDto =>
-        message instanceof CreateChattingMessageDto;
-
-      const parsingMessage: CreateChattingMessageDto[] = chatLog
-        .map(makeMessageDto)
-        .filter(isCreateChattingMessageDto);
-
-      const createChattingMessageDto = parsingMessage
-        .slice(0, -2)
-        .concat(parsingMessage.slice(-1));
-
-      // 채팅 메시지 INSERT
-      this.chatService.createMessage(
-        client.chatRoomId,
-        createChattingMessageDto,
-      );
-
-      // 타로 결과 INSERT
-      const makeTarotResult = async (tarotResult: string) => {
-        const createTarotResultDto: CreateTarotResultDto =
-          new CreateTarotResultDto();
-        createTarotResultDto.cardUrl = `${bucketUrl}/basic/${cardIdx}.jpg`;
-        createTarotResultDto.message = tarotResult;
-
-        const tarotResultId: string =
-          await this.tarotService.createTarotResult(createTarotResultDto);
-        console.log(tarotResultId);
-      };
-
-      const totalMsgCnt: number = chatLog.length;
-      makeTarotResult(chatLog[totalMsgCnt - 1].content);
-    };
-
-    const tarotReadEventHandler = async (cardIdx: number) => {
-      const result = await createTarotReading(
-        client.chatLog,
-        tarotCardNames[cardIdx],
-        X_NCP_APIGW_API_KEY,
-        X_NCP_CLOVASTUDIO_API_KEY,
-      );
-      if (result) {
-        readStreamAndSend(client, result.getReader(), () =>
-          chatEndEvent(cardIdx),
-        );
-      }
-    };
-
-    client.on('message', messageEventHandler);
-    client.on('tarotRead', tarotReadEventHandler);
   }
-}
 
-function readStreamAndSend(
-  socket: MySocket,
-  reader: ReadableStreamDefaultReader<Uint8Array>,
-  callback?: () => void,
-) {
-  let message = '';
-  socket.emit('message', message);
+  @SubscribeMessage('message')
+  async handleMessageEvent(client: MySocket, message: string) {
+    if (client.chatEnd) return;
 
-  const readStream = () => {
-    reader?.read().then(({ done, value }) => {
-      if (done) {
-        socket.emit('streamEnd');
-        socket.chatLog.push({ role: 'assistant', content: message });
+    const result = await createTalk(
+      client.chatLog,
+      message,
+      this.X_NCP_APIGW_API_KEY,
+      this.X_NCP_CLOVASTUDIO_API_KEY,
+    );
+    if (result) {
+      this.readStreamAndSend(client, result.getReader());
+    }
+  }
 
-        if (message.includes(askTarotCardMessage)) {
-          socket.chatEnd = true;
-          socket.emit('tarotCard');
-        }
+  @SubscribeMessage('tarotRead')
+  async handleTarotReadEvent(client: MySocket, cardIdx: number) {
+    const result = await createTarotReading(
+      client.chatLog,
+      tarotCardNames[cardIdx],
+      this.X_NCP_APIGW_API_KEY,
+      this.X_NCP_CLOVASTUDIO_API_KEY,
+    );
+    if (result) {
+      this.readStreamAndSend(client, result.getReader(), () =>
+        this.chatEndEvent(client, cardIdx),
+      );
+    }
+  }
 
-        if (callback) {
-          setTimeout(callback, 3000);
-        }
-        return;
+  chatEndEvent(client: MySocket, cardIdx: Number) {
+    client.emit('chatEnd', chatEndMessage);
+
+    if (__DEV__) return;
+
+    const chatLog: Chat[] = client.chatLog;
+
+    const makeMessageDto = (
+      message: Chat,
+    ): CreateChattingMessageDto | undefined => {
+      const messageDto = new CreateChattingMessageDto();
+      if (message.role === 'system') {
+        return undefined;
       }
-      message += new TextDecoder().decode(value);
-      socket.emit('messageUpdate', message);
+      messageDto.isHost = message.role === 'assistant';
+      messageDto.message = message.content;
+      return messageDto;
+    };
 
-      return readStream();
-    });
-  };
-  readStream();
+    const isCreateChattingMessageDto = (
+      message: CreateChattingMessageDto | undefined,
+    ): message is CreateChattingMessageDto =>
+      message instanceof CreateChattingMessageDto;
+
+    const parsingMessage: CreateChattingMessageDto[] = chatLog
+      .map(makeMessageDto)
+      .filter(isCreateChattingMessageDto);
+
+    const createChattingMessageDto = parsingMessage
+      .slice(0, -2)
+      .concat(parsingMessage.slice(-1));
+
+    // 채팅 메시지 INSERT
+    this.chatService.createMessage(client.chatRoomId, createChattingMessageDto);
+
+    // 타로 결과 INSERT
+    const makeTarotResult = async (tarotResult: string) => {
+      const createTarotResultDto: CreateTarotResultDto =
+        new CreateTarotResultDto();
+      createTarotResultDto.cardUrl = `${bucketUrl}/basic/${cardIdx}.jpg`;
+      createTarotResultDto.message = tarotResult;
+
+      const tarotResultId: string =
+        await this.tarotService.createTarotResult(createTarotResultDto);
+      console.log(tarotResultId);
+    };
+
+    const totalMsgCnt: number = chatLog.length;
+    makeTarotResult(chatLog[totalMsgCnt - 1].content);
+  }
+
+  readStreamAndSend(
+    client: MySocket,
+    reader: ReadableStreamDefaultReader<Uint8Array>,
+    callback?: () => void,
+  ) {
+    let message = '';
+    client.emit('message', message);
+
+    const readStream = () => {
+      reader?.read().then(({ done, value }) => {
+        if (done) {
+          client.emit('streamEnd');
+          client.chatLog.push({ role: 'assistant', content: message });
+
+          if (message.includes(askTarotCardMessage)) {
+            client.chatEnd = true;
+            client.emit('tarotCard');
+          }
+
+          if (callback) {
+            setTimeout(callback, 3000);
+          }
+          return;
+        }
+        message += new TextDecoder().decode(value);
+        client.emit('messageUpdate', message);
+
+        return readStream();
+      });
+    };
+    readStream();
+  }
 }
