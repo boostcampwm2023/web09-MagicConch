@@ -123,13 +123,21 @@ export default {
       addComponents(shadowTheme);
     },
     ({ addUtilities }) => {
-      const flexUtils = {
+      const sizeUtil = {
         '.flex-all-center': {
           justifyContent: 'center',
           alignItems: 'center',
         },
+        '.w-h-full': {
+          width: '100%',
+          heght: '100%',
+        },
+        '.w-h-screen': {
+          width: '100vw',
+          height: '100vh',
+        },
       };
-      addUtilities(flexUtils);
+      addUtilities(sizeUtil);
     },
   ],
 };
