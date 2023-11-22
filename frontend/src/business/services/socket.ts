@@ -30,6 +30,6 @@ export function setChatEndEventListener(listener: (message: string) => void) {
 export function sendMessage(message: string) {
   socket.emit('message', message);
 }
-export function requestTarotRead(message: string) {
-  socket.emit('tarotRead', message);
+export function requestTarotRead(tarotCard: number) {
+  socket.emit('tarotRead', tarotCard);
 }
