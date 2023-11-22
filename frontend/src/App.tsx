@@ -7,10 +7,12 @@ import ReaderListPage from './pages/ReaderListPage';
 import ResultSharePage from './pages/ResultSharePage';
 
 import BackgroundMusic from './components/BackgroundMusic';
+import Cursor from '@components/Cursor';
 
 function App() {
   return (
     <>
+      <Cursor />
       <Routes>
         <Route
           path="/"
