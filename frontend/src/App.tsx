@@ -23,7 +23,7 @@ function App() {
           element={<AIChatPage />}
         />
         <Route
-          path="/chat/human/:id"
+          path="/chat/human/:roomName"
           element={<HumanChatPage />}
         />
         <Route

@@ -17,7 +17,7 @@ const io = new Server(server, {
   },
 });
 
-const PORT = 3001;
+const PORT = 3000;
 
 const socketRooms = {};
 const users = {};
@@ -51,24 +51,24 @@ io.on('connection', socket => {
     // 입장 전 해당 방에 다른 유저가 있는지 확인
     //있다면 offer-answer를 위해 알려줌
     const ohters = socketRooms[roomId].filter(user => user.id !== socket.id);
-    if (ohters.length) {
-      io.sockets.to(socket.id).emit('all_users', ohters);
+    if (ohters.length > 0) {
+      socket.to(roomId).emit('welcome', ohters);
     }
   });
 
   // offer를 전달받고 다른 유저들에게 전달해준다.
   socket.on('offer', (sdp, roomName) => {
-    socket.to(roomName).emit('getOffer', sdp);
+    socket.to(roomName).emit('offer', sdp);
   });
 
   // answer를 전달받고, 다른 유저들에게 전달해준다.
   socket.on('answer', (sdp, roomName) => {
-    socket.to(roomName).emit('getAnswer', sdp);
+    socket.to(roomName).emit('answer', sdp);
   });
 
   // candidate를 전달받고, 다른 유저들에게 전달해준다.
   socket.on('candidate', (candidate, roomName) => {
-    socket.to(roomName).emit('getCandidate', candidate);
+    socket.to(roomName).emit('candidate', candidate);
   });
 
   // 방을 나간다면
@@ -83,6 +83,7 @@ io.on('connection', socket => {
       }
     }
     delete users[socket.id];
+
     socket.broadcast.to(socketRooms[roomID]).emit('user_exit', { id: socket.id });
 
     console.log('disconnect', socketRooms);
