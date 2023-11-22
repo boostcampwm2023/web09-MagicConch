@@ -22,7 +22,7 @@ function ResultSharePage({}: ResultSharePageProps) {
       <Header />
       <div
         ref={resultSharePageRef}
-        className="w-screen h-full flex flex-all-center gap-80 display-medium16 surface-alt text-strong p-20"
+        className="w-screen h-full flex flex-with-center gap-80 display-medium16 surface-alt text-strong p-20"
       >
         <ResultImage cardUrl={card_url} />
 

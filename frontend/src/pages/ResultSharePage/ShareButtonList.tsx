@@ -15,7 +15,7 @@ export function ShareButtonList({ cardUrl, resultSharePageRef }: ShareButtonList
   const { shareButtons } = useShareButtons({ cardUrl, resultSharePageRef });
 
   return (
-    <ul className="w-full h-110 rounded-b-2xl flex flex-all-center gap-12 ignore-html2canvas">
+    <ul className="w-full h-110 rounded-b-2xl flex flex-with-center gap-12 ignore-html2canvas">
       {Object.entries(shareButtons).map(([key, { icon, iconColor, onClick, text, tooltip }]) => (
         <li
           key={key}
