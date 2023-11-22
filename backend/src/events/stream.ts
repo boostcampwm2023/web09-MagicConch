@@ -18,32 +18,29 @@ export function convertClovaEventStream2TokenStream(
   return clovaEventStream.pipeThrough(transformer);
 }
 
-type tokenStreamHandlers = {
-  onStreaming: (token: string) => void;
-  onStreamEnd: (completeMessage: string) => void;
-};
-
 export function readTokenStream(
   stream: ReadableStream<Uint8Array>,
-  { onStreaming, onStreamEnd }: tokenStreamHandlers,
-) {
+  onStreaming: (token: string) => void,
+): Promise<string> {
   let message = '';
   const reader = stream.getReader();
 
-  const readStream = () => {
-    reader?.read().then(({ done, value }) => {
-      if (done) {
-        onStreamEnd(message);
-        return;
-      }
-      const token = new TextDecoder().decode(value);
-      message += token;
+  return new Promise((resolve) => {
+    const readStream = () => {
+      reader?.read().then(({ done, value }) => {
+        if (done) {
+          resolve(message);
+          return;
+        }
+        const token = new TextDecoder().decode(value);
+        message += token;
 
-      onStreaming(token);
-      return readStream();
-    });
-  };
-  readStream();
+        onStreaming(token);
+        return readStream();
+      });
+    };
+    readStream();
+  });
 }
 
 export function string2TokenStream(string: string): ReadableStream<Uint8Array> {

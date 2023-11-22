@@ -103,13 +103,12 @@ export class EventsGateway
     client.emit('streamStart');
 
     const stream = await this.clovaStudio.createTalk(client.chatLog, message);
+
     if (stream) {
-      const onDone = (generatedMessage: string) => {
-        if (generatedMessage.includes(askTarotCardMessage)) {
-          client.emit('tarotCard');
-        }
-      };
-      this.#streamMessage(client, stream, onDone);
+      const sentMessage = await this.#streamMessage(client, stream);
+      if (sentMessage.includes(askTarotCardMessage)) {
+        client.emit('tarotCard');
+      }
     }
   }
 
@@ -126,8 +125,8 @@ export class EventsGateway
       tarotCardNames[cardIdx],
     );
     if (stream) {
-      const onDone = () => this.chatEndEvent(client, cardIdx);
-      this.#streamMessage(client, stream, onDone);
+      await this.#streamMessage(client, stream);
+      this.chatEndEvent(client, cardIdx);
     }
   }
 
@@ -146,18 +145,14 @@ export class EventsGateway
     this.#streamMessage(client, stream);
   }
 
-  #streamMessage(
-    client: MySocket,
-    stream: ReadableStream<Uint8Array>,
-    onDone = (generatedMessage: string) => {},
-  ) {
+  async #streamMessage(client: MySocket, stream: ReadableStream<Uint8Array>) {
     const onStreaming = (token: string) => client.emit('streaming', token);
-    const onStreamEnd = (completeMessage: string) => {
-      client.emit('streamEnd');
-      this.logger.log(`🚀 Send a message to client: ${completeMessage}`);
-      onDone(completeMessage);
-    };
-    readTokenStream(stream, { onStreaming, onStreamEnd });
+    const sentMessage = await readTokenStream(stream, onStreaming);
+
+    this.logger.log(`🚀 Send a message to client: ${sentMessage}`);
+    client.emit('streamEnd');
+
+    return sentMessage;
   }
 
   chatEndEvent(client: MySocket, cardIdx: Number) {
