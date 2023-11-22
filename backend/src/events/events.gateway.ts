@@ -8,6 +8,7 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
+  WsException,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ChatService, ChattingInfo } from 'src/chat/chat.service';
@@ -160,15 +161,27 @@ export class EventsGateway
   async #saveChatLog(client: MySocket) {
     if (__DEV__) return;
 
-    const createChattingMessageDto = chatLog2createChattingMessageDtos(
-      client.chatLog,
-    );
-    this.chatService.createMessage(client.chatRoomId, createChattingMessageDto);
+    try {
+      const createChattingMessageDto = chatLog2createChattingMessageDtos(
+        client.chatLog,
+      );
+      this.chatService.createMessage(
+        client.chatRoomId,
+        createChattingMessageDto,
+      );
+    } catch (error) {
+      throw new WsException('채팅 로그를 저장하는데 실패했습니다.');
+    }
   }
 
   async #createShareLinkId(cardIdx: number, result: string): Promise<string> {
     if (__DEV__) return 'DEV';
-    const createTarotResultDto = result2createTarotResultDto(cardIdx, result);
-    return await this.tarotService.createTarotResult(createTarotResultDto);
+
+    try {
+      const createTarotResultDto = result2createTarotResultDto(cardIdx, result);
+      return await this.tarotService.createTarotResult(createTarotResultDto);
+    } catch (error) {
+      throw new WsException('타로 결과를 저장하는데 실패했습니다.');
+    }
   }
 }

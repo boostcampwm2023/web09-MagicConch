@@ -1,3 +1,4 @@
+import { WsException } from '@nestjs/websockets';
 import {
   CLOVA_URL,
   chatMaxTokens,
@@ -60,7 +61,7 @@ class ClovaStudio {
     });
 
     if (!response.ok || !response.body) {
-      throw new Error('FATCH ERROR!!!');
+      throw new WsException('서버에서 Clova API를 호출하는데 실패했습니다.');
     }
 
     const tokenStream = convertClovaEventStream2TokenStream(response.body);
