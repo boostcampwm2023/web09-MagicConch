@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
+import { CustomButton } from '@components/Buttons';
 import { MessageButton } from '@components/ChatList';
-import CustomButton from '@components/CustomButton';
 
 interface MessageProps {
   type: 'left' | 'right';

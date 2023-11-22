@@ -1,9 +1,8 @@
-import CustomButton from '@components/CustomButton';
-import { ButtonColor, ButtonSize } from '@components/CustomButton/CustomButton';
-
 import { iconColors } from '@constants/colors';
 
-import { Icon } from '@iconify/react/dist/iconify.js';
+import { Icon } from '@iconify/react';
+
+import CustomButton, { ButtonColor, ButtonSize } from './CustomButton';
 
 export interface IconButton {
   id?: string;

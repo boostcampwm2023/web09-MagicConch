@@ -1,5 +1,5 @@
 interface HeaderRightProps {
-  items: React.ReactNode[];
+  items?: React.ReactNode[];
 }
 
 export default function HeaderRight({ items }: HeaderRightProps) {

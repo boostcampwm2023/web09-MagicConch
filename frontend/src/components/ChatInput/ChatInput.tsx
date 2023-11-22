@@ -1,5 +1,6 @@
-import CustomButton from '../CustomButton';
 import { useRef } from 'react';
+
+import { CustomButton } from '@components/Buttons';
 
 import { Icon } from '@iconify/react';
 
