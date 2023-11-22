@@ -13,16 +13,16 @@ export default function HumanChatPage() {
   );
 
   return (
-    <div className="w-full h-full flex flex-col gap-10 justify-center items-center">
+    <div className="w-h-full flex-with-center flex-col gap-10 ">
       <div className="flex justify-center">
         <video
-          className="w-[320px] h-[180px] bg-blue-200"
+          className="w-320 h-180 bg-blue-200"
           ref={localVideoRef}
           autoPlay
           playsInline
         />
         <video
-          className="w-[320px] h-[180px] bg-red-200"
+          className="w-320 h-180 bg-red-200"
           ref={remoteVideoRef}
           autoPlay
           playsInline
