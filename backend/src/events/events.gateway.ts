@@ -66,21 +66,20 @@ export class EventsGateway
   private readonly logger: Logger = new Logger('EventsGateway');
 
   afterInit(server: Server) {
-    this.logger.log('웹소켓 서버 초기화 ✅');
+    this.logger.log('🚀 웹소켓 서버 초기화');
   }
 
   handleDisconnect(client: Socket) {
-    this.logger.log(`Client Disconnected : ${client.id}`);
+    this.logger.log(`🚀 Client Disconnected : ${client.id}`);
   }
 
   handleConnection(client: MySocket, ...args: any[]) {
-    this.logger.log(`Client Connected : ${client.id}`);
+    this.logger.log(`🚀 Client Connected : ${client.id}`);
 
     client.chatLog = initChatLog();
     client.chatEnd = false;
 
     // 채팅방 INSERT
-
     if (!__DEV__) {
       const createRoom = async () => {
         const chattingInfo: ChattingInfo = await this.chatService.createRoom(
@@ -101,6 +100,7 @@ export class EventsGateway
 
   @SubscribeMessage('message')
   async handleMessageEvent(client: MySocket, message: string) {
+    this.logger.log(`🚀 Received a message from ${client.id}: ${message}`);
     if (client.chatEnd) return;
 
     const result = await createTalk(
@@ -116,6 +116,10 @@ export class EventsGateway
 
   @SubscribeMessage('tarotRead')
   async handleTarotReadEvent(client: MySocket, cardIdx: number) {
+    this.logger.log(
+      `🚀 TarotRead request received from ${client.id}: ${cardIdx}번 ${tarotCardNames[cardIdx]}`,
+    );
+
     const result = await createTarotReading(
       client.chatLog,
       tarotCardNames[cardIdx],
@@ -193,6 +197,8 @@ export class EventsGateway
         if (done) {
           client.emit('streamEnd');
           client.chatLog.push({ role: 'assistant', content: message });
+
+          this.logger.log(`🚀 Message sent to ${client.id}: ${message}`);
 
           if (message.includes(askTarotCardMessage)) {
             client.chatEnd = true;
