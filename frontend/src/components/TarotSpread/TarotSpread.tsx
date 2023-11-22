@@ -1,8 +1,9 @@
 import Background from '../Background';
-import TarotCard from './TarotCard';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { shuffledArray } from '@utils/array';
+
+import TarotCard from './TarotCard';
 
 interface TarotSpreadProps {
   opened: boolean;
@@ -12,10 +13,10 @@ interface TarotSpreadProps {
 
 const TAROT_COUNT = 78;
 const spreadSound = new Audio('/spreadCards.mp3');
+const flipSound = new Audio('/flipCard.mp3');
 
 export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProps) {
   const [closing, setClosing] = useState<boolean>(!opened);
-  const [picked, setPicked] = useState<number>();
   const [dragging, setDragging] = useState<boolean>(false);
 
   const tarotCardRefs = useRef<HTMLDivElement[]>([]);
@@ -23,9 +24,12 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
   const tarotSpreadRef = useRef<HTMLDivElement>(null);
   const rotationRef = useRef<number>(0);
 
-  // TODO: react-query api로 사용자 정의 뒷면 기본 이미지 들고오기
+  // TODO: react-query api로 사용자 정의 뒷면 기본 이미지 & 랜덤 이미지 불러오기
   const backImg = useMemo(() => `../../../__tests__/mocks/cards/back.png`, []);
-  const shuffledCard = useMemo(() => shuffledArray(Array.from({ length: TAROT_COUNT }, (_, idx) => idx)), []);
+  const frontImg = useMemo(() => {
+    const id = Math.floor(Math.random() * 78) % 22;
+    return `../../../__tests__/mocks/cards/${id.toString().padStart(2, '0')}.jpg`;
+  }, []);
 
   useEffect(() => {
     const rotateSpread = ({ deltaX }: WheelEvent) => rotateTarotSpread(deltaX > 0 ? 'left' : 'right');
@@ -47,31 +51,41 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
   };
 
   const rotateTarotSpread = (direction: 'right' | 'left') => {
-    const target = tarotSpreadRef.current;
-    if (!target) return;
+    const spread = tarotSpreadRef.current;
+    if (!spread) return;
 
     const rotateIndex = rotationRef.current;
     const nextRotateIndex = direction == 'right' ? rotateIndex + 1 : rotateIndex - 1;
-    target.style.transform = `translateX(-50%) rotate(${nextRotateIndex * 0.6}deg)`;
+    spread.style.transform = `translateX(-50%) rotate(${nextRotateIndex * 0.6}deg)`;
     rotationRef.current = nextRotateIndex;
   };
 
   const spreadTarotCards = () => {
     spreadSound.play();
     tarotCardRefs.current.forEach((ref, idx) => {
-      ref.style.transform = `rotate(${270 + idx * 4.6}deg)`;
+      ref.style.transform = `rotate(${270 + idx * 4.6}deg) rotateY(0deg) perspective(800px)`;
+      ref.style.transformStyle = 'preserve-3d';
       ref.style.transition = 'transform 1s ease-out';
     });
   };
 
   const unSpreadTarotCards = () => {
     spreadSound.play();
-    setTimeout(() => tarotCardRefs.current.forEach(ref => (ref.style.transform = `rotate(270deg)`)), 500);
+    tarotSpreadRef.current!.style.transform = `translateX(-50%) rotate(0deg)`;
+    setTimeout(() => tarotCardRefs.current.forEach(ref => (ref.style.transform = `rotate(270deg)`)), 200);
   };
 
-  const clickCard = (id: number) => {
+  const flipCard = async (id: number, card: HTMLDivElement) => {
+    flipSound.play();
+    tarotSpreadRef.current!.style.pointerEvents = 'none';
+
+    const unFlippedStyle = 'rotateY(0deg)';
+    const flippedStyle = 'rotateY(180deg) scale(1.3) translateY(240px)';
+
+    card.style.zIndex = '1000';
+    card.style.transform = card.style.transform.replace(unFlippedStyle, flippedStyle);
+
     pickCard(id);
-    setPicked(id);
     setTimeout(() => unSpreadTarotCards(), 1500);
     setTimeout(() => setClosing(true), 2000);
   };
@@ -86,17 +100,17 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
         onMouseUp={() => setDragging(false)}
         className="transition-all ease-out absolute w-220 h-400 origin-center top-1200 left-[50%] translate-x-[-50%]"
       >
-        {shuffledCard.map((id: number, idx: number) => (
+        {Array.from({ length: TAROT_COUNT }, (_, idx) => idx).map((id: number, idx: number) => (
           <div
-            key={id}
+            key={idx}
             ref={ref => (tarotCardRefs.current[idx] = ref!)}
-            className={`${picked && 'pointer-events-none'} absolute w-full h-full`}
+            className="absolute w-full h-full"
+            onClick={() => flipCard(id, tarotCardRefs.current[idx])}
           >
             <TarotCard
               dragging={dragging}
-              index={id}
               backImg={backImg}
-              onClick={() => clickCard(id)}
+              frontImg={frontImg}
             />
           </div>
         ))}
