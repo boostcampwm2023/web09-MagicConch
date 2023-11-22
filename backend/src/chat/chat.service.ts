@@ -13,6 +13,11 @@ import { UpdateChattingRoomDto } from './dto/update-chatting-room.dto';
 import { ChattingMessage } from './entities/chatting-message.entity';
 import { ChattingRoom } from './entities/chatting-room.entity';
 
+export interface ChattingInfo {
+  memeberId: string;
+  roomId: string;
+}
+
 @Injectable()
 export class ChatService {
   constructor(
@@ -24,19 +29,27 @@ export class ChatService {
     private readonly membersRepository: Repository<Member>,
   ) {}
 
-  async createRoom(memberId: string): Promise<string> {
-    const member: Member | null = await this.membersRepository.findOneBy({
-      id: memberId,
-    });
-    if (!member) {
-      throw new NotFoundException();
-    }
+  async createRoom(memberId: string): Promise<ChattingInfo> {
+    /**
+     * 임시로 쿠키 대신 사용
+     */
+    const member: Member = new Member();
+    const savedMember: Member = await this.membersRepository.save(member);
+
+    // const member: Member | null = await this.membersRepository.findOneBy({
+    //   id: memberId,
+    // });
+    // if (!member) {
+    //   throw new NotFoundException();
+    // }
+
     const room: ChattingRoom = new ChattingRoom();
-    room.participant = member;
+    room.participant = savedMember;
+
     try {
       const savedRoom: ChattingRoom =
         await this.chattingRoomRepository.save(room);
-      return savedRoom.id;
+      return { memeberId: savedMember.id, roomId: savedRoom.id };
     } catch (err: unknown) {
       throw err;
     }
