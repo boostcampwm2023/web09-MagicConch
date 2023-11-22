@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 
 import TarotSpread from '@components/TarotSpread';
 
-import { requestTarotRead, setTarotCardEventListener } from '@business/services/socket';
+import { aiSocketEmit, aiSocketOn } from '@business/services/socket';
 
 import { tarotCardNames } from '@constants/tarotCardNames';
 
@@ -12,7 +12,7 @@ export function useTarotSpread(tarotCardId: React.MutableRefObject<string | unde
 
   const pickCard = (idx: number) => {
     idx %= tarotCardNames.length;
-    requestTarotRead(idx);
+    aiSocketEmit('tarotRead', idx);
     tarotCardId.current = idx.toString().padStart(2, '0');
   };
 
@@ -27,6 +27,6 @@ export function useTarotSpread(tarotCardId: React.MutableRefObject<string | unde
   };
 
   useEffect(() => {
-    setTarotCardEventListener(() => setTimeout(openTarotSpread, 3000));
+    aiSocketOn('tarotCard', () => setTimeout(openTarotSpread, 1000));
   }, []);
 }
