@@ -1,4 +1,5 @@
-import HeaderLeft from './HeaderLeft';
+import { LogoButton } from '@components/Buttons';
+
 import HeaderRight from './HeaderRight';
 
 interface HeaderProps {
@@ -8,7 +9,7 @@ interface HeaderProps {
 export default function Header({ rightItems }: HeaderProps) {
   return (
     <div className="fixed top-0 w-full flex justify-between items-center surface-content text-default px-8 py-5">
-      <HeaderLeft />
+      <LogoButton />
       <HeaderRight items={rightItems} />
     </div>
   );

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
+import { IconButton } from '@components/Buttons';
 import { MessageButton } from '@components/ChatList';
-import IconButton from '@components/IconButton';
 import Message from '@components/MessageBox/Message';
 
 interface MessageBoxProps {

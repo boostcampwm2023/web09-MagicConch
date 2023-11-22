@@ -1,6 +1,6 @@
 import { RefObject } from 'react';
 
-import IconButton from '@components/IconButton';
+import { IconButton } from '@components/Buttons';
 
 import { useShareButtons } from '@business/hooks/useShareButtons';
 
