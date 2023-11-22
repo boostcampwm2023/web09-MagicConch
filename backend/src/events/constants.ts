@@ -1,6 +1,9 @@
 export const CLOVA_URL =
   'https://clovastudio.stream.ntruss.com/testapp/v1/chat-completions/HCX-002';
 
+export const chatMaxTokens = 50;
+export const tarotMaxTokens = 500;
+
 export const welcomeMessage =
   '안녕, 나는 어떤 고민이든지 들어주는 마법의 소라고둥이야!\n고민이 있으면 말해줘!';
 export const askTarotCardMessage = '타로 카드를 뽑아볼까?';

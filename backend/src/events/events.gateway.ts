@@ -15,7 +15,7 @@ import { CreateChattingMessageDto } from 'src/chat/dto/create-chatting-message.d
 import { __DEV__ } from 'src/node.env';
 import { CreateTarotResultDto } from 'src/tarot/dto/create-tarot-result.dto';
 import { TarotService } from 'src/tarot/tarot.service';
-import { Chat, createTalk, createTarotReading, initChatLog } from './clova';
+import ClovaStudio, { Chat } from './clovaStudio';
 import {
   askTarotCardMessage,
   chatEndMessage,
@@ -40,8 +40,8 @@ export class EventsGateway
 {
   chatService: ChatService;
   tarotService: TarotService;
-  X_NCP_APIGW_API_KEY: any;
-  X_NCP_CLOVASTUDIO_API_KEY: any;
+
+  clovaStudio: ClovaStudio;
 
   constructor(
     private readonly configService: ConfigService,
@@ -54,9 +54,14 @@ export class EventsGateway
       this.tarotService = await this.moduleRef.create(TarotService);
     }
 
-    this.X_NCP_APIGW_API_KEY = this.configService.get('X_NCP_APIGW_API_KEY');
-    this.X_NCP_CLOVASTUDIO_API_KEY = this.configService.get(
+    const X_NCP_APIGW_API_KEY = this.configService.get('X_NCP_APIGW_API_KEY');
+    const X_NCP_CLOVASTUDIO_API_KEY = this.configService.get(
       'X_NCP_CLOVASTUDIO_API_KEY',
+    );
+
+    this.clovaStudio = new ClovaStudio(
+      X_NCP_APIGW_API_KEY,
+      X_NCP_CLOVASTUDIO_API_KEY,
     );
   }
 
@@ -76,7 +81,9 @@ export class EventsGateway
   handleConnection(client: MySocket, ...args: any[]) {
     this.logger.log(`🚀 Client Connected : ${client.id}`);
 
-    client.chatLog = initChatLog();
+    client.chatLog = [];
+    this.clovaStudio.initChatLog(client.chatLog);
+
     client.chatEnd = false;
 
     // 채팅방 INSERT
@@ -103,12 +110,7 @@ export class EventsGateway
     this.logger.log(`🚀 Received a message from ${client.id}: ${message}`);
     if (client.chatEnd) return;
 
-    const result = await createTalk(
-      client.chatLog,
-      message,
-      this.X_NCP_APIGW_API_KEY,
-      this.X_NCP_CLOVASTUDIO_API_KEY,
-    );
+    const result = await this.clovaStudio.createTalk(client.chatLog, message);
     if (result) {
       this.readStreamAndSend(client, result.getReader());
     }
@@ -120,11 +122,9 @@ export class EventsGateway
       `🚀 TarotRead request received from ${client.id}: ${cardIdx}번 ${tarotCardNames[cardIdx]}`,
     );
 
-    const result = await createTarotReading(
+    const result = await this.clovaStudio.createTarotReading(
       client.chatLog,
       tarotCardNames[cardIdx],
-      this.X_NCP_APIGW_API_KEY,
-      this.X_NCP_CLOVASTUDIO_API_KEY,
     );
     if (result) {
       this.readStreamAndSend(client, result.getReader(), () =>
