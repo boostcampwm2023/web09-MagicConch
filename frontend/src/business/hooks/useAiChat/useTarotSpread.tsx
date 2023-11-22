@@ -12,7 +12,7 @@ export function useTarotSpread(tarotCardId: React.MutableRefObject<string | unde
 
   const pickCard = (idx: number) => {
     idx %= tarotCardNames.length;
-    requestTarotRead(`${idx}번 ${tarotCardNames[idx]}카드`);
+    requestTarotRead(idx);
     tarotCardId.current = idx.toString().padStart(2, '0');
   };
 
