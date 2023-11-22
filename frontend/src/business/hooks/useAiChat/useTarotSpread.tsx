@@ -5,15 +5,12 @@ import TarotSpread from '@components/TarotSpread';
 
 import { aiSocketEmit, aiSocketOn } from '@business/services/socket';
 
-import { tarotCardNames } from '@constants/tarotCardNames';
-
 export function useTarotSpread(tarotCardId: React.MutableRefObject<string | undefined>) {
   const { open } = useOverlay();
 
   const pickCard = (idx: number) => {
-    idx %= tarotCardNames.length;
     aiSocketEmit('tarotRead', idx);
-    tarotCardId.current = idx.toString().padStart(2, '0');
+    tarotCardId.current = idx.toString().padStart(2, '0'); // TODO: server에서 가져오는 데이터로 변경되면 padStart 삭제
   };
 
   const openTarotSpread = () => {
