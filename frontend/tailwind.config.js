@@ -147,7 +147,7 @@ export default {
     },
     ({ addUtilities }) => {
       const sizeUtil = {
-        '.flex-all-center': {
+        '.flex-with-center': {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
