@@ -4,13 +4,13 @@ interface BackgroundProps {
 }
 
 function Background({ children, type = 'default' }: BackgroundProps) {
-  const fadiInIfOpen = type == 'open' ? 'animate-fadeIn' : '';
+  const fadeInIfOpen = type == 'open' ? 'animate-fadeIn' : '';
   const fadeOutIfClose = type == 'close' ? 'animate-fadeOut' : '';
   const fadeInIfDynamic = type == 'dynamic' ? 'animate-fadeIn' : '';
 
   return (
-    <div className={`w-h-screen flex flex-all-center  ${fadiInIfOpen} ${fadeOutIfClose}`}>
-      <div className="w-h-screen absolute -z-10 flex flex-col flex-all-center ">
+    <div className={`w-h-screen flex flex-with-center  ${fadeInIfOpen} ${fadeOutIfClose}`}>
+      <div className="w-h-screen absolute -z-10 flex flex-col flex-with-center ">
         <img
           className="absolute w-h-screen object-cover -z-10"
           src="/bg.png"

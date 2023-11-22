@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 
-import CustomButton from '@components/CustomButton';
+import CustomButton from '@components/Buttons/CustomButton';
 import CustomSelect from '@components/CustomSelect';
 
 import { useWebRTC } from '@business/hooks/useWebRTC';

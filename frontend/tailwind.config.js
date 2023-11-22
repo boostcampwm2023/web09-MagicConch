@@ -154,7 +154,7 @@ export default {
         },
         '.w-h-full': {
           width: '100%',
-          heght: '100%',
+          height: '100%',
         },
         '.w-h-screen': {
           width: '100vw',
