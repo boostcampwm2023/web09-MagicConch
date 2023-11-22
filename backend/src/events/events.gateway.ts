@@ -11,20 +11,19 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ChatService, ChattingInfo } from 'src/chat/chat.service';
-import { CreateChattingMessageDto } from 'src/chat/dto/create-chatting-message.dto';
 import { __DEV__ } from 'src/node.env';
-import { CreateTarotResultDto } from 'src/tarot/dto/create-tarot-result.dto';
 import { TarotService } from 'src/tarot/tarot.service';
 import ClovaStudio, { Chat } from './clovaStudio';
 import {
   askTarotCardMessage,
-  chatEndMessage,
   tarotCardNames,
   welcomeMessage,
 } from './constants';
+import {
+  chatLog2createChattingMessageDtos,
+  result2createTarotResultDto,
+} from './createDTOHelper';
 import { readTokenStream, string2TokenStream } from './stream';
-
-const bucketUrl: string = 'https://kr.object.ncloudstorage.com/magicconch';
 
 interface MySocket extends Socket {
   memberId: string;
@@ -87,7 +86,6 @@ export class EventsGateway
 
     client.chatEnd = false;
 
-    // 채팅방 INSERT
     if (!__DEV__) {
       this.#createRoom(client);
     }
@@ -125,8 +123,12 @@ export class EventsGateway
       tarotCardNames[cardIdx],
     );
     if (stream) {
-      await this.#streamMessage(client, stream);
-      this.chatEndEvent(client, cardIdx);
+      const sentMessage = await this.#streamMessage(client, stream);
+
+      this.#saveChatLog(client);
+      const shareLinkId = await this.#createShareLinkId(cardIdx, sentMessage);
+
+      client.emit('chatEnd', shareLinkId);
     }
   }
 
@@ -155,54 +157,18 @@ export class EventsGateway
     return sentMessage;
   }
 
-  chatEndEvent(client: MySocket, cardIdx: Number) {
-    client.emit('chatEnd', chatEndMessage);
-
+  async #saveChatLog(client: MySocket) {
     if (__DEV__) return;
 
-    const chatLog: Chat[] = client.chatLog;
-
-    const makeMessageDto = (
-      message: Chat,
-    ): CreateChattingMessageDto | undefined => {
-      const messageDto = new CreateChattingMessageDto();
-      if (message.role === 'system') {
-        return undefined;
-      }
-      messageDto.isHost = message.role === 'assistant';
-      messageDto.message = message.content;
-      return messageDto;
-    };
-
-    const isCreateChattingMessageDto = (
-      message: CreateChattingMessageDto | undefined,
-    ): message is CreateChattingMessageDto =>
-      message instanceof CreateChattingMessageDto;
-
-    const parsingMessage: CreateChattingMessageDto[] = chatLog
-      .map(makeMessageDto)
-      .filter(isCreateChattingMessageDto);
-
-    const createChattingMessageDto = parsingMessage
-      .slice(0, -2)
-      .concat(parsingMessage.slice(-1));
-
-    // 채팅 메시지 INSERT
+    const createChattingMessageDto = chatLog2createChattingMessageDtos(
+      client.chatLog,
+    );
     this.chatService.createMessage(client.chatRoomId, createChattingMessageDto);
+  }
 
-    // 타로 결과 INSERT
-    const makeTarotResult = async (tarotResult: string) => {
-      const createTarotResultDto: CreateTarotResultDto =
-        new CreateTarotResultDto();
-      createTarotResultDto.cardUrl = `${bucketUrl}/basic/${cardIdx}.jpg`;
-      createTarotResultDto.message = tarotResult;
-
-      const tarotResultId: string =
-        await this.tarotService.createTarotResult(createTarotResultDto);
-      console.log(tarotResultId);
-    };
-
-    const totalMsgCnt: number = chatLog.length;
-    makeTarotResult(chatLog[totalMsgCnt - 1].content);
+  async #createShareLinkId(cardIdx: number, result: string): Promise<string> {
+    if (__DEV__) return 'DEV';
+    const createTarotResultDto = result2createTarotResultDto(cardIdx, result);
+    return await this.tarotService.createTarotResult(createTarotResultDto);
   }
 }
