@@ -34,8 +34,8 @@ export function readTokenStream(
         }
         const token = new TextDecoder().decode(value);
         message += token;
+        onStreaming(message);
 
-        onStreaming(token);
         return readStream();
       });
     };

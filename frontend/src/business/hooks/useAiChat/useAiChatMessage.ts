@@ -16,15 +16,8 @@ export function useAiChatMessage(tarotCardId: React.MutableRefObject<string | un
     setMessages(messages => [...messages, { type, message, profile, tarotId, button }]);
   };
 
-  const updateMessage = (token: string) => {
-    setMessages(messages => {
-      const lastMessage = messages[messages.length - 1];
-      if (lastMessage.message === '...') {
-        lastMessage.message = '';
-      }
-      lastMessage.message = lastMessage.message + token;
-      return messages;
-    });
+  const updateMessage = (message: string) => {
+    setMessages(messages => [...messages.slice(0, -1), { ...messages[messages.length - 1], message }]);
   };
 
   const onSubmitMessage = (message: string) => {
@@ -37,7 +30,7 @@ export function useAiChatMessage(tarotCardId: React.MutableRefObject<string | un
       setInputDisabled(true);
       addMessage('left', '...');
     });
-    aiSocketOn('streaming', token => updateMessage(token as string));
+    aiSocketOn('streaming', message => updateMessage(message as string));
     aiSocketOn('streamEnd', () => setInputDisabled(false));
 
     aiSocketOn('tarotCard', () => setInputDisabled(true));
@@ -47,7 +40,7 @@ export function useAiChatMessage(tarotCardId: React.MutableRefObject<string | un
 
     aiSocketOn('chatEnd', shareLinkId => {
       console.log(shareLinkId);
-      setTimeout(() => addMessage('left', requsetFeedbackMessage, button));
+      setTimeout(() => addMessage('left', requsetFeedbackMessage, button), 5000);
     });
   }, []);
 
