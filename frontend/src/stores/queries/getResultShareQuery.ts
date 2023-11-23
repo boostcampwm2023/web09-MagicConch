@@ -11,7 +11,7 @@ export function getResultShareQuery() {
   const { id } = useParams();
 
   return useSuspenseQuery({
-    queryKey: ['resultShareQueryKey'],
+    queryKey: [`resultShareQueryKey_${id}`],
     queryFn: async () =>
       (await axios.get<ResultShareResponse>(`${import.meta.env.VITE_BASE_URL}/tarot/result/${id}`)).data,
   });
