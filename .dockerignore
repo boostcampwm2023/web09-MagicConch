@@ -1,0 +1,9 @@
+*node_modules/
+*dist/
+
+*nest-cli.json
+*tsconfig.build.json
+*tsconfig.json
+
+*.git
+*.gitignore
