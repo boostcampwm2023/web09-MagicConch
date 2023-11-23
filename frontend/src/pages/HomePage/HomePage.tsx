@@ -3,13 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import Background from '@components/Background';
 import { CustomButton } from '@components/Buttons';
 
-import { connect } from '@business/services/socket';
+import { useSocket } from '@business/hooks/useSocket';
 
 function HomePage() {
   const navigate = useNavigate();
+  const { connectSocket } = useSocket('AIChat');
 
   const moveAiChat = () => {
-    connect();
+    connectSocket(import.meta.env.VITE_BASE_URL);
 
     navigate('/chat/ai');
   };
