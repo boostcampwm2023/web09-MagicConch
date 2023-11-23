@@ -20,7 +20,6 @@ interface ChatListProps {
   messages: Message[];
 }
 
-// TODO: tarotId 올바르게 교체
 function ChatList({ messages }: ChatListProps) {
   const messagesRef = useRef<HTMLUListElement>(null);
 
