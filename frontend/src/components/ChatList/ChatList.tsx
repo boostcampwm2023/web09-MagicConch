@@ -12,6 +12,7 @@ export interface Message {
   profile: string;
   tarotId?: string;
   button?: MessageButton;
+  shareLinkId?: string;
 }
 
 interface ChatListProps {
@@ -32,7 +33,7 @@ function ChatList({ messages }: ChatListProps) {
       ref={messagesRef}
       className={`w-full h-full mb-20 overflow-auto scroll-smooth`}
     >
-      {messages.map(({ type, message, profile, tarotId, button }, index) => {
+      {messages.map(({ type, message, profile, tarotId, button, shareLinkId }, index) => {
         return (
           <li
             key={new Date().getTime() + index}
@@ -44,6 +45,7 @@ function ChatList({ messages }: ChatListProps) {
               message={message}
               profile={profile}
               button={button}
+              shareLinkId={shareLinkId}
             />
           </li>
         );

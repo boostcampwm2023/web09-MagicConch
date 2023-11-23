@@ -1,0 +1,30 @@
+version: "3.3"
+
+services:
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile.node
+    environment:
+      - DB_PORT=${DB_PORT}
+      - DB_HOST=${DB_HOST}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=${DB_DATABASE}
+      - ACCESS_KEY_ID=${ACCESS_KEY_ID}
+      - SECRET_KEY=${SECRET_KEY}
+      - X_NCP_CLOVASTUDIO_API_KEY=${X_NCP_CLOVASTUDIO_API_KEY}
+      - X_NCP_APIGW_API_KEY=${X_NCP_APIGW_API_KEY}
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
+    expose:
+      - 3000
+
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    ports:
+      - "8080:80"
+    depends_on:
+      - node
