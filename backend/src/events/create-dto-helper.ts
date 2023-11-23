@@ -1,6 +1,6 @@
 import { CreateChattingMessageDto } from 'src/chat/dto/create-chatting-message.dto';
 import { CreateTarotResultDto } from 'src/tarot/dto/create-tarot-result.dto';
-import { Chat } from './clovaStudio';
+import { Chat } from './clova-studio';
 
 const bucketUrl: string = 'https://kr.object.ncloudstorage.com/magicconch';
 

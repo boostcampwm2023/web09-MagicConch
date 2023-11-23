@@ -14,7 +14,7 @@ import { Server, Socket } from 'socket.io';
 import { ChatService, ChattingInfo } from 'src/chat/chat.service';
 import { __DEV__ } from 'src/node.env';
 import { TarotService } from 'src/tarot/tarot.service';
-import ClovaStudio, { Chat } from './clovaStudio';
+import ClovaStudio, { Chat } from './clova-studio';
 import {
   askTarotCardCandidates,
   tarotCardNames,
@@ -23,7 +23,7 @@ import {
 import {
   chatLog2createChattingMessageDtos,
   result2createTarotResultDto,
-} from './createDTOHelper';
+} from './create-dto-helper';
 import { readTokenStream, string2TokenStream } from './stream';
 
 interface MySocket extends Socket {
