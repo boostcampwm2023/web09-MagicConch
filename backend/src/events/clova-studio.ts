@@ -16,12 +16,9 @@ class ClovaStudio {
     public readonly X_NCP_APIGW_API_KEY: string,
     public readonly X_NCP_CLOVASTUDIO_API_KEY: string,
   ) {
-    this.X_NCP_APIGW_API_KEY = X_NCP_APIGW_API_KEY;
-    this.X_NCP_CLOVASTUDIO_API_KEY = X_NCP_CLOVASTUDIO_API_KEY;
-
     this.headers = {
-      'X-NCP-CLOVASTUDIO-API-KEY': 's',
-      'X-NCP-APIGW-API-KEY': this.X_NCP_APIGW_API_KEY,
+      'X-NCP-CLOVASTUDIO-API-KEY': X_NCP_CLOVASTUDIO_API_KEY,
+      'X-NCP-APIGW-API-KEY': X_NCP_APIGW_API_KEY,
       'Content-Type': 'application/json',
       Accept: 'text/event-stream',
     };
