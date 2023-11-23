@@ -6,4 +6,5 @@ interface ImportMetaEnv {
   readonly VITE_KAKAO_JAVASCRIPT_KEY: string;
   readonly VITE_KAKAO_ADMIN_KEY: string;
   readonly VITE_BASE_URL: string;
+  readonly VITE_HUMAN_SOCKET_URL: string;
 }

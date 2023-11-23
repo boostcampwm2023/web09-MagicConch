@@ -1,12 +1,12 @@
+import { useSocket } from '../useSocket';
 import { useEffect, useState } from 'react';
 
 import { Message, MessageButton } from '@components/ChatList';
 
-import { aiSocketEmit, aiSocketOn } from '@business/services/socket';
-
 export function useAiChatMessage(tarotCardId: React.MutableRefObject<number | undefined>) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputDisabled, setInputDisabled] = useState(false);
+  const { socketEmit, socketOn } = useSocket('AIChat');
 
   const addMessage = (type: 'left' | 'right', message: string, button?: MessageButton) => {
     const tarotId = tarotCardId.current;
@@ -22,24 +22,24 @@ export function useAiChatMessage(tarotCardId: React.MutableRefObject<number | un
 
   const onSubmitMessage = (message: string) => {
     addMessage('right', message);
-    aiSocketEmit('message', message);
+    socketEmit('message', message);
   };
 
   useEffect(() => {
-    aiSocketOn('streamStart', () => {
+    socketOn('streamStart', () => {
       setInputDisabled(true);
       addMessage('left', '');
     });
-    aiSocketOn('streaming', message => updateMessage(message as string));
-    aiSocketOn('streamEnd', () => setInputDisabled(false));
+    socketOn('streaming', (message: string) => updateMessage(message));
+    socketOn('streamEnd', () => setInputDisabled(false));
 
-    aiSocketOn('tarotCard', () => setInputDisabled(true));
+    socketOn('tarotCard', () => setInputDisabled(true));
 
     const requsetFeedbackMessage = '이번 상담은 어땠어?\n피드백을 남겨주면 내가 더 발전할 수 있어!';
     const button = { content: '피드백하기', onClick: () => {} };
 
-    aiSocketOn('chatEnd', id => {
-      const shareLinkId: string = id as string;
+    socketOn('chatEnd', (id: string) => {
+      const shareLinkId: string = id;
       setMessages(messages => [...messages.slice(0, -1), { ...messages[messages.length - 1], shareLinkId }]);
       setTimeout(() => addMessage('left', requsetFeedbackMessage, button), 5000);
     });

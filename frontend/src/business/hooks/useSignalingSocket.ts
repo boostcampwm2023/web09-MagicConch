@@ -1,4 +1,4 @@
-import { connectSocket, socketEmit, socketOn } from '@business/services/socket';
+import { useSocket } from './useSocket';
 
 interface useSignalingSocketProps {
   roomName: string;
@@ -6,8 +6,10 @@ interface useSignalingSocketProps {
 }
 
 export function useSignalingSocket({ roomName, peerConnectionRef }: useSignalingSocketProps) {
+  const { connectSocket, socketEmit, socketOn } = useSocket('WebRTC');
+
   const initSignalingSocket = () => {
-    connectSocket();
+    connectSocket(import.meta.env.VITE_HUMAN_SOCKET_URL);
 
     socketOn('welcome', (users: { id: string }[]) => {
       if (users.length > 0) {

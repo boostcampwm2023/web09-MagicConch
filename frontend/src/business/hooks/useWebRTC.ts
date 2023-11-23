@@ -1,14 +1,14 @@
 import { useEffect, useRef } from 'react';
 
-import { disconnectSocket, socketEmit } from '@business/services/socket';
-
 import { iceServers } from '@constants/urls';
 
 import { useMedia } from './useMedia';
 import { useSignalingSocket } from './useSignalingSocket';
+import { useSocket } from './useSocket';
 
 export function useWebRTC(roomName: string) {
   const peerConnectionRef = useRef<RTCPeerConnection>();
+  const { socketEmit, disconnectSocket } = useSocket('WebRTC');
 
   const {
     localVideoRef,
@@ -50,7 +50,6 @@ export function useWebRTC(roomName: string) {
       peerConnectionRef.current?.addTrack(track, localStreamRef.current!);
     });
   };
-
   useEffect(() => {
     const init = async () => {
       await getMedia();
