@@ -1,5 +1,3 @@
-import App from './App';
-import './tailwind.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import ReactDOM from 'react-dom/client';
@@ -7,7 +5,10 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { OverlayProvider } from './business/hooks/useOverlay/OverlayProvider';
 
-if (import.meta.env.DEV) {
+import App from './App';
+import './tailwind.css';
+
+if (import.meta.env.MODE === 'development') {
   const { worker } = await import('./mocks/browser');
 
   // onUnhandledRequest를 byPass로 주면
