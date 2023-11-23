@@ -16,7 +16,7 @@ import { __DEV__ } from 'src/node.env';
 import { TarotService } from 'src/tarot/tarot.service';
 import ClovaStudio, { Chat } from './clovaStudio';
 import {
-  askTarotCardMessage,
+  askTarotCardCandidates,
   tarotCardNames,
   welcomeMessage,
 } from './constants';
@@ -105,7 +105,9 @@ export class EventsGateway
 
     if (stream) {
       const sentMessage = await this.#streamMessage(client, stream);
-      if (sentMessage.includes(askTarotCardMessage)) {
+
+      const askedTarotCard = askTarotCardCandidates.some(sentMessage.includes);
+      if (askedTarotCard) {
         client.emit('tarotCard');
       }
     }

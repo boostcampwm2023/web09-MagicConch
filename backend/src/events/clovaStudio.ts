@@ -44,7 +44,7 @@ class ClovaStudio {
     const response = await fetch(CLOVA_URL, {
       method: 'POST',
       headers: {
-        'X-NCP-CLOVASTUDIO-API-KEY': this.X_NCP_CLOVASTUDIO_API_KEY,
+        'X-NCP-CLOVASTUDIO-API-KEY': 's',
         'X-NCP-APIGW-API-KEY': this.X_NCP_APIGW_API_KEY,
         'Content-Type': 'application/json',
         Accept: 'text/event-stream',

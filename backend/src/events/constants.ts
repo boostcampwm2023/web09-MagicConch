@@ -7,9 +7,7 @@ export const tarotMaxTokens = 500;
 export const welcomeMessage =
   '안녕, 나는 어떤 고민이든지 들어주는 마법의 소라고둥이야!\n고민이 있으면 말해줘!';
 export const askTarotCardMessage = '타로 카드를 뽑아볼까?';
-
-export const chatEndMessage =
-  '이번 상담은 어땠어?\n피드백을 남겨주면 내가 더 발전할 수 있어!';
+export const askTarotCardCandidates = ['타로 카드를 뽑', '타로를 뽑'];
 
 export const tarotReadingSystemMessage = `
 사용자가 말한 고민에 대해 공감성 멘트로 친근한 반말로 타로 카드를 해설하시오.
@@ -42,6 +40,7 @@ user와 친근한 반말로 상황에 맞게 대화를 이어나가되,
 - "그럼 타로 카드를 뽑아볼까?"라는 문장 이외의 표현으로 타로 카드를 뽑자고 제안하지 않습니다.
 - 타로 카드 해설에 대한 system 메세지가 오기 전까지, 타로 해설은 하지 않습니다.
 - assistant의 답변은 30토큰 이하로 제한되며, 간결하게 표현합니다.
+- assistant의 답변은 반드시 반말로 합니다. 존댓말을 사용하지 않습니다.
 `;
 
 export const tarotCardNames = [
