@@ -27,7 +27,7 @@ export function readTokenStream(
 
   return new Promise((resolve) => {
     const readStream = () => {
-      reader?.read().then(({ done, value }) => {
+      reader.read().then(({ done, value }) => {
         if (done) {
           resolve(message);
           return;
