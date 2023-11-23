@@ -5,7 +5,7 @@ export interface TarotImageResponse {
   cardUrl: string;
 }
 
-export function getTarotImage(tarotId: number) {
+export function getTarotImageQuery(tarotId: number) {
   return useSuspenseQuery({
     queryKey: ['tarotImageQueryKey'],
     queryFn: async () =>

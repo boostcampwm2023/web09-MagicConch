@@ -4,7 +4,7 @@ import { CustomButton, IconButton } from '@components/Buttons';
 import { MessageButton } from '@components/ChatList';
 import Message from '@components/MessageBox/Message';
 
-import { getTarotImage } from '@stores/queries/getTarotImage';
+import { getTarotImageQuery } from '@stores/queries/getTarotImageQuery';
 
 interface MessageBoxProps {
   tarotId?: number;
@@ -19,7 +19,7 @@ interface MessageBoxProps {
 // TODO: 프로필 이미지 설정
 
 function MessageBox({ tarotId, type, message, profile, button, shareLinkId }: MessageBoxProps) {
-  const cardUrl = tarotId ? getTarotImage(tarotId).data.cardUrl : '';
+  const cardUrl = tarotId ? getTarotImageQuery(tarotId).data.cardUrl : '';
 
   return (
     <div className="relative max-w-[70%]">
