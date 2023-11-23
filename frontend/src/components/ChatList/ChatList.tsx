@@ -10,7 +10,7 @@ export interface Message {
   type: 'left' | 'right';
   message: string;
   profile: string;
-  tarotId?: string;
+  tarotId?: number;
   button?: MessageButton;
   shareLinkId?: string;
 }
