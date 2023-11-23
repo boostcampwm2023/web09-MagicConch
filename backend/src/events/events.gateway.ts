@@ -155,7 +155,7 @@ export class EventsGateway
         client.chatRoomId,
         createChattingMessageDto,
       );
-    } catch (error) {
+    } catch (err) {
       throw new WsException('채팅 로그를 저장하는데 실패했습니다.');
     }
   }
@@ -167,7 +167,7 @@ export class EventsGateway
     try {
       const createTarotResultDto = result2createTarotResultDto(cardIdx, result);
       return await this.tarotService.createTarotResult(createTarotResultDto);
-    } catch (error) {
+    } catch (err) {
       throw new WsException('타로 결과를 저장하는데 실패했습니다.');
     }
   }
