@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import { IconButton } from '@components/Buttons';
+import { CustomButton, IconButton } from '@components/Buttons';
 import { MessageButton } from '@components/ChatList';
 import Message from '@components/MessageBox/Message';
 
@@ -32,7 +32,6 @@ function MessageBox({ tarotId, type, message, profile, button, shareLinkId }: Me
           type={type}
           message={message}
           profile={profile}
-          button={button}
         />
         {shareLinkId && (
           <div className="absolute bottom-10 -right-50">
@@ -49,6 +48,17 @@ function MessageBox({ tarotId, type, message, profile, button, shareLinkId }: Me
                 circle
               />
             </Link>
+          </div>
+        )}
+        {button && (
+          <div className="absolute bottom-15 -right-90">
+            <CustomButton
+              size="s"
+              color="active"
+              onClick={button.onClick}
+            >
+              {button.content}
+            </CustomButton>
           </div>
         )}
       </div>

@@ -28,7 +28,7 @@ export function useAiChatMessage(tarotCardId: React.MutableRefObject<string | un
   useEffect(() => {
     aiSocketOn('streamStart', () => {
       setInputDisabled(true);
-      addMessage('left', '...');
+      addMessage('left', '');
     });
     aiSocketOn('streaming', message => updateMessage(message as string));
     aiSocketOn('streamEnd', () => setInputDisabled(false));
