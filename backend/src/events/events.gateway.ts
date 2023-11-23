@@ -1,6 +1,5 @@
 import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ModuleRef } from '@nestjs/core';
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -12,7 +11,6 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ChatService, ChattingInfo } from 'src/chat/chat.service';
-import { __DEV__ } from 'src/node.env';
 import { TarotService } from 'src/tarot/tarot.service';
 import ClovaStudio from './clova-studio';
 import {
@@ -33,22 +31,13 @@ import type { MySocket } from './type';
 export class EventsGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-  chatService: ChatService;
-  tarotService: TarotService;
-
   clovaStudio: ClovaStudio;
 
   constructor(
     private readonly configService: ConfigService,
-    private readonly moduleRef: ModuleRef,
-  ) {}
-
-  async onModuleInit() {
-    if (!__DEV__) {
-      this.chatService = await this.moduleRef.create(ChatService);
-      this.tarotService = await this.moduleRef.create(TarotService);
-    }
-
+    private readonly chatService: ChatService,
+    private readonly tarotService: TarotService,
+  ) {
     const X_NCP_APIGW_API_KEY = this.configService.get('X_NCP_APIGW_API_KEY');
     const X_NCP_CLOVASTUDIO_API_KEY = this.configService.get(
       'X_NCP_CLOVASTUDIO_API_KEY',
@@ -81,9 +70,7 @@ export class EventsGateway
 
     client.chatEnd = false;
 
-    if (!__DEV__) {
-      this.createRoom(client);
-    }
+    this.createRoom(client);
 
     setTimeout(() => this.welcome(client), 2000);
   }
@@ -160,8 +147,6 @@ export class EventsGateway
   }
 
   private async saveChatLog(client: MySocket) {
-    if (__DEV__) return;
-
     try {
       const createChattingMessageDto = chatLog2createChattingMessageDtos(
         client.chatLog,
@@ -179,8 +164,6 @@ export class EventsGateway
     cardIdx: number,
     result: string,
   ): Promise<string> {
-    if (__DEV__) return 'DEV';
-
     try {
       const createTarotResultDto = result2createTarotResultDto(cardIdx, result);
       return await this.tarotService.createTarotResult(createTarotResultDto);
