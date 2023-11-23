@@ -1,36 +1,29 @@
 import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ModuleRef } from '@nestjs/core';
-import { InjectRepository } from '@nestjs/typeorm';
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
   OnGatewayInit,
+  SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
+  WsException,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ChatService, ChattingInfo } from 'src/chat/chat.service';
-import { CreateChattingMessageDto } from 'src/chat/dto/create-chatting-message.dto';
-import { __DEV__ } from 'src/node.env';
-import { CreateTarotResultDto } from 'src/tarot/dto/create-tarot-result.dto';
 import { TarotService } from 'src/tarot/tarot.service';
-import { Chat, createTalk, createTarotReading, initChatLog } from './clova';
+import ClovaStudio from './clova-studio';
 import {
-  askTarotCardMessage,
-  chatEndMessage,
+  askTarotCardCandidates,
   tarotCardNames,
   welcomeMessage,
 } from './constants';
-
-const bucketUrl: string = 'https://kr.object.ncloudstorage.com/magicconch';
-
-interface MySocket extends Socket {
-  memberId: string;
-  chatLog: Chat[];
-  chatEnd: boolean;
-  chatRoomId: string;
-}
+import {
+  chatLog2createChattingMessageDtos,
+  result2createTarotResultDto,
+} from './create-dto-helper';
+import { readTokenStream, string2TokenStream } from './stream';
+import type { MySocket } from './type';
 
 @WebSocketGateway({
   cors: { origin: 'http://localhost:5173' },
@@ -38,19 +31,22 @@ interface MySocket extends Socket {
 export class EventsGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-  chatService: ChatService;
-  tarotService: TarotService;
+  clovaStudio: ClovaStudio;
 
   constructor(
     private readonly configService: ConfigService,
-    private readonly moduleRef: ModuleRef,
-  ) {}
+    private readonly chatService: ChatService,
+    private readonly tarotService: TarotService,
+  ) {
+    const X_NCP_APIGW_API_KEY = this.configService.get('X_NCP_APIGW_API_KEY');
+    const X_NCP_CLOVASTUDIO_API_KEY = this.configService.get(
+      'X_NCP_CLOVASTUDIO_API_KEY',
+    );
 
-  async onModuleInit() {
-    if (!__DEV__) {
-      this.chatService = await this.moduleRef.create(ChatService);
-      this.tarotService = await this.moduleRef.create(TarotService);
-    }
+    this.clovaStudio = new ClovaStudio(
+      X_NCP_APIGW_API_KEY,
+      X_NCP_CLOVASTUDIO_API_KEY,
+    );
   }
 
   @WebSocketServer()
@@ -59,159 +55,120 @@ export class EventsGateway
   private readonly logger: Logger = new Logger('EventsGateway');
 
   afterInit(server: Server) {
-    this.logger.log('웹소켓 서버 초기화 ✅');
+    this.logger.log('🚀 웹소켓 서버 초기화');
   }
 
   handleDisconnect(client: Socket) {
-    this.logger.log(`Client Disconnected : ${client.id}`);
+    this.logger.log(`🚀 Client Disconnected : ${client.id}`);
   }
 
   handleConnection(client: MySocket, ...args: any[]) {
-    this.logger.log(`Client Connected : ${client.id}`);
+    this.logger.log(`🚀 Client Connected : ${client.id}`);
 
-    client.chatLog = initChatLog();
+    client.chatLog = [];
+    this.clovaStudio.initChatLog(client.chatLog);
+
     client.chatEnd = false;
 
-    // 채팅방 INSERT
+    this.createRoom(client);
 
-    if (!__DEV__) {
-      const createRoom = async () => {
-        const chattingInfo: ChattingInfo = await this.chatService.createRoom(
-          client.id,
-        );
-        client.memberId = chattingInfo.memeberId;
-        client.chatRoomId = chattingInfo.roomId;
-      };
+    setTimeout(() => this.welcome(client), 2000);
+  }
 
-      createRoom();
+  @SubscribeMessage('message')
+  async handleMessageEvent(client: MySocket, message: string) {
+    this.logger.log(`🚀 Received a message from ${client.id}: ${message}`);
+    if (client.chatEnd) return;
+
+    client.emit('streamStart');
+
+    const stream = await this.clovaStudio.createTalk(client.chatLog, message);
+
+    if (stream) {
+      const sentMessage = await this.streamMessage(client, stream);
+
+      const askedTarotCard = askTarotCardCandidates.some((candidates) =>
+        sentMessage.includes(candidates),
+      );
+      if (askedTarotCard) {
+        client.emit('tarotCard');
+      }
     }
+  }
 
-    const X_NCP_APIGW_API_KEY = this.configService.get('X_NCP_APIGW_API_KEY');
-    const X_NCP_CLOVASTUDIO_API_KEY = this.configService.get(
-      'X_NCP_CLOVASTUDIO_API_KEY',
+  @SubscribeMessage('tarotRead')
+  async handleTarotReadEvent(client: MySocket, cardIdx: number) {
+    this.logger.log(
+      `🚀 TarotRead request received from ${client.id}: ${cardIdx}번 ${tarotCardNames[cardIdx]}`,
     );
 
-    setTimeout(() => {
-      client.emit('message', welcomeMessage);
-      client.chatLog.push({ role: 'assistant', content: welcomeMessage });
-    }, 2000);
+    client.emit('streamStart');
 
-    const messageEventHandler = async (message: string) => {
-      if (client.chatEnd) return;
+    const stream = await this.clovaStudio.createTarotReading(
+      client.chatLog,
+      tarotCardNames[cardIdx],
+    );
+    if (stream) {
+      const sentMessage = await this.streamMessage(client, stream);
 
-      const result = await createTalk(
+      this.saveChatLog(client);
+      const shareLinkId = await this.createShareLinkId(cardIdx, sentMessage);
+
+      client.emit('chatEnd', shareLinkId);
+    }
+  }
+
+  private async createRoom(client: MySocket) {
+    const chattingInfo: ChattingInfo = await this.chatService.createRoom(
+      client.id,
+    );
+    client.memberId = chattingInfo.memeberId;
+    client.chatRoomId = chattingInfo.roomId;
+  }
+
+  private welcome(client: MySocket) {
+    client.emit('streamStart');
+
+    const stream = string2TokenStream(welcomeMessage);
+    this.streamMessage(client, stream);
+  }
+
+  private async streamMessage(
+    client: MySocket,
+    stream: ReadableStream<Uint8Array>,
+  ) {
+    const onStreaming = (token: string) => client.emit('streaming', token);
+    const sentMessage = await readTokenStream(stream, onStreaming);
+
+    this.logger.log(`🚀 Send a message to ${client.id}: ${sentMessage}`);
+    client.emit('streamEnd');
+
+    return sentMessage;
+  }
+
+  private async saveChatLog(client: MySocket) {
+    try {
+      const createChattingMessageDto = chatLog2createChattingMessageDtos(
         client.chatLog,
-        message,
-        X_NCP_APIGW_API_KEY,
-        X_NCP_CLOVASTUDIO_API_KEY,
       );
-      if (result) {
-        readStreamAndSend(client, result.getReader());
-      }
-    };
-
-    const chatEndEvent = (cardIdx: Number) => {
-      client.emit('chatEnd', chatEndMessage);
-
-      if (__DEV__) return;
-
-      const chatLog: Chat[] = client.chatLog;
-
-      const makeMessageDto = (
-        message: Chat,
-      ): CreateChattingMessageDto | undefined => {
-        const messageDto = new CreateChattingMessageDto();
-        if (message.role === 'system') {
-          return undefined;
-        }
-        messageDto.isHost = message.role === 'assistant';
-        messageDto.message = message.content;
-        return messageDto;
-      };
-
-      const isCreateChattingMessageDto = (
-        message: CreateChattingMessageDto | undefined,
-      ): message is CreateChattingMessageDto =>
-        message instanceof CreateChattingMessageDto;
-
-      const parsingMessage: CreateChattingMessageDto[] = chatLog
-        .map(makeMessageDto)
-        .filter(isCreateChattingMessageDto);
-
-      const createChattingMessageDto = parsingMessage
-        .slice(0, -2)
-        .concat(parsingMessage.slice(-1));
-
-      // 채팅 메시지 INSERT
       this.chatService.createMessage(
         client.chatRoomId,
         createChattingMessageDto,
       );
-
-      // 타로 결과 INSERT
-      const makeTarotResult = async (tarotResult: string) => {
-        const createTarotResultDto: CreateTarotResultDto =
-          new CreateTarotResultDto();
-        createTarotResultDto.cardUrl = `${bucketUrl}/basic/${cardIdx}.jpg`;
-        createTarotResultDto.message = tarotResult;
-
-        const tarotResultId: string =
-          await this.tarotService.createTarotResult(createTarotResultDto);
-        console.log(tarotResultId);
-      };
-
-      const totalMsgCnt: number = chatLog.length;
-      makeTarotResult(chatLog[totalMsgCnt - 1].content);
-    };
-
-    const tarotReadEventHandler = async (cardIdx: number) => {
-      const result = await createTarotReading(
-        client.chatLog,
-        tarotCardNames[cardIdx],
-        X_NCP_APIGW_API_KEY,
-        X_NCP_CLOVASTUDIO_API_KEY,
-      );
-      if (result) {
-        readStreamAndSend(client, result.getReader(), () =>
-          chatEndEvent(cardIdx),
-        );
-      }
-    };
-
-    client.on('message', messageEventHandler);
-    client.on('tarotRead', tarotReadEventHandler);
+    } catch (err) {
+      throw new WsException('채팅 로그를 저장하는데 실패했습니다.');
+    }
   }
-}
 
-function readStreamAndSend(
-  socket: MySocket,
-  reader: ReadableStreamDefaultReader<Uint8Array>,
-  callback?: () => void,
-) {
-  let message = '';
-  socket.emit('message', message);
-
-  const readStream = () => {
-    reader?.read().then(({ done, value }) => {
-      if (done) {
-        socket.emit('streamEnd');
-        socket.chatLog.push({ role: 'assistant', content: message });
-
-        if (message.includes(askTarotCardMessage)) {
-          socket.chatEnd = true;
-          socket.emit('tarotCard');
-        }
-
-        if (callback) {
-          setTimeout(callback, 3000);
-        }
-        return;
-      }
-      message += new TextDecoder().decode(value);
-      socket.emit('messageUpdate', message);
-
-      return readStream();
-    });
-  };
-  readStream();
+  private async createShareLinkId(
+    cardIdx: number,
+    result: string,
+  ): Promise<string> {
+    try {
+      const createTarotResultDto = result2createTarotResultDto(cardIdx, result);
+      return await this.tarotService.createTarotResult(createTarotResultDto);
+    } catch (err) {
+      throw new WsException('타로 결과를 저장하는데 실패했습니다.');
+    }
+  }
 }

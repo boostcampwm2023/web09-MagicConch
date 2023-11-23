@@ -2,14 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { Message, MessageButton } from '@components/ChatList';
 
-import {
-  sendMessage,
-  setChatEndEventListener,
-  setMessageEventListener,
-  setMessageUpdateEventListener,
-  setStreamEndEventListener,
-  setTarotCardEventListener,
-} from '@business/services/socket';
+import { aiSocketEmit, aiSocketOn } from '@business/services/socket';
 
 export function useAiChatMessage(tarotCardId: React.MutableRefObject<string | undefined>) {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -24,23 +17,32 @@ export function useAiChatMessage(tarotCardId: React.MutableRefObject<string | un
   };
 
   const updateMessage = (message: string) => {
-    setInputDisabled(true);
     setMessages(messages => [...messages.slice(0, -1), { ...messages[messages.length - 1], message }]);
   };
 
   const onSubmitMessage = (message: string) => {
     addMessage('right', message);
-    sendMessage(message);
+    aiSocketEmit('message', message);
   };
 
   useEffect(() => {
-    setMessageEventListener(message => addMessage('left', message));
-    setMessageUpdateEventListener(message => updateMessage(message));
-    setStreamEndEventListener(() => setInputDisabled(false));
-    setTarotCardEventListener(() => setInputDisabled(true));
+    aiSocketOn('streamStart', () => {
+      setInputDisabled(true);
+      addMessage('left', '...');
+    });
+    aiSocketOn('streaming', message => updateMessage(message as string));
+    aiSocketOn('streamEnd', () => setInputDisabled(false));
 
+    aiSocketOn('tarotCard', () => setInputDisabled(true));
+
+    const requsetFeedbackMessage = '이번 상담은 어땠어?\n피드백을 남겨주면 내가 더 발전할 수 있어!';
     const button = { content: '피드백하기', onClick: () => alert('👩‍🔧') };
-    setChatEndEventListener(message => addMessage('left', message, button));
+
+    aiSocketOn('chatEnd', id => {
+      const shareLinkId: string = id as string;
+      setMessages(messages => [...messages.slice(0, -1), { ...messages[messages.length - 1], shareLinkId }]);
+      setTimeout(() => addMessage('left', requsetFeedbackMessage, button), 5000);
+    });
   }, []);
 
   return { messages, inputDisabled, onSubmitMessage };
