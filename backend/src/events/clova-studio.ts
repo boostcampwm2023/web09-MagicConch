@@ -25,7 +25,7 @@ class ClovaStudio {
 
   createTalk(chatLog: Chat[], message: string) {
     chatLog.push({ role: 'user', content: message });
-    return this.#fetchClovaAPI(chatLog, chatMaxTokens);
+    return this.fetchClovaAPI(chatLog, chatMaxTokens);
   }
 
   createTarotReading(chatLog: Chat[], tarotName: string) {
@@ -33,10 +33,10 @@ class ClovaStudio {
       { role: 'system', content: tarotReadingSystemMessage },
       { role: 'user', content: `타로 카드: ${tarotName}\n` },
     );
-    return this.#fetchClovaAPI(chatLog, tarotMaxTokens);
+    return this.fetchClovaAPI(chatLog, tarotMaxTokens);
   }
 
-  async #fetchClovaAPI(chatLog: Chat[], maxTokens: number) {
+  private async fetchClovaAPI(chatLog: Chat[], maxTokens: number) {
     const response = await fetch(CLOVA_URL, {
       method: 'POST',
       headers: {

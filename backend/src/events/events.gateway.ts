@@ -82,10 +82,10 @@ export class EventsGateway
     client.chatEnd = false;
 
     if (!__DEV__) {
-      this.#createRoom(client);
+      this.createRoom(client);
     }
 
-    setTimeout(() => this.#welcome(client), 2000);
+    setTimeout(() => this.welcome(client), 2000);
   }
 
   @SubscribeMessage('message')
@@ -98,7 +98,7 @@ export class EventsGateway
     const stream = await this.clovaStudio.createTalk(client.chatLog, message);
 
     if (stream) {
-      const sentMessage = await this.#streamMessage(client, stream);
+      const sentMessage = await this.streamMessage(client, stream);
 
       const askedTarotCard = askTarotCardCandidates.some(sentMessage.includes);
       if (askedTarotCard) {
@@ -120,16 +120,16 @@ export class EventsGateway
       tarotCardNames[cardIdx],
     );
     if (stream) {
-      const sentMessage = await this.#streamMessage(client, stream);
+      const sentMessage = await this.streamMessage(client, stream);
 
-      this.#saveChatLog(client);
-      const shareLinkId = await this.#createShareLinkId(cardIdx, sentMessage);
+      this.saveChatLog(client);
+      const shareLinkId = await this.createShareLinkId(cardIdx, sentMessage);
 
       client.emit('chatEnd', shareLinkId);
     }
   }
 
-  async #createRoom(client: MySocket) {
+  private async createRoom(client: MySocket) {
     const chattingInfo: ChattingInfo = await this.chatService.createRoom(
       client.id,
     );
@@ -137,14 +137,17 @@ export class EventsGateway
     client.chatRoomId = chattingInfo.roomId;
   }
 
-  #welcome(client: MySocket) {
+  private welcome(client: MySocket) {
     client.emit('streamStart');
 
     const stream = string2TokenStream(welcomeMessage);
-    this.#streamMessage(client, stream);
+    this.streamMessage(client, stream);
   }
 
-  async #streamMessage(client: MySocket, stream: ReadableStream<Uint8Array>) {
+  private async streamMessage(
+    client: MySocket,
+    stream: ReadableStream<Uint8Array>,
+  ) {
     const onStreaming = (token: string) => client.emit('streaming', token);
     const sentMessage = await readTokenStream(stream, onStreaming);
 
@@ -154,7 +157,7 @@ export class EventsGateway
     return sentMessage;
   }
 
-  async #saveChatLog(client: MySocket) {
+  private async saveChatLog(client: MySocket) {
     if (__DEV__) return;
 
     try {
@@ -170,7 +173,10 @@ export class EventsGateway
     }
   }
 
-  async #createShareLinkId(cardIdx: number, result: string): Promise<string> {
+  private async createShareLinkId(
+    cardIdx: number,
+    result: string,
+  ): Promise<string> {
     if (__DEV__) return 'DEV';
 
     try {
