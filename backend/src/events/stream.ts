@@ -88,7 +88,11 @@ function streamEventParse(str: string): ClovaEvent | undefined {
       return { ...event, [key]: value };
     }
     if (key === 'data') {
-      return { ...event, [key]: parseJson(value) };
+      try {
+        return { ...event, [key]: JSON.parse(value) };
+      } catch (err) {
+        return event;
+      }
     }
     return event;
   }, {} as any);
@@ -122,12 +126,4 @@ function uint8Array2Stream(uint8Array: Uint8Array): ReadableStream<Uint8Array> {
   });
 
   return readableStream;
-}
-
-function parseJson(value: string): any {
-  try {
-    return JSON.parse(value);
-  } catch (err) {
-    return undefined;
-  }
 }
