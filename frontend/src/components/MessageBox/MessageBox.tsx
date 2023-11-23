@@ -54,7 +54,10 @@ function MessageBox({ tarotId, type, message, profile, button, shareLinkId }: Me
           </div>
         )}
         {button && (
-          <div className="absolute bottom-15 -right-90">
+          <div
+            id="TOLD"
+            className="absolute bottom-15 -right-90"
+          >
             <CustomButton
               size="s"
               color="active"
