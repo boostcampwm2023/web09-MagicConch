@@ -7,7 +7,7 @@ import {
   tarotReadingSystemMessage,
 } from './constants';
 import { convertClovaEventStream2TokenStream } from './stream';
-import { Chat } from './type';
+import type { Chat } from './type';
 
 class ClovaStudio {
   headers;

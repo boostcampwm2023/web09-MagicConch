@@ -25,7 +25,7 @@ import {
   result2createTarotResultDto,
 } from './create-dto-helper';
 import { readTokenStream, string2TokenStream } from './stream';
-import { MySocket } from './type';
+import type { MySocket } from './type';
 
 @WebSocketGateway({
   cors: { origin: 'http://localhost:5173' },

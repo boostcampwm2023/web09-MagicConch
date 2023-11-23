@@ -11,3 +11,16 @@ export type Chat = {
   role: 'user' | 'system' | 'assistant';
   content: string;
 };
+
+export type ClovaEvent = {
+  id: string;
+  event: string;
+  data: ClovaEventData;
+};
+
+type ClovaEventData = {
+  message: {
+    role: string;
+    content: string;
+  };
+};

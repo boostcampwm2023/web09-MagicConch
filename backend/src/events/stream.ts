@@ -1,15 +1,4 @@
-type ClovaEvent = {
-  id: string;
-  event: string;
-  data: ClovaEventData;
-};
-
-type ClovaEventData = {
-  message: {
-    role: string;
-    content: string;
-  };
-};
+import type { ClovaEvent } from './type';
 
 export function convertClovaEventStream2TokenStream(
   clovaEventStream: ReadableStream<Uint8Array>,
