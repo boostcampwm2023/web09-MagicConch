@@ -28,10 +28,10 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
   const rotationRef = useRef<number>(0);
 
   const backImg = getTarotImageQuery(TAROT_CARDS_LENGTH).data.cardUrl;
-  const frontImg = getTarotImageQuery(Math.floor(Math.random() * TAROT_CARDS_LENGTH)).data.cardUrl;
+  const frontImg = getTarotImageQuery(pickedId).data.cardUrl;
 
   useEffect(() => {
-    setPickedId(Math.floor(Math.random() * 78));
+    setPickedId(Math.floor(Math.random() * TAROT_CARDS_LENGTH));
     const rotateSpread = ({ deltaX }: WheelEvent) => rotateTarotSpread(deltaX > 0 ? 'left' : 'right');
     const closeWithFadeOut = ({ animationName }: AnimationEvent) => animationName == 'fadeOut' && close();
 
