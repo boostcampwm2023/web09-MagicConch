@@ -3,15 +3,16 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
 export interface ResultShareResponse {
-  card_url: string;
-  content: string;
+  cardUrl: string;
+  message: string;
 }
 
 export function getResultShareQuery() {
   const { id } = useParams();
 
   return useSuspenseQuery({
-    queryKey: ['resultShareQueryKey'],
-    queryFn: async () => (await axios.get<ResultShareResponse>(`/result/${id}`)).data,
+    queryKey: [`resultShareQueryKey_${id}`],
+    queryFn: async () =>
+      (await axios.get<ResultShareResponse>(`${import.meta.env.VITE_BASE_URL}/tarot/result/${id}`)).data,
   });
 }

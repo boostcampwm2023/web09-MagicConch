@@ -10,7 +10,7 @@ export interface Message {
   type: 'left' | 'right';
   message: string;
   profile: string;
-  tarotId?: string;
+  tarotId?: number;
   button?: MessageButton;
   shareLinkId?: string;
 }
@@ -20,7 +20,6 @@ interface ChatListProps {
   messages: Message[];
 }
 
-// TODO: tarotId 올바르게 교체
 function ChatList({ messages }: ChatListProps) {
   const messagesRef = useRef<HTMLUListElement>(null);
 

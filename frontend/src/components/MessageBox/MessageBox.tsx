@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom';
 
-import { IconButton } from '@components/Buttons';
+import { CustomButton, IconButton } from '@components/Buttons';
 import { MessageButton } from '@components/ChatList';
 import Message from '@components/MessageBox/Message';
 
+import { getTarotImageQuery } from '@stores/queries/getTarotImageQuery';
+
 interface MessageBoxProps {
-  tarotId?: string;
+  tarotId?: number;
   type: 'left' | 'right';
   message: string;
   profile: string;
@@ -13,18 +15,18 @@ interface MessageBoxProps {
   shareLinkId?: string;
 }
 
-// TODO: tarotId로 서버에서 타로 카드 이미지 정보를 받아와서 src와 alt 채워주기
-// TODO: 조건식 !tarotId -> tarotId로 변경
 // TODO: 프로필 이미지 설정
 
 function MessageBox({ tarotId, type, message, profile, button, shareLinkId }: MessageBoxProps) {
+  const cardUrl = tarotId ? getTarotImageQuery(tarotId).data.cardUrl : '';
+
   return (
     <div className="relative max-w-[70%]">
       {tarotId && (
         <img
           className="w-120 h-200 relative left-72 rounded-lg"
-          src={`../../../__tests__/mocks/cards/${tarotId}.jpg`}
-          alt="테스트용 이미지"
+          src={cardUrl}
+          alt="테스트용 이미지" // TODO server에서 카드 이름도 같이 넘겨주면 alt에 채워주기
         />
       )}
       <div className="flex">
@@ -32,7 +34,6 @@ function MessageBox({ tarotId, type, message, profile, button, shareLinkId }: Me
           type={type}
           message={message}
           profile={profile}
-          button={button}
         />
         {shareLinkId && (
           <div className="absolute bottom-10 -right-50">
@@ -49,6 +50,20 @@ function MessageBox({ tarotId, type, message, profile, button, shareLinkId }: Me
                 circle
               />
             </Link>
+          </div>
+        )}
+        {button && (
+          <div
+            id="TOLD"
+            className="absolute bottom-15 -right-90"
+          >
+            <CustomButton
+              size="s"
+              color="active"
+              onClick={button.onClick}
+            >
+              {button.content}
+            </CustomButton>
           </div>
         )}
       </div>

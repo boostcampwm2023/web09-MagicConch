@@ -1,5 +1,9 @@
 import Background from '../Background';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+import { getTarotImageQuery } from '@stores/queries/getTarotImageQuery';
+
+import { TAROT_CARDS_LENGTH } from '@constants/sizes';
 
 import TarotCard from './TarotCard';
 
@@ -9,27 +13,24 @@ interface TarotSpreadProps {
   pickCard: (idx: number) => void;
 }
 
-const TAROT_COUNT = 78;
 const spreadSound = new Audio('/spreadCards.mp3');
 const flipSound = new Audio('/flipCard.mp3');
 
 export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProps) {
   const [closing, setClosing] = useState<boolean>(!opened);
   const [dragging, setDragging] = useState<boolean>(false);
+  const [pickedId, setPickedId] = useState<number>(0);
 
   const tarotCardRefs = useRef<HTMLDivElement[]>([]);
   const prevMouseXRef = useRef<number>(0);
   const tarotSpreadRef = useRef<HTMLDivElement>(null);
   const rotationRef = useRef<number>(0);
 
-  // TODO: react-query api로 사용자 정의 뒷면 기본 이미지 & 랜덤 이미지 불러오기
-  const backImg = useMemo(() => `../../../__tests__/mocks/cards/back.png`, []);
-  const frontImg = useMemo(() => {
-    const id = Math.floor(Math.random() * 78) % 22;
-    return `../../../__tests__/mocks/cards/${id.toString().padStart(2, '0')}.jpg`;
-  }, []);
+  const backImg = getTarotImageQuery(TAROT_CARDS_LENGTH).data.cardUrl;
+  const frontImg = getTarotImageQuery(pickedId).data.cardUrl;
 
   useEffect(() => {
+    setPickedId(Math.floor(Math.random() * TAROT_CARDS_LENGTH));
     const rotateSpread = ({ deltaX }: WheelEvent) => rotateTarotSpread(deltaX > 0 ? 'left' : 'right');
     const closeWithFadeOut = ({ animationName }: AnimationEvent) => animationName == 'fadeOut' && close();
 
@@ -73,7 +74,7 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
     setTimeout(() => tarotCardRefs.current.forEach(ref => (ref.style.transform = `rotate(270deg)`)), 200);
   };
 
-  const flipCard = async (id: number, card: HTMLDivElement) => {
+  const flipCard = async (card: HTMLDivElement) => {
     flipSound.play();
     tarotSpreadRef.current!.style.pointerEvents = 'none';
 
@@ -83,7 +84,7 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
     card.style.zIndex = '1000';
     card.style.transform = card.style.transform.replace(unFlippedStyle, flippedStyle);
 
-    pickCard(id);
+    pickCard(pickedId);
     setTimeout(() => unSpreadTarotCards(), 1500);
     setTimeout(() => setClosing(true), 2000);
   };
@@ -98,12 +99,12 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
         onMouseUp={() => setDragging(false)}
         className="transition-all ease-out absolute w-220 h-400 origin-center top-1200 left-[50%] translate-x-[-50%]"
       >
-        {Array.from({ length: TAROT_COUNT }, (_, idx) => idx).map((id: number, idx: number) => (
+        {Array.from({ length: TAROT_CARDS_LENGTH }, (_, idx) => idx).map((_, idx: number) => (
           <div
             key={idx}
             ref={ref => (tarotCardRefs.current[idx] = ref!)}
             className="absolute w-h-full"
-            onClick={() => flipCard(id, tarotCardRefs.current[idx])}
+            onClick={() => flipCard(tarotCardRefs.current[idx])}
           >
             <TarotCard
               dragging={dragging}
