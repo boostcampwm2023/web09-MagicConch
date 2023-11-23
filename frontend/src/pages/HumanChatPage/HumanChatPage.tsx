@@ -10,8 +10,16 @@ import CamBox from './CamBox';
 export default function HumanChatPage() {
   const { roomName } = useParams();
 
-  const { cameraOptions, localVideoRef, remoteVideoRef, toggleAudio, toggleVideo, changeCamera, cameraConnected } =
-    useWebRTC(roomName as string);
+  const {
+    cameraOptions,
+    localVideoRef,
+    remoteVideoRef,
+    toggleAudio,
+    toggleVideo,
+    changeCamera,
+    cameraConnected,
+    changeVideoTrack,
+  } = useWebRTC(roomName as string);
 
   return (
     <div className="w-h-full flex-with-center flex-col gap-10 ">
@@ -19,20 +27,21 @@ export default function HumanChatPage() {
         <CamBox
           videoRef={localVideoRef}
           cameraConnected={cameraConnected.local}
-          defaultImag="ddung"
+          defaultImage="bg-ddung"
         />
         <CamBox
           videoRef={remoteVideoRef}
           cameraConnected={cameraConnected.remote}
-          defaultImag="sponge"
+          defaultImage="bg-sponge"
         />
       </div>
       <div className="w-full h-10 flex justify-center gap-5">
         <CustomButton onClick={toggleVideo}>video</CustomButton>
         <CustomButton onClick={toggleAudio}>mic</CustomButton>
         <CustomSelect
-          onChange={({ value }) => {
-            changeCamera(value);
+          onChange={async ({ value }) => {
+            await changeCamera(value);
+            changeVideoTrack();
           }}
           options={cameraOptions.map(({ deviceId, label }) => ({ label, value: deviceId }))}
         />
