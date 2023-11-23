@@ -100,7 +100,9 @@ export class EventsGateway
     if (stream) {
       const sentMessage = await this.streamMessage(client, stream);
 
-      const askedTarotCard = askTarotCardCandidates.some(sentMessage.includes);
+      const askedTarotCard = askTarotCardCandidates.some((candidates) =>
+        sentMessage.includes(candidates),
+      );
       if (askedTarotCard) {
         client.emit('tarotCard');
       }
