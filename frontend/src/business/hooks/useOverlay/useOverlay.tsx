@@ -1,6 +1,7 @@
+import { useContext, useEffect, useMemo, useState } from 'react';
+
 import { OverlayContext } from './OverlayProvider';
 import { CreateOverlayElement } from './types';
-import { useContext, useEffect, useMemo, useState } from 'react';
 
 // overlay element를 구분하기 위한 id
 let elementId = 1;
@@ -12,7 +13,7 @@ export default function useOverlay() {
   }
 
   const [id] = useState(() => String(elementId++));
-  const [opened, setOpened] = useState(true);
+  const [opened] = useState(true);
 
   const { mount, unmount } = context;
 

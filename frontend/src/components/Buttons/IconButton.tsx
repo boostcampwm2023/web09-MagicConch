@@ -1,4 +1,4 @@
-import { iconColors } from '@constants/colors';
+import { IconColor, iconColors } from '@constants/colors';
 
 import { Icon } from '@iconify/react';
 
@@ -8,7 +8,7 @@ export interface IconButton {
   id?: string;
   text?: string;
   icon?: string;
-  iconColor?: keyof typeof iconColors;
+  iconColor?: IconColor;
   onClick?: () => void;
 }
 
