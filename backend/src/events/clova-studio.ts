@@ -7,11 +7,7 @@ import {
   tarotReadingSystemMessage,
 } from './constants';
 import { convertClovaEventStream2TokenStream } from './stream';
-
-export type Chat = {
-  role: 'user' | 'system' | 'assistant';
-  content: string;
-};
+import { Chat } from './type';
 
 class ClovaStudio {
   constructor(

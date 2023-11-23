@@ -14,7 +14,7 @@ import { Server, Socket } from 'socket.io';
 import { ChatService, ChattingInfo } from 'src/chat/chat.service';
 import { __DEV__ } from 'src/node.env';
 import { TarotService } from 'src/tarot/tarot.service';
-import ClovaStudio, { Chat } from './clova-studio';
+import ClovaStudio from './clova-studio';
 import {
   askTarotCardCandidates,
   tarotCardNames,
@@ -25,13 +25,7 @@ import {
   result2createTarotResultDto,
 } from './create-dto-helper';
 import { readTokenStream, string2TokenStream } from './stream';
-
-interface MySocket extends Socket {
-  memberId: string;
-  chatLog: Chat[];
-  chatEnd: boolean;
-  chatRoomId: string;
-}
+import { MySocket } from './type';
 
 @WebSocketGateway({
   cors: { origin: 'http://localhost:5173' },
