@@ -55,7 +55,7 @@ export function useWebRTC(roomName: string) {
       await getMedia();
       initSignalingSocket();
       makeConnection();
-      socketEmit('join_room', roomName);
+      socketEmit('joinRoom', roomName);
     };
     init();
 
