@@ -10,12 +10,21 @@ import { convertClovaEventStream2TokenStream } from './stream';
 import { Chat } from './type';
 
 class ClovaStudio {
+  headers;
+
   constructor(
     public readonly X_NCP_APIGW_API_KEY: string,
     public readonly X_NCP_CLOVASTUDIO_API_KEY: string,
   ) {
     this.X_NCP_APIGW_API_KEY = X_NCP_APIGW_API_KEY;
     this.X_NCP_CLOVASTUDIO_API_KEY = X_NCP_CLOVASTUDIO_API_KEY;
+
+    this.headers = {
+      'X-NCP-CLOVASTUDIO-API-KEY': 's',
+      'X-NCP-APIGW-API-KEY': this.X_NCP_APIGW_API_KEY,
+      'Content-Type': 'application/json',
+      Accept: 'text/event-stream',
+    };
   }
 
   initChatLog(chatLog: Chat[]): void {
@@ -39,12 +48,7 @@ class ClovaStudio {
   private async fetchClovaAPI(chatLog: Chat[], maxTokens: number) {
     const response = await fetch(CLOVA_URL, {
       method: 'POST',
-      headers: {
-        'X-NCP-CLOVASTUDIO-API-KEY': 's',
-        'X-NCP-APIGW-API-KEY': this.X_NCP_APIGW_API_KEY,
-        'Content-Type': 'application/json',
-        Accept: 'text/event-stream',
-      },
+      headers: this.headers,
       body: JSON.stringify({
         topK: 0,
         includeAiFilters: true,
