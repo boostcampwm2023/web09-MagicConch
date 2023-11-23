@@ -153,7 +153,7 @@ export class EventsGateway
     const onStreaming = (token: string) => client.emit('streaming', token);
     const sentMessage = await readTokenStream(stream, onStreaming);
 
-    this.logger.log(`🚀 Send a message to client: ${sentMessage}`);
+    this.logger.log(`🚀 Send a message to ${client.id}: ${sentMessage}`);
     client.emit('streamEnd');
 
     return sentMessage;
