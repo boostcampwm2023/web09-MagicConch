@@ -13,7 +13,6 @@ interface TarotSpreadProps {
   pickCard: (idx: number) => void;
 }
 
-const TAROT_COUNT = 78;
 const spreadSound = new Audio('/spreadCards.mp3');
 const flipSound = new Audio('/flipCard.mp3');
 
@@ -100,7 +99,7 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
         onMouseUp={() => setDragging(false)}
         className="transition-all ease-out absolute w-220 h-400 origin-center top-1200 left-[50%] translate-x-[-50%]"
       >
-        {Array.from({ length: TAROT_COUNT }, (_, idx) => idx).map((_, idx: number) => (
+        {Array.from({ length: TAROT_CARDS_LENGTH }, (_, idx) => idx).map((_, idx: number) => (
           <div
             key={idx}
             ref={ref => (tarotCardRefs.current[idx] = ref!)}
