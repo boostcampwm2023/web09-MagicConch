@@ -5,6 +5,8 @@ import { useParams } from 'react-router-dom';
 export interface ResultShareResponse {
   cardUrl: string;
   message: string;
+  cardUrl: string;
+  message: string;
 }
 
 export function getResultShareQuery() {
