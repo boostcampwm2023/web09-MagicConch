@@ -5,27 +5,26 @@ import CustomSelect from '@components/CustomSelect';
 
 import { useWebRTC } from '@business/hooks/useWebRTC';
 
+import CamBox from './CamBox';
+
 export default function HumanChatPage() {
   const { roomName } = useParams();
 
-  const { cameraOptions, localVideoRef, remoteVideoRef, toggleAudio, toggleVideo, changeCamera } = useWebRTC(
-    roomName as string,
-  );
+  const { cameraOptions, localVideoRef, remoteVideoRef, toggleAudio, toggleVideo, changeCamera, cameraConnected } =
+    useWebRTC(roomName as string);
 
   return (
     <div className="w-h-full flex-with-center flex-col gap-10 ">
-      <div className="flex justify-center">
-        <video
-          className="w-320 h-180 bg-blue-200"
-          ref={localVideoRef}
-          autoPlay
-          playsInline
+      <div className="flex justify-center gap-20 h-320">
+        <CamBox
+          videoRef={localVideoRef}
+          cameraConnected={cameraConnected.local}
+          defaultImag="ddung"
         />
-        <video
-          className="w-320 h-180 bg-red-200"
-          ref={remoteVideoRef}
-          autoPlay
-          playsInline
+        <CamBox
+          videoRef={remoteVideoRef}
+          cameraConnected={cameraConnected.remote}
+          defaultImag="sponge"
         />
       </div>
       <div className="w-full h-10 flex justify-center gap-5">

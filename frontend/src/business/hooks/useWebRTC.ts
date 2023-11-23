@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { iceServers } from '@constants/urls';
 
@@ -9,6 +9,7 @@ import { useSocket } from './useSocket';
 export function useWebRTC(roomName: string) {
   const peerConnectionRef = useRef<RTCPeerConnection>();
   const { socketEmit, disconnectSocket } = useSocket('WebRTC');
+  const [cameraConnected, setCameraConnected] = useState({ local: false, remote: false });
 
   const {
     localVideoRef,
@@ -44,6 +45,7 @@ export function useWebRTC(roomName: string) {
       }
 
       socketEmit('candidate', e.candidate, roomName);
+      setCameraConnected(prev => ({ ...prev, remote: true }));
     });
 
     localStreamRef.current.getTracks().forEach(track => {
@@ -53,6 +55,7 @@ export function useWebRTC(roomName: string) {
   useEffect(() => {
     const init = async () => {
       await getMedia();
+      setCameraConnected(prev => ({ ...prev, local: true }));
       initSignalingSocket();
       makeConnection();
       socketEmit('joinRoom', roomName);
@@ -69,6 +72,7 @@ export function useWebRTC(roomName: string) {
     cameraOptions,
     localVideoRef,
     remoteVideoRef,
+    cameraConnected,
     toggleAudio,
     toggleVideo,
     changeCamera,
