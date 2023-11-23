@@ -165,4 +165,7 @@ export default {
       addUtilities(sizeUtil);
     },
   ],
+  daisyui: {
+    themes: ['light', 'dark'],
+  },
 };
