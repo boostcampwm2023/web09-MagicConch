@@ -28,7 +28,7 @@ function CustomButton({ size, color = 'active', circle = false, disabled = false
   return (
     <button
       disabled={disabled}
-      className={`btn rounded-full border-transparent hover:scale-110 
+      className={`btn rounded-full border-transparent hover:scale-110 hover:text-weak
       ${circle && 'btn-circle'}  ${colorMap[color]} ${size && !circle && sizeMap[size]}`}
       onClick={onClick}
     >
