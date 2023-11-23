@@ -29,7 +29,7 @@ export function useSignalingSocket({ roomName, peerConnectionRef }: useSignaling
       await peerConnectionRef.current?.addIceCandidate(candidate);
     });
 
-    socketOn('room_full', () => {
+    socketOn('roomFull', () => {
       alert('room is full');
     });
   };
