@@ -90,20 +90,18 @@ function isString(object: any): object is string {
 }
 
 function streamEventParse(str: string): ClovaEvent | undefined {
-  const event: any = {};
-
-  str.split('\n').forEach((line: string) => {
+  const event: any = str.split('\n').reduce((event, line) => {
     const splitIdx = line.indexOf(':');
     const [key, value] = [line.slice(0, splitIdx), line.slice(splitIdx + 1)];
 
     if (key === 'id' || key === 'event') {
-      event[key] = value;
-    } else if (key === 'data') {
-      try {
-        event[key] = JSON.parse(value);
-      } catch (e) {}
+      return { ...event, [key]: value };
     }
-  });
+    if (key === 'data') {
+      return { ...event, [key]: parseJson(value) };
+    }
+    return event;
+  }, {} as any);
 
   return isStreamEvent(event) ? (event as ClovaEvent) : undefined;
 }
@@ -137,4 +135,12 @@ function uint8ArrayToStream(
   });
 
   return readableStream;
+}
+
+function parseJson(value: string): any {
+  try {
+    return JSON.parse(value);
+  } catch (err) {
+    return undefined;
+  }
 }
