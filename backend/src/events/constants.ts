@@ -7,7 +7,11 @@ export const tarotMaxTokens = 500;
 export const welcomeMessage =
   '안녕, 나는 어떤 고민이든지 들어주는 마법의 소라고둥이야!\n고민이 있으면 말해줘!';
 export const askTarotCardMessage = '타로 카드를 뽑아볼까?';
-export const askTarotCardCandidates = ['타로 카드를 뽑', '타로를 뽑'];
+export const askTarotCardCandidates = [
+  '타로 카드를 뽑',
+  '타로를 뽑',
+  '뽑아볼까?',
+];
 
 export const tarotReadingSystemMessage = `
 사용자가 말한 고민에 대해 공감성 멘트로 친근한 반말로 타로 카드를 해설하시오.
