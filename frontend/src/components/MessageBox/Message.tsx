@@ -1,16 +1,12 @@
 import { useMemo } from 'react';
 
-import { CustomButton } from '@components/Buttons';
-import { MessageButton } from '@components/ChatList';
-
 interface MessageProps {
   type: 'left' | 'right';
   message: string;
   profile: string;
-  button?: MessageButton;
 }
 
-function Message({ type, message, profile, button }: MessageProps) {
+function Message({ type, message, profile }: MessageProps) {
   const chatStyle = useMemo(
     () => ({
       box: type == 'left' ? 'chat-start' : 'chat-end',
@@ -30,18 +26,9 @@ function Message({ type, message, profile, button }: MessageProps) {
             />
           </div>
         </div>
-        <div className={`chat-bubble max-w-none shadow-chat ${chatStyle.bubble}`}>{message}</div>
-        {button && (
-          <div className="p-8 pt-12">
-            <CustomButton
-              size="s"
-              color="active"
-              onClick={button.onClick}
-            >
-              {button.content}
-            </CustomButton>
-          </div>
-        )}
+        <div className={`chat-bubble max-w-none shadow-chat ${chatStyle.bubble}`}>
+          {message.length ? message : <span className="loading loading-dots loading-md"></span>}
+        </div>
       </div>
     </>
   );
