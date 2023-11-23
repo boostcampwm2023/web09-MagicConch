@@ -12,7 +12,7 @@ interface ResultSharePageProps {}
 
 function ResultSharePage({}: ResultSharePageProps) {
   const {
-    data: { card_url, content },
+    data: { cardUrl, message },
   } = getResultShareQuery();
 
   const resultSharePageRef = useRef<HTMLDivElement>(null);
@@ -24,12 +24,12 @@ function ResultSharePage({}: ResultSharePageProps) {
         ref={resultSharePageRef}
         className="w-screen h-full flex flex-with-center gap-80 display-medium16 surface-alt text-strong p-20"
       >
-        <ResultImage cardUrl={card_url} />
+        <ResultImage cardUrl={cardUrl} />
 
         <div className="w-664 h-640 flex flex-col rounded-2xl surface-box">
-          <ResultTextBox content={content} />
+          <ResultTextBox content={message} />
           <ShareButtonList
-            cardUrl={card_url}
+            cardUrl={cardUrl}
             resultSharePageRef={resultSharePageRef}
           />
         </div>
