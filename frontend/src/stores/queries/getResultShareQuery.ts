@@ -13,6 +13,6 @@ export function getResultShareQuery() {
   return useSuspenseQuery({
     queryKey: [`resultShareQueryKey_${id}`],
     queryFn: async () =>
-      (await axios.get<ResultShareResponse>(`${import.meta.env.VITE_BASE_URL}/tarot/result/${id}`)).data,
+      (await axios.get<ResultShareResponse>(`${import.meta.env.VITE_WAS_URL}/tarot/result/${id}`)).data,
   });
 }

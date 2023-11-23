@@ -9,6 +9,6 @@ export function getTarotImageQuery(tarotId: number) {
   return useSuspenseQuery({
     queryKey: [`tarotImageQueryKey_${tarotId}}`],
     queryFn: async () =>
-      (await axios.get<TarotImageResponse>(`${import.meta.env.VITE_BASE_URL}/tarot/card/${tarotId}`)).data,
+      (await axios.get<TarotImageResponse>(`${import.meta.env.VITE_WAS_URL}/tarot/card/${tarotId}`)).data,
   });
 }
