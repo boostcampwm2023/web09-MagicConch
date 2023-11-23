@@ -16,6 +16,7 @@ const flipSound = new Audio('/flipCard.mp3');
 export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProps) {
   const [closing, setClosing] = useState<boolean>(!opened);
   const [dragging, setDragging] = useState<boolean>(false);
+  const [pickedId, setPickedId] = useState<number>(0);
 
   const tarotCardRefs = useRef<HTMLDivElement[]>([]);
   const prevMouseXRef = useRef<number>(0);
@@ -24,12 +25,10 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
 
   // TODO: react-query api로 사용자 정의 뒷면 기본 이미지 & 랜덤 이미지 불러오기
   const backImg = useMemo(() => `../../../__tests__/mocks/cards/back.png`, []);
-  const frontImg = useMemo(() => {
-    const id = Math.floor(Math.random() * 78) % 22;
-    return `../../../__tests__/mocks/cards/${id.toString().padStart(2, '0')}.jpg`;
-  }, []);
+  const frontImg = useMemo(() => `../../../__tests__/mocks/cards/${pickedId.toString().padStart(2, '0')}.jpg`, []);
 
   useEffect(() => {
+    setPickedId(Math.floor(Math.random() * 78));
     const rotateSpread = ({ deltaX }: WheelEvent) => rotateTarotSpread(deltaX > 0 ? 'left' : 'right');
     const closeWithFadeOut = ({ animationName }: AnimationEvent) => animationName == 'fadeOut' && close();
 
@@ -73,7 +72,7 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
     setTimeout(() => tarotCardRefs.current.forEach(ref => (ref.style.transform = `rotate(270deg)`)), 200);
   };
 
-  const flipCard = async (id: number, card: HTMLDivElement) => {
+  const flipCard = async (card: HTMLDivElement) => {
     flipSound.play();
     tarotSpreadRef.current!.style.pointerEvents = 'none';
 
@@ -83,7 +82,7 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
     card.style.zIndex = '1000';
     card.style.transform = card.style.transform.replace(unFlippedStyle, flippedStyle);
 
-    pickCard(id);
+    pickCard(pickedId);
     setTimeout(() => unSpreadTarotCards(), 1500);
     setTimeout(() => setClosing(true), 2000);
   };
@@ -98,12 +97,12 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
         onMouseUp={() => setDragging(false)}
         className="transition-all ease-out absolute w-220 h-400 origin-center top-1200 left-[50%] translate-x-[-50%]"
       >
-        {Array.from({ length: TAROT_COUNT }, (_, idx) => idx).map((id: number, idx: number) => (
+        {Array.from({ length: TAROT_COUNT }, (_, idx) => idx).map((_, idx: number) => (
           <div
             key={idx}
             ref={ref => (tarotCardRefs.current[idx] = ref!)}
             className="absolute w-h-full"
-            onClick={() => flipCard(id, tarotCardRefs.current[idx])}
+            onClick={() => flipCard(tarotCardRefs.current[idx])}
           >
             <TarotCard
               dragging={dragging}
