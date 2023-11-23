@@ -1,7 +1,7 @@
 import Background from '../Background';
 import { useEffect, useRef, useState } from 'react';
 
-import { getTarotImage } from '@stores/queries/getTarotImage';
+import { getTarotImageQuery } from '@stores/queries/getTarotImageQuery';
 
 import { TAROT_CARDS_LENGTH } from '@constants/sizes';
 
@@ -27,8 +27,8 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
   const tarotSpreadRef = useRef<HTMLDivElement>(null);
   const rotationRef = useRef<number>(0);
 
-  const backImg = getTarotImage(TAROT_CARDS_LENGTH).data.cardUrl;
-  const frontImg = getTarotImage(Math.floor(Math.random() * TAROT_CARDS_LENGTH)).data.cardUrl;
+  const backImg = getTarotImageQuery(TAROT_CARDS_LENGTH).data.cardUrl;
+  const frontImg = getTarotImageQuery(Math.floor(Math.random() * TAROT_CARDS_LENGTH)).data.cardUrl;
 
   useEffect(() => {
     setPickedId(Math.floor(Math.random() * 78));
