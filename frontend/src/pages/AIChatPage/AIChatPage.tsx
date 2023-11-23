@@ -13,7 +13,7 @@ import { Icon } from '@iconify/react';
 interface AIChatPageProps {}
 
 function AIChatPage({}: AIChatPageProps) {
-  const tarotCardId = useRef<string>();
+  const tarotCardId = useRef<number>();
 
   useTarotSpread(tarotCardId);
   const { messages, inputDisabled, onSubmitMessage } = useAiChatMessage(tarotCardId);
