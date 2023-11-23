@@ -14,7 +14,6 @@ interface MessageBoxProps {
 }
 
 // TODO: tarotId로 서버에서 타로 카드 이미지 정보를 받아와서 src와 alt 채워주기
-// TODO: 조건식 !tarotId -> tarotId로 변경
 // TODO: 프로필 이미지 설정
 
 function MessageBox({ tarotId, type, message, profile, button, shareLinkId }: MessageBoxProps) {
