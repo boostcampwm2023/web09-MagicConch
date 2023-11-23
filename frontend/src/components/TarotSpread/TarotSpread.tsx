@@ -1,8 +1,6 @@
 import Background from '../Background';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { shuffledArray } from '@utils/array';
-
 import TarotCard from './TarotCard';
 
 interface TarotSpreadProps {

@@ -5,10 +5,12 @@ import { Kakao } from '@business/services/Kakao';
 
 import { downloadImage } from '@utils/downloadImage';
 
+import { IconColor } from '@constants/colors';
+
 type ShareButton = {
   text?: string;
   icon?: string;
-  iconColor?: string;
+  iconColor?: IconColor;
   onClick?: () => void;
   tooltip?: string;
 };
@@ -38,7 +40,7 @@ export function useShareButtons({ cardUrl, resultSharePageRef }: useShareButtonP
     kakao: {
       text: '카카오톡 공유',
       icon: 'simple-icons:kakaotalk',
-      iconColor: '#FEE500',
+      iconColor: 'kakaoIcon',
       onClick: share2Kakao,
     },
     download: {

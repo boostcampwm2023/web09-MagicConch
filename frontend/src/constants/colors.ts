@@ -4,4 +4,6 @@ export const iconColors = {
   textDefault: 'text-default',
   textWeak: 'text-weak',
   textWhite: 'text-white-default',
+  kakaoIcon: 'kakao-icon',
 };
+export type IconColor = keyof typeof iconColors;
