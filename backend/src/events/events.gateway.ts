@@ -26,7 +26,7 @@ import { readTokenStream, string2TokenStream } from './stream';
 import type { MySocket } from './type';
 
 @WebSocketGateway({
-  cors: { origin: 'http://localhost:5173' },
+  cors: { origin: '*' },
 })
 export class EventsGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
