@@ -1,5 +1,9 @@
 import Background from '../Background';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+import { getTarotImage } from '@stores/queries/getTarotImage';
+
+import { TAROT_CARDS_LENGTH } from '@constants/sizes';
 
 import TarotCard from './TarotCard';
 
@@ -23,9 +27,8 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
   const tarotSpreadRef = useRef<HTMLDivElement>(null);
   const rotationRef = useRef<number>(0);
 
-  // TODO: react-query api로 사용자 정의 뒷면 기본 이미지 & 랜덤 이미지 불러오기
-  const backImg = useMemo(() => `../../../__tests__/mocks/cards/back.png`, []);
-  const frontImg = useMemo(() => `../../../__tests__/mocks/cards/${pickedId.toString().padStart(2, '0')}.jpg`, []);
+  const backImg = getTarotImage(TAROT_CARDS_LENGTH).data.cardUrl;
+  const frontImg = getTarotImage(Math.floor(Math.random() * TAROT_CARDS_LENGTH)).data.cardUrl;
 
   useEffect(() => {
     setPickedId(Math.floor(Math.random() * 78));
