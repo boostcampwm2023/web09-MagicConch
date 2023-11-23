@@ -1,5 +1,7 @@
 import type { ClovaEvent } from './type';
 
+const encoder = new TextEncoder();
+
 export function convertClovaEventStream2TokenStream(
   clovaEventStream: ReadableStream<Uint8Array>,
 ): ReadableStream<Uint8Array> {
@@ -33,8 +35,8 @@ export function readTokenStream(
 }
 
 export function string2TokenStream(string: string): ReadableStream<Uint8Array> {
-  const uint8Array = stringToUint8Array(string);
-  const stream = uint8ArrayToStream(uint8Array);
+  const uint8Array = string2Uint8Array(string);
+  const stream = uint8Array2Stream(uint8Array);
   return stream;
 }
 
@@ -64,7 +66,6 @@ function createTransformer(): TransformStream<Uint8Array, Uint8Array> {
 
       const newChunks = splitedChunk.map(extractToken).filter(isString);
 
-      const encoder = new TextEncoder();
       newChunks
         .map((token) => encoder.encode(token))
         .forEach((encodeedToken) => controller.enqueue(encodeedToken));
@@ -108,14 +109,11 @@ function isStreamEvent(object: any): object is ClovaEvent {
   );
 }
 
-function stringToUint8Array(string: string): Uint8Array {
-  const encoder = new TextEncoder();
+function string2Uint8Array(string: string): Uint8Array {
   return encoder.encode(string);
 }
 
-function uint8ArrayToStream(
-  uint8Array: Uint8Array,
-): ReadableStream<Uint8Array> {
+function uint8Array2Stream(uint8Array: Uint8Array): ReadableStream<Uint8Array> {
   const readableStream = new ReadableStream({
     start(controller) {
       controller.enqueue(uint8Array);
