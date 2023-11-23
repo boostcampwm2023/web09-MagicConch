@@ -32,7 +32,10 @@ function Message({ type, message, profile, button }: MessageProps) {
         </div>
         <div className={`chat-bubble max-w-none shadow-chat ${chatStyle.bubble}`}>{message}</div>
         {button && (
-          <div className="p-8 pt-12">
+          <div
+            id="TOLD"
+            className="p-8 pt-12"
+          >
             <CustomButton
               size="s"
               color="active"
