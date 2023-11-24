@@ -96,6 +96,11 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd ~/app
-            docker rm -f $(docker ps -a -q)
+            docker rm -f $(docker ps -aq)
             docker-compose -f docker-compose.${{ github.sha }}.yml pull
             docker-compose -f docker-compose.${{ github.sha }}.yml up -d
+            while [ -z "$(docker ps -afq name=nest)" ]; do
+              sleep 5
+            done
+            sleep 60
+            rm .env
