@@ -1,10 +1,10 @@
 version: "3.3"
 
 services:
-  node:
+  nest:
     build:
       context: .
-      dockerfile: Dockerfile.node
+      dockerfile: Dockerfile.nest
     environment:
       - DB_PORT=${DB_PORT}
       - DB_HOST=${DB_HOST}
@@ -17,14 +17,22 @@ services:
       - X_NCP_APIGW_API_KEY=${X_NCP_APIGW_API_KEY}
     extra_hosts:
       - "host.docker.internal:172.17.0.1"
-    expose:
-      - 3000
 
   nginx:
+    image: nginx:latest
     build:
       context: .
       dockerfile: Dockerfile.nginx
     ports:
-      - "8080:80"
+      - "80:80"
+      - "443:443"
     depends_on:
-      - node
+      - nest
+      - certbot
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - /etc/letsencrypt
+      - /var/www/html:/var/www/html
+    command: certonly --webroot --webroot-path=/var/www/html -d was.tarotmilktea.com
