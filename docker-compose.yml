@@ -2,6 +2,7 @@ version: "3.3"
 
 services:
   nest:
+    image: nest
     build:
       context: .
       dockerfile: Dockerfile.nest
@@ -21,7 +22,7 @@ services:
       - "3000"
 
   nginx:
-    image: nginx:latest
+    image: nginx
     build:
       context: .
       dockerfile: Dockerfile.nginx
