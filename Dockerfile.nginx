@@ -7,7 +7,4 @@ COPY config/nginx/ssl/fullchain.pem /etc/letsencrypt/live/was.tarotmilktea.com/f
 COPY config/nginx/ssl/privkey.pem /etc/letsencrypt/live/was.tarotmilktea.com/privkey.pem
 COPY config/nginx/ssl/ssl-dhparams.pem /etc/letsencrypt/ssl-dhparams.pem
 
-EXPOSE 80
-EXPOSE 443
-
 CMD ["nginx", "-g", "daemon off;"]
