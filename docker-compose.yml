@@ -1,11 +1,11 @@
 version: "3.3"
 
 services:
-  nest:
-    image: nest
+  was:
+    image: was
     build:
       context: .
-      dockerfile: Dockerfile.nest
+      dockerfile: Dockerfile.was
     environment:
       - DB_PORT=${DB_PORT}
       - DB_HOST=${DB_HOST}
