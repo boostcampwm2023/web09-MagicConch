@@ -53,8 +53,10 @@ jobs:
 
       - name: Build Docker Images
         run: |
-          docker-compose build -t ${{ secrets.DOCKER_USERNAME }}/magicconch:${{ github.sha }}
-          cp docker-compose.yml docker-compose.${{ github.sha }}.yml
+          DOCKER_IMAGE_TAG="${{ github.sha }}"
+          DOCKER_IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/magicconch"
+          docker-compose build -t "${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}"
+          cp docker-compose.yml docker-compose.${DOCKER_IMAGE_TAG}.yml
 
       - name: Copy docker-compose to Remote Server
         uses: appleboy/scp-action@master
@@ -63,7 +65,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
-          source: "docker-compose.${{ github.sha }}.yml"
+          source: "docker-compose.${DOCKER_IMAGE_TAG}.yml"
           target: "~/app"
 
       - name: Remove local docker-compose copied file
@@ -97,9 +99,9 @@ jobs:
           script: |
             cd ~/app
             docker rm -f $(docker ps -aq)
-            docker-compose -f docker-compose.${{ github.sha }}.yml pull
-            docker-compose -f docker-compose.${{ github.sha }}.yml up -d
-            while [ -z "$(docker ps -afq name=nest)" ]; do
+            docker-compose -f docker-compose.${DOCKER_IMAGE_TAG}.yml pull
+            docker-compose -f docker-compose.${DOCKER_IMAGE_TAG}.yml up -d
+            while [ -z "$(docker ps -afq name=was)" ]; do
               sleep 5
             done
             sleep 60
