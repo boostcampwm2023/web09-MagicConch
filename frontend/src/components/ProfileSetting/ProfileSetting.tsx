@@ -1,7 +1,8 @@
 import { useState } from 'react';
 
 import { CustomButton, IconButton, IconToggleButton } from '@components/Buttons';
-import CustomSelect from '@components/CustomSelect';
+
+import DeviceSelect from './DeviceSelect';
 
 interface ProfileSettingProps {
   close: () => void;
@@ -81,14 +82,16 @@ export default function ProfileSetting({ close }: ProfileSettingProps) {
               placeholder="닉네임을 입력하세요."
             />
           </div>
-          <div className="flex flex-col gap-4">
-            <span className="text-strong display-bold14">사용할 카메라 장치를 선택하세요.</span>
-            <CustomSelect options={camList} />
-          </div>
-          <div className="flex flex-col gap-4">
-            <span className="text-strong display-bold14">사용할 오디오 장치를 선택하세요.</span>
-            <CustomSelect options={micList} />
-          </div>
+          <DeviceSelect
+            name="카메라"
+            deviceList={camList}
+            onChange={console.log}
+          />
+          <DeviceSelect
+            name="마이크"
+            deviceList={micList}
+            onChange={console.log}
+          />
           <CustomButton
             onClick={close}
             color="dark"
