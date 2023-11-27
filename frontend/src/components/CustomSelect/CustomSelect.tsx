@@ -25,7 +25,7 @@ export default function CustomSelect({ width, options, autoFocus, onChange }: Cu
 
   const updateOption = (option: CustomSelectOptions) => {
     inputRef.current?.click();
-    if (option.value != selected.value) {
+    if (option.value !== selected.value) {
       setSelected(option);
       onChange?.(option);
     }
@@ -55,7 +55,7 @@ export default function CustomSelect({ width, options, autoFocus, onChange }: Cu
         >
           {options.map(({ value, label }) => (
             <p
-              className={`display-medium14  ${selected.value == value && 'text-point font-bold'}
+              className={`display-medium14  ${selected.value === value && 'text-point font-bold'}
                         leading-24 p-0 py-8 hover:bg-gray-100`}
               key={value}
               title={selected.label}
