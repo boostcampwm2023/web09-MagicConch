@@ -2,7 +2,7 @@ name: Dockerized CD
 
 on:
   push:
-    branches: ["dev", "BE/bugfix/#262-백엔드-배포-깃허브-액션-오류"]
+    branches: ["dev"]
 
 jobs:
   build:
