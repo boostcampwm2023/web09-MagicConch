@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { CustomButton, IconButton, IconToggleButton } from '@components/Buttons';
 
 import DeviceSelect from './DeviceSelect';
+import DeviceToggleButtons from './DeviceToggleButtons';
 
 interface ProfileSettingProps {
   close: () => void;
@@ -40,24 +41,12 @@ export default function ProfileSetting({ close }: ProfileSettingProps) {
             className="w-320 h-320"
             src="/ddung.png"
           />
-          <div className="flex-with-center gap-36">
-            <IconToggleButton
-              activeIcon="pepicons-pop:camera"
-              disabledIcon="pepicons-pop:camera-off"
-              iconSize={28}
-              buttonSize="l"
-              active={cameraActive}
-              onClick={cameraToggle}
-            />
-            <IconToggleButton
-              activeIcon="mingcute:mic-line"
-              disabledIcon="mingcute:mic-off-line"
-              iconSize={28}
-              buttonSize="l"
-              active={micActive}
-              onClick={micToggle}
-            />
-          </div>
+          <DeviceToggleButtons
+            cameraActive={cameraActive}
+            micActive={micActive}
+            cameraToggle={cameraToggle}
+            micToggle={micToggle}
+          />
         </div>
         <div className="flex flex-col gap-24">
           <div className="flex-with-center gap-12">
