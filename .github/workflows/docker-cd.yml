@@ -103,7 +103,7 @@ jobs:
             docker rm -f $(docker ps -aq)
             docker-compose -f docker-compose.${{ github.sha }}.yml pull
             docker-compose -f docker-compose.${{ github.sha }}.yml up -d
-            while [ -z "$(docker ps -afq name=was)" ]; do
+            while [ -z "$(docker ps -afq name=app_was)" ]; do
               sleep 5
             done
             sleep 60
