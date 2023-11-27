@@ -17,7 +17,7 @@ export function useMedia() {
   const getMedia = async (deviceId?: string) => {
     const stream = await navigator.mediaDevices.getUserMedia({
       audio: true,
-      video: deviceId ? { deviceId } : { facingMode: 'user' },
+      video: deviceId ? { deviceId, width: 320, height: 320 } : { facingMode: 'user', width: 320, height: 320 },
     });
 
     if (localVideoRef.current) {

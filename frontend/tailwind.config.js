@@ -53,6 +53,10 @@ export default {
         tarotHovering: 'tarotHovering 0.5s ease-in-out forwards',
         tarotLeaving: 'tarotLeaving 0.3s ease-in-out forwards',
       },
+      backgroundImage: {
+        ddung: "url('/ddung.png')",
+        sponge: "url('/sponge.png')",
+      },
     },
   },
   plugins: [
