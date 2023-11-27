@@ -42,6 +42,9 @@ jobs:
           echo "${{ secrets.SSL_PRIVKEY }}" > config/nginx/ssl/privkey.pem
           echo "${{ secrets.SSL_DHPARAMS }}" > config/nginx/ssl/ssl-dhparams.pem
 
+      - name: Create target directory if not exists
+        run: mkdir -p ~/app/config/nginx/ssl
+
       - name: Copy SSL files to Remote Server
         uses: appleboy/scp-action@master
         with:
