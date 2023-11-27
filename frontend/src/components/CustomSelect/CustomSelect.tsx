@@ -1,43 +1,72 @@
-export interface OnChangeSelectFunction {
+import { useRef, useState } from 'react';
+
+import { Icon } from '@iconify/react';
+
+export interface CustomSelectOptions {
   value: string;
   label: string;
 }
 
-export interface CustomSelectOptions extends OnChangeSelectFunction {
-  selected?: boolean;
-}
-
 interface CustomSelectProps {
+  width?: string;
   options: CustomSelectOptions[];
-  required?: boolean;
   autoFocus?: boolean;
-  onChange?: ({ value, label }: OnChangeSelectFunction) => void;
+  onChange?: ({ value, label }: CustomSelectOptions) => void;
 }
 
-export default function CustomSelect({ options, required, autoFocus, onChange }: CustomSelectProps) {
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { selectedIndex, options } = e.target;
-    const { value, innerText } = options[selectedIndex];
+export default function CustomSelect({ width, autoFocus, onChange }: CustomSelectProps) {
+  const options: CustomSelectOptions[] = [
+    { value: 'test1', label: '카메라1 테스트' },
+    { value: 'test2', label: '카메라2 테스트' },
+    { value: 'test3', label: '카메라3 테스트' },
+  ];
+  const [opened, setOpened] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [selected, setSelected] = useState<CustomSelectOptions>(options.length ? options[0] : { value: '', label: '' });
 
-    onChange?.({ value, label: innerText });
+  const updateOption = (option: CustomSelectOptions) => {
+    inputRef.current?.click();
+    if (option.value != selected.value) {
+      setSelected(option);
+      onChange?.(option);
+    }
   };
 
   return (
-    <select
-      className="select select-bordered w-full"
-      required={required}
-      autoFocus={autoFocus}
-      onChange={handleChange}
-    >
-      {options.map(({ value, label, selected }) => (
-        <option
-          key={value}
-          value={value}
-          selected={selected}
+    <div className="relative">
+      <div className={`absolute collapse ${width ?? 'w-250'} min-h-48 bg-white border border-gray-300`}>
+        <input
+          title={selected.label}
+          ref={inputRef}
+          type="checkbox"
+          className="min-h-48"
+          onClick={() => setOpened(!opened)}
+        />
+        <div className="collapse-title w-full leading-48 min-h-48 focus:outline-none flex justify-between py-0 px-15">
+          {selected.label}
+          <Icon
+            icon="teenyicons:down-solid"
+            className="h-48 transition-transform"
+            transform={`${opened ? 'rotate(180)' : 'rotate(0)'}`}
+          />
+        </div>
+        <div
+          className={`collapse-content w-full`}
+          autoFocus={autoFocus}
         >
-          {label}
-        </option>
-      ))}
-    </select>
+          {options.map(({ value, label }) => (
+            <p
+              className={`option display-medium14  ${selected.value == value && 'text-point font-bold'}
+                        leading-24 p-0 py-8 hover:bg-gray-100`}
+              key={value}
+              title={selected.label}
+              onClick={() => updateOption({ value, label })}
+            >
+              {label}
+            </p>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
