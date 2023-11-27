@@ -2,11 +2,11 @@ import { useParams } from 'react-router-dom';
 
 import Background from '@components/Background';
 import CustomButton from '@components/Buttons/CustomButton';
+import CamBox from '@components/CamBox';
 import ChatContainer from '@components/ChatContainer';
+import CustomSelect, { CustomSelectOptions } from '@components/CustomSelect';
 import Header from '@components/Header';
 import SideBar from '@components/SideBar';
-import CamBox from '@components/CamBox';
-import CustomSelect, { OnChangeSelectFunction } from '@components/CustomSelect';
 
 import { useWebRTC } from '@business/hooks/useWebRTC';
 
@@ -24,7 +24,7 @@ export default function HumanChatPage() {
     changeVideoTrack,
   } = useWebRTC(roomName as string);
 
-  const changeMyCamera = async ({ value }: OnChangeSelectFunction) => {
+  const changeMyCamera = async ({ value }: CustomSelectOptions) => {
     await changeCamera(value);
     changeVideoTrack();
   };
@@ -48,12 +48,12 @@ export default function HumanChatPage() {
             videoRef={localVideoRef}
             cameraConnected={cameraConnected.local}
             defaultImage="bg-ddung"
-            />
+          />
           <CamBox
             videoRef={remoteVideoRef}
             cameraConnected={cameraConnected.remote}
             defaultImage="bg-sponge"
-            />
+          />
         </div>
         <div className="w-full flex justify-center gap-5">
           <CustomButton onClick={toggleVideo}>video</CustomButton>
