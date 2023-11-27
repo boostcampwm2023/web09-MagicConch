@@ -31,7 +31,7 @@ img {
 
 *:hover,
 *::-webkit-media-controls-play-button {
-  cursor: none;
+  cursor: none !important;
 }
 
 ::-webkit-scrollbar {

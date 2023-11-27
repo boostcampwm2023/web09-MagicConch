@@ -73,6 +73,7 @@ export default {
       };
 
       const textTheme = {
+        '.text-point': { color: '#7890E7' },
         '.text-strong': { color: '#14212B' },
         '.text-bold': { color: '#4B5966' },
         '.text-default': { color: '#5E6E76' },
@@ -142,7 +143,7 @@ export default {
           mixBlendMode: 'difference',
           background: '#fff',
         },
-        '.cursor:has(~ div button:hover), .cursor:has(~ div input:hover), .cursor:has(~ div a:hover), .cursor:has(~ div audio:hover)':
+        '.cursor:has(~ div button:hover), .cursor:has(~ div input:hover), .cursor:has(~ div a:hover), .cursor:has(~ div audio:hover), .cursor:has(~ div .collapse-content:hover)':
           {
             transition: 'transform 0.1s ease-in-out',
             transform: 'translate(-50%, -50%) scale(2)',

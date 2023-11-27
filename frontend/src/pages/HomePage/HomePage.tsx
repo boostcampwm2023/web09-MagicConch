@@ -16,7 +16,8 @@ function HomePage() {
   };
 
   const moveHumanChat = () => {
-    navigate('/chat/human');
+    // TODO: 실제 roomname 넣기
+    navigate('/chat/human/1');
   };
 
   return (

@@ -39,7 +39,7 @@ export default function HumanChatPage() {
           defaultImage="bg-sponge"
         />
       </div>
-      <div className="w-full h-10 flex justify-center gap-5">
+      <div className="w-full flex justify-center gap-5">
         <CustomButton onClick={toggleVideo}>video</CustomButton>
         <CustomButton onClick={toggleAudio}>mic</CustomButton>
         <CustomSelect
