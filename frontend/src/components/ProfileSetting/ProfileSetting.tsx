@@ -1,6 +1,5 @@
-import { useState } from 'react';
-
 import { CustomButton, IconButton } from '@components/Buttons';
+import CamBox from '@components/CamBox';
 import { CustomSelectOptions } from '@components/CustomSelect';
 
 import DeviceSelect from './DeviceSelect';
@@ -11,6 +10,7 @@ interface ProfileSettingProps {
   toggleVideo: () => void;
   toggleAudio: () => void;
   camList: CustomSelectOptions[];
+  videoRef: React.RefObject<HTMLVideoElement>;
   cameraConnected: { local: boolean; remote: boolean };
   changeMyCamera: (deviceId: string) => void;
 }
@@ -20,6 +20,7 @@ export default function ProfileSetting({
   toggleVideo,
   toggleAudio,
   camList,
+  videoRef,
   cameraConnected,
   changeMyCamera,
 }: ProfileSettingProps) {
@@ -28,9 +29,10 @@ export default function ProfileSetting({
       <div className="flex gap-48 rounded-lg p-64 surface-box">
         <div className="flex flex-col gap-24">
           {/* TODO: Cam component기 완성되면 바꿔야 함. */}
-          <img
-            className="w-320 h-320"
-            src="/ddung.png"
+          <CamBox
+            videoRef={videoRef}
+            cameraConnected={cameraConnected.local}
+            defaultImage="bg-ddung"
           />
           <DeviceToggleButtons
             cameraActive={cameraConnected.local}

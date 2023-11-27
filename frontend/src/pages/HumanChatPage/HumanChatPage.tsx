@@ -41,6 +41,7 @@ export default function HumanChatPage() {
         cameraConnected={cameraConnected}
         changeMyCamera={changeMyCamera}
         camList={cameraOptions.map(({ deviceId, label }) => ({ label, value: deviceId }))}
+        videoRef={localVideoRef}
       />
     ));
   };
