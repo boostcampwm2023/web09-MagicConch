@@ -1,32 +1,51 @@
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import Background from '@components/Background';
 import CustomButton from '@components/Buttons/CustomButton';
 import CamContainer from '@components/CamContainer';
 import Header from '@components/Header';
+import ProfileSetting from '@components/ProfileSetting';
 
+import useOverlay from '@business/hooks/useOverlay';
 import { useWebRTC } from '@business/hooks/useWebRTC';
 
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 export default function HumanChatPage() {
   const { roomName } = useParams();
+  const { open } = useOverlay();
 
   const {
-    // cameraOptions,
+    cameraOptions,
     localVideoRef,
     remoteVideoRef,
     toggleAudio,
     toggleVideo,
-    // changeCamera,
+    changeCamera,
     cameraConnected,
-    // changeVideoTrack,
+    changeVideoTrack,
   } = useWebRTC(roomName as string);
 
-  // const changeMyCamera = async ({ value }: OnChangeSelectFunction) => {
-  //   await changeCamera(value);
-  //   changeVideoTrack();
-  // };
+  const changeMyCamera = async (deviceId: string) => {
+    await changeCamera(deviceId);
+    changeVideoTrack();
+  };
+
+  const openProfileSetting = () => {
+    open(({ close }) => (
+      <ProfileSetting
+        close={close}
+        toggleVideo={toggleVideo}
+        toggleAudio={toggleAudio}
+        cameraConnected={cameraConnected}
+        changeMyCamera={changeMyCamera}
+        camList={cameraOptions.map(({ deviceId, label }) => ({ label, value: deviceId }))}
+      />
+    ));
+  };
+
+  useEffect(() => openProfileSetting(), []);
 
   return (
     <Background type="dynamic">
@@ -51,14 +70,6 @@ export default function HumanChatPage() {
         toggleAudio={toggleAudio}
         cameraConnected={cameraConnected}
       />
-      {/* <div className="w-full h-10 flex justify-center gap-5">
-        <CustomButton onClick={toggleVideo}>video</CustomButton>
-        <CustomButton onClick={toggleAudio}>mic</CustomButton>
-        <CustomSelect
-          onChange={changeMyCamera}
-          options={cameraOptions.map(({ deviceId, label }) => ({ label, value: deviceId }))}
-        />
-      </div> */}
     </Background>
   );
 }

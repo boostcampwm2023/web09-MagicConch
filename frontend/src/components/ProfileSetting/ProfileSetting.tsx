@@ -1,37 +1,28 @@
 import { useState } from 'react';
 
 import { CustomButton, IconButton } from '@components/Buttons';
+import { CustomSelectOptions } from '@components/CustomSelect';
 
 import DeviceSelect from './DeviceSelect';
 import DeviceToggleButtons from './DeviceToggleButtons';
 
 interface ProfileSettingProps {
   close: () => void;
+  toggleVideo: () => void;
+  toggleAudio: () => void;
+  camList: CustomSelectOptions[];
+  cameraConnected: { local: boolean; remote: boolean };
+  changeMyCamera: (deviceId: string) => void;
 }
 
-export default function ProfileSetting({ close }: ProfileSettingProps) {
-  const [cameraActive, setCameraActive] = useState(true);
-  const [micActive, setMicActive] = useState(true);
-
-  const cameraToggle = () => {
-    setCameraActive(cameraActive => !cameraActive);
-  };
-  const micToggle = () => {
-    setMicActive(micActive => !micActive);
-  };
-
-  const camList = [
-    { label: '카메라1', value: 'camera1', selected: true },
-    { label: '카메라2', value: 'camera2' },
-    { label: '카메라3', value: 'camera3' },
-  ];
-
-  const micList = [
-    { label: '마이크1', value: 'mic1', selected: true },
-    { label: '마이크2', value: 'mic2' },
-    { label: '마이크3', value: 'mic3' },
-  ];
-
+export default function ProfileSetting({
+  close,
+  toggleVideo,
+  toggleAudio,
+  camList,
+  cameraConnected,
+  changeMyCamera,
+}: ProfileSettingProps) {
   return (
     <div className="w-[100vw] h-[100vh] flex-with-center">
       <div className="flex gap-48 rounded-lg p-64 surface-box">
@@ -42,10 +33,10 @@ export default function ProfileSetting({ close }: ProfileSettingProps) {
             src="/ddung.png"
           />
           <DeviceToggleButtons
-            cameraActive={cameraActive}
-            micActive={micActive}
-            cameraToggle={cameraToggle}
-            micToggle={micToggle}
+            cameraActive={cameraConnected.local}
+            micActive={true}
+            toggleVideo={toggleVideo}
+            toggleAudio={toggleAudio}
           />
         </div>
         <div className="flex flex-col gap-24">
@@ -74,12 +65,12 @@ export default function ProfileSetting({ close }: ProfileSettingProps) {
           <DeviceSelect
             name="카메라"
             deviceList={camList}
-            onChange={console.log}
+            onChange={changeMyCamera}
           />
           <DeviceSelect
             name="마이크"
-            deviceList={micList}
-            onChange={console.log}
+            deviceList={camList}
+            onChange={changeMyCamera}
           />
           <CustomButton
             onClick={close}

@@ -3,15 +3,15 @@ import { IconToggleButton } from '@components/Buttons';
 interface DeviceToggleButtonsProps {
   cameraActive: boolean;
   micActive: boolean;
-  cameraToggle: () => void;
-  micToggle: () => void;
+  toggleVideo: () => void;
+  toggleAudio: () => void;
 }
 
 export default function DeviceToggleButtons({
   cameraActive,
   micActive,
-  cameraToggle,
-  micToggle,
+  toggleVideo,
+  toggleAudio,
 }: DeviceToggleButtonsProps) {
   return (
     <div className="flex-with-center gap-36">
@@ -21,7 +21,7 @@ export default function DeviceToggleButtons({
         iconSize={28}
         buttonSize="l"
         active={cameraActive}
-        onClick={cameraToggle}
+        onClick={toggleVideo}
       />
       <IconToggleButton
         activeIcon="mingcute:mic-line"
@@ -29,7 +29,7 @@ export default function DeviceToggleButtons({
         iconSize={28}
         buttonSize="l"
         active={micActive}
-        onClick={micToggle}
+        onClick={toggleAudio}
       />
     </div>
   );
