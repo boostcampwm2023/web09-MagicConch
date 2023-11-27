@@ -18,7 +18,7 @@ export default function CamContainer({
 }: CamContainerProps) {
   return (
     <div className="flex-with-center flex-col gap-80 pt-80">
-      <div className="flex-with-center gap-64">
+      <div className="flex justify-center gap-64 h-320">
         <CamBox
           videoRef={localVideoRef}
           cameraConnected={cameraConnected.local}
