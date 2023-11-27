@@ -2,7 +2,6 @@ version: "3.3"
 
 services:
   was:
-    image: was
     build:
       context: .
       dockerfile: Dockerfile.was
@@ -22,7 +21,6 @@ services:
       - "3000"
 
   nginx:
-    image: nginx
     build:
       context: .
       dockerfile: Dockerfile.nginx

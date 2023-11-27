@@ -57,8 +57,7 @@ jobs:
 
       - name: Build Docker Images
         run: |
-          DOCKER_IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/magicconch"
-          docker-compose build -t "${DOCKER_IMAGE_NAME}:${{ github.sha }}"
+          docker-compose build -t "${{ secrets.DOCKER_USERNAME }}/magicconch:${{ github.sha }}"
           cp docker-compose.yml docker-compose.${{ github.sha }}.yml
 
       - name: Copy docker-compose to Remote Server
