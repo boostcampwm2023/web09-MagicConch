@@ -1,4 +1,4 @@
-import { IconButton } from '@components/Buttons';
+import { IconToggleButton } from '@components/Buttons';
 import CamBox from '@components/CamBox';
 
 interface CamContainerProps {
@@ -31,20 +31,20 @@ export default function CamContainer({
         />
       </div>
       <div className="flex-with-center gap-48">
-        <IconButton
-          icon="pepicons-pop:camera"
-          iconColor="textWhite"
+        <IconToggleButton
+          activeIcon="pepicons-pop:camera"
+          disabledIcon="pepicons-pop:camera-off"
           iconSize={28}
-          buttonColor="active"
           buttonSize="l"
+          active={cameraConnected.local}
           onClick={toggleVideo}
         />
-        <IconButton
-          icon="mingcute:mic-line"
-          iconColor="textWhite"
+        <IconToggleButton
+          activeIcon="mingcute:mic-line"
+          disabledIcon="mingcute:mic-off-line"
           iconSize={28}
-          buttonColor="active"
           buttonSize="l"
+          active={cameraConnected.local}
           onClick={toggleAudio}
         />
       </div>
