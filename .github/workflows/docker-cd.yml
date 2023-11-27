@@ -32,7 +32,7 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
           source: ".env"
-          target: "~/app"
+          target: "~/app/"
 
       - name: Generate SSL files
         run: |
@@ -45,30 +45,34 @@ jobs:
       - name: Create target directory if not exists
         run: mkdir -p ~/app/config/nginx/ssl
 
-      - name: Copy SSL files to Remote Server
+      - name: Copy nginx configuration and SSL files to Remote Server
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
-          source: "config/nginx/ssl/*"
-          target: "~/app/config/nginx/ssl"
+          source: "config/nginx/*"
+          target: "~/app/config/nginx/"
 
       - name: Build Docker Images
         run: |
           docker-compose build -t "${{ secrets.DOCKER_USERNAME }}/magicconch:${{ github.sha }}"
           cp docker-compose.yml docker-compose.${{ github.sha }}.yml
 
-      - name: Copy docker-compose to Remote Server
+      - name: Copy Dockerfiles to Remote Server
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
-          source: "docker-compose.${{ github.sha }}.yml"
-          target: "~/app"
+          source: |
+            docker-compose.${{ github.sha }}.yml
+            Dockerfile.nginx
+            Dockerfile.was
+          target: "~/app/"
+          overwrite: true
 
       - name: Remove local docker-compose copied file
         run: rm docker-compose.${{ github.sha }}.yml
