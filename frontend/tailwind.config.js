@@ -45,6 +45,14 @@ export default {
           '0%': { transform: 'scale(1.02) translateY(-1000px)' },
           '100%': { transform: 'translateY(-1000px)' },
         },
+        openingSidebar: {
+          '0%': { right: '-500px' },
+          '100%': { right: 0 },
+        },
+        closingSidebar: {
+          '0%': { right: 0 },
+          '100%': { right: '-500px' },
+        },
       },
       animation: {
         shining: 'shining 2s ease-in-out infinite alternate',
@@ -52,6 +60,8 @@ export default {
         fadeOut: 'fadeOut 2.5s ease-in-out forwards',
         tarotHovering: 'tarotHovering 0.5s ease-in-out forwards',
         tarotLeaving: 'tarotLeaving 0.3s ease-in-out forwards',
+        openingSidebar: 'openingSidebar 0.5s ease-in-out forwards',
+        closingSidebar: 'closingSidebar 0.5s ease-in-out forwards',
       },
     },
   },
