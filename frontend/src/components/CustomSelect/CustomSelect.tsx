@@ -15,7 +15,6 @@ interface CustomSelectProps {
 }
 
 export default function CustomSelect({ width, options, autoFocus, onChange }: CustomSelectProps) {
-  console.log('CustomSelect', options);
   const [opened, setOpened] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [selected, setSelected] = useState<CustomSelectOptions>({ value: '', label: '' });
