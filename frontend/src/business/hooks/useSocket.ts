@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { Socket, io } from 'socket.io-client';
 
 interface SocketTypesMap {
@@ -11,14 +12,27 @@ interface SocketTypesMap {
   };
 }
 
+type ConnectSocketOptions = {
+  reconnect: boolean;
+};
+
 type SocketType = keyof SocketTypesMap;
 
 const sockets = {} as Record<SocketType, Socket>;
 
 export function useSocket<T extends SocketType>(socketType: T) {
-  function connectSocket(url: string) {
+  const navigate = useNavigate();
+
+  const ConnectSocketDefaultOptions = {
+    reconnect: false,
+  };
+
+  function connectSocket(url: string, { reconnect }: ConnectSocketOptions = ConnectSocketDefaultOptions) {
     if (sockets[socketType]) {
-      throw new Error('소켓이 이미 존재합니다.');
+      if (!reconnect) {
+        throw new Error('소켓이 이미 존재합니다.');
+      }
+      sockets[socketType].disconnect();
     }
     sockets[socketType] = io(url);
   }
@@ -32,10 +46,18 @@ export function useSocket<T extends SocketType>(socketType: T) {
   }
 
   function socketOn<U>(eventName: SocketTypesMap[T]['OnEventName'], eventListener: (args: U) => void) {
+    if (!sockets[socketType]) {
+      navigate('/');
+      return;
+    }
     sockets[socketType].on(eventName, eventListener as any);
   }
 
   function socketEmit(eventName: SocketTypesMap[T]['EmitEventName'], ...eventArgs: unknown[]) {
+    if (!sockets[socketType]) {
+      navigate('/');
+      return;
+    }
     sockets[socketType].emit(eventName, ...eventArgs);
   }
 
