@@ -9,6 +9,8 @@ import ResultSharePage from './pages/ResultSharePage';
 import BackgroundMusic from './components/BackgroundMusic';
 import Cursor from '@components/Cursor';
 
+import { DataChannelProvider } from '@business/hooks/DataChannelProvider';
+
 function App() {
   return (
     <>
@@ -24,7 +26,11 @@ function App() {
         />
         <Route
           path="/chat/human/:roomName"
-          element={<HumanChatPage />}
+          element={
+            <DataChannelProvider>
+              <HumanChatPage />
+            </DataChannelProvider>
+          }
         />
         <Route
           path="/readers"

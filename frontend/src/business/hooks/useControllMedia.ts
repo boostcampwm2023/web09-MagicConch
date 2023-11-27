@@ -1,9 +1,19 @@
+import { useDataChannelContext } from './useDataChannelContext';
+
 interface useContorollMediaProps {
   localStreamRef: React.MutableRefObject<MediaStream | undefined>;
   peerConnectionRef: React.MutableRefObject<RTCPeerConnection | undefined>;
+  localVideoRef: React.RefObject<HTMLVideoElement | undefined>;
+  mediaInfoChannel: React.MutableRefObject<RTCDataChannel | undefined>;
 }
 
-export function useControllMedia({ localStreamRef, peerConnectionRef }: useContorollMediaProps) {
+export function useControllMedia({
+  localVideoRef,
+  localStreamRef,
+  peerConnectionRef,
+  mediaInfoChannel,
+}: useContorollMediaProps) {
+  const { toggleMyVideo, toggleMyMic } = useDataChannelContext();
   const addTracks = () => {
     if (localStreamRef.current === undefined) {
       return;
@@ -25,5 +35,33 @@ export function useControllMedia({ localStreamRef, peerConnectionRef }: useConto
     sender?.replaceTrack(nowTrack!);
   };
 
-  return { addTracks, changeVideoTrack, changeAudioTrack };
+  const toggleVideo = () => {
+    if (!localVideoRef.current) {
+      return;
+    }
+
+    const videoTrack = localVideoRef.current.srcObject as MediaStream;
+    videoTrack.getVideoTracks().forEach(track => (track.enabled = !track.enabled));
+    toggleMyVideo();
+    // 여기서 dataChannel로 비디오 on/off를 보내줘야 함
+    mediaInfoChannel.current?.send(
+      JSON.stringify([{ type: 'video', onOrOff: videoTrack.getVideoTracks()[0].enabled }]),
+    );
+  };
+
+  const toggleAudio = () => {
+    if (!localVideoRef.current) {
+      return;
+    }
+
+    const audioTrack = localVideoRef.current.srcObject as MediaStream;
+    audioTrack.getAudioTracks().forEach(track => (track.enabled = !track.enabled));
+    toggleMyMic();
+    // 여기서 dataChannel로 오디오 on/off를 보내줘야 함
+    mediaInfoChannel.current?.send(
+      JSON.stringify([{ type: 'audio', onOrOff: audioTrack.getAudioTracks()[0].enabled }]),
+    );
+  };
+
+  return { addTracks, changeVideoTrack, changeAudioTrack, toggleVideo, toggleAudio };
 }

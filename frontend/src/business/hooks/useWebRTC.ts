@@ -1,36 +1,45 @@
 import { useEffect } from 'react';
 
 import { useControllMedia } from './useControllMedia';
+import { useDataChannel } from './useDataChannel';
 import { useMedia } from './useMedia';
 import { useRTCPeerConnection } from './useRTCPeerConnection';
 import { useSignalingSocket } from './useSignalingSocket';
 import { useSocket } from './useSocket';
 
-export function useWebRTC(roomName: string) {
+interface useWebRTCProps {
+  roomName: string;
+}
+
+export function useWebRTC({ roomName }: useWebRTCProps) {
   const { socketEmit, disconnectSocket } = useSocket('WebRTC');
 
-  const {
-    localVideoRef,
-    remoteVideoRef,
-    cameraOptions,
-    localStreamRef,
-    toggleVideo,
-    toggleAudio,
-    changeCamera,
-    getMedia,
-  } = useMedia();
+  const { localVideoRef, remoteVideoRef, cameraOptions, localStreamRef, getMedia } = useMedia();
 
-  const { peerConnectionRef, makeConnection, closeConnection } = useRTCPeerConnection({ roomName, remoteVideoRef });
+  const { peerConnectionRef, makeRTCPeerConnection, closeRTCPeerConnection } = useRTCPeerConnection({
+    roomName,
+    remoteVideoRef,
+  });
 
   const { initSignalingSocket } = useSignalingSocket({ roomName, peerConnectionRef });
 
-  const { addTracks, changeAudioTrack, changeVideoTrack } = useControllMedia({ localStreamRef, peerConnectionRef });
+  const { mediaInfoChannel, chatChannel, initDataChannels } = useDataChannel({
+    peerConnectionRef,
+  });
+
+  const { addTracks, changeAudioTrack, changeVideoTrack, toggleAudio, toggleVideo } = useControllMedia({
+    localStreamRef,
+    peerConnectionRef,
+    localVideoRef,
+    mediaInfoChannel,
+  });
 
   useEffect(() => {
     const init = async () => {
       await getMedia();
       initSignalingSocket();
-      makeConnection();
+      makeRTCPeerConnection();
+      initDataChannels();
       addTracks();
       socketEmit('joinRoom', roomName);
     };
@@ -38,7 +47,7 @@ export function useWebRTC(roomName: string) {
 
     return () => {
       disconnectSocket();
-      closeConnection();
+      closeRTCPeerConnection();
     };
   }, []);
 
@@ -48,9 +57,11 @@ export function useWebRTC(roomName: string) {
     remoteVideoRef,
     toggleAudio,
     toggleVideo,
-    changeCamera,
     addTracks,
     changeVideoTrack,
     changeAudioTrack,
+    changeCamera: getMedia,
+    mediaInfoChannel,
+    chatChannel,
   };
 }

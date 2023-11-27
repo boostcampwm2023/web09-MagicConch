@@ -14,7 +14,7 @@ export function useRTCPeerConnection({ roomName, remoteVideoRef }: useRTCPeerCon
 
   const { socketEmit } = useSocket('WebRTC');
 
-  const makeConnection = () => {
+  const makeRTCPeerConnection = async () => {
     peerConnectionRef.current = new RTCPeerConnection({ iceServers: [{ urls: iceServers }] });
 
     peerConnectionRef.current.addEventListener('track', e => {
@@ -34,9 +34,9 @@ export function useRTCPeerConnection({ roomName, remoteVideoRef }: useRTCPeerCon
     });
   };
 
-  const closeConnection = () => {
+  const closeRTCPeerConnection = () => {
     peerConnectionRef.current?.close();
   };
 
-  return { makeConnection, closeConnection, peerConnectionRef };
+  return { makeRTCPeerConnection, closeRTCPeerConnection, peerConnectionRef };
 }

@@ -29,25 +29,6 @@ export function useMedia() {
       await getCameras();
     }
   };
-
-  const toggleVideo = () => {
-    if (!localVideoRef.current) {
-      return;
-    }
-
-    const videoTrack = localVideoRef.current.srcObject as MediaStream;
-    videoTrack.getVideoTracks().forEach(track => (track.enabled = !track.enabled));
-  };
-
-  const toggleAudio = () => {
-    if (!localVideoRef.current) {
-      return;
-    }
-
-    const audioTrack = localVideoRef.current.srcObject as MediaStream;
-    audioTrack.getAudioTracks().forEach(track => (track.enabled = !track.enabled));
-  };
-
   const changeCamera = async (cameraId: string) => {
     await getMedia(cameraId);
   };
@@ -58,8 +39,6 @@ export function useMedia() {
     remoteVideoRef,
     localStreamRef,
     getMedia,
-    toggleAudio,
-    toggleVideo,
     changeCamera,
   };
 }
