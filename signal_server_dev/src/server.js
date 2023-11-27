@@ -26,13 +26,12 @@ const MAXIMUM = 2;
 io.on('connection', socket => {
   console.log(socket.id, 'connection');
 
-  socket.on('join_room', roomId => {
+  socket.on('joinRoom', roomId => {
     // 방이 기존에 생성 됐다면
     if (socketRooms[roomId]) {
       const currentRoomUsersCnt = socketRooms[roomId].length;
       if (currentRoomUsersCnt === MAXIMUM) {
-        socket.emit('room_full');
-        console.log('full');
+        socket.emit('roomFull');
         return;
       }
 

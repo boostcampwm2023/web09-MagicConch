@@ -10,7 +10,7 @@ function HomePage() {
   const { connectSocket } = useSocket('AIChat');
 
   const moveAiChat = () => {
-    connectSocket(import.meta.env.VITE_WAS_URL);
+    connectSocket(import.meta.env.VITE_WAS_URL, { reconnect: true });
     navigate('/chat/ai');
   };
 
