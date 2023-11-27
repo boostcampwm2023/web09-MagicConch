@@ -34,5 +34,9 @@ export function useRTCPeerConnection({ roomName, remoteVideoRef }: useRTCPeerCon
     });
   };
 
-  return { makeConnection, peerConnectionRef };
+  const closeConnection = () => {
+    peerConnectionRef.current?.close();
+  };
+
+  return { makeConnection, closeConnection, peerConnectionRef };
 }

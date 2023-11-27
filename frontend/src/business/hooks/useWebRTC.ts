@@ -1,15 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 
-import { iceServers } from '@constants/urls';
-
+import { useControllMedia } from './useControllMedia';
 import { useMedia } from './useMedia';
+import { useRTCPeerConnection } from './useRTCPeerConnection';
 import { useSignalingSocket } from './useSignalingSocket';
 import { useSocket } from './useSocket';
 
 export function useWebRTC(roomName: string) {
-  const peerConnectionRef = useRef<RTCPeerConnection>();
   const { socketEmit, disconnectSocket } = useSocket('WebRTC');
-  const [cameraConnected, setCameraConnected] = useState({ local: false, remote: false });
 
   const {
     localVideoRef,
@@ -22,54 +20,15 @@ export function useWebRTC(roomName: string) {
     getMedia,
   } = useMedia();
 
-  const { initSignalingSocket, closePeerConnection } = useSignalingSocket({ roomName, peerConnectionRef });
+  const { peerConnectionRef, makeConnection, closeConnection } = useRTCPeerConnection({ roomName, remoteVideoRef });
 
-  const makeConnection = () => {
-    peerConnectionRef.current = new RTCPeerConnection({ iceServers: [{ urls: iceServers }] });
+  const { initSignalingSocket } = useSignalingSocket({ roomName, peerConnectionRef });
 
-    peerConnectionRef.current.addEventListener('track', e => {
-      if (!remoteVideoRef.current) {
-        return;
-      }
-
-      remoteVideoRef.current.srcObject = e.streams[0];
-    });
-
-    peerConnectionRef.current.addEventListener('icecandidate', e => {
-      if (!e.candidate) {
-        return;
-      }
-
-      socketEmit('candidate', e.candidate, roomName);
-      setCameraConnected(prev => ({ ...prev, remote: true }));
-    });
-  };
-
-  const addTracks = () => {
-    if (localStreamRef.current === undefined) {
-      return;
-    }
-    localStreamRef.current.getTracks().forEach(track => {
-      peerConnectionRef.current?.addTrack(track, localStreamRef.current!);
-    });
-  };
-
-  const changeVideoTrack = () => {
-    const nowTrack = localStreamRef.current?.getVideoTracks()[0];
-    const sender = peerConnectionRef.current?.getSenders().find(sender => sender.track?.kind === 'video');
-    sender?.replaceTrack(nowTrack!);
-  };
-
-  const changeAudioTrack = () => {
-    const nowTrack = localStreamRef.current?.getAudioTracks()[0];
-    const sender = peerConnectionRef.current?.getSenders().find(sender => sender.track?.kind === 'audio');
-    sender?.replaceTrack(nowTrack!);
-  };
+  const { addTracks, changeAudioTrack, changeVideoTrack } = useControllMedia({ localStreamRef, peerConnectionRef });
 
   useEffect(() => {
     const init = async () => {
       await getMedia();
-      setCameraConnected(prev => ({ ...prev, local: true }));
       initSignalingSocket();
       makeConnection();
       addTracks();
@@ -79,7 +38,7 @@ export function useWebRTC(roomName: string) {
 
     return () => {
       disconnectSocket();
-      closePeerConnection();
+      closeConnection();
     };
   }, []);
 
@@ -87,7 +46,6 @@ export function useWebRTC(roomName: string) {
     cameraOptions,
     localVideoRef,
     remoteVideoRef,
-    cameraConnected,
     toggleAudio,
     toggleVideo,
     changeCamera,
