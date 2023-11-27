@@ -36,6 +36,7 @@ jobs:
 
       - name: Generate SSL files
         run: |
+          mkdir -p config/nginx/ssl/
           echo "${{ secrets.SSL_OPTIONS }}" > config/nginx/ssl/options-ssl-nginx.conf
           echo "${{ secrets.SSL_FULLCHAIN }}" > config/nginx/ssl/fullchain.pem
           echo "${{ secrets.SSL_PRIVKEY }}" > config/nginx/ssl/privkey.pem
