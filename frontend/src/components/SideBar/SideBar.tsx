@@ -1,17 +1,28 @@
-import { PropsWithChildren, useState } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 
 import { CustomButton } from '@components/Buttons';
 
 import { Icon } from '@iconify/react';
 
 function SideBar({ children }: PropsWithChildren) {
+  const [hidden, setHidden] = useState(true);
   const [opened, setOpened] = useState(false);
-  const [updated, setUpdated] = useState(false);
+  const [animating, setAnimating] = useState(false);
 
   const toggleOpened = () => {
-    if (!updated) setUpdated(true);
-    setOpened(!opened);
+    if (!animating) setOpened(!opened);
+    if (hidden) setHidden(false);
   };
+
+  useEffect(() => {
+    addEventListener('animationstart', () => setAnimating(true));
+    addEventListener('animationend', () => setAnimating(false));
+
+    return () => {
+      removeEventListener('animationstart', () => setAnimating(true));
+      removeEventListener('animationend', () => setAnimating(false));
+    };
+  }, []);
 
   return (
     <>
@@ -26,7 +37,7 @@ function SideBar({ children }: PropsWithChildren) {
         />
       </CustomButton>
       <div
-        className={`${updated && (opened ? 'animate-openingSidebar' : 'animate-closingSidebar')} 
+        className={`${!hidden && (opened ? 'animate-openingSidebar' : 'animate-closingSidebar')}
                     surface-alt w-500 h-[calc(100vh-48px)] absolute -right-500 top-48 flex-with-center overflow-hidden`}
       >
         {children}
