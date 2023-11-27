@@ -1,13 +1,11 @@
-import CamBox from '@pages/HumanChatPage/CamBox';
-
 import { IconButton } from '@components/Buttons';
+import CamBox from '@components/CamBox';
 
 interface CamContainerProps {
   localVideoRef: React.RefObject<HTMLVideoElement>;
   remoteVideoRef: React.RefObject<HTMLVideoElement>;
   toggleVideo: () => void;
   toggleAudio: () => void;
-  audioConnected: { local: boolean; remote: boolean };
   cameraConnected: { local: boolean; remote: boolean };
 }
 
@@ -16,22 +14,18 @@ export default function CamContainer({
   remoteVideoRef,
   toggleVideo,
   toggleAudio,
-  audioConnected,
   cameraConnected,
 }: CamContainerProps) {
   return (
     <div className="flex-with-center flex-col gap-80 pt-80">
       <div className="flex-with-center gap-64">
-        {/* TODO: Cam component가 완성되면 바꿔야 함. */}
         <CamBox
           videoRef={localVideoRef}
-          audioConnected={audioConnected.local}
           cameraConnected={cameraConnected.local}
           defaultImage="bg-ddung"
         />
         <CamBox
           videoRef={remoteVideoRef}
-          audioConnected={audioConnected.remote}
           cameraConnected={cameraConnected.remote}
           defaultImage="bg-sponge"
         />
