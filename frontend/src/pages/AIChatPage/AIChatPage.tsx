@@ -1,14 +1,10 @@
 import { useRef } from 'react';
 
 import Background from '@components/Background';
-import { CustomButton } from '@components/Buttons';
-import ChatInput from '@components/ChatInput';
-import ChatList from '@components/ChatList';
+import ChatContainer from '@components/ChatContainer';
 import Header from '@components/Header';
 
-import { useAiChatMessage, useTarotSpread } from '@business/hooks/useAiChat';
-
-import { Icon } from '@iconify/react';
+import { useTarotSpread } from '@business/hooks/useAiChat';
 
 interface AIChatPageProps {}
 
@@ -16,31 +12,16 @@ function AIChatPage({}: AIChatPageProps) {
   const tarotCardId = useRef<number>();
 
   useTarotSpread(tarotCardId);
-  const { messages, inputDisabled, onSubmitMessage } = useAiChatMessage(tarotCardId);
 
   return (
     <Background type="dynamic">
-      <Header
-        rightItems={[
-          <CustomButton
-            color="transparent"
-            circle
-            key="side-panel-close"
-          >
-            <Icon
-              className="text-25"
-              icon="carbon:side-panel-close"
-            />
-          </CustomButton>,
-        ]}
+      {/* // TODO history sidebar 구현필요 */}
+      <Header />
+      <ChatContainer
+        width="w-700"
+        height="h-3/4"
+        position="top-90"
       />
-      <div className="w-700 absolute top-95 h-3/4">
-        <ChatList messages={messages} />
-        <ChatInput
-          disabled={inputDisabled}
-          sendChatMessage={onSubmitMessage}
-        />
-      </div>
     </Background>
   );
 }

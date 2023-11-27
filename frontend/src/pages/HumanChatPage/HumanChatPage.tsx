@@ -2,15 +2,14 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import Background from '@components/Background';
-import CustomButton from '@components/Buttons/CustomButton';
 import CamContainer from '@components/CamContainer';
+import ChatContainer from '@components/ChatContainer';
 import Header from '@components/Header';
 import ProfileSetting from '@components/ProfileSetting';
+import SideBar from '@components/SideBar';
 
 import useOverlay from '@business/hooks/useOverlay';
 import { useWebRTC } from '@business/hooks/useWebRTC';
-
-import { Icon } from '@iconify/react/dist/iconify.js';
 
 export default function HumanChatPage() {
   const { roomName } = useParams();
@@ -59,16 +58,13 @@ export default function HumanChatPage() {
     <Background type="dynamic">
       <Header
         rightItems={[
-          <CustomButton
-            color="transparent"
-            circle
-            key="side-panel-close"
-          >
-            <Icon
-              className="text-25"
-              icon="carbon:side-panel-close"
+          <SideBar key="chat-side-bar">
+            <ChatContainer
+              width="w-400"
+              height="h-4/5"
+              position="top-40"
             />
-          </CustomButton>,
+          </SideBar>,
         ]}
       />
       {!setting && (

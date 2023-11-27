@@ -11,12 +11,12 @@ function HomePage() {
 
   const moveAiChat = () => {
     connectSocket(import.meta.env.VITE_WAS_URL, { reconnect: true });
-
     navigate('/chat/ai');
   };
 
   const moveHumanChat = () => {
-    // TODO: 실제 roomname 넣기
+    connectSocket(import.meta.env.VITE_WAS_URL);
+    // TODO: 실제 room id를 받아와야 함
     navigate('/chat/human/1');
   };
 
