@@ -2,9 +2,7 @@ import { useParams } from 'react-router-dom';
 
 import Background from '@components/Background';
 import CustomButton from '@components/Buttons/CustomButton';
-import CamBox from '@components/CamBox';
 import CamContainer from '@components/CamContainer';
-import CustomSelect, { OnChangeSelectFunction } from '@components/CustomSelect';
 import Header from '@components/Header';
 
 import { useWebRTC } from '@business/hooks/useWebRTC';
@@ -15,20 +13,20 @@ export default function HumanChatPage() {
   const { roomName } = useParams();
 
   const {
-    cameraOptions,
+    // cameraOptions,
     localVideoRef,
     remoteVideoRef,
     toggleAudio,
     toggleVideo,
-    changeCamera,
+    // changeCamera,
     cameraConnected,
-    changeVideoTrack,
+    // changeVideoTrack,
   } = useWebRTC(roomName as string);
 
-  const changeMyCamera = async ({ value }: OnChangeSelectFunction) => {
-    await changeCamera(value);
-    changeVideoTrack();
-  };
+  // const changeMyCamera = async ({ value }: OnChangeSelectFunction) => {
+  //   await changeCamera(value);
+  //   changeVideoTrack();
+  // };
 
   return (
     <Background type="dynamic">
