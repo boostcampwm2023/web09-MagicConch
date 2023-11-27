@@ -28,13 +28,11 @@ export default function HumanChatPage() {
           playsInline
         />
       </div>
-      <div className="w-full h-10 flex justify-center gap-5">
+      <div className="w-full flex justify-center gap-5">
         <CustomButton onClick={toggleVideo}>video</CustomButton>
         <CustomButton onClick={toggleAudio}>mic</CustomButton>
         <CustomSelect
-          onChange={({ value }) => {
-            changeCamera(value);
-          }}
+          onChange={({ value }) => changeCamera(value)}
           options={cameraOptions.map(({ deviceId, label }) => ({ label, value: deviceId }))}
         />
       </div>
