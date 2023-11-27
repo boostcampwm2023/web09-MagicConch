@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { Socket, io } from 'socket.io-client';
 
 interface SocketTypesMap {
@@ -20,6 +21,8 @@ type SocketType = keyof SocketTypesMap;
 const sockets = {} as Record<SocketType, Socket>;
 
 export function useSocket<T extends SocketType>(socketType: T) {
+  const navigate = useNavigate();
+
   const ConnectSocketDefaultOptions = {
     reconnect: false,
   };
@@ -43,10 +46,18 @@ export function useSocket<T extends SocketType>(socketType: T) {
   }
 
   function socketOn<U>(eventName: SocketTypesMap[T]['OnEventName'], eventListener: (args: U) => void) {
+    if (!sockets[socketType]) {
+      navigate('/');
+      return;
+    }
     sockets[socketType].on(eventName, eventListener as any);
   }
 
   function socketEmit(eventName: SocketTypesMap[T]['EmitEventName'], ...eventArgs: unknown[]) {
+    if (!sockets[socketType]) {
+      navigate('/');
+      return;
+    }
     sockets[socketType].emit(eventName, ...eventArgs);
   }
 
