@@ -8,11 +8,13 @@ import { useAiChatMessage } from '@business/hooks/useAiChat';
 interface ChatContainerProps {
   width: string;
   height: string;
-  position: string;
+  position?: string;
 }
 
 function ChatContainer({ width, height, position }: ChatContainerProps) {
   const tarotCardId = useRef<number>();
+
+  // TODO: 현재 무조건 AI 채팅으로 넘어감 -> useHumanChatMessage로 변경 필요
   const { messages, inputDisabled, onSubmitMessage } = useAiChatMessage(tarotCardId);
 
   return (

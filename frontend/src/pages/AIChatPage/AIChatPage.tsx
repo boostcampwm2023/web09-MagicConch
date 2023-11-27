@@ -15,6 +15,7 @@ function AIChatPage({}: AIChatPageProps) {
 
   return (
     <Background type="dynamic">
+      {/* // TODO history sidebar 구현필요 */}
       <Header />
       <ChatContainer
         width="w-700"
