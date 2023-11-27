@@ -56,7 +56,7 @@ export default function CustomSelect({ width, autoFocus, onChange }: CustomSelec
         >
           {options.map(({ value, label }) => (
             <p
-              className={`option display-medium14  ${selected.value == value && 'text-point font-bold'}
+              className={`display-medium14  ${selected.value == value && 'text-point font-bold'}
                         leading-24 p-0 py-8 hover:bg-gray-100`}
               key={value}
               title={selected.label}
