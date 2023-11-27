@@ -41,7 +41,7 @@ export default function ProfileSetting({
         </div>
         <div className="flex flex-col gap-24">
           <div className="flex-with-center gap-12">
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 w-240">
               <span className="text-strong display-bold14">프로필 이미지를 설정하세요.</span>
               <span className="text-strong display-medium12">카메라가 off 되었을 때 표시됩니다.</span>
             </div>
