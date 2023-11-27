@@ -57,12 +57,9 @@ jobs:
 
       - name: Build Docker Images
         run: |
-          DOCKER_IMAGE_TAG="${{ github.sha }}"
           DOCKER_IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/magicconch"
-          docker-compose build -t "${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}"
-          cp docker-compose.yml docker-compose.${DOCKER_IMAGE_TAG}.yml
-          cat docker-compose.${DOCKER_IMAGE_TAG}.yml
-          ls
+          docker-compose build -t "${DOCKER_IMAGE_NAME}:${{ github.sha }}"
+          cp docker-compose.yml docker-compose.${{ github.sha }}.yml
 
       - name: Copy docker-compose to Remote Server
         uses: appleboy/scp-action@master
@@ -73,10 +70,9 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           source: "docker-compose.${{ github.sha }}.yml"
           target: "~/app"
-          debug: true
 
       - name: Remove local docker-compose copied file
-        run: rm docker-compose.${DOCKER_IMAGE_TAG}.yml
+        run: rm docker-compose.${{ github.sha }}.yml
 
       - name: Push Docker Images to Registry
         uses: docker/login-action@v3
@@ -106,8 +102,8 @@ jobs:
           script: |
             cd ~/app
             docker rm -f $(docker ps -aq)
-            docker-compose -f docker-compose.${DOCKER_IMAGE_TAG}.yml pull
-            docker-compose -f docker-compose.${DOCKER_IMAGE_TAG}.yml up -d
+            docker-compose -f docker-compose.${{ github.sha }}.yml pull
+            docker-compose -f docker-compose.${{ github.sha }}.yml up -d
             while [ -z "$(docker ps -afq name=was)" ]; do
               sleep 5
             done
