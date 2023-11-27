@@ -5,7 +5,7 @@ import { Message, MessageButton } from '@components/ChatContainer/ChatList';
 
 export function useAiChatMessage(tarotCardId: React.MutableRefObject<number | undefined>) {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [inputDisabled, setInputDisabled] = useState(false);
+  const [inputDisabled, setInputDisabled] = useState(true);
   const { socketEmit, socketOn } = useSocket('AIChat');
 
   const addMessage = (type: 'left' | 'right', message: string, button?: MessageButton) => {
