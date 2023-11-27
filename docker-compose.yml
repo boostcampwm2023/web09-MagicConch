@@ -29,7 +29,7 @@ services:
     ports:
       - "443:443"
     depends_on:
-      - nest
+      - was
       - certbot
 
   certbot:
