@@ -18,9 +18,7 @@ export default function Popup({ close, onCancel, onConfirm, children }: PopupPro
             color="dark"
             onClick={() => {
               close();
-              if (onCancel) {
-                onCancel();
-              }
+              onCancel?.();
             }}
           >
             취소하기
