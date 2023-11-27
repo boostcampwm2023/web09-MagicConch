@@ -14,7 +14,7 @@ import { useWebRTC } from '@business/hooks/useWebRTC';
 export default function HumanChatPage() {
   const { roomName } = useParams();
   const { open } = useOverlay();
-  const [setting, setSetting] = useState(false);
+  const [setting, setSetting] = useState(true);
 
   const {
     cameraOptions,
