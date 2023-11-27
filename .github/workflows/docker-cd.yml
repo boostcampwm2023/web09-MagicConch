@@ -100,10 +100,10 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd ~/app
-            docker rm -f $(docker ps -aq)
+            docker rm -f $(docker ps -qa)
             docker-compose -f docker-compose.${{ github.sha }}.yml pull
             docker-compose -f docker-compose.${{ github.sha }}.yml up -d
-            while [ -z "$(docker ps -afq name=app_was)" ]; do
+            while [ -z "$(docker ps -qaf "name=*was*")" ]; do
               sleep 5
             done
             sleep 60
