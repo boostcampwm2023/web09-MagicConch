@@ -1,19 +1,39 @@
+import CamBox from '@pages/HumanChatPage/CamBox';
+
 import { IconButton } from '@components/Buttons';
 
-interface CamContainerProps {}
+interface CamContainerProps {
+  localVideoRef: React.RefObject<HTMLVideoElement>;
+  remoteVideoRef: React.RefObject<HTMLVideoElement>;
+  toggleVideo: () => void;
+  toggleAudio: () => void;
+  audioConnected: { local: boolean; remote: boolean };
+  cameraConnected: { local: boolean; remote: boolean };
+}
 
-export default function CamContainer({}: CamContainerProps) {
+export default function CamContainer({
+  localVideoRef,
+  remoteVideoRef,
+  toggleVideo,
+  toggleAudio,
+  audioConnected,
+  cameraConnected,
+}: CamContainerProps) {
   return (
     <div className="flex-with-center flex-col gap-80 pt-80">
       <div className="flex-with-center gap-64">
         {/* TODO: Cam component가 완성되면 바꿔야 함. */}
-        <img
-          className="w-320 h-320"
-          src="/ddung.png"
+        <CamBox
+          videoRef={localVideoRef}
+          audioConnected={audioConnected.local}
+          cameraConnected={cameraConnected.local}
+          defaultImage="bg-ddung"
         />
-        <img
-          className="w-320 h-320"
-          src="/ddung.png"
+        <CamBox
+          videoRef={remoteVideoRef}
+          audioConnected={audioConnected.remote}
+          cameraConnected={cameraConnected.remote}
+          defaultImage="bg-sponge"
         />
       </div>
       <div className="flex-with-center gap-48">
@@ -23,6 +43,7 @@ export default function CamContainer({}: CamContainerProps) {
           iconSize={28}
           buttonColor="active"
           buttonSize="l"
+          onClick={toggleVideo}
         />
         <IconButton
           icon="mingcute:mic-line"
@@ -30,6 +51,7 @@ export default function CamContainer({}: CamContainerProps) {
           iconSize={28}
           buttonColor="active"
           buttonSize="l"
+          onClick={toggleAudio}
         />
       </div>
     </div>
