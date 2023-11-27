@@ -23,7 +23,7 @@ export default function HumanChatPage() {
 
   return (
     <div className="w-h-full flex-with-center flex-col gap-10 ">
-      <div className="flex justify-center gap-20 h-320">
+      <div className="flex justify-center gap-20 h-320 ">
         <CamBox
           videoRef={localVideoRef}
           cameraConnected={cameraConnected.local}
