@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { CustomButton, IconButton, IconToggleButton } from '@components/Buttons';
+import { CustomButton, IconButton } from '@components/Buttons';
 
 import DeviceSelect from './DeviceSelect';
 import DeviceToggleButtons from './DeviceToggleButtons';
