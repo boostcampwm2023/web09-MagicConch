@@ -11,7 +11,7 @@ export default function Popup({ close, onCancel, onConfirm, children }: PopupPro
   return (
     <div className="w-[100vw] h-[100vh] flex-with-center">
       <div className="surface-content rounded p-16 gap-16">
-        <div className="flex-with-center flex-row gap-16 p-16 display-bold16">{children}</div>
+        <div className="flex-with-center p-16 display-bold16">{children}</div>
         <div className="flex justify-around p-12">
           <CustomButton
             size="m"
