@@ -11,14 +11,25 @@ interface SocketTypesMap {
   };
 }
 
+type ConnectSocketOptions = {
+  reconnect: boolean;
+};
+
 type SocketType = keyof SocketTypesMap;
 
 const sockets = {} as Record<SocketType, Socket>;
 
 export function useSocket<T extends SocketType>(socketType: T) {
-  function connectSocket(url: string) {
+  const ConnectSocketDefaultOptions = {
+    reconnect: false,
+  };
+
+  function connectSocket(url: string, { reconnect }: ConnectSocketOptions = ConnectSocketDefaultOptions) {
     if (sockets[socketType]) {
-      throw new Error('소켓이 이미 존재합니다.');
+      if (!reconnect) {
+        throw new Error('소켓이 이미 존재합니다.');
+      }
+      sockets[socketType].disconnect();
     }
     sockets[socketType] = io(url);
   }
