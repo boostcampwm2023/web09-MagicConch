@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import Background from '@components/Background';
@@ -15,6 +15,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 export default function HumanChatPage() {
   const { roomName } = useParams();
   const { open } = useOverlay();
+  const [setting, setSetting] = useState(false);
 
   const {
     cameraOptions,
@@ -33,14 +34,20 @@ export default function HumanChatPage() {
   };
 
   const openProfileSetting = () => {
+    setSetting(true);
+    const camList = cameraOptions.map(({ deviceId, label }) => ({ label, value: deviceId }));
+
     open(({ close }) => (
       <ProfileSetting
-        close={close}
+        close={() => {
+          close();
+          setSetting(false);
+        }}
         toggleVideo={toggleVideo}
         toggleAudio={toggleAudio}
         cameraConnected={cameraConnected}
         changeMyCamera={changeMyCamera}
-        camList={cameraOptions.map(({ deviceId, label }) => ({ label, value: deviceId }))}
+        camList={camList}
         videoRef={localVideoRef}
       />
     ));
@@ -64,13 +71,15 @@ export default function HumanChatPage() {
           </CustomButton>,
         ]}
       />
-      <CamContainer
-        localVideoRef={localVideoRef}
-        remoteVideoRef={remoteVideoRef}
-        toggleVideo={toggleVideo}
-        toggleAudio={toggleAudio}
-        cameraConnected={cameraConnected}
-      />
+      {!setting && (
+        <CamContainer
+          localVideoRef={localVideoRef}
+          remoteVideoRef={remoteVideoRef}
+          toggleVideo={toggleVideo}
+          toggleAudio={toggleAudio}
+          cameraConnected={cameraConnected}
+        />
+      )}
     </Background>
   );
 }
