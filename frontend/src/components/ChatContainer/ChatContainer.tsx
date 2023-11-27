@@ -1,9 +1,9 @@
 import { useRef } from 'react';
 
-import ChatInput from '@components/ChatContainer/ChatInput';
-import ChatList from '@components/ChatContainer/ChatList';
-
 import { useAiChatMessage } from '@business/hooks/useAiChat';
+
+import ChatInput from './ChatInput';
+import ChatList from './ChatList';
 
 interface ChatContainerProps {
   width: string;
