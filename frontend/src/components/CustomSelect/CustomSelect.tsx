@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Icon } from '@iconify/react';
 
@@ -14,15 +14,15 @@ interface CustomSelectProps {
   onChange?: ({ value, label }: CustomSelectOptions) => void;
 }
 
-export default function CustomSelect({ width, autoFocus, onChange }: CustomSelectProps) {
-  const options: CustomSelectOptions[] = [
-    { value: 'test1', label: '카메라1 테스트' },
-    { value: 'test2', label: '카메라2 테스트' },
-    { value: 'test3', label: '카메라3 테스트' },
-  ];
+export default function CustomSelect({ width, options, autoFocus, onChange }: CustomSelectProps) {
+  console.log('CustomSelect', options);
   const [opened, setOpened] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [selected, setSelected] = useState<CustomSelectOptions>(options.length ? options[0] : { value: '', label: '' });
+  const [selected, setSelected] = useState<CustomSelectOptions>({ value: '', label: '' });
+
+  useEffect(() => {
+    if (options.length) setSelected(options[0]);
+  }, [options]);
 
   const updateOption = (option: CustomSelectOptions) => {
     inputRef.current?.click();
@@ -34,7 +34,7 @@ export default function CustomSelect({ width, autoFocus, onChange }: CustomSelec
 
   return (
     <div className="relative">
-      <div className={`absolute collapse ${width ?? 'w-250'} min-h-48 bg-white border border-gray-300`}>
+      <div className={`absolute collapse ${width ?? 'w-300'} min-h-48 bg-white border border-gray-300`}>
         <input
           title={selected.label}
           ref={inputRef}
