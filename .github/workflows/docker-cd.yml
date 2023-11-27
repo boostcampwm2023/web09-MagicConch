@@ -71,8 +71,9 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
-          source: "docker-compose.${DOCKER_IMAGE_TAG}.yml"
+          source: "docker-compose.${{ github.sha }}.yml"
           target: "~/app"
+          debug: true
 
       - name: Remove local docker-compose copied file
         run: rm docker-compose.${DOCKER_IMAGE_TAG}.yml
