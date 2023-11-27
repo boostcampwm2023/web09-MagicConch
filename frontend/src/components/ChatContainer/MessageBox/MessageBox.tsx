@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
 
 import { CustomButton, IconButton } from '@components/Buttons';
-import { MessageButton } from '@components/ChatList';
-import Message from '@components/MessageBox/Message';
+import { MessageButton } from '@components/ChatContainer/ChatList';
+import Message from '@components/ChatContainer/MessageBox/Message';
 
 import { getTarotImageQuery } from '@stores/queries/getTarotImageQuery';
 
