@@ -97,7 +97,7 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
         onMouseDown={() => setDragging(true)}
         onMouseLeave={() => setDragging(false)}
         onMouseUp={() => setDragging(false)}
-        className="transition-all ease-out absolute w-220 h-400 origin-center top-1200 left-[50%] translate-x-[-50%]"
+        className="transition-all ease-out absolute w-220 h-400 sm:w-160 sm:h-270 origin-center top-1200 left-[50%] translate-x-[-50%] sm:top-[40vh] sm:left-1200"
       >
         {Array.from({ length: TAROT_CARDS_LENGTH }, (_, idx) => idx).map((_, idx: number) => (
           <div
