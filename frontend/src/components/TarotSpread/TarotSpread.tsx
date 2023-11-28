@@ -79,7 +79,7 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
     tarotSpreadRef.current!.style.pointerEvents = 'none';
 
     const unFlippedStyle = 'rotateY(0deg)';
-    const flippedStyle = 'rotateY(180deg) scale(1.3) translateY(240px)';
+    const flippedStyle = 'rotateY(180deg) scale(1.2) translateY(160px)';
 
     card.style.zIndex = '1000';
     card.style.transform = card.style.transform.replace(unFlippedStyle, flippedStyle);
@@ -97,7 +97,7 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
         onMouseDown={() => setDragging(true)}
         onMouseLeave={() => setDragging(false)}
         onMouseUp={() => setDragging(false)}
-        className="transition-all ease-out absolute w-220 h-400 sm:w-160 sm:h-270 origin-center top-1200 left-[50%] translate-x-[-50%] sm:top-[40vh] sm:left-1200"
+        className="transition-all ease-out absolute w-220 h-400 sm:w-160 sm:h-270 origin-center top-1150 left-[50%] translate-x-[-50%] sm:top-[35vh] sm:left-1200 md:top-[35vh] md:left-1400"
       >
         {Array.from({ length: TAROT_CARDS_LENGTH }, (_, idx) => idx).map((_, idx: number) => (
           <div
