@@ -158,7 +158,7 @@ export default {
           mixBlendMode: 'difference',
           background: '#fff',
         },
-        '.cursor:has(~ div button:hover), .cursor:has(~ div input:hover), .cursor:has(~ div a:hover), .cursor:has(~ div audio:hover), .cursor:has(~ div .collapse-content:hover)':
+        '.cursor:has(~ div button:hover), .cursor:has(~ div input:hover), .cursor:has(~ div a:hover), .cursor:has(~ div audio:hover), .cursor:has(~ div .collapse-content:hover), .cursor:has(~ div .result:hover)':
           {
             transition: 'transform 0.1s ease-in-out',
             transform: 'translate(-50%, -50%) scale(2)',
