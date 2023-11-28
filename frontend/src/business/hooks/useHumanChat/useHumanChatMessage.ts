@@ -1,5 +1,5 @@
 import useChatMessage from '../useChatMessage';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function useHumanChatMessage(
   chatChannel: React.MutableRefObject<RTCDataChannel | undefined>,
@@ -7,6 +7,7 @@ export default function useHumanChatMessage(
   setTarotId: (tarotId: number | undefined) => void,
 ) {
   const { messages, pushMessage } = useChatMessage();
+  const [inputDisabled, setInputDisabled] = useState(true);
 
   const addMessage = (type: 'left' | 'right', message: string) => {
     // TODO: host인지에 따라서 프로필 사진을 다르게 해야함
@@ -23,6 +24,14 @@ export default function useHumanChatMessage(
 
   useEffect(() => {
     if (chatChannel.current) {
+      chatChannel.current.addEventListener('open', () => {
+        setInputDisabled(false);
+      });
+
+      chatChannel.current.addEventListener('close', () => {
+        setInputDisabled(true);
+      });
+
       chatChannel.current.addEventListener('message', event => {
         const data = JSON.parse(event.data);
 
@@ -45,5 +54,5 @@ export default function useHumanChatMessage(
     }
   }, [tarotId]);
 
-  return { messages, onSubmitMessage };
+  return { messages, onSubmitMessage, inputDisabled };
 }

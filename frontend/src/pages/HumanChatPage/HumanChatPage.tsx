@@ -20,7 +20,7 @@ export default function HumanChatPage() {
 
   // TODO: {requestTarotCard}로 받아 '타로 카드 펼치기' 버튼을 눌렀을 때 실행
   const {} = useHumanTarotSpread(webRTCData.chatChannel, setTarotId);
-  const { messages, onSubmitMessage } = useHumanChatMessage(webRTCData.chatChannel, tarotId, setTarotId);
+  const { messages, onSubmitMessage, inputDisabled } = useHumanChatMessage(webRTCData.chatChannel, tarotId, setTarotId);
 
   return (
     <Background type="dynamic">
@@ -32,8 +32,8 @@ export default function HumanChatPage() {
               height="h-4/5"
               position="top-40"
               messages={messages}
-              inputDisabled={true}
               onSubmitMessage={onSubmitMessage}
+              inputDisabled={inputDisabled}
             />
           </SideBar>,
         ]}
