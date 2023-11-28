@@ -1,19 +1,7 @@
 import MessageBox from '../MessageBox';
 import { useEffect, useRef } from 'react';
 
-export interface MessageButton {
-  content: string;
-  onClick: () => void;
-}
-
-export interface Message {
-  type: 'left' | 'right';
-  message: string;
-  profile: string;
-  tarotId?: number;
-  button?: MessageButton;
-  shareLinkId?: string;
-}
+import type { Message } from '@components/ChatContainer';
 
 interface ChatListProps {
   size?: string;
