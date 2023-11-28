@@ -1,0 +1,45 @@
+version: "3.3"
+
+services:
+  was-blue:
+    build:
+      context: .
+      dockerfile: Dockerfile.was
+    environment:
+      - DB_PORT=${DB_PORT}
+      - DB_HOST=${DB_HOST}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=${DB_DATABASE}
+      - ACCESS_KEY_ID=${ACCESS_KEY_ID}
+      - SECRET_KEY=${SECRET_KEY}
+      - X_NCP_CLOVASTUDIO_API_KEY=${X_NCP_CLOVASTUDIO_API_KEY}
+      - X_NCP_APIGW_API_KEY=${X_NCP_APIGW_API_KEY}
+    expose:
+      - "3000"
+
+  signal-blue:
+    build:
+      context: .
+      dockerfile: Dockerfile.signal
+    expose:
+      - "3001"
+
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - was-blue
+      - signal-blue
+      - certbot
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - /etc/letsencrypt
+      - /var/www/html:/var/www/html
+    command: certonly --webroot --webroot-path=/var/www/html -d was.tarotmilktea.com
