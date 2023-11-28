@@ -8,11 +8,7 @@ import { useRTCPeerConnection } from './useRTCPeerConnection';
 import { useSignalingSocket } from './useSignalingSocket';
 import { useSocket } from './useSocket';
 
-interface useWebRTCProps {
-  roomName: string;
-}
-
-export function useWebRTC({ roomName }: useWebRTCProps) {
+export function useWebRTC(roomName: string) {
   const { socketEmit } = useSocket('WebRTC');
 
   const { mediaInfos } = useMediaInfoContext();
