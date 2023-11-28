@@ -20,6 +20,7 @@ async function bootstrap() {
 
   setupSwagger(app);
 
-  await app.listen(3000);
+  const port = process.env.WAS_PORT || 3000;
+  await app.listen(port);
 }
 bootstrap();
