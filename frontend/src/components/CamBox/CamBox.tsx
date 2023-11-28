@@ -10,9 +10,9 @@ interface CamBoxProps {
 const CamBox = ({ videoRef, defaultImage, cameraConnected, audioConnected }: CamBoxProps) => {
   return (
     <>
-      <div className="flex relative">
+      <div className="flex relative w-320 h-320">
         <video
-          className={`flex-1 rounded-[55px] w-320 max-w-full ${!cameraConnected && defaultImage}`}
+          className={`flex-1 rounded-[55px] w-320 h-320 first-letter:max-w-full ${!cameraConnected && defaultImage}`}
           ref={videoRef}
           autoPlay
           playsInline
