@@ -1,23 +1,48 @@
 import { useRef, useState } from 'react';
 
+import { useMediaInfoContext } from './useMediaInfoContext';
+
 export function useMedia() {
+  const {
+    mediaInfos: { selectedAudioID, selectedCameraID },
+  } = useMediaInfoContext();
+
   const [cameraOptions, setCameraOptions] = useState<MediaDeviceInfo[]>([]);
+  const [audioOptions, setAudioOptions] = useState<MediaDeviceInfo[]>([]);
+
+  const localStreamRef = useRef<MediaStream>();
 
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
 
-  const localStreamRef = useRef<MediaStream>();
-
-  const getCameras = async () => {
+  const getCamerasOptions = async () => {
     const devices = await navigator.mediaDevices.enumerateDevices();
     const cameras = devices.filter(device => device.kind === 'videoinput');
     setCameraOptions(cameras);
   };
 
-  const getMedia = async (deviceId?: string) => {
+  const getAudiosOptions = async () => {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const audios = devices.filter(device => device.kind === 'audioinput');
+    setAudioOptions(audios);
+  };
+
+  const getMedia = async ({ audioID, cameraID }: { cameraID?: string; audioID?: string }) => {
+    const _audioID = audioID || selectedAudioID;
+    const _cameraID = cameraID || selectedCameraID;
+
+    const audioOptions = {
+      withAudioId: { deviceId: _audioID },
+      default: true,
+    };
+    const videoOptions = {
+      withCameraId: { deviceId: _cameraID, width: 320, height: 320 },
+      default: { facingMode: 'user', width: 320, height: 320 },
+    };
+
     const stream = await navigator.mediaDevices.getUserMedia({
-      audio: true,
-      video: deviceId ? { deviceId, width: 320, height: 320 } : { facingMode: 'user', width: 320, height: 320 },
+      audio: _audioID ? audioOptions.withAudioId : audioOptions.default,
+      video: _cameraID ? videoOptions.withCameraId : videoOptions.default,
     });
 
     if (localVideoRef.current) {
@@ -25,41 +50,22 @@ export function useMedia() {
       localStreamRef.current = stream;
     }
 
-    if (!deviceId) {
-      await getCameras();
+    if (!selectedAudioID) {
+      await getCamerasOptions();
     }
-  };
-
-  const toggleVideo = () => {
-    if (!localVideoRef.current) {
-      return;
+    if (!selectedCameraID) {
+      await getAudiosOptions();
     }
-
-    const videoTrack = localVideoRef.current.srcObject as MediaStream;
-    videoTrack.getVideoTracks().forEach(track => (track.enabled = !track.enabled));
-  };
-
-  const toggleAudio = () => {
-    if (!localVideoRef.current) {
-      return;
-    }
-
-    const audioTrack = localVideoRef.current.srcObject as MediaStream;
-    audioTrack.getAudioTracks().forEach(track => (track.enabled = !track.enabled));
-  };
-
-  const changeCamera = async (cameraId: string) => {
-    await getMedia(cameraId);
   };
 
   return {
     cameraOptions,
+    audioOptions,
     localVideoRef,
     remoteVideoRef,
     localStreamRef,
     getMedia,
-    toggleAudio,
-    toggleVideo,
-    changeCamera,
+    getAudiosOptions,
+    getCamerasOptions,
   };
 }

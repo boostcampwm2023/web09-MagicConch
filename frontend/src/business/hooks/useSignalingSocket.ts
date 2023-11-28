@@ -47,12 +47,7 @@ export function useSignalingSocket({ roomName, peerConnectionRef }: useSignaling
     socketEmit('answer', answerSdp, roomName);
   };
 
-  const closePeerConnection = () => {
-    peerConnectionRef.current?.close();
-  };
-
   return {
     initSignalingSocket,
-    closePeerConnection,
   };
 }
