@@ -31,11 +31,18 @@ export function useMedia() {
     const _audioID = audioID || selectedAudioID;
     const _cameraID = cameraID || selectedCameraID;
 
+    const audioOptions = {
+      withAudioId: { deviceId: _audioID },
+      default: true,
+    };
+    const videoOptions = {
+      withCameraId: { deviceId: _cameraID, width: 320, height: 320 },
+      default: { facingMode: 'user', width: 320, height: 320 },
+    };
+
     const stream = await navigator.mediaDevices.getUserMedia({
-      audio: _audioID ? { deviceId: _audioID } : true,
-      video: _cameraID
-        ? { deviceId: _cameraID, width: 320, height: 320 }
-        : { facingMode: 'user', width: 320, height: 320 },
+      audio: _audioID ? audioOptions.withAudioId : audioOptions.default,
+      video: _cameraID ? videoOptions.withCameraId : videoOptions.default,
     });
 
     if (localVideoRef.current) {
