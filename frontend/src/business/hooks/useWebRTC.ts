@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useControllMedia } from './useControllMedia';
 import { useDataChannel } from './useDataChannel';
 import { useMedia } from './useMedia';
+import { useMediaInfoContext } from './useMediaInfoContext';
 import { useRTCPeerConnection } from './useRTCPeerConnection';
 import { useSignalingSocket } from './useSignalingSocket';
 import { useSocket } from './useSocket';
@@ -14,7 +15,18 @@ interface useWebRTCProps {
 export function useWebRTC({ roomName }: useWebRTCProps) {
   const { socketEmit, disconnectSocket } = useSocket('WebRTC');
 
-  const { localVideoRef, remoteVideoRef, cameraOptions, localStreamRef, getMedia } = useMedia();
+  const { mediaInfos } = useMediaInfoContext();
+
+  const {
+    localVideoRef,
+    remoteVideoRef,
+    localStreamRef,
+    cameraOptions,
+    audioOptions,
+    getMedia,
+    getAudiosOptions,
+    getCamerasOptions,
+  } = useMedia();
 
   const { peerConnectionRef, makeRTCPeerConnection, closeRTCPeerConnection } = useRTCPeerConnection({
     roomName,
@@ -27,16 +39,17 @@ export function useWebRTC({ roomName }: useWebRTCProps) {
     peerConnectionRef,
   });
 
-  const { addTracks, changeAudioTrack, changeVideoTrack, toggleAudio, toggleVideo } = useControllMedia({
+  const { addTracks, changeMyAudioTrack, changeMyVideoTrack, toggleAudio, toggleVideo } = useControllMedia({
     localStreamRef,
     peerConnectionRef,
     localVideoRef,
     mediaInfoChannel,
+    getMedia,
   });
 
   useEffect(() => {
     const init = async () => {
-      await getMedia();
+      await getMedia({});
       initSignalingSocket();
       makeRTCPeerConnection();
       initDataChannels();
@@ -53,15 +66,19 @@ export function useWebRTC({ roomName }: useWebRTCProps) {
 
   return {
     cameraOptions,
+    audioOptions,
     localVideoRef,
     remoteVideoRef,
+    mediaInfoChannel,
+    chatChannel,
+    mediaInfos,
     toggleAudio,
     toggleVideo,
     addTracks,
-    changeVideoTrack,
-    changeAudioTrack,
-    changeCamera: getMedia,
-    mediaInfoChannel,
-    chatChannel,
+    changeMyAudioTrack,
+    changeMyVideoTrack,
+    getAudiosOptions,
+    getCamerasOptions,
+    getMedia,
   };
 }

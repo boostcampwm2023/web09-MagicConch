@@ -3,20 +3,26 @@ import { useParams } from 'react-router-dom';
 import CustomButton from '@components/Buttons/CustomButton';
 import CustomSelect from '@components/CustomSelect';
 
-import { useDataChannelContext } from '@business/hooks/useDataChannelContext';
 import { useWebRTC } from '@business/hooks/useWebRTC';
 
 import CamBox from './CamBox';
 
 export default function HumanChatPage() {
-  const {
-    mediaInfos: { myMicOn, myVideoOn, remoteMicOn, remoteVideoOn },
-  } = useDataChannelContext();
-
   const { roomName } = useParams();
 
-  const { cameraOptions, localVideoRef, remoteVideoRef, changeVideoTrack, changeCamera, toggleAudio, toggleVideo } =
-    useWebRTC({ roomName: roomName as string });
+  const {
+    mediaInfos,
+    cameraOptions,
+    audioOptions,
+    localVideoRef,
+    remoteVideoRef,
+    changeMyAudioTrack,
+    changeMyVideoTrack,
+    toggleAudio,
+    toggleVideo,
+  } = useWebRTC({ roomName: roomName as string });
+
+  const { myMicOn, myVideoOn, remoteMicOn, remoteVideoOn } = mediaInfos;
 
   return (
     <div className="w-h-full flex-with-center flex-col gap-10 ">
@@ -38,11 +44,13 @@ export default function HumanChatPage() {
         <CustomButton onClick={() => toggleVideo()}>video</CustomButton>
         <CustomButton onClick={toggleAudio}>mic</CustomButton>
         <CustomSelect
-          onChange={async ({ value }) => {
-            await changeCamera(value);
-            changeVideoTrack();
-          }}
+          onChange={({ value }) => changeMyVideoTrack(value)}
           options={cameraOptions.map(({ deviceId, label }) => ({ label, value: deviceId }))}
+        />
+
+        <CustomSelect
+          onChange={({ value }) => changeMyAudioTrack(value)}
+          options={audioOptions.map(({ deviceId, label }) => ({ label, value: deviceId }))}
         />
       </div>
     </div>

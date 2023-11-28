@@ -1,23 +1,41 @@
 import { useRef, useState } from 'react';
 
+import { useMediaInfoContext } from './useMediaInfoContext';
+
 export function useMedia() {
+  const {
+    mediaInfos: { selectedAudioID, selectedCameraID },
+  } = useMediaInfoContext();
+
   const [cameraOptions, setCameraOptions] = useState<MediaDeviceInfo[]>([]);
+  const [audioOptions, setAudioOptions] = useState<MediaDeviceInfo[]>([]);
+
+  const localStreamRef = useRef<MediaStream>();
 
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
 
-  const localStreamRef = useRef<MediaStream>();
-
-  const getCameras = async () => {
+  const getCamerasOptions = async () => {
     const devices = await navigator.mediaDevices.enumerateDevices();
     const cameras = devices.filter(device => device.kind === 'videoinput');
     setCameraOptions(cameras);
   };
 
-  const getMedia = async (deviceId?: string) => {
+  const getAudiosOptions = async () => {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const audios = devices.filter(device => device.kind === 'audioinput');
+    setAudioOptions(audios);
+  };
+
+  const getMedia = async ({ audioID, cameraID }: { cameraID?: string; audioID?: string }) => {
+    const _audioID = audioID || selectedAudioID;
+    const _cameraID = cameraID || selectedCameraID;
+
     const stream = await navigator.mediaDevices.getUserMedia({
-      audio: true,
-      video: deviceId ? { deviceId, width: 320, height: 320 } : { facingMode: 'user', width: 320, height: 320 },
+      audio: _audioID ? { deviceId: _audioID } : true,
+      video: _cameraID
+        ? { deviceId: _cameraID, width: 320, height: 320 }
+        : { facingMode: 'user', width: 320, height: 320 },
     });
 
     if (localVideoRef.current) {
@@ -25,20 +43,22 @@ export function useMedia() {
       localStreamRef.current = stream;
     }
 
-    if (!deviceId) {
-      await getCameras();
+    if (!selectedAudioID) {
+      await getCamerasOptions();
     }
-  };
-  const changeCamera = async (cameraId: string) => {
-    await getMedia(cameraId);
+    if (!selectedCameraID) {
+      await getAudiosOptions();
+    }
   };
 
   return {
     cameraOptions,
+    audioOptions,
     localVideoRef,
     remoteVideoRef,
     localStreamRef,
     getMedia,
-    changeCamera,
+    getAudiosOptions,
+    getCamerasOptions,
   };
 }

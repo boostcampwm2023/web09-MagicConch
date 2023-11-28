@@ -1,10 +1,11 @@
-import { useDataChannelContext } from './useDataChannelContext';
+import { useMediaInfoContext } from './useMediaInfoContext';
 
 interface useContorollMediaProps {
   localStreamRef: React.MutableRefObject<MediaStream | undefined>;
   peerConnectionRef: React.MutableRefObject<RTCPeerConnection | undefined>;
   localVideoRef: React.RefObject<HTMLVideoElement | undefined>;
   mediaInfoChannel: React.MutableRefObject<RTCDataChannel | undefined>;
+  getMedia: ({ cameraID, audioID }: { cameraID?: string; audioID?: string }) => Promise<void>;
 }
 
 export function useControllMedia({
@@ -12,8 +13,10 @@ export function useControllMedia({
   localStreamRef,
   peerConnectionRef,
   mediaInfoChannel,
+  getMedia,
 }: useContorollMediaProps) {
-  const { toggleMyVideo, toggleMyMic } = useDataChannelContext();
+  const { toggleMyVideo, toggleMyMic, setSelectedAudioID, setSelectedCameraID } = useMediaInfoContext();
+
   const addTracks = () => {
     if (localStreamRef.current === undefined) {
       return;
@@ -63,5 +66,17 @@ export function useControllMedia({
     );
   };
 
-  return { addTracks, changeVideoTrack, changeAudioTrack, toggleVideo, toggleAudio };
+  const changeMyVideoTrack = async (id: string) => {
+    setSelectedCameraID(id);
+    await getMedia({ cameraID: id });
+    changeVideoTrack();
+  };
+
+  const changeMyAudioTrack = async (id: string) => {
+    setSelectedAudioID(id);
+    await getMedia({ audioID: id });
+    changeAudioTrack();
+  };
+
+  return { addTracks, changeMyVideoTrack, changeMyAudioTrack, toggleVideo, toggleAudio };
 }

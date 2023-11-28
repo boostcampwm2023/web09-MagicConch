@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 
-import { useDataChannelContext } from './useDataChannelContext';
+import { useMediaInfoContext } from './useMediaInfoContext';
 
 interface useDataChannelProps {
   peerConnectionRef: React.MutableRefObject<RTCPeerConnection | undefined>;
@@ -10,7 +10,8 @@ export function useDataChannel({ peerConnectionRef }: useDataChannelProps) {
     mediaInfos: { myMicOn, myVideoOn },
     setRemoteMicOn,
     setRemoteVideoOn,
-  } = useDataChannelContext();
+  } = useMediaInfoContext();
+
   const mediaInfoChannel = useRef<RTCDataChannel>();
   const chatChannel = useRef<RTCDataChannel>();
 
