@@ -26,7 +26,6 @@ export function useDataChannel({ peerConnectionRef }: useDataChannelProps) {
       const mediaInfoArray = JSON.parse(data);
 
       mediaInfoArray.forEach(({ type, onOrOff }: { type: string; onOrOff: boolean }) => {
-        console.log(mediaInfoArray);
         if (type === 'audio') {
           setRemoteMicOn(onOrOff);
         } else if (type === 'video') {
@@ -45,5 +44,10 @@ export function useDataChannel({ peerConnectionRef }: useDataChannelProps) {
     });
   };
 
-  return { mediaInfoChannel, chatChannel, initDataChannels };
+  const closeDataChannels = () => {
+    mediaInfoChannel.current?.close();
+    chatChannel.current?.close();
+  };
+
+  return { mediaInfoChannel, chatChannel, initDataChannels, closeDataChannels };
 }

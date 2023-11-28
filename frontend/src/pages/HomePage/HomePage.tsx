@@ -15,7 +15,7 @@ function HomePage() {
   };
 
   const moveHumanChat = () => {
-    connectSocket(import.meta.env.VITE_WAS_URL);
+    connectSocket(import.meta.env.VITE_HUMAN_SOCKET_URL);
     // TODO: 실제 room id를 받아와야 함
     navigate('/chat/human/1');
   };

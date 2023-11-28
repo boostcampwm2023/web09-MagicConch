@@ -7,7 +7,7 @@ interface SocketTypesMap {
     EmitEventName: 'message' | 'tarotRead' | 'tarotRead';
   };
   WebRTC: {
-    OnEventName: 'welcome' | 'offer' | 'answer' | 'candidate' | 'roomFull';
+    OnEventName: 'welcome' | 'offer' | 'answer' | 'candidate' | 'roomFull' | 'userExit';
     EmitEventName: 'offer' | 'answer' | 'candidate' | 'joinRoom';
   };
 }
