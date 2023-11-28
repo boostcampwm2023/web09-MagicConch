@@ -68,7 +68,6 @@ export function useWebRTC(roomName: string) {
     return () => {
       closeRTCPeerConnection();
       closeDataChannels();
-      disconnectSocket();
     };
   }, []);
 
