@@ -6,23 +6,23 @@ import DeviceSelect from './DeviceSelect';
 import DeviceToggleButtons from './DeviceToggleButtons';
 
 interface ProfileSettingProps {
-  close: () => void;
   toggleVideo: () => void;
   toggleAudio: () => void;
   camList: CustomSelectOptions[];
   videoRef: React.RefObject<HTMLVideoElement>;
   cameraConnected: { local: boolean; remote: boolean };
   changeMyCamera: (deviceId: string) => void;
+  onConfirm: () => void;
 }
 
 export default function ProfileSetting({
-  close,
   toggleVideo,
   toggleAudio,
   camList,
   videoRef,
   cameraConnected,
   changeMyCamera,
+  onConfirm,
 }: ProfileSettingProps) {
   return (
     <div className="w-[100vw] h-[100vh] flex-with-center">
@@ -75,7 +75,7 @@ export default function ProfileSetting({
             onChange={changeMyCamera}
           />
           <CustomButton
-            onClick={close}
+            onClick={onConfirm}
             color="dark"
           >
             확인
