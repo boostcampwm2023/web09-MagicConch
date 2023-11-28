@@ -24,7 +24,7 @@ function HomePage() {
       // TODO: 실제 room의 password로 설정해야 함
       console.log(password);
       // TODO: 실제 room id를 받아와야 함
-      navigate('/chat/human/1');
+      navigate('/chat/human/1/setting');
     };
 
     openPasswordPopup(setPassword, { host: true });
