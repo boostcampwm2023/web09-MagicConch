@@ -13,7 +13,7 @@ interface TarotSpreadProps {
   pickCard: (idx: number) => void;
 }
 
-interface MouseOffset {
+interface PageOffset {
   pageX: number;
   pageY: number;
 }
@@ -26,18 +26,17 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
   const [dragging, setDragging] = useState<boolean>(false);
   const [pickedId, setPickedId] = useState<number>(0);
 
+  const prevMouseRef = useRef<PageOffset>({ pageX: 0, pageY: 0 });
+  const prevTouchRef = useRef<PageOffset>({ pageX: 0, pageY: 0 });
+
   const tarotCardRefs = useRef<HTMLDivElement[]>([]);
-
-  const prevMouseRef = useRef<MouseOffset>({ pageX: 0, pageY: 0 });
-  const prevTouchYRef = useRef<number>(0);
-
   const tarotSpreadRef = useRef<HTMLDivElement>(null);
   const rotationRef = useRef<number>(0);
 
   const backImg = getTarotImageQuery(TAROT_CARDS_LENGTH).data.cardUrl;
   const frontImg = getTarotImageQuery(pickedId).data.cardUrl;
 
-  const isMobile = window.innerWidth < 768;
+  const isPortrait = window.innerWidth < 1024;
 
   useEffect(() => {
     setPickedId(Math.floor(Math.random() * TAROT_CARDS_LENGTH));
@@ -59,14 +58,15 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
 
   const dragTarotSpread = ({ pageX, pageY }: React.MouseEvent<HTMLDivElement>) => {
     const { pageX: prevPageX, pageY: prevPageY } = prevMouseRef.current;
-    if (dragging) rotateTarotSpread((isMobile ? prevPageY > pageY : prevPageX < pageX) ? 'right' : 'left');
+    if (dragging) rotateTarotSpread((isPortrait ? prevPageY > pageY : prevPageX < pageX) ? 'right' : 'left');
     prevMouseRef.current = { pageX, pageY };
   };
 
-  const touchTarotSpread = ({ touches }: TouchEvent) => {
-    const pageY = touches.item(0)?.pageY ?? 0;
-    rotateTarotSpread(prevTouchYRef.current > pageY ? 'right' : 'left');
-    prevTouchYRef.current = pageY;
+  const touchTarotSpread = ({ touches: { item } }: TouchEvent) => {
+    const { pageX: prevPageX, pageY: prevPageY } = prevTouchRef.current;
+    const { pageX, pageY } = { pageX: item(0)?.pageY ?? 0, pageY: item(0)?.pageX ?? 0 };
+    rotateTarotSpread((isPortrait ? prevPageY > pageY : prevPageX < pageX) ? 'right' : 'left');
+    prevTouchRef.current = { pageX, pageY };
   };
 
   const rotateTarotSpread = (direction: 'right' | 'left') => {
