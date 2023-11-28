@@ -2,10 +2,17 @@ import useChatMessage from '../useChatMessage';
 import { useSocket } from '../useSocket';
 import { useEffect, useState } from 'react';
 
-export function useAiChatMessage(tarotCardId: React.MutableRefObject<number | undefined>) {
-  const { messages, addMessage, updateMessage } = useChatMessage(tarotCardId);
+import type { MessageButton } from '@components/ChatContainer';
+
+export function useAiChatMessage(tarotId: number | undefined, setTarotId: (tarotId: number | undefined) => void) {
+  const { messages, pushMessage, updateMessage } = useChatMessage();
   const [inputDisabled, setInputDisabled] = useState(false);
   const { socketEmit, socketOn } = useSocket('AIChat');
+
+  const addMessage = (type: 'left' | 'right', message: string, button?: MessageButton) => {
+    const profile = type == 'left' ? '/moon.png' : '/sponge.png';
+    pushMessage({ type, message, profile, button });
+  };
 
   const onSubmitMessage = (message: string) => {
     addMessage('right', message);
@@ -31,6 +38,14 @@ export function useAiChatMessage(tarotCardId: React.MutableRefObject<number | un
       setTimeout(() => addMessage('left', requestFeedbackMessage, button), 5000);
     });
   }, []);
+
+  useEffect(() => {
+    if (tarotId) {
+      // TODO: host인지에 따라서 프로필 사진을 다르게 해야함
+      pushMessage({ type: 'left', tarotId, profile: '/sponge.png' });
+      setTarotId(undefined);
+    }
+  }, [tarotId]);
 
   return { messages, inputDisabled, onSubmitMessage };
 }

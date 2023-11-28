@@ -23,44 +23,46 @@ function MessageBox({ tarotId, type, message, profile, button, shareLinkId }: Me
           alt="테스트용 이미지" // TODO server에서 카드 이름도 같이 넘겨주면 alt에 채워주기
         />
       )}
-      <div className="flex">
-        <Message
-          type={type}
-          message={message}
-          profile={profile}
-        />
-        {shareLinkId && (
-          <div className="absolute bottom-10 -right-50">
-            <Link
-              to={`/result/${shareLinkId}`}
-              target="_blank"
-              rel="noopener noreferrer"
+      {message && (
+        <div className="flex">
+          <Message
+            type={type}
+            message={message}
+            profile={profile}
+          />
+          {shareLinkId && (
+            <div className="absolute bottom-10 -right-50">
+              <Link
+                to={`/result/${shareLinkId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <IconButton
+                  buttonColor="transparent"
+                  iconColor="textWhite"
+                  icon="ion:share"
+                  iconSize={28}
+                  circle
+                />
+              </Link>
+            </div>
+          )}
+          {button && (
+            <div
+              id="TOLD"
+              className="absolute bottom-15 -right-90"
             >
-              <IconButton
-                buttonColor="transparent"
-                iconColor="textWhite"
-                icon="ion:share"
-                iconSize={28}
-                circle
-              />
-            </Link>
-          </div>
-        )}
-        {button && (
-          <div
-            id="TOLD"
-            className="absolute bottom-15 -right-90"
-          >
-            <CustomButton
-              size="s"
-              color="active"
-              onClick={button.onClick}
-            >
-              {button.content}
-            </CustomButton>
-          </div>
-        )}
-      </div>
+              <CustomButton
+                size="s"
+                color="active"
+                onClick={button.onClick}
+              >
+                {button.content}
+              </CustomButton>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

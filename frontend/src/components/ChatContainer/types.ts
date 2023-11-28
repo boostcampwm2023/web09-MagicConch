@@ -6,7 +6,7 @@ export interface MessageButton {
 export interface Message {
   tarotId?: number;
   type: 'left' | 'right';
-  message: string;
+  message?: string;
   profile: string;
   button?: MessageButton;
   shareLinkId?: string;

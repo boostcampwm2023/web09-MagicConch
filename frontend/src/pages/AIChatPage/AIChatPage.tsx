@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 import Background from '@components/Background';
 import ChatContainer from '@components/ChatContainer';
@@ -9,10 +9,10 @@ import { useAiChatMessage, useTarotSpread } from '@business/hooks/useAiChat';
 interface AIChatPageProps {}
 
 function AIChatPage({}: AIChatPageProps) {
-  const tarotCardId = useRef<number>();
+  const [tarotId, setTarotId] = useState<number>();
 
-  useTarotSpread(tarotCardId);
-  const { messages, inputDisabled, onSubmitMessage } = useAiChatMessage(tarotCardId);
+  useTarotSpread(setTarotId);
+  const { messages, inputDisabled, onSubmitMessage } = useAiChatMessage(tarotId, setTarotId);
 
   return (
     <Background type="dynamic">

@@ -4,13 +4,13 @@ import { useEffect } from 'react';
 
 import TarotSpread from '@components/TarotSpread';
 
-export function useTarotSpread(tarotCardId: React.MutableRefObject<number | undefined>) {
+export function useTarotSpread(setTarotId: (idx: number) => void) {
   const { open } = useOverlay();
   const { socketEmit, socketOn } = useSocket('AIChat');
 
   const pickCard = (idx: number) => {
     socketEmit('tarotRead', idx);
-    tarotCardId.current = idx;
+    setTarotId(idx);
   };
 
   const openTarotSpread = () => {
