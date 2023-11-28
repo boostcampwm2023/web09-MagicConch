@@ -1,24 +1,11 @@
+import useChatMessage from '../useChatMessage';
 import { useSocket } from '../useSocket';
 import { useEffect, useState } from 'react';
 
-import { Message, MessageButton } from '@components/ChatContainer/ChatList';
-
 export function useAiChatMessage(tarotCardId: React.MutableRefObject<number | undefined>) {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [inputDisabled, setInputDisabled] = useState(true);
+  const { messages, addMessage, updateMessage } = useChatMessage(tarotCardId);
+  const [inputDisabled, setInputDisabled] = useState(false);
   const { socketEmit, socketOn } = useSocket('AIChat');
-
-  const addMessage = (type: 'left' | 'right', message: string, button?: MessageButton) => {
-    const tarotId = tarotCardId.current;
-    tarotCardId.current = undefined;
-
-    const profile = type == 'left' ? '/moon.png' : '/sponge.png';
-    setMessages(messages => [...messages, { type, message, profile, tarotId, button }]);
-  };
-
-  const updateMessage = (message: string) => {
-    setMessages(messages => [...messages.slice(0, -1), { ...messages[messages.length - 1], message }]);
-  };
 
   const onSubmitMessage = (message: string) => {
     addMessage('right', message);
@@ -30,7 +17,7 @@ export function useAiChatMessage(tarotCardId: React.MutableRefObject<number | un
       setInputDisabled(true);
       addMessage('left', '');
     });
-    socketOn('streaming', (message: string) => updateMessage(message));
+    socketOn('streaming', (text: string) => updateMessage(message => ({ ...message, message: text })));
     socketOn('streamEnd', () => setInputDisabled(false));
 
     socketOn('tarotCard', () => setInputDisabled(true));
@@ -40,7 +27,7 @@ export function useAiChatMessage(tarotCardId: React.MutableRefObject<number | un
 
     socketOn('chatEnd', (id: string) => {
       const shareLinkId: string = id;
-      setMessages(messages => [...messages.slice(0, -1), { ...messages[messages.length - 1], shareLinkId }]);
+      updateMessage(message => ({ ...message, shareLinkId }));
       setTimeout(() => addMessage('left', requestFeedbackMessage, button), 5000);
     });
   }, []);
