@@ -1,15 +1,25 @@
 import useChatMessage from '../useChatMessage';
 import { useEffect } from 'react';
 
-export default function useHumanChatMessage(tarotCardId: React.MutableRefObject<number | undefined>) {
+export default function useHumanChatMessage(
+  tarotCardId: React.MutableRefObject<number | undefined>,
+  chatChannel: React.MutableRefObject<RTCDataChannel | undefined>,
+) {
   const { messages, addMessage } = useChatMessage(tarotCardId);
 
   const onSubmitMessage = (message: string) => {
     addMessage('right', message);
-    // 상대한테도 전송
+    chatChannel.current?.send(message);
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (chatChannel.current) {
+      chatChannel.current.onmessage = (event: MessageEvent) => {
+        const data = JSON.parse(event.data);
+        addMessage('left', data.message);
+      };
+    }
+  }, [chatChannel.current]);
 
   return { messages, onSubmitMessage };
 }
