@@ -4,12 +4,13 @@ import useOverlay from '@business/hooks/useOverlay';
 
 import { randomString } from '@utils/ramdom';
 
+type PasswordPopupOptions = {
+  host?: boolean;
+};
+
 export default function usePasswordPopup() {
   const { open } = useOverlay();
 
-  type PasswordPopupOptions = {
-    host?: boolean;
-  };
   const defaultOptions: PasswordPopupOptions = {
     host: false,
   };
