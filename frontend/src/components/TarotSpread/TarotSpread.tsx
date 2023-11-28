@@ -13,6 +13,11 @@ interface TarotSpreadProps {
   pickCard: (idx: number) => void;
 }
 
+interface MouseOffset {
+  pageX: number;
+  pageY: number;
+}
+
 const spreadSound = new Audio('/spreadCards.mp3');
 const flipSound = new Audio('/flipCard.mp3');
 
@@ -23,7 +28,7 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
 
   const tarotCardRefs = useRef<HTMLDivElement[]>([]);
 
-  const prevMouseXRef = useRef<number>(0);
+  const prevMouseRef = useRef<MouseOffset>({ pageX: 0, pageY: 0 });
   const prevTouchYRef = useRef<number>(0);
 
   const tarotSpreadRef = useRef<HTMLDivElement>(null);
@@ -31,6 +36,8 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
 
   const backImg = getTarotImageQuery(TAROT_CARDS_LENGTH).data.cardUrl;
   const frontImg = getTarotImageQuery(pickedId).data.cardUrl;
+
+  const isMobile = window.innerWidth < 768;
 
   useEffect(() => {
     setPickedId(Math.floor(Math.random() * TAROT_CARDS_LENGTH));
@@ -50,14 +57,15 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
     };
   }, []);
 
-  const dragTarotSpread = ({ pageX }: React.MouseEvent<HTMLDivElement>) => {
-    if (dragging) rotateTarotSpread(prevMouseXRef.current < pageX ? 'right' : 'left');
-    prevMouseXRef.current = pageX;
+  const dragTarotSpread = ({ pageX, pageY }: React.MouseEvent<HTMLDivElement>) => {
+    const { pageX: prevPageX, pageY: prevPageY } = prevMouseRef.current;
+    rotateTarotSpread((isMobile ? prevPageY > pageY : prevPageX < pageX) ? 'right' : 'left');
+    prevMouseRef.current = { pageX, pageY };
   };
 
   const touchTarotSpread = ({ touches }: TouchEvent) => {
     const pageY = touches.item(0)?.pageY ?? 0;
-    if (dragging) rotateTarotSpread(prevTouchYRef.current < pageY ? 'right' : 'left');
+    rotateTarotSpread(prevTouchYRef.current < pageY ? 'right' : 'left');
     prevTouchYRef.current = pageY;
   };
 
@@ -67,7 +75,7 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
 
     const rotateIndex = rotationRef.current;
     const nextRotateIndex = direction == 'right' ? rotateIndex + 1 : rotateIndex - 1;
-    spread.style.transform = `translateX(-50%) rotate(${nextRotateIndex * 0.4}deg)`;
+    spread.style.transform = `translateX(-50%) rotate(${nextRotateIndex * 0.8}deg)`;
     rotationRef.current = nextRotateIndex;
   };
 
