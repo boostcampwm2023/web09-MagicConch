@@ -1,4 +1,4 @@
-import { RefObject, useMemo } from 'react';
+import { RefObject } from 'react';
 
 import { IconButton } from '@components/Buttons';
 
