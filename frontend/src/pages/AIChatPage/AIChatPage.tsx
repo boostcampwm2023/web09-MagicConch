@@ -18,9 +18,9 @@ function AIChatPage({}: AIChatPageProps) {
       {/* // TODO history sidebar 구현필요 */}
       <Header />
       <ChatContainer
-        width="w-700"
-        height="h-3/4"
-        position="top-90"
+        width="w-[80vw] max-w-700"
+        height="h-[75vh]"
+        position="top-[10vh]"
       />
     </Background>
   );

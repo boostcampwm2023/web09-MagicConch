@@ -18,7 +18,7 @@ function ChatContainer({ width, height, position }: ChatContainerProps) {
   const { messages, inputDisabled, onSubmitMessage } = useAiChatMessage(tarotCardId);
 
   return (
-    <div className={`${width} ${height} ${position} absolute`}>
+    <div className={`${width} ${height} ${position} absolute `}>
       <ChatList messages={messages} />
       <ChatInput
         disabled={inputDisabled}
