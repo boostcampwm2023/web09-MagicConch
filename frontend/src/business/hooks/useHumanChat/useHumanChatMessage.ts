@@ -30,7 +30,7 @@ export default function useHumanChatMessage(
           addMessage('left', data.message);
         }
 
-        if (data.type == 'tarotCard') {
+        if (data.type == 'pickCard') {
           pushMessage({ type: 'right', profile: '/sponge.png', tarotId: data.tarotId });
         }
       };
