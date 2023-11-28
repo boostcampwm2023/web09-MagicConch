@@ -22,16 +22,17 @@ function ResultSharePage({}: ResultSharePageProps) {
       <Header />
       <div
         ref={resultSharePageRef}
-        className="w-screen h-full flex flex-with-center gap-80 display-medium16 surface-alt text-strong p-20"
+        className="relative top-48 w-screen h-[calc(100vh-48px)] flex flex-with-center gap-40 display-medium16 surface-alt text-strong p-50"
       >
         <ResultImage cardUrl={cardUrl} />
-
-        <div className="w-664 h-640 flex flex-col rounded-2xl surface-box">
+        <div className="relative w-664 h-500 min-w-400 min-h-450 flex flex-col rounded-2xl surface-box">
           <ResultTextBox content={message} />
-          <ShareButtonList
-            cardUrl={cardUrl}
-            resultSharePageRef={resultSharePageRef}
-          />
+          <div className="md:absolute md:-bottom-100 md:w-full">
+            <ShareButtonList
+              cardUrl={cardUrl}
+              resultSharePageRef={resultSharePageRef}
+            />
+          </div>
         </div>
       </div>
     </>

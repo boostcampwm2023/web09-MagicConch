@@ -4,9 +4,9 @@ interface ResultImageProps {
 
 export function ResultImage({ cardUrl }: ResultImageProps) {
   return (
-    <div className="w-384 h-640 rounded-2xl flex flex-with-center">
+    <div className="flex flex-with-center">
       <img
-        className="rounded-2xl"
+        className="w-300 h-500 min-w-300 min-h-450 rounded-2xl"
         src={cardUrl}
       />
     </div>
