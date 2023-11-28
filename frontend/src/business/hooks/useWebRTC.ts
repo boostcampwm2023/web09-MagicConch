@@ -94,5 +94,6 @@ export function useWebRTC(roomName: string) {
     addTracks,
     changeVideoTrack,
     changeAudioTrack,
+    getMedia,
   };
 }
