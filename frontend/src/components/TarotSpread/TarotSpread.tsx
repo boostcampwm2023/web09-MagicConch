@@ -59,13 +59,13 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
 
   const dragTarotSpread = ({ pageX, pageY }: React.MouseEvent<HTMLDivElement>) => {
     const { pageX: prevPageX, pageY: prevPageY } = prevMouseRef.current;
-    rotateTarotSpread((isMobile ? prevPageY > pageY : prevPageX < pageX) ? 'right' : 'left');
+    if (dragging) rotateTarotSpread((isMobile ? prevPageY > pageY : prevPageX < pageX) ? 'right' : 'left');
     prevMouseRef.current = { pageX, pageY };
   };
 
   const touchTarotSpread = ({ touches }: TouchEvent) => {
     const pageY = touches.item(0)?.pageY ?? 0;
-    rotateTarotSpread(prevTouchYRef.current < pageY ? 'right' : 'left');
+    rotateTarotSpread(prevTouchYRef.current > pageY ? 'right' : 'left');
     prevTouchYRef.current = pageY;
   };
 
