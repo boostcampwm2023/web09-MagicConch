@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 
 import Background from '@components/Background';
-import CustomSelect from '@components/CustomSelect';
+import ChatContainer from '@components/ChatContainer';
 import Header from '@components/Header';
 import SideBar from '@components/SideBar';
 
