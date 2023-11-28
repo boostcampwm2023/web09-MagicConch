@@ -83,7 +83,7 @@ io.on('connection', socket => {
     }
     delete users[socket.id];
 
-    socket.broadcast.to(socketRooms[roomID]).emit('user_exit', { id: socket.id });
+    socket.to(roomID).emit('userExit', { id: socket.id });
 
     console.log('disconnect', socketRooms);
   });
