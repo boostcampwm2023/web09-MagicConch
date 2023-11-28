@@ -28,7 +28,6 @@ export default function ProfileSetting({
     <div className="w-[100vw] h-[100vh] flex-with-center">
       <div className="flex gap-48 rounded-lg p-64 surface-box">
         <div className="flex flex-col gap-24">
-          {/* TODO: Cam component기 완성되면 바꿔야 함. */}
           <CamBox
             videoRef={videoRef}
             cameraConnected={cameraConnected.local}
