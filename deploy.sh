@@ -13,10 +13,10 @@ else
   WAS_STOP_PORT=3002
 fi
 
-docker-compose -f docker-compose.${RUN_TARGET}.${{ github.sha }}.yml up -d
-sed -i "s/was-${STOP_TARGET}:${WAS_STOP_PORT}/was-${RUN_TARGET}:${WAS_RUN_PORT}/" config/nginx/nginx.conf
-sed -i "s/signal-${STOP_TARGET}:${WAS_STOP_PORT + 1}/signal-${RUN_TARGET}:${WAS_RUN_PORT + 1}/" config/nginx/nginx.conf
-docker-compose -f docker-compose.${RUN_TARGET}.${{ github.sha }}.yml exec nginx nginx -s reload
+docker-compose -f "docker-compose.${RUN_TARGET}.${{ github.sha }}.yml" up -d
+sed -i "s/was-${STOP_TARGET}:${WAS_STOP_PORT}/was-${RUN_TARGET}:${WAS_RUN_PORT}/" config/nginx/default.conf
+sed -i "s/signal-${STOP_TARGET}:${WAS_STOP_PORT + 1}/signal-${RUN_TARGET}:${WAS_RUN_PORT + 1}/" config/nginx/default.conf
+docker-compose -f "docker-compose.${RUN_TARGET}.${{ github.sha }}.yml" exec nginx nginx -s reload
             
 while [ -z "$(docker ps --filter "name=was-${RUN_TARGET}" --quiet)" ]; do
   sleep 5
