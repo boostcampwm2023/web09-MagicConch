@@ -8,6 +8,8 @@ import ResultSharePage from './pages/ResultSharePage';
 import BackgroundMusic from './components/BackgroundMusic';
 import Cursor from '@components/Cursor';
 
+import { MediaInfoProvider } from '@business/providers/MediaInfoProvider';
+
 function App() {
   return (
     <>

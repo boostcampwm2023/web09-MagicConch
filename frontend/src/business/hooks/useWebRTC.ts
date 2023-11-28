@@ -27,7 +27,6 @@ export function useWebRTC(roomName: string) {
     roomName,
     remoteVideoRef,
   });
-
   const { mediaInfoChannel, chatChannel, initDataChannels, closeDataChannels } = useDataChannel({
     peerConnectionRef,
   });
@@ -69,6 +68,7 @@ export function useWebRTC(roomName: string) {
     return () => {
       closeRTCPeerConnection();
       closeDataChannels();
+      disconnectSocket();
     };
   }, []);
 
