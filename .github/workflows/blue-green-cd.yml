@@ -1,0 +1,133 @@
+name: Blue/Green CD
+
+on:
+  push:
+    branches: ["dev"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate .env file
+        run: |
+          echo "DB_PORT=${{ secrets.DB_PORT }}" > .env
+          echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
+          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
+          echo "ACCESS_KEY_ID=${{ secrets.ACCESS_KEY_ID }}" >> .env
+          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
+          echo "X_NCP_CLOVASTUDIO_API_KEY=${{ secrets.X_NCP_CLOVASTUDIO_API_KEY }}" >> .env
+          echo "X_NCP_APIGW_API_KEY=${{ secrets.X_NCP_APIGW_API_KEY }}" >> .env
+
+      - name: Copy .env to Remote Server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          source: ".env"
+          target: "~/app/"
+
+      - name: Generate SSL files
+        run: |
+          mkdir -p config/nginx/ssl/
+          echo "${{ secrets.SSL_OPTIONS }}" > config/nginx/ssl/options-ssl-nginx.conf
+          echo "${{ secrets.SSL_FULLCHAIN }}" > config/nginx/ssl/fullchain.pem
+          echo "${{ secrets.SSL_PRIVKEY }}" > config/nginx/ssl/privkey.pem
+          echo "${{ secrets.SSL_DHPARAMS }}" > config/nginx/ssl/ssl-dhparams.pem
+
+      - name: Create target directory if not exists
+        run: mkdir -p ~/app/config/nginx/ssl
+
+      - name: Copy nginx configuration and SSL files to Remote Server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "config/nginx/*"
+          target: "~/app/config/nginx/"
+
+      - name: Build Docker Images (Blue)
+        run: |
+          docker-compose -f docker-compose.blue.yml build -t "${{ secrets.DOCKER_USERNAME }}/magicconch:latest-blue"
+          cp docker-compose.blue.yml docker-compose.${{ github.sha }}.blue.yml
+
+      - name: Push Docker Images to Registry (Blue)
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+      - run: docker-compose -f docker-compose.${{ github.sha }}.blue.yml push
+
+      - name: Build Docker Images (Green)
+        run: |
+          docker-compose -f docker-compose.green.yml build -t "${{ secrets.DOCKER_USERNAME }}/magicconch:latest-green"
+          cp docker-compose.green.yml docker-compose.${{ github.sha }}.green.yml
+
+      - name: Push Docker Images to Registry (Green)
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+      - run: docker-compose -f docker-compose.${{ github.sha }}.green.yml push
+
+      - name: Copy Dockerfiles to Remote Server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "docker-compose.${{ github.sha }}.blue.yml,docker-compose.${{ git hub.sha }}.green.yml,Dockerfile.nginx,Dockerfile.was"
+          target: "~/app/"
+          overwrite: true
+
+      - name: Remove local docker-compose copied file
+        run: |
+          rm docker-compose.blue.${{ github.sha }}.yml
+          rm docker-compose.green.${{ github.sha }}.yml
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+
+      - name: Run Docker on Remote Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ~/app
+            if docker ps --filter "name=was-blue" --quiet; then
+              echo "WAS_PORT=3002" >> .env
+              echo "SIGNAL_PORT=3003" >> .env
+              docker-compose -f docker-compose.green.${{ github.sha }}.yml up -d
+              sed -i 's/was-blue:3000/was-green:3002/' config/nginx/nginx.conf
+              docker-compose -f docker-compose.green.${{ github.sha }}.yml exec nginx nginx -s reload
+            else
+              docker-compose -f docker-compose.blue.${{ github.sha }}.yml up -d
+              sed -i 's/was-green:3002/was-blue:3000/' config/nginx/nginx.conf
+              docker-compose -f docker-compose.blue.${{ github.sha }}.yml exec nginx nginx -s reload
+            fi
+            while [ -z "$(docker ps --filter "name=was" --quiet)" ]; do
+              sleep 5
+            done
+            sleep 60
+            rm .env
