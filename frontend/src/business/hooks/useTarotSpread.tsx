@@ -1,15 +1,11 @@
-import useOverlay from '../useOverlay';
-import { useSocket } from '../useSocket';
-import { useEffect } from 'react';
-
 import TarotSpread from '@components/TarotSpread';
+
+import useOverlay from './useOverlay';
 
 export function useTarotSpread(setTarotId: (idx: number) => void) {
   const { open } = useOverlay();
-  const { socketEmit, socketOn } = useSocket('AIChat');
 
   const pickCard = (idx: number) => {
-    socketEmit('tarotRead', idx);
     setTarotId(idx);
   };
 
@@ -23,7 +19,5 @@ export function useTarotSpread(setTarotId: (idx: number) => void) {
     ));
   };
 
-  useEffect(() => {
-    socketOn('tarotCard', () => setTimeout(openTarotSpread, 1000));
-  }, []);
+  return { openTarotSpread };
 }

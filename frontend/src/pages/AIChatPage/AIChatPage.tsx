@@ -4,14 +4,14 @@ import Background from '@components/Background';
 import ChatContainer from '@components/ChatContainer';
 import Header from '@components/Header';
 
-import { useAiChatMessage, useTarotSpread } from '@business/hooks/useAiChat';
+import { useAiChatMessage, useAiTarotSpread } from '@business/hooks/useAiChat';
 
 interface AIChatPageProps {}
 
 function AIChatPage({}: AIChatPageProps) {
   const [tarotId, setTarotId] = useState<number>();
 
-  useTarotSpread(setTarotId);
+  useAiTarotSpread(setTarotId);
   const { messages, inputDisabled, onSubmitMessage } = useAiChatMessage(tarotId, setTarotId);
 
   return (
