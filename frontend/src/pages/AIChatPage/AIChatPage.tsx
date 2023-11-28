@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 import Background from '@components/Background';
 import ChatContainer from '@components/ChatContainer';
