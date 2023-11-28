@@ -1,2 +1,2 @@
 export { useAiChatMessage } from './useAiChatMessage';
-export { useTarotSpread } from './useTarotSpread';
+export { useAiTarotSpread } from './useAiTarotSpread';
