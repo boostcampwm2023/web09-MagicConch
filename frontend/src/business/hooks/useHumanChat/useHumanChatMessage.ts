@@ -23,7 +23,7 @@ export default function useHumanChatMessage(
 
   useEffect(() => {
     if (chatChannel.current) {
-      chatChannel.current.onmessage = (event: MessageEvent) => {
+      chatChannel.current.addEventListener('message', event => {
         const data = JSON.parse(event.data);
 
         if (data.type === 'message') {
@@ -33,7 +33,7 @@ export default function useHumanChatMessage(
         if (data.type == 'pickCard') {
           pushMessage({ type: 'right', profile: '/sponge.png', tarotId: data.tarotId });
         }
-      };
+      });
     }
   }, [chatChannel.current]);
 

@@ -20,13 +20,13 @@ export default function useHumanTarotSpread(
 
   useEffect(() => {
     if (chatChannel.current) {
-      chatChannel.current.onmessage = (event: MessageEvent) => {
+      chatChannel.current.addEventListener('message', event => {
         const data = JSON.parse(event.data);
 
         if (data.type === 'tarotCard') {
           setTimeout(openTarotSpread, 1000);
         }
-      };
+      });
     }
   }, []);
 
