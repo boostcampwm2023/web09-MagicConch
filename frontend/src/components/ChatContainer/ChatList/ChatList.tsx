@@ -24,7 +24,7 @@ function ChatList({ messages }: ChatListProps) {
         return (
           <li
             key={new Date().getTime() + index}
-            className={`flex pr-20 ${index != 0 && 'mt-40'} ${type == 'right' && 'justify-end'}`}
+            className={`flex pr-20 ${message && 'mb-40'} ${type == 'right' && 'justify-end'}`}
           >
             <MessageBox
               tarotId={index == 0 ? undefined : tarotId}

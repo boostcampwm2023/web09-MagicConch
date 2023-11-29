@@ -15,56 +15,57 @@ function MessageBox({ tarotId, type, message, profile, button, shareLinkId }: Me
   const cardUrl = tarotId ? getTarotImageQuery(tarotId).data.cardUrl : '';
 
   return (
-    <div className="relative max-w-[70%] sm:max-w-[90%]">
-      <div className="relative left-70 w-[70%]">
+    <div className="relative max-w-[70%] sm:max-w-[85%]">
+      <div className="relative left-75">
         {tarotId && (
           <img
-            className="w-120 h-200 rounded-lg"
+            className="w-120 h-200 min-w-120 rounded-lg"
             src={cardUrl}
             alt="테스트용 이미지" // TODO server에서 카드 이름도 같이 넘겨주면 alt에 채워주기
           />
         )}
       </div>
 
-    {message && (<div className="flex flex-col">
-        <Message
-          type={type}
-          message={message}
-          profile={profile}
-        />
-        {shareLinkId && (
-          <div className="absolute -right-50 bottom-5">
-            <Link
-              to={`/result/${shareLinkId}`}
-              target="_blank"
-              rel="noopener noreferrer"
+      {message && (
+        <div className="flex flex-col">
+          <Message
+            type={type}
+            message={message}
+            profile={profile}
+          />
+          {shareLinkId && (
+            <div className="absolute -right-50 bottom-5">
+              <Link
+                to={`/result/${shareLinkId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <IconButton
+                  buttonColor="transparent"
+                  iconColor="textWhite"
+                  icon="ion:share"
+                  iconSize={28}
+                  circle
+                />
+              </Link>
+            </div>
+          )}
+          {button && (
+            <div
+              id="TOLD"
+              className="relative left-70 w-80"
             >
-              <IconButton
-                buttonColor="transparent"
-                iconColor="textWhite"
-                icon="ion:share"
-                iconSize={28}
-                circle
-              />
-            </Link>
-          </div>
-        )}
-        {button && (
-          <div
-            id="TOLD"
-            className="relative left-70 w-80"
-          >
-            <CustomButton
-              size="s"
-              color="active"
-              onClick={button.onClick}
-            >
-              {button.content}
-            </CustomButton>
-          </div>
-        )}
-      </div>
-    )}
+              <CustomButton
+                size="s"
+                color="active"
+                onClick={button.onClick}
+              >
+                {button.content}
+              </CustomButton>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
