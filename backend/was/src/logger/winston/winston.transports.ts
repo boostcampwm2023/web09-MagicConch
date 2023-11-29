@@ -1,4 +1,4 @@
-import fs from 'fs';
+import * as fs from 'fs';
 import { transports } from 'winston';
 import * as DailyRotateFile from 'winston-daily-rotate-file';
 
