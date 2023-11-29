@@ -65,7 +65,9 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
     prevMouseRef.current = { pageX, pageY };
   };
 
-  const touchTarotSpread = ({ touches }: TouchEvent) => {
+  const touchTarotSpread = (event: TouchEvent) => {
+    event.preventDefault();
+    const { touches } = event;
     const { pageX: prevPageX, pageY: prevPageY } = prevTouchRef.current;
     const { pageX, pageY } = { pageX: touches.item(0)?.pageX ?? 0, pageY: touches.item(0)?.pageY ?? 0 };
     rotateTarotSpread((isPortrait ? prevPageY > pageY : prevPageX < pageX) ? 'right' : 'left');
@@ -78,7 +80,6 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
 
     const rotateIndex = rotationRef.current;
     const nextRotateIndex = direction == 'right' ? rotateIndex + 1 : rotateIndex - 1;
-    console.log('2', nextRotateIndex);
     spread.style.transform = `translateX(-50%) rotate(${nextRotateIndex * 0.8}deg)`;
     rotationRef.current = nextRotateIndex;
   };
