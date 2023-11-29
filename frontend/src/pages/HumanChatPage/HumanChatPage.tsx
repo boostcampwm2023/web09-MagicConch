@@ -39,8 +39,8 @@ export default function HumanChatPage() {
     //  - 서버와 통신해 password를 보내고, roomName을 받는다.
     //  - 받은 roomName으로 navigate를 한다.
 
-    // 3.둘다 아니라면
-    //  - 알수없는 오류가 발생했다고 알람을 띄우고
+    // ✅3. 둘다 아니라면
+    //  - 잘못된 접근이라고 알람을 띄우고
     //  - /로 navigate를 한다.
 
     const createRoom = async () => {
@@ -65,6 +65,10 @@ export default function HumanChatPage() {
     if (!roomName && state.host) {
       createRoom();
     } else if (roomName && !state.host) {
+      joinRoom();
+    } else {
+      alert('잘못된 접근입니다. ');
+      navigate('/');
     }
 
     return () => {
