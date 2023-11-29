@@ -17,6 +17,8 @@ services:
       - X_NCP_APIGW_API_KEY=${X_NCP_APIGW_API_KEY}
     expose:
       - "3000"
+    volumes:
+      - /app/was/logs:/app/logs/was
 
   signal-blue:
     build:
@@ -36,6 +38,8 @@ services:
       - was-blue
       - signal-blue
       - certbot
+    volumes:
+      - /var/log/nginx:/app/logs/nginx
 
   certbot:
     image: certbot/certbot

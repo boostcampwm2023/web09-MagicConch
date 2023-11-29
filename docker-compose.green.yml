@@ -17,6 +17,8 @@ services:
       - X_NCP_APIGW_API_KEY=${X_NCP_APIGW_API_KEY}
     expose:
       - "3002"
+    volumes:
+      - /app/was/logs:/app/logs/was
 
   signal-green:
     build:
@@ -24,6 +26,8 @@ services:
       dockerfile: Dockerfile.signal
     expose:
       - "3003"
+    volumes:
+      - /var/log/nginx:/app/logs/nginx
 
   nginx:
     build:
