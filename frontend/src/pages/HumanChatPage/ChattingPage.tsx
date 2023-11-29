@@ -24,6 +24,7 @@ export default function ChattingPage() {
         toggleVideo={toggleVideo}
         toggleAudio={toggleAudio}
         cameraConnected={{ local: mediaInfos.myVideoOn, remote: mediaInfos.remoteVideoOn }}
+        audioConnected={{ local: mediaInfos.myMicOn, remote: mediaInfos.remoteMicOn }}
       />
       <div className="absolute top-72 left-25">
         <IconButton
