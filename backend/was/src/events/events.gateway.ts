@@ -10,14 +10,15 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ChatService, ChattingInfo } from 'src/chat/chat.service';
+import { ERR_MSG } from 'src/common/constants/errors';
 import { LoggerService } from 'src/logger/logger.service';
 import { TarotService } from 'src/tarot/tarot.service';
-import ClovaStudio from './clova-studio';
 import {
   askTarotCardCandidates,
   tarotCardNames,
   welcomeMessage,
-} from './constants';
+} from '../common/constants/events';
+import ClovaStudio from './clova-studio';
 import {
   chatLog2createChattingMessageDtos,
   result2createTarotResultDto,
@@ -162,7 +163,7 @@ export class EventsGateway
           err.stack,
         );
       }
-      throw new WsException('채팅 로그를 저장하는데 실패했습니다.');
+      throw new WsException(ERR_MSG.SAVE_CHATTING_LOG);
     }
   }
 
@@ -180,7 +181,7 @@ export class EventsGateway
           err.stack,
         );
       }
-      throw new WsException('타로 결과를 저장하는데 실패했습니다.');
+      throw new WsException(ERR_MSG.SAVE_TAROT_RESULT);
     }
   }
 }
