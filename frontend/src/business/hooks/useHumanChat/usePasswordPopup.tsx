@@ -11,25 +11,26 @@ type PasswordPopupOptions = {
 export default function usePasswordPopup() {
   const { open } = useOverlay();
 
-  const defaultOptions: PasswordPopupOptions = {
-    host: false,
-  };
+  const defaultOptions = false;
 
-  const openPasswordPopup = ({
-    onSubmit,
-    options = defaultOptions,
-  }: {
-    onSubmit: (password: string) => void;
-    options: PasswordPopupOptions;
-  }) => {
-    const defaultValue = options.host ? randomString() : '';
-    open(({ close }) => (
-      <PasswordPopup
-        close={close}
-        onSubmit={onSubmit}
-        defaultValue={defaultValue}
-      />
-    ));
+  const openPasswordPopup = ({ host = defaultOptions }: { host: boolean }) => {
+    const defaultValue = host ? randomString() : '';
+
+    return new Promise<string>(resolve =>
+      open(({ close }) => (
+        <PasswordPopup
+          close={() => {
+            close();
+            resolve('');
+          }}
+          onSubmit={password => {
+            close();
+            resolve(password);
+          }}
+          defaultValue={defaultValue}
+        />
+      )),
+    );
   };
 
   return { openPasswordPopup };
