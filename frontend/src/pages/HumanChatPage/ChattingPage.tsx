@@ -9,8 +9,15 @@ import type { OutletContext } from './HumanChatPage';
 export default function ChattingPage() {
   const navigate = useNavigate();
 
-  const { localVideoRef, remoteVideoRef, toggleVideo, toggleAudio, mediaInfos, getMedia }: OutletContext =
-    useOutletContext();
+  const {
+    localVideoRef,
+    remoteVideoRef,
+    toggleVideo,
+    toggleAudio,
+    mediaInfos,
+    getMedia,
+    requestTarotSpread,
+  }: OutletContext = useOutletContext();
 
   useEffect(() => {
     getMedia({});
@@ -25,6 +32,7 @@ export default function ChattingPage() {
         toggleAudio={toggleAudio}
         cameraConnected={{ local: mediaInfos.myVideoOn, remote: mediaInfos.remoteVideoOn }}
         audioConnected={{ local: mediaInfos.myMicOn, remote: mediaInfos.remoteMicOn }}
+        requestTarotSpread={requestTarotSpread}
       />
       <div className="absolute top-72 left-25">
         <IconButton

@@ -10,7 +10,9 @@ import SideBar from '@components/SideBar';
 import { useHumanChatMessage, useHumanTarotSpread } from '@business/hooks/useHumanChat';
 import { useWebRTC } from '@business/hooks/useWebRTC';
 
-export type OutletContext = ReturnType<typeof useWebRTC>;
+export interface OutletContext extends ReturnType<typeof useWebRTC> {
+  requestTarotSpread: () => void;
+}
 
 export default function HumanChatPage() {
   const { roomName } = useParams();
@@ -19,7 +21,7 @@ export default function HumanChatPage() {
   const [tarotId, setTarotId] = useState<number>();
 
   // TODO: {requestTarotSpread}로 받아 '타로 카드 펼치기' 버튼을 눌렀을 때 실행
-  const {} = useHumanTarotSpread(webRTCData.chatChannel, setTarotId);
+  const { requestTarotSpread } = useHumanTarotSpread(webRTCData.chatChannel, setTarotId);
   const { messages, onSubmitMessage, inputDisabled } = useHumanChatMessage(webRTCData.chatChannel, tarotId, setTarotId);
 
   return (
@@ -38,7 +40,7 @@ export default function HumanChatPage() {
           </SideBar>,
         ]}
       />
-      <Outlet context={webRTCData} />
+      <Outlet context={{ ...webRTCData, requestTarotSpread }} />
     </Background>
   );
 }

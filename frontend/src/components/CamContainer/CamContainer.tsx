@@ -10,6 +10,7 @@ interface CamContainerProps {
   toggleAudio: () => void;
   cameraConnected: { local: boolean; remote: boolean };
   audioConnected: { local: boolean; remote: boolean };
+  requestTarotSpread: () => void;
 }
 
 export default function CamContainer({
@@ -19,6 +20,7 @@ export default function CamContainer({
   toggleAudio,
   cameraConnected,
   audioConnected,
+  requestTarotSpread,
 }: CamContainerProps) {
   return (
     <div className="flex-with-center flex-col gap-80 pt-80">
@@ -37,7 +39,10 @@ export default function CamContainer({
         />
       </div>
       <div className="flex flex-col gap-30">
-        <CustomButton size="m">
+        <CustomButton
+          size="m"
+          onClick={requestTarotSpread}
+        >
           <Icon
             width="17"
             height="17"
