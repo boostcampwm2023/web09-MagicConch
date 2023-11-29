@@ -1,19 +1,13 @@
 import { Link } from 'react-router-dom';
 
 import { CustomButton, IconButton } from '@components/Buttons';
-import { MessageButton } from '@components/ChatContainer/ChatList';
-import Message from '@components/ChatContainer/MessageBox/Message';
+import type { Message as MessageType } from '@components/ChatContainer';
 
 import { getTarotImageQuery } from '@stores/queries/getTarotImageQuery';
 
-interface MessageBoxProps {
-  tarotId?: number;
-  type: 'left' | 'right';
-  message: string;
-  profile: string;
-  button?: MessageButton;
-  shareLinkId?: string;
-}
+import Message from './Message';
+
+interface MessageBoxProps extends MessageType {}
 
 // TODO: 프로필 이미지 설정
 
@@ -32,7 +26,7 @@ function MessageBox({ tarotId, type, message, profile, button, shareLinkId }: Me
         )}
       </div>
 
-      <div className="flex flex-col">
+    {message && (<div className="flex flex-col">
         <Message
           type={type}
           message={message}
@@ -70,6 +64,7 @@ function MessageBox({ tarotId, type, message, profile, button, shareLinkId }: Me
           </div>
         )}
       </div>
+    )}
     </div>
   );
 }

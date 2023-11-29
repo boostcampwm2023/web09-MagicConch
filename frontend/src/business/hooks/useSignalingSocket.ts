@@ -3,9 +3,10 @@ import { useSocket } from './useSocket';
 interface useSignalingSocketProps {
   roomName: string;
   peerConnectionRef: React.MutableRefObject<RTCPeerConnection | undefined>;
+  negotiationDataChannels: () => void;
 }
 
-export function useSignalingSocket({ roomName, peerConnectionRef }: useSignalingSocketProps) {
+export function useSignalingSocket({ roomName, peerConnectionRef, negotiationDataChannels }: useSignalingSocketProps) {
   const { connectSocket, socketEmit, socketOn } = useSocket('WebRTC');
 
   const initSignalingSocket = () => {
@@ -32,6 +33,10 @@ export function useSignalingSocket({ roomName, peerConnectionRef }: useSignaling
     socketOn('roomFull', () => {
       alert('room is full');
     });
+
+    socketOn('userExit', async () => {
+      negotiationDataChannels();
+    });
   };
 
   const createOffer = async () => {
@@ -47,12 +52,7 @@ export function useSignalingSocket({ roomName, peerConnectionRef }: useSignaling
     socketEmit('answer', answerSdp, roomName);
   };
 
-  const closePeerConnection = () => {
-    peerConnectionRef.current?.close();
-  };
-
   return {
     initSignalingSocket,
-    closePeerConnection,
   };
 }

@@ -12,30 +12,31 @@ export default function ChattingPage() {
     localVideoRef,
     toggleVideo,
     toggleAudio,
-    cameraConnected,
+    mediaInfos,
     cameraOptions,
-    changeCamera,
-    changeVideoTrack,
+    audioOptions,
+    changeMyVideoTrack,
+    changeMyAudioTrack,
     getMedia,
   }: OutletContext = useOutletContext();
 
   const camList = cameraOptions.map(({ deviceId, label }) => ({ label, value: deviceId }));
-  const changeMyCamera = async (deviceId: string) => {
-    await changeCamera(deviceId);
-    changeVideoTrack();
-  };
+  const micList = audioOptions.map(({ deviceId, label }) => ({ label, value: deviceId }));
 
   useEffect(() => {
-    getMedia();
+    getMedia({});
   }, []);
 
   return (
     <ProfileSetting
       toggleVideo={toggleVideo}
       toggleAudio={toggleAudio}
-      cameraConnected={cameraConnected}
-      changeMyCamera={changeMyCamera}
+      cameraConnected={{ local: mediaInfos.myVideoOn, remote: mediaInfos.remoteVideoOn }}
+      audioConnected={{ local: mediaInfos.myMicOn, remote: mediaInfos.remoteMicOn }}
+      changeMyCamera={changeMyVideoTrack}
+      changeMyAudio={changeMyAudioTrack}
       camList={camList}
+      micList={micList}
       videoRef={localVideoRef}
       onConfirm={() => navigate('..')}
     />

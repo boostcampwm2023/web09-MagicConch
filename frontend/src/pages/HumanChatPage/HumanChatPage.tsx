@@ -23,6 +23,10 @@ export default function HumanChatPage() {
               width="w-400"
               height="h-4/5"
               position="top-40"
+              // TODO: useHuman~에서 값을 가져와서 넣어주어야 함
+              messages={[]}
+              inputDisabled={true}
+              onSubmitMessage={() => {}}
             />
           </SideBar>,
         ]}

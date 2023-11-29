@@ -1,99 +1,91 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 
-import { iceServers } from '@constants/urls';
-
+import { useControllMedia } from './useControllMedia';
+import { useDataChannel } from './useDataChannel';
 import { useMedia } from './useMedia';
+import { useMediaInfoContext } from './useMediaInfoContext';
+import { useRTCPeerConnection } from './useRTCPeerConnection';
 import { useSignalingSocket } from './useSignalingSocket';
 import { useSocket } from './useSocket';
 
 export function useWebRTC(roomName: string) {
-  const peerConnectionRef = useRef<RTCPeerConnection>();
-  const { socketEmit, disconnectSocket } = useSocket('WebRTC');
-  const [cameraConnected, setCameraConnected] = useState({ local: false, remote: false });
+  const { socketEmit } = useSocket('WebRTC');
 
+  const { mediaInfos } = useMediaInfoContext();
   const {
     localVideoRef,
     remoteVideoRef,
-    cameraOptions,
     localStreamRef,
-    toggleVideo,
-    toggleAudio,
-    changeCamera,
+    cameraOptions,
+    audioOptions,
     getMedia,
+    getAudiosOptions,
+    getCamerasOptions,
   } = useMedia();
 
-  const { initSignalingSocket, closePeerConnection } = useSignalingSocket({ roomName, peerConnectionRef });
+  const { peerConnectionRef, makeRTCPeerConnection, closeRTCPeerConnection } = useRTCPeerConnection({
+    roomName,
+    remoteVideoRef,
+  });
+  const { mediaInfoChannel, chatChannel, initDataChannels, closeDataChannels } = useDataChannel({
+    peerConnectionRef,
+  });
 
-  const makeConnection = () => {
-    peerConnectionRef.current = new RTCPeerConnection({ iceServers: [{ urls: iceServers }] });
+  const { addTracks, changeMyAudioTrack, changeMyVideoTrack, toggleAudio, toggleVideo } = useControllMedia({
+    localStreamRef,
+    peerConnectionRef,
+    localVideoRef,
+    mediaInfoChannel,
+    getMedia,
+  });
 
-    peerConnectionRef.current.addEventListener('track', e => {
-      if (!remoteVideoRef.current) {
-        return;
-      }
-
-      remoteVideoRef.current.srcObject = e.streams[0];
-    });
-
-    peerConnectionRef.current.addEventListener('icecandidate', e => {
-      if (!e.candidate) {
-        return;
-      }
-
-      socketEmit('candidate', e.candidate, roomName);
-      setCameraConnected(prev => ({ ...prev, remote: true }));
-    });
+  const negotiationDataChannels = () => {
+    closeRTCPeerConnection();
+    closeDataChannels();
+    makeRTCPeerConnection();
+    initDataChannels();
+    addTracks();
   };
 
-  const addTracks = () => {
-    if (localStreamRef.current === undefined) {
-      return;
-    }
-    localStreamRef.current.getTracks().forEach(track => {
-      peerConnectionRef.current?.addTrack(track, localStreamRef.current!);
-    });
-  };
-
-  const changeVideoTrack = () => {
-    const nowTrack = localStreamRef.current?.getVideoTracks()[0];
-    const sender = peerConnectionRef.current?.getSenders().find(sender => sender.track?.kind === 'video');
-    sender?.replaceTrack(nowTrack!);
-  };
-
-  const changeAudioTrack = () => {
-    const nowTrack = localStreamRef.current?.getAudioTracks()[0];
-    const sender = peerConnectionRef.current?.getSenders().find(sender => sender.track?.kind === 'audio');
-    sender?.replaceTrack(nowTrack!);
-  };
+  const { initSignalingSocket } = useSignalingSocket({
+    roomName,
+    peerConnectionRef,
+    negotiationDataChannels,
+  });
 
   useEffect(() => {
-    const init = async () => {
-      await getMedia();
-      setCameraConnected(prev => ({ ...prev, local: true }));
+    const initOnMount = async () => {
+      await getMedia({});
       initSignalingSocket();
-      makeConnection();
+      makeRTCPeerConnection();
+      initDataChannels();
       addTracks();
       socketEmit('joinRoom', roomName);
     };
-    init();
+
+    initOnMount();
 
     return () => {
-      disconnectSocket();
-      closePeerConnection();
+      closeRTCPeerConnection();
+      closeDataChannels();
     };
   }, []);
 
   return {
     cameraOptions,
+    audioOptions,
     localVideoRef,
     remoteVideoRef,
-    cameraConnected,
+    mediaInfoChannel,
+    chatChannel,
+    mediaInfos,
     toggleAudio,
     toggleVideo,
-    changeCamera,
     addTracks,
-    changeVideoTrack,
-    changeAudioTrack,
+    changeMyAudioTrack,
+    changeMyVideoTrack,
+    getAudiosOptions,
+    getCamerasOptions,
     getMedia,
   };
 }
