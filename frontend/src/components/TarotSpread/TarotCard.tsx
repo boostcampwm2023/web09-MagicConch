@@ -8,7 +8,7 @@ interface TarotCardProps {
 
 export default function TarotCard({ dragging, backImg, frontImg }: TarotCardProps) {
   const tarotCardStyle = useMemo(
-    () => `${dragging && 'hover:animate-tarotHovering'} animate-tarotLeaving w-full h-full -translate-y-1000 absolute`,
+    () => `${!dragging && 'hover:animate-tarotHovering'} animate-tarotLeaving w-full h-full -translate-y-1000 absolute`,
     [dragging],
   );
 

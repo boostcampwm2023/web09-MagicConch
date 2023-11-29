@@ -25,14 +25,14 @@ function ChatInput({ disabled, sendChatMessage }: ChatInputProps) {
   };
 
   return (
-    <div className={`form-control flex flex-row w-full`}>
+    <div className={`form-control flex flex-row w-[105%]`}>
       <input
         ref={inputRef}
         onKeyUp={detectEnter}
         disabled={disabled}
         type="text"
         placeholder="Type Here"
-        className="input input-bordered input-md w-full display-medium16"
+        className="input input-bordered input-md w-full display-medium16 sm:text-14"
       />
       <CustomButton
         color="transparent"

@@ -18,13 +18,13 @@ function ChatList({ messages }: ChatListProps) {
   return (
     <ul
       ref={messagesRef}
-      className={`w-full h-full mb-20 overflow-auto scroll-smooth`}
+      className={`w-full h-full mb-20 overflow-auto scroll-smooth sm:text-12`}
     >
       {messages.map(({ type, message, profile, tarotId, button, shareLinkId }, index) => {
         return (
           <li
             key={new Date().getTime() + index}
-            className={`flex pr-20 ${index != 0 && 'mt-40'} ${type == 'right' && 'justify-end'}`}
+            className={`flex ${message && 'mb-40'} ${type == 'right' && 'justify-end'}`}
           >
             <MessageBox
               tarotId={index == 0 ? undefined : tarotId}
