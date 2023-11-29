@@ -24,7 +24,7 @@ export function ShareButtonList({ isMobile, cardUrl, resultSharePageRef }: Share
           data-tip={tooltip && tooltip}
         >
           <IconButton
-            text={!isMobile ? text : ''}
+            text={isMobile ? '' : text}
             icon={icon}
             iconColor={iconColor}
             iconSize={RESULT_SHARE_ICON_SIZE}

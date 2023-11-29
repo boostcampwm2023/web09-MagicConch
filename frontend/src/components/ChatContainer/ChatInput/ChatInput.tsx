@@ -32,7 +32,7 @@ function ChatInput({ disabled, sendChatMessage }: ChatInputProps) {
         disabled={disabled}
         type="text"
         placeholder="Type Here"
-        className="input input-bordered input-md w-full display-medium16 sm:text-[14px]"
+        className="input input-bordered input-md w-full display-medium16 sm:text-14"
       />
       <CustomButton
         color="transparent"

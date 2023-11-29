@@ -107,17 +107,25 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
     setTimeout(() => setClosing(true), 2000);
   };
 
+  const MouseEventHandler = {
+    onMouseMove: dragTarotSpread,
+    onMouseDown: () => setDragging(true),
+    onMouseLeave: () => setDragging(false),
+    onMouseUp: () => setDragging(false),
+  };
+
+  const TouchEventHandler = {
+    onTouchMove: touchTarotSpread,
+    onTouchStart: () => setDragging(true),
+    onTouchEnd: () => setDragging(false),
+  };
+
   return (
     <Background type={`${closing ? 'close' : 'open'}`}>
       <div
         ref={tarotSpreadRef}
-        onMouseMove={dragTarotSpread}
-        onMouseDown={() => setDragging(true)}
-        onMouseLeave={() => setDragging(false)}
-        onMouseUp={() => setDragging(false)}
-        onTouchMove={touchTarotSpread}
-        onTouchStart={() => setDragging(true)}
-        onTouchEnd={() => setDragging(false)}
+        {...MouseEventHandler}
+        {...TouchEventHandler}
         className="transition-all ease-out absolute w-220 h-400 sm:w-160 sm:h-270 origin-center top-1150 left-[50%] translate-x-[-50%] sm:top-[35vh] sm:left-1200 md:top-[35vh] md:left-1400"
       >
         {Array.from({ length: TAROT_CARDS_LENGTH }, (_, idx) => idx).map((_, idx: number) => (
