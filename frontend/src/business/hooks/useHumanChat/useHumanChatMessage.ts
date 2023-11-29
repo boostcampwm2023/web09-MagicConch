@@ -1,6 +1,10 @@
 import useChatMessage from '../useChatMessage';
 import { useEffect, useState } from 'react';
 
+import { HumanChatEvents } from '@constants/events';
+
+const { PICK_CARD, CHAT_MESSAGE } = HumanChatEvents;
+
 export default function useHumanChatMessage(
   chatChannel: React.MutableRefObject<RTCDataChannel | undefined>,
   tarotId: number | undefined,
@@ -18,7 +22,7 @@ export default function useHumanChatMessage(
   const onSubmitMessage = (message: string) => {
     addMessage('right', message);
 
-    const payload = { type: 'message', message };
+    const payload = { type: CHAT_MESSAGE, content: message };
     chatChannel.current?.send(JSON.stringify(payload));
   };
 
@@ -33,14 +37,13 @@ export default function useHumanChatMessage(
       });
 
       chatChannel.current.addEventListener('message', event => {
-        const data = JSON.parse(event.data);
+        const message = JSON.parse(event.data);
 
-        if (data.type === 'message') {
-          addMessage('left', data.message);
+        if (message.type === CHAT_MESSAGE) {
+          addMessage('left', message.content);
         }
-
-        if (data.type == 'pickCard') {
-          pushMessage({ type: 'right', profile: '/sponge.png', tarotId: data.tarotId });
+        if (message.type == PICK_CARD) {
+          pushMessage({ type: 'right', profile: '/sponge.png', tarotId: message.content });
         }
       });
     }
