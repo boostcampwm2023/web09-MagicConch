@@ -1,4 +1,5 @@
-import { Logger, createLogger, format } from 'winston';
+import { Logger, createLogger } from 'winston';
+import { customFormat } from './winston.format';
 import {
   debugTransports,
   errorTransports,
@@ -7,23 +8,8 @@ import {
   warnTransports,
 } from './winston.transports';
 
-const customFormat = format.printf(({ level, message, timestamp, stack }) => {
-  const logMessage: string = `[WAS]\t${timestamp}\t[${level}] : ${message}`;
-  if (stack) {
-    return `${logMessage}\n${stack}`;
-  }
-  return logMessage;
-});
-
 export const winstonLogger: Logger = createLogger({
-  format: format.combine(
-    format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-    format.errors({ stack: true }),
-    format.splat(),
-    format.colorize(),
-    customFormat,
-  ),
-
+  format: customFormat,
   transports: [
     debugTransports,
     infoTransports,
