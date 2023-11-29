@@ -9,9 +9,12 @@ interface ProfileSettingProps {
   toggleVideo: () => void;
   toggleAudio: () => void;
   camList: CustomSelectOptions[];
+  micList: CustomSelectOptions[];
   videoRef: React.RefObject<HTMLVideoElement>;
   cameraConnected: { local: boolean; remote: boolean };
+  audioConnected: { local: boolean; remote: boolean };
   changeMyCamera: (deviceId: string) => void;
+  changeMyAudio: (deviceId: string) => void;
   onConfirm: () => void;
 }
 
@@ -19,9 +22,12 @@ export default function ProfileSetting({
   toggleVideo,
   toggleAudio,
   camList,
+  micList,
   videoRef,
   cameraConnected,
+  audioConnected,
   changeMyCamera,
+  changeMyAudio,
   onConfirm,
 }: ProfileSettingProps) {
   return (
@@ -31,11 +37,12 @@ export default function ProfileSetting({
           <CamBox
             videoRef={videoRef}
             cameraConnected={cameraConnected.local}
+            audioConnected={audioConnected.local}
             defaultImage="bg-ddung"
           />
           <DeviceToggleButtons
             cameraActive={cameraConnected.local}
-            micActive={true}
+            micActive={audioConnected.local}
             toggleVideo={toggleVideo}
             toggleAudio={toggleAudio}
           />
@@ -70,8 +77,8 @@ export default function ProfileSetting({
           />
           <DeviceSelect
             name="마이크"
-            deviceList={camList}
-            onChange={changeMyCamera}
+            deviceList={micList}
+            onChange={changeMyAudio}
           />
           <CustomButton
             onClick={onConfirm}

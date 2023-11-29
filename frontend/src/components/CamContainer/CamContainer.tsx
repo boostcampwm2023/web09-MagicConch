@@ -7,6 +7,7 @@ interface CamContainerProps {
   toggleVideo: () => void;
   toggleAudio: () => void;
   cameraConnected: { local: boolean; remote: boolean };
+  audioConnected: { local: boolean; remote: boolean };
 }
 
 export default function CamContainer({
@@ -15,6 +16,7 @@ export default function CamContainer({
   toggleVideo,
   toggleAudio,
   cameraConnected,
+  audioConnected,
 }: CamContainerProps) {
   return (
     <div className="flex-with-center flex-col gap-80 pt-80">
@@ -22,11 +24,13 @@ export default function CamContainer({
         <CamBox
           videoRef={localVideoRef}
           cameraConnected={cameraConnected.local}
+          audioConnected={audioConnected.local}
           defaultImage="bg-ddung"
         />
         <CamBox
           videoRef={remoteVideoRef}
           cameraConnected={cameraConnected.remote}
+          audioConnected={audioConnected.remote}
           defaultImage="bg-sponge"
         />
       </div>
