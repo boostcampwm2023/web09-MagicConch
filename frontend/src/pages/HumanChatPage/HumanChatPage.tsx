@@ -22,11 +22,24 @@ export default function HumanChatPage() {
   const {} = useHumanTarotSpread(webRTCData.chatChannel, setTarotId);
   const { messages, onSubmitMessage, inputDisabled } = useHumanChatMessage(webRTCData.chatChannel, tarotId, setTarotId);
 
+  const [contentAnimation, setContentAnimation] = useState<string>('');
+
+  const changeContentAnimation = (opendSidebar: boolean) => {
+    const newAnimation = opendSidebar
+      ? 'animate-contentSideWithOpeningSidebar'
+      : 'animate-contentSideWithClosingSidebar';
+
+    setContentAnimation(newAnimation);
+  };
+
   return (
     <Background type="dynamic">
       <Header
         rightItems={[
-          <SideBar key="chat-side-bar">
+          <SideBar
+            key="chat-side-bar"
+            onSide={changeContentAnimation}
+          >
             <ChatContainer
               width="w-400"
               height="h-4/5"
@@ -38,7 +51,11 @@ export default function HumanChatPage() {
           </SideBar>,
         ]}
       />
-      <Outlet context={webRTCData} />
+      <div className="w-h-screen">
+        <div className={`flex-with-center h-full ${contentAnimation}`}>
+          <Outlet context={webRTCData} />
+        </div>
+      </div>
     </Background>
   );
 }
