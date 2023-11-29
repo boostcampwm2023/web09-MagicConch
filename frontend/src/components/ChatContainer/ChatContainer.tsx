@@ -14,7 +14,7 @@ interface ChatContainerProps {
 
 function ChatContainer({ width, height, position, messages, inputDisabled, onSubmitMessage }: ChatContainerProps) {
   return (
-    <div className={`${width} ${height} ${position} absolute `}>
+    <div className={`${width} ${height} ${position} absolute`}>
       <ChatList messages={messages} />
       <ChatInput
         disabled={inputDisabled}

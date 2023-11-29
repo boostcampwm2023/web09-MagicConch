@@ -3,7 +3,6 @@ import { useEffect, useRef } from 'react';
 
 const browser = detect();
 const __iOS__ = browser?.os?.includes('iOS');
-console.log('test', browser?.os);
 
 function Cursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
