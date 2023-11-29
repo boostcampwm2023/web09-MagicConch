@@ -53,6 +53,14 @@ export default {
           '0%': { right: 0 },
           '100%': { right: '-500px' },
         },
+        contentSideWithOpeningSidebar: {
+          '0%': { width: '100%' },
+          '100%': { width: 'calc(100% - 500px)' },
+        },
+        contentSideWithClosingSidebar: {
+          '0%': { width: 'calc(100% - 500px)' },
+          '100%': { width: '100%' },
+        },
       },
       animation: {
         shining: 'shining 2s ease-in-out infinite alternate',
@@ -62,6 +70,8 @@ export default {
         tarotLeaving: 'tarotLeaving 0.3s ease-in-out forwards',
         openingSidebar: 'openingSidebar 0.5s ease-in-out forwards',
         closingSidebar: 'closingSidebar 0.5s ease-in-out forwards',
+        contentSideWithOpeningSidebar: 'contentSideWithOpeningSidebar 0.5s ease-in-out forwards',
+        contentSideWithClosingSidebar: 'contentSideWithClosingSidebar 0.5s ease-in-out forwards',
       },
       backgroundImage: {
         ddung: "url('/ddung.png')",

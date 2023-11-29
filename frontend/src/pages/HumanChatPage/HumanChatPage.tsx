@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 
@@ -14,11 +15,23 @@ export default function HumanChatPage() {
   const { roomName } = useParams();
   const webRTCData = useWebRTC(roomName as string);
 
+  const [opendSidebar, setOpendSidebar] = useState<boolean>();
+
+  const contentAnimation =
+    opendSidebar === undefined
+      ? ''
+      : opendSidebar
+      ? 'animate-contentSideWithOpeningSidebar'
+      : 'animate-contentSideWithClosingSidebar';
+
   return (
     <Background type="dynamic">
       <Header
         rightItems={[
-          <SideBar key="chat-side-bar">
+          <SideBar
+            key="chat-side-bar"
+            onSide={setOpendSidebar}
+          >
             <ChatContainer
               width="w-400"
               height="h-4/5"
@@ -31,7 +44,11 @@ export default function HumanChatPage() {
           </SideBar>,
         ]}
       />
-      <Outlet context={webRTCData} />
+      <div className="w-h-screen">
+        <div className={`flex-with-center h-full ${contentAnimation}`}>
+          <Outlet context={webRTCData} />
+        </div>
+      </div>
     </Background>
   );
 }
