@@ -61,5 +61,9 @@ export function useSocket<T extends SocketType>(socketType: T) {
     sockets[socketType].emit(eventName, ...eventArgs);
   }
 
-  return { connectSocket, disconnectSocket, socketOn, socketEmit };
+  function isSocketConnected() {
+    return Boolean(sockets[socketType]);
+  }
+
+  return { connectSocket, disconnectSocket, socketOn, socketEmit, isSocketConnected };
 }

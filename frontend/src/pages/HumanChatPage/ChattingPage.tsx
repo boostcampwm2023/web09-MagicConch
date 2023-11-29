@@ -13,7 +13,11 @@ export default function ChattingPage() {
     useOutletContext();
 
   useEffect(() => {
-    getMedia({});
+    // startWebRTC().then(() => {
+    //   console.log('connected');
+    // });
+    // getMedia({});
+    // TODO: 여기 들어오면 소켓을 연결시킴.
   }, []);
 
   return (

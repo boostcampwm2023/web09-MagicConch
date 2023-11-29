@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 
@@ -13,6 +14,11 @@ export type OutletContext = ReturnType<typeof useWebRTC>;
 export default function HumanChatPage() {
   const { roomName } = useParams();
   const webRTCData = useWebRTC(roomName as string);
+
+  useEffect(() => {
+    webRTCData.startWebRTC();
+    return () => webRTCData.endWebRTC();
+  }, []);
 
   return (
     <Background type="dynamic">

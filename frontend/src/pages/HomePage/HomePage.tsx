@@ -18,8 +18,6 @@ function HomePage() {
   };
 
   const moveHumanChat = () => {
-    connectSocket(import.meta.env.VITE_WAS_URL);
-
     const setPassword = (password: string) => {
       // TODO: 실제 room의 password로 설정해야 함
       console.log(password);
