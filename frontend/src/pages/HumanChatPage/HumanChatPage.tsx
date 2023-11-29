@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 
 import Background from '@components/Background';
@@ -40,6 +41,22 @@ export default function HumanChatPage() {
       disconnectSocket();
     };
   }, []);
+
+  const [tarotId, setTarotId] = useState<number>();
+
+  // TODO: {requestTarotSpread}로 받아 '타로 카드 펼치기' 버튼을 눌렀을 때 실행
+  const {} = useHumanTarotSpread(webRTCData.chatChannel, setTarotId);
+  const { messages, onSubmitMessage, inputDisabled } = useHumanChatMessage(webRTCData.chatChannel, tarotId, setTarotId);
+
+  const [contentAnimation, setContentAnimation] = useState<string>('');
+
+  const changeContentAnimation = (opendSidebar: boolean) => {
+    const newAnimation = opendSidebar
+      ? 'animate-contentSideWithOpeningSidebar'
+      : 'animate-contentSideWithClosingSidebar';
+
+    setContentAnimation(newAnimation);
+  };
 
   const [tarotId, setTarotId] = useState<number>();
 
