@@ -7,7 +7,7 @@ import { useSignalingSocket } from './useSignalingSocket';
 import { useSocket } from './useSocket';
 
 export function useWebRTC() {
-  const { socketEmit, disconnectSocket, isSocketConnected } = useSocket('WebRTC');
+  const { isSocketConnected } = useSocket('WebRTC');
 
   const { mediaInfos } = useMediaInfoContext();
   const {
@@ -50,24 +50,18 @@ export function useWebRTC() {
     negotiationDataChannels,
   });
 
-  const startWebRTC = async ({ roomName, password }: { roomName: string; password: string }) => {
+  const startWebRTC = async ({ roomName }: { roomName: string }) => {
     await getMedia({});
     initSignalingSocket({ roomName });
     makeRTCPeerConnection({ roomName });
     initDataChannels();
     addTracks();
-
-    if (password) {
-    } else {
-      socketEmit('joinRoom', roomName);
-    }
   };
 
   const endWebRTC = () => {
     if (isSocketConnected()) {
       closeRTCPeerConnection();
       closeDataChannels();
-      disconnectSocket();
     }
   };
 
