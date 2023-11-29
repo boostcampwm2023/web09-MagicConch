@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 import Header from '@components/Header';
 
@@ -10,28 +10,58 @@ import { ShareButtonList } from './ShareButtonList';
 
 interface ResultSharePageProps {}
 
+const flipSound = new Audio('/flipCard.mp3');
+
 function ResultSharePage({}: ResultSharePageProps) {
+  const [flipped, setFlipped] = useState<boolean>(false);
   const {
     data: { cardUrl, message },
   } = getResultShareQuery();
 
   const resultSharePageRef = useRef<HTMLDivElement>(null);
+  const resultCardRef = useRef<HTMLDivElement>(null);
+  const isMobile = window.innerWidth < 768;
+
+  const flipCard = () => {
+    setFlipped(true);
+    flipSound.play();
+  };
 
   return (
     <>
       <Header />
       <div
         ref={resultSharePageRef}
-        className="w-screen h-full flex flex-with-center gap-80 display-medium16 surface-alt text-strong p-20"
+        className="w-h-full sm: display-medium16 surface-alt text-strong p-50"
       >
-        <ResultImage cardUrl={cardUrl} />
+        <div
+          ref={resultCardRef}
+          className={`${isMobile && !flipped && 'animate-flappingCard'} ${
+            flipped && 'animate-flippingCard'
+          } relative top-[15vh] flex-with-center gap-40 sm:hover:scale-[1.1] sm:transition-transform`}
+          style={{ transition: 'transform 1s ease-out', transformStyle: 'preserve-3d' }}
+          onClick={() => isMobile && !flipped && flipCard()}
+        >
+          <div
+            style={isMobile ? { backfaceVisibility: 'hidden' } : {}}
+            className="result sm:absolute"
+          >
+            <ResultImage cardUrl={cardUrl} />
+          </div>
 
-        <div className="w-664 h-640 flex flex-col rounded-2xl surface-box">
-          <ResultTextBox content={message} />
-          <ShareButtonList
-            cardUrl={cardUrl}
-            resultSharePageRef={resultSharePageRef}
-          />
+          <div
+            style={isMobile ? { backfaceVisibility: 'hidden', rotate: 'y 180deg' } : {}}
+            className="relative w-664 h-500 sm:min-w-220 sm:w-220 sm:h-400 min-w-400 flex flex-col align-center rounded-2xl surface-box"
+          >
+            <ResultTextBox content={message} />
+            <div className="md:absolute md:-bottom-100 md:w-full">
+              <ShareButtonList
+                isMobile={isMobile}
+                cardUrl={cardUrl}
+                resultSharePageRef={resultSharePageRef}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </>

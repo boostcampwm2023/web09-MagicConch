@@ -7,6 +7,11 @@ const px0_2000 = { ...Array.from(Array(2001)).map((_, i) => `${i / ROOT_PX}rem`)
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
+    screens: {
+      sm: { min: '280px', max: '767px' },
+      md: { min: '768px', max: '1023px' },
+      lg: { min: '1024px' },
+    },
     extend: {
       width: px0_2000,
       height: px0_2000,
@@ -53,6 +58,14 @@ export default {
           '0%': { right: 0 },
           '100%': { right: '-500px' },
         },
+        flappingCard: {
+          '0%': { transform: 'rotateY(0deg)' },
+          '100%': { transform: 'rotateY(30deg)' },
+        },
+        flippingCard: {
+          '0%': { transform: 'rotateY(0deg)' },
+          '100%': { transform: 'rotateY(180deg)' },
+        },
       },
       animation: {
         shining: 'shining 2s ease-in-out infinite alternate',
@@ -62,6 +75,8 @@ export default {
         tarotLeaving: 'tarotLeaving 0.3s ease-in-out forwards',
         openingSidebar: 'openingSidebar 0.5s ease-in-out forwards',
         closingSidebar: 'closingSidebar 0.5s ease-in-out forwards',
+        flappingCard: 'flappingCard 1s ease-in-out forwards infinite alternate',
+        flippingCard: 'flippingCard 1s ease-in-out forwards',
       },
       backgroundImage: {
         ddung: "url('/ddung.png')",
@@ -153,7 +168,7 @@ export default {
           mixBlendMode: 'difference',
           background: '#fff',
         },
-        '.cursor:has(~ div button:hover), .cursor:has(~ div input:hover), .cursor:has(~ div a:hover), .cursor:has(~ div audio:hover), .cursor:has(~ div .collapse-content:hover)':
+        '.cursor:has(~ div button:hover), .cursor:has(~ div input:hover), .cursor:has(~ div a:hover), .cursor:has(~ div audio:hover), .cursor:has(~ div .collapse-content:hover), .cursor:has(~ div .result:hover)':
           {
             transition: 'transform 0.1s ease-in-out',
             transform: 'translate(-50%, -50%) scale(2)',
