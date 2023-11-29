@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 import Header from '@components/Header';
 
@@ -13,6 +13,7 @@ interface ResultSharePageProps {}
 const flipSound = new Audio('/flipCard.mp3');
 
 function ResultSharePage({}: ResultSharePageProps) {
+  const [flipped, setFlipped] = useState<boolean>(false);
   const {
     data: { cardUrl, message },
   } = getResultShareQuery();
@@ -21,12 +22,9 @@ function ResultSharePage({}: ResultSharePageProps) {
   const resultCardRef = useRef<HTMLDivElement>(null);
   const isMobile = window.innerWidth < 768;
 
-  const flipCard = async (card: HTMLDivElement) => {
+  const flipCard = () => {
+    setFlipped(true);
     flipSound.play();
-
-    card.style.transform = 'rotateY(180deg)';
-    card.style.transition = 'transform 1s ease-out';
-    card.style.transformStyle = 'preserve-3d';
   };
 
   return (
@@ -38,8 +36,11 @@ function ResultSharePage({}: ResultSharePageProps) {
       >
         <div
           ref={resultCardRef}
-          className="relative top-[15vh] flex-with-center gap-40 sm:hover:scale-[1.1] sm:transition-transform"
-          onClick={() => isMobile && flipCard(resultCardRef.current!)}
+          className={`${isMobile && !flipped && 'animate-flappingCard'} ${
+            flipped && 'animate-flippingCard'
+          } relative top-[15vh] flex-with-center gap-40 sm:hover:scale-[1.1] sm:transition-transform`}
+          style={{ transition: 'transform 1s ease-out', transformStyle: 'preserve-3d' }}
+          onClick={() => isMobile && !flipped && flipCard()}
         >
           <div
             style={isMobile ? { backfaceVisibility: 'hidden' } : {}}
