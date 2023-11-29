@@ -46,11 +46,17 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
 
     addEventListener('wheel', rotateSpread);
     addEventListener('animationend', closeWithFadeOut);
+    addEventListener('touchmove', touchTarotSpread);
+    addEventListener('touchstart', () => setDragging(true));
+    addEventListener('touchend', () => setDragging(false));
     setTimeout(spreadTarotCards, 10);
 
     return () => {
       removeEventListener('wheel', rotateSpread);
       removeEventListener('animationend', closeWithFadeOut);
+      removeEventListener('touchmove', touchTarotSpread);
+      removeEventListener('touchstart', () => setDragging(true));
+      removeEventListener('touchend', () => setDragging(false));
     };
   }, []);
 
@@ -60,9 +66,9 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
     prevMouseRef.current = { pageX, pageY };
   };
 
-  const touchTarotSpread = ({ touches: { item } }: React.TouchEvent<HTMLDivElement>) => {
+  const touchTarotSpread = ({ touches: { item } }: TouchEvent) => {
     const { pageX: prevPageX, pageY: prevPageY } = prevTouchRef.current;
-    const { pageX = 0, pageY = 0 } = item(0);
+    const { pageX, pageY } = { pageX: item(0)?.pageX ?? 0, pageY: item(0)?.pageY ?? 0 };
     rotateTarotSpread((isPortrait ? prevPageY > pageY : prevPageX < pageX) ? 'right' : 'left');
     prevTouchRef.current = { pageX, pageY };
   };
@@ -114,18 +120,16 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
     onMouseUp: () => setDragging(false),
   };
 
-  const TouchEventHandler = {
-    onTouchMove: touchTarotSpread,
-    onTouchStart: () => setDragging(true),
-    onTouchEnd: () => setDragging(false),
-  };
+  // const TouchEventHandler = {
+  //   onTouchStart: () => setDragging(true),
+  //   onTouchEnd: () => setDragging(false),
+  // };
 
   return (
     <Background type={`${closing ? 'close' : 'open'}`}>
       <div
         ref={tarotSpreadRef}
         {...MouseEventHandler}
-        {...TouchEventHandler}
         className="transition-all ease-out absolute w-220 h-400 sm:w-160 sm:h-270 origin-center top-1150 left-[50%] translate-x-[-50%] sm:top-[35vh] sm:left-1200 md:top-[35vh] md:left-1400"
       >
         {Array.from({ length: TAROT_CARDS_LENGTH }, (_, idx) => idx).map((_, idx: number) => (
