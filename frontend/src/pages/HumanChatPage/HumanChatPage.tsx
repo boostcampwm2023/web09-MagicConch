@@ -15,14 +15,15 @@ export default function HumanChatPage() {
   const { roomName } = useParams();
   const webRTCData = useWebRTC(roomName as string);
 
-  const [opendSidebar, setOpendSidebar] = useState<boolean>();
+  const [contentAnimation, setContentAnimation] = useState<string>('');
 
-  const contentAnimation =
-    opendSidebar === undefined
-      ? ''
-      : opendSidebar
+  const changeContentAnimation = (opendSidebar: boolean) => {
+    const newAnimation = opendSidebar
       ? 'animate-contentSideWithOpeningSidebar'
       : 'animate-contentSideWithClosingSidebar';
+
+    setContentAnimation(newAnimation);
+  };
 
   return (
     <Background type="dynamic">
@@ -30,7 +31,7 @@ export default function HumanChatPage() {
         rightItems={[
           <SideBar
             key="chat-side-bar"
-            onSide={setOpendSidebar}
+            onSide={changeContentAnimation}
           >
             <ChatContainer
               width="w-400"
