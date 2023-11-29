@@ -18,7 +18,7 @@ export default function HumanChatPage() {
 
   const [tarotId, setTarotId] = useState<number>();
 
-  // TODO: {requestTarotCard}로 받아 '타로 카드 펼치기' 버튼을 눌렀을 때 실행
+  // TODO: {requestTarotSpread}로 받아 '타로 카드 펼치기' 버튼을 눌렀을 때 실행
   const {} = useHumanTarotSpread(webRTCData.chatChannel, setTarotId);
   const { messages, onSubmitMessage, inputDisabled } = useHumanChatMessage(webRTCData.chatChannel, tarotId, setTarotId);
 

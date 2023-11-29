@@ -15,7 +15,7 @@ export default function useHumanTarotSpread(
     setTarotId(idx);
   };
 
-  const requestTarotCard = () => {
+  const requestTarotSpread = () => {
     const payload = { type: TAROT_SPREAD };
     chatChannel.current?.send(JSON.stringify(payload));
   };
@@ -34,5 +34,5 @@ export default function useHumanTarotSpread(
     }
   }, []);
 
-  return { requestTarotCard };
+  return { requestTarotSpread };
 }
