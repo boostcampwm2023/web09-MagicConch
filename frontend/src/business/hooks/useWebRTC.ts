@@ -45,7 +45,7 @@ export function useWebRTC() {
     addTracks();
   };
 
-  const { initSignalingSocket } = useSignalingSocket({
+  const { initSignalingSocket, createRoom, joinRoom } = useSignalingSocket({
     peerConnectionRef,
     negotiationDataChannels,
   });
@@ -83,5 +83,7 @@ export function useWebRTC() {
     getMedia,
     startWebRTC,
     endWebRTC,
+    createRoom,
+    joinRoom,
   };
 }
