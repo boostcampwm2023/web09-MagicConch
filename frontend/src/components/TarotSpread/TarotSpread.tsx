@@ -1,11 +1,15 @@
 import Background from '../Background';
-import { useEffect, useRef, useState } from 'react';
+import { detect } from 'detect-browser';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { getTarotImageQuery } from '@stores/queries/getTarotImageQuery';
 
 import { TAROT_CARDS_LENGTH } from '@constants/sizes';
 
 import TarotCard from './TarotCard';
+
+const browser = detect();
+const __iOS__ = browser?.os?.includes('iOS');
 
 interface TarotSpreadProps {
   opened: boolean;
@@ -40,20 +44,12 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
 
   useEffect(() => {
     setPickedId(Math.floor(Math.random() * TAROT_CARDS_LENGTH));
-    const rotateSpread = ({ deltaX, deltaY }: WheelEvent) =>
-      rotateTarotSpread((isPortrait ? deltaY > 0 : deltaX > 0) ? 'left' : 'right');
     const closeWithFadeOut = ({ animationName }: AnimationEvent) => animationName == 'fadeOut' && close();
 
-    addEventListener('wheel', rotateSpread);
     addEventListener('animationend', closeWithFadeOut);
-    addEventListener('touchmove', touchTarotSpread);
     setTimeout(spreadTarotCards, 10);
 
-    return () => {
-      removeEventListener('wheel', rotateSpread);
-      removeEventListener('animationend', closeWithFadeOut);
-      removeEventListener('touchmove', touchTarotSpread);
-    };
+    return () => removeEventListener('animationend', closeWithFadeOut);
   }, []);
 
   const startDragging = () => setDragging(true);
@@ -65,7 +61,10 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
     prevMouseRef.current = { pageX, pageY };
   };
 
-  const touchTarotSpread = (event: TouchEvent) => {
+  const wheelTarotSpread = ({ deltaX, deltaY }: React.WheelEvent<HTMLDivElement>) =>
+    rotateTarotSpread((isPortrait ? deltaY > 0 : deltaX > 0) ? 'left' : 'right');
+
+  const touchTarotSpread = (event: React.TouchEvent<HTMLDivElement>) => {
     const { touches } = event;
     const { pageX: prevPageX, pageY: prevPageY } = prevTouchRef.current;
     const { pageX, pageY } = { pageX: touches.item(0)?.pageX ?? 0, pageY: touches.item(0)?.pageY ?? 0 };
@@ -114,6 +113,7 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
   };
 
   const MouseEventHandler = {
+    onWheel: wheelTarotSpread,
     onMouseMove: dragTarotSpread,
     onMouseDown: startDragging,
     onMouseLeave: endDragging,
@@ -121,6 +121,7 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
   };
 
   const TouchEventHandler = {
+    onTouchMove: touchTarotSpread,
     onTouchStart: startDragging,
     onTouchEnd: endDragging,
   };
@@ -129,8 +130,8 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
     <Background type={`${closing ? 'close' : 'open'}`}>
       <div
         ref={tarotSpreadRef}
-        {...MouseEventHandler}
-        {...TouchEventHandler}
+        {...(!__iOS__ && MouseEventHandler)}
+        {...(!__iOS__ && TouchEventHandler)}
         className="transition-all ease-out absolute w-220 h-400 sm:w-160 sm:h-270 origin-center top-1150 left-[50%] translate-x-[-50%] sm:top-[35vh] sm:-left-800 md:top-[35vh] md:-left-700"
       >
         {Array.from({ length: TAROT_CARDS_LENGTH }, (_, idx) => idx).map((_, idx: number) => (
