@@ -5,7 +5,7 @@ import { CustomButton } from '@components/Buttons';
 import { Icon } from '@iconify/react';
 
 interface SideBarProps {
-  onSide?: (show: boolean) => void;
+  onSide?: (showed: boolean) => void;
   children: React.ReactNode;
 }
 
