@@ -44,23 +44,30 @@ export default function HumanChatPage() {
     //  - /로 navigate를 한다.
 
     const createRoom = async () => {
-      const { password, close } = await openPasswordPopup({ host: true });
-      close?.();
+      openPasswordPopup({
+        host: true,
+        onClose: () => {
+          navigate('..');
+        },
+        onSubmit: ({ password, close }) => {
+          socketEmit('createRoom', password);
 
-      if (!password) {
-        navigate('..');
-        return;
-      }
-
-      socketEmit('createRoom', password);
-
-      socketOn('roomCreated', (roomName: string) => {
-        navigate(roomName);
-        webRTCData.startWebRTC({ roomName });
+          socketOn('roomCreated', (roomName: string) => {
+            navigate(roomName);
+            webRTCData.startWebRTC({ roomName });
+          });
+        },
       });
     };
 
-    const joinRoom = async () => {};
+    const joinRoom = async () => {
+      let inputCorrectPassword = false;
+      // const {  = await openPasswordPopup({ host: true });
+
+      // while (!inputCorrectPassword) {
+
+      // }
+    };
 
     if (!roomName && state.host) {
       createRoom();

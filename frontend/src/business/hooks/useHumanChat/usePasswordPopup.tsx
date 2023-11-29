@@ -7,25 +7,29 @@ import { randomString } from '@utils/ramdom';
 export default function usePasswordPopup() {
   const { open } = useOverlay();
 
-  const defaultOptions = false;
-
-  const openPasswordPopup = ({ host = defaultOptions }: { host: boolean }) => {
+  const openPasswordPopup = ({
+    host,
+    onSubmit,
+    onClose,
+  }: {
+    host?: boolean;
+    onSubmit?: ({ password, close }: { password: string; close: () => void }) => void;
+    onClose?: () => void;
+  }) => {
     const defaultValue = host ? randomString() : '';
 
-    return new Promise<{ password?: string; close?: () => void }>(resolve =>
-      open(({ close }) => (
-        <PasswordPopup
-          close={() => {
-            close();
-            resolve({});
-          }}
-          onSubmit={password => {
-            resolve({ password, close });
-          }}
-          defaultValue={defaultValue}
-        />
-      )),
-    );
+    open(({ close }) => (
+      <PasswordPopup
+        close={() => {
+          close();
+          onClose?.();
+        }}
+        onSubmit={password => {
+          onSubmit?.({ password, close });
+        }}
+        defaultValue={defaultValue}
+      />
+    ));
   };
 
   return { openPasswordPopup };
