@@ -1,10 +1,17 @@
+import fs from 'fs';
 import { transports } from 'winston';
 import * as DailyRotateFile from 'winston-daily-rotate-file';
 
+const dirname = 'logs';
+
 function createDailyRotateFile(level: string): DailyRotateFile {
+  if (!fs.existsSync(dirname)) {
+    fs.mkdirSync(dirname);
+  }
+
   return new DailyRotateFile({
     level: level,
-    dirname: 'logs',
+    dirname: dirname,
     filename: `${level}-%DATE%.log`,
     datePattern: 'YYYY-MM-DD',
     zippedArchive: true,
