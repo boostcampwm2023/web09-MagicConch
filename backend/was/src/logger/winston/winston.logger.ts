@@ -7,13 +7,19 @@ import {
   warnTransports,
 } from './winston.transports';
 
-const customFormat = format.printf(({ level, message, timestamp }) => {
-  return `${timestamp}\t[${level}] : ${message}`;
+const customFormat = format.printf(({ level, message, timestamp, stack }) => {
+  const logMessage: string = `[WAS]\t${timestamp}\t[${level}] : ${message}`;
+  if (stack) {
+    return `${logMessage}\n${stack}`;
+  }
+  return logMessage;
 });
 
 export const winstonLogger: Logger = createLogger({
   format: format.combine(
     format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+    format.errors({ stack: true }),
+    format.splat(),
     format.colorize(),
     customFormat,
   ),
