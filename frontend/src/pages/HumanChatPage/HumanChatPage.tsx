@@ -34,37 +34,37 @@ export default function HumanChatPage() {
     //  - 맞다면, joinRoom을 하고, navigate를 한다.
     //  - 틀리다면, 다시 password를 물어본다.
 
-    // 2.만약 roomName이 있고, host가 맞다면
-    //  - 알수없는 오류가 발생했다고 알람을 띄우고
-    //  - /로 navigate를 한다.
-
-    // 3.만약 roomName이 없고, host가 맞다면
+    // ✅ 2.만약 roomName이 없고, host가 맞다면
     //  - password를 물어본다.
     //  - 서버와 통신해 password를 보내고, roomName을 받는다.
     //  - 받은 roomName으로 navigate를 한다.
 
-    // 4.만약 roomName이 없고, host가 아니라면
-    //  - 잘못된 경로로 들어왔고, 알람을 띄운다.
-    //  - 그 후 /로 navigate를 한다.
+    // 3.둘다 아니라면
+    //  - 알수없는 오류가 발생했다고 알람을 띄우고
+    //  - /로 navigate를 한다.
 
-    // 3.만약 roomName이 없고, host가 맞다면
     const createRoom = async () => {
-      const password = await openPasswordPopup({ host: true });
+      const { password, close } = await openPasswordPopup({ host: true });
+      close?.();
+
       if (!password) {
         navigate('..');
         return;
       }
 
       socketEmit('createRoom', password);
+
       socketOn('roomCreated', (roomName: string) => {
         navigate(roomName);
         webRTCData.startWebRTC({ roomName });
       });
     };
 
-    // 3.만약 roomName이 없고, host가 맞다면
+    const joinRoom = async () => {};
+
     if (!roomName && state.host) {
       createRoom();
+    } else if (roomName && !state.host) {
     }
 
     return () => {
