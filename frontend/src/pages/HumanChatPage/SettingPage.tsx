@@ -14,12 +14,14 @@ export default function ChattingPage() {
     toggleAudio,
     mediaInfos,
     cameraOptions,
-    // changeCamera,
+    audioOptions,
     changeMyVideoTrack,
+    changeMyAudioTrack,
     getMedia,
   }: OutletContext = useOutletContext();
 
   const camList = cameraOptions.map(({ deviceId, label }) => ({ label, value: deviceId }));
+  const micList = audioOptions.map(({ deviceId, label }) => ({ label, value: deviceId }));
 
   useEffect(() => {
     getMedia({});
@@ -30,8 +32,11 @@ export default function ChattingPage() {
       toggleVideo={toggleVideo}
       toggleAudio={toggleAudio}
       cameraConnected={{ local: mediaInfos.myVideoOn, remote: mediaInfos.remoteVideoOn }}
+      audioConnected={{ local: mediaInfos.myMicOn, remote: mediaInfos.remoteMicOn }}
       changeMyCamera={changeMyVideoTrack}
+      changeMyAudio={changeMyAudioTrack}
       camList={camList}
+      micList={micList}
       videoRef={localVideoRef}
       onConfirm={() => navigate('..')}
     />
