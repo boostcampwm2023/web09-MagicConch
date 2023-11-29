@@ -8,17 +8,19 @@ function Cursor() {
 
     if (cursorRef.current) {
       cursorRef.current.style.left = pageX + 'px';
-      cursorRef.current.style.top = pageY - scrollY + 'px';
+      cursorRef.current.style.top = pageY + 'px';
     }
   };
 
   useEffect(() => {
     addEventListener('scroll', setCursor);
     addEventListener('mousemove', setCursor);
+    addEventListener('touchmove', setCursor);
 
     return () => {
       removeEventListener('scroll', setCursor);
       removeEventListener('mousemove', setCursor);
+      removeEventListener('touchmove', setCursor);
     };
   });
 

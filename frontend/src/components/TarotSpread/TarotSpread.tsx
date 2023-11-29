@@ -22,7 +22,6 @@ const spreadSound = new Audio('/spreadCards.mp3');
 const flipSound = new Audio('/flipCard.mp3');
 
 export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProps) {
-  console.log('TarotSpread TEST');
   const [closing, setClosing] = useState<boolean>(!opened);
   const [dragging, setDragging] = useState<boolean>(false);
   const [pickedId, setPickedId] = useState<number>(0);
@@ -67,10 +66,8 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
   };
 
   const touchTarotSpread = ({ touches }: TouchEvent) => {
-    console.log('제..발..', touches);
     const { pageX: prevPageX, pageY: prevPageY } = prevTouchRef.current;
     const { pageX, pageY } = { pageX: touches.item(0)?.pageX ?? 0, pageY: touches.item(0)?.pageY ?? 0 };
-    console.log('1', prevPageX, prevPageY, pageX, pageY);
     rotateTarotSpread((isPortrait ? prevPageY > pageY : prevPageX < pageX) ? 'right' : 'left');
     prevTouchRef.current = { pageX, pageY };
   };
