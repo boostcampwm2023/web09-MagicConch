@@ -22,6 +22,7 @@ const spreadSound = new Audio('/spreadCards.mp3');
 const flipSound = new Audio('/flipCard.mp3');
 
 export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProps) {
+  console.log('TarotSpread TEST');
   const [closing, setClosing] = useState<boolean>(!opened);
   const [dragging, setDragging] = useState<boolean>(false);
   const [pickedId, setPickedId] = useState<number>(0);
@@ -47,18 +48,17 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
     addEventListener('wheel', rotateSpread);
     addEventListener('animationend', closeWithFadeOut);
     addEventListener('touchmove', touchTarotSpread);
-    addEventListener('touchstart', () => setDragging(true));
-    addEventListener('touchend', () => setDragging(false));
     setTimeout(spreadTarotCards, 10);
 
     return () => {
       removeEventListener('wheel', rotateSpread);
       removeEventListener('animationend', closeWithFadeOut);
       removeEventListener('touchmove', touchTarotSpread);
-      removeEventListener('touchstart', () => setDragging(true));
-      removeEventListener('touchend', () => setDragging(false));
     };
   }, []);
+
+  const startDragging = () => setDragging(true);
+  const endDragging = () => setDragging(false);
 
   const dragTarotSpread = ({ pageX, pageY }: React.MouseEvent<HTMLDivElement>) => {
     const { pageX: prevPageX, pageY: prevPageY } = prevMouseRef.current;
@@ -66,9 +66,11 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
     prevMouseRef.current = { pageX, pageY };
   };
 
-  const touchTarotSpread = ({ touches: { item } }: TouchEvent) => {
+  const touchTarotSpread = ({ touches }: TouchEvent) => {
+    console.log('제..발..', touches);
     const { pageX: prevPageX, pageY: prevPageY } = prevTouchRef.current;
-    const { pageX, pageY } = { pageX: item(0)?.pageX ?? 0, pageY: item(0)?.pageY ?? 0 };
+    const { pageX, pageY } = { pageX: touches.item(0)?.pageX ?? 0, pageY: touches.item(0)?.pageY ?? 0 };
+    console.log('1', prevPageX, prevPageY, pageX, pageY);
     rotateTarotSpread((isPortrait ? prevPageY > pageY : prevPageX < pageX) ? 'right' : 'left');
     prevTouchRef.current = { pageX, pageY };
   };
@@ -79,6 +81,7 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
 
     const rotateIndex = rotationRef.current;
     const nextRotateIndex = direction == 'right' ? rotateIndex + 1 : rotateIndex - 1;
+    console.log('2', nextRotateIndex);
     spread.style.transform = `translateX(-50%) rotate(${nextRotateIndex * 0.8}deg)`;
     rotationRef.current = nextRotateIndex;
   };
@@ -115,21 +118,22 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
 
   const MouseEventHandler = {
     onMouseMove: dragTarotSpread,
-    onMouseDown: () => setDragging(true),
-    onMouseLeave: () => setDragging(false),
-    onMouseUp: () => setDragging(false),
+    onMouseDown: startDragging,
+    onMouseLeave: endDragging,
+    onMouseUp: endDragging,
   };
 
-  // const TouchEventHandler = {
-  //   onTouchStart: () => setDragging(true),
-  //   onTouchEnd: () => setDragging(false),
-  // };
+  const TouchEventHandler = {
+    onTouchStart: startDragging,
+    onTouchEnd: endDragging,
+  };
 
   return (
     <Background type={`${closing ? 'close' : 'open'}`}>
       <div
         ref={tarotSpreadRef}
         {...MouseEventHandler}
+        {...TouchEventHandler}
         className="transition-all ease-out absolute w-220 h-400 sm:w-160 sm:h-270 origin-center top-1150 left-[50%] translate-x-[-50%] sm:top-[35vh] sm:left-1200 md:top-[35vh] md:left-1400"
       >
         {Array.from({ length: TAROT_CARDS_LENGTH }, (_, idx) => idx).map((_, idx: number) => (
