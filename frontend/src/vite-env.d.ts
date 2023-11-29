@@ -8,4 +8,5 @@ interface ImportMetaEnv {
   readonly VITE_WAS_URL: string;
   readonly VITE_BASE_URL: string;
   readonly VITE_HUMAN_SOCKET_URL: string;
+  readonly VITE_BASE_URL_DEV: string;
 }
