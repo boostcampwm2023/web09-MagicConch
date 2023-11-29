@@ -1,3 +1,6 @@
+import { useNavigate } from 'react-router-dom';
+
+import { usePasswordPopup } from './useHumanChat';
 import { useSocket } from './useSocket';
 
 interface useSignalingSocketProps {
@@ -7,11 +10,13 @@ interface useSignalingSocketProps {
 }
 
 export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels }: useSignalingSocketProps) {
-  const { connectSocket, socketEmit, socketOn } = useSocket('WebRTC');
+  const { socketEmit, socketOn } = useSocket('WebRTC');
+
+  const navigate = useNavigate();
+
+  const { openPasswordPopup } = usePasswordPopup();
 
   const initSignalingSocket = ({ roomName }: { roomName: string }) => {
-    connectSocket(import.meta.env.VITE_HUMAN_SOCKET_URL);
-
     socketOn('welcome', (users: { id: string }[]) => {
       if (users.length > 0) {
         createOffer({ roomName });
@@ -41,18 +46,76 @@ export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels 
 
   const createOffer = async ({ roomName }: { roomName: string }) => {
     const sdp = await peerConnectionRef.current?.createOffer();
-    peerConnectionRef.current?.setLocalDescription(sdp);
+    await peerConnectionRef.current?.setLocalDescription(sdp);
     socketEmit('offer', sdp, roomName);
   };
 
   const createAnswer = async ({ roomName, sdp }: { roomName: string; sdp: RTCSessionDescription }) => {
-    peerConnectionRef.current?.setRemoteDescription(sdp);
+    await peerConnectionRef.current?.setRemoteDescription(sdp);
     const answerSdp = await peerConnectionRef.current?.createAnswer();
     peerConnectionRef.current?.setLocalDescription(answerSdp);
     socketEmit('answer', answerSdp, roomName);
   };
 
+  const createRoom = async ({
+    onSuccess,
+  }: {
+    onSuccess?: ({ roomName, password }: { roomName: string; password: string }) => void;
+  }) => {
+    openPasswordPopup({
+      host: true,
+      onClose: () => {
+        navigate('..');
+      },
+      onSubmit: ({ password, close }) => {
+        socketEmit('createRoom', password);
+
+        close();
+
+        socketOn('roomCreated', (roomName: string) => {
+          onSuccess?.({ roomName, password });
+        });
+      },
+    });
+  };
+
+  const joinRoom = async ({
+    roomName,
+    onFull,
+    onFail,
+    onSuccess,
+  }: {
+    roomName: string;
+    onFull?: () => void;
+    onFail?: () => void;
+    onSuccess?: () => void;
+  }) => {
+    openPasswordPopup({
+      onClose: () => {
+        navigate('/');
+      },
+      onSubmit: ({ password, close }) => {
+        socketEmit('joinRoom', roomName, password);
+
+        socketOn('joinRoomFailed', () => {
+          onFail?.();
+        });
+
+        socketOn('roomFull', () => {
+          onFull?.();
+        });
+
+        socketOn('joinRoomSuccess', async () => {
+          close();
+          onSuccess?.();
+        });
+      },
+    });
+  };
+
   return {
     initSignalingSocket,
+    createRoom,
+    joinRoom,
   };
 }

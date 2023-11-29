@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useLocation, useNavigate, useOutletContext, useParams } from 'react-router-dom';
 
 import { IconButton } from '@components/Buttons';
 import CamContainer from '@components/CamContainer';
@@ -7,17 +7,28 @@ import CamContainer from '@components/CamContainer';
 import type { OutletContext } from './HumanChatPage';
 
 export default function ChattingPage() {
-  const navigate = useNavigate();
-
-  const { localVideoRef, remoteVideoRef, toggleVideo, toggleAudio, mediaInfos, getMedia }: OutletContext =
+  const { localVideoRef, remoteVideoRef, toggleVideo, toggleAudio, mediaInfos, startWebRTC, joinRoom }: OutletContext =
     useOutletContext();
 
+  const { roomName } = useParams();
+  const { state } = useLocation();
+  const navigate = useNavigate();
+
   useEffect(() => {
-    // startWebRTC().then(() => {
-    //   console.log('connected');
-    // });
-    // getMedia({});
-    // TODO: 여기 들어오면 소켓을 연결시킴.
+    startWebRTC({ roomName: roomName as string });
+
+    if (roomName && !state?.host) {
+      joinRoom({
+        roomName,
+        onFull: () => {
+          alert('방이 꽉 찼습니다, 첫페이지로 이동합니다.');
+          navigate('/');
+        },
+        onFail: () => {
+          alert('잘못된 링크거나 비밀번호가 틀렸습니다.');
+        },
+      });
+    }
   }, []);
 
   return (
