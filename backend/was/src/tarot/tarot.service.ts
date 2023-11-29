@@ -1,6 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ERR_MSG } from 'src/common/constants/errors';
+import { LoggerService } from 'src/logger/logger.service';
+import { QueryFailedError, Repository } from 'typeorm';
 import { CreateTarotResultDto } from './dto/create-tarot-result.dto';
 import { TarotCardResponseDto } from './dto/tarot-card-response.dto';
 import { TarotResultResponseDto } from './dto/tarot-result-response.dto';
@@ -16,6 +18,7 @@ export class TarotService {
     private readonly tarotCardRepository: Repository<TarotCard>,
     @InjectRepository(TarotResult)
     private readonly tarotResultRepository: Repository<TarotResult>,
+    private readonly logger: LoggerService,
   ) {}
 
   async createTarotResult(
@@ -29,7 +32,17 @@ export class TarotService {
         await this.tarotResultRepository.save(tarotResult);
       return savedResult.id;
     } catch (err: unknown) {
-      throw err;
+      if (err instanceof QueryFailedError) {
+        this.logger.error(
+          `Failed to create tarot result : ${err.message}`,
+          err.stack,
+        );
+        if (err.message.includes('UNIQUE')) {
+          throw new Error(ERR_MSG.NOT_UNIQUE);
+        }
+        throw new Error(ERR_MSG.UNKNOWN_DATABASE);
+      }
+      throw new Error(ERR_MSG.UNKNOWN);
     }
   }
 
@@ -43,7 +56,10 @@ export class TarotService {
         cardPack: undefined,
       });
     if (!tarotCard) {
-      throw new NotFoundException();
+      this.logger.error(
+        `Failed to find tarot card : ${ERR_MSG.TAROT_CARD_NOT_FOUND}`,
+      );
+      throw new NotFoundException(ERR_MSG.TAROT_CARD_NOT_FOUND);
     }
     const cardDto = new TarotCardResponseDto();
     const url: string = `${bucketUrl}/basic/${id}${tarotCard.ext}`;
@@ -55,7 +71,10 @@ export class TarotService {
     const tarotResult: TarotResult | null =
       await this.tarotResultRepository.findOneBy({ id });
     if (!tarotResult) {
-      throw new NotFoundException();
+      this.logger.error(
+        `Failed to find tarot result : ${ERR_MSG.TAROT_RESULT_NOT_FOUND}`,
+      );
+      throw new NotFoundException(ERR_MSG.TAROT_RESULT_NOT_FOUND);
     }
     const resultDto = new TarotResultResponseDto();
     resultDto.cardUrl = tarotResult.cardUrl;
