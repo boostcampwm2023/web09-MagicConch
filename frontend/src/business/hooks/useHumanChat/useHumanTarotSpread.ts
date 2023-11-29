@@ -26,13 +26,14 @@ export default function useHumanTarotSpread(
     if (chatChannel.current) {
       chatChannel.current.addEventListener('message', event => {
         const data = JSON.parse(event.data);
+        console.log(data);
 
         if (data.type === TAROT_SPREAD) {
           setTimeout(openTarotSpread, 1000);
         }
       });
     }
-  }, []);
+  }, [chatChannel.current]);
 
   return { requestTarotSpread };
 }
