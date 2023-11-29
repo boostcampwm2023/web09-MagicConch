@@ -1,4 +1,9 @@
+import { detect } from 'detect-browser';
 import { useEffect, useRef } from 'react';
+
+const browser = detect();
+const __iOS__ = browser?.os?.includes('iOS');
+console.log('test', browser?.os);
 
 function Cursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
@@ -15,20 +20,20 @@ function Cursor() {
   useEffect(() => {
     addEventListener('scroll', setCursor);
     addEventListener('mousemove', setCursor);
-    addEventListener('touchmove', setCursor);
 
     return () => {
       removeEventListener('scroll', setCursor);
       removeEventListener('mousemove', setCursor);
-      removeEventListener('touchmove', setCursor);
     };
   });
 
   return (
-    <div
-      ref={cursorRef}
-      className="cursor"
-    />
+    !__iOS__ && (
+      <div
+        ref={cursorRef}
+        className="cursor"
+      />
+    )
   );
 }
 
