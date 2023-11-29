@@ -155,7 +155,13 @@ export class EventsGateway
         client.chatRoomId,
         createChattingMessageDto,
       );
-    } catch (err) {
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        this.logger.error(
+          `🚀 Failed to save chat log : ${err.message}`,
+          err.stack,
+        );
+      }
       throw new WsException('채팅 로그를 저장하는데 실패했습니다.');
     }
   }
@@ -167,7 +173,13 @@ export class EventsGateway
     try {
       const createTarotResultDto = result2createTarotResultDto(cardIdx, result);
       return await this.tarotService.createTarotResult(createTarotResultDto);
-    } catch (err) {
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        this.logger.error(
+          `🚀 Failed to create share link ID : ${err.message}`,
+          err.stack,
+        );
+      }
       throw new WsException('타로 결과를 저장하는데 실패했습니다.');
     }
   }
