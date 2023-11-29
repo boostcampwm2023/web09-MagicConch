@@ -6,8 +6,8 @@ import { useRTCPeerConnection } from './useRTCPeerConnection';
 import { useSignalingSocket } from './useSignalingSocket';
 import { useSocket } from './useSocket';
 
-export function useWebRTC(roomName: string) {
-  const { socketEmit, disconnectSocket } = useSocket('WebRTC');
+export function useWebRTC() {
+  const { socketEmit, disconnectSocket, isSocketConnected } = useSocket('WebRTC');
 
   const { mediaInfos } = useMediaInfoContext();
   const {
@@ -22,7 +22,6 @@ export function useWebRTC(roomName: string) {
   } = useMedia();
 
   const { peerConnectionRef, makeRTCPeerConnection, closeRTCPeerConnection } = useRTCPeerConnection({
-    roomName,
     remoteVideoRef,
   });
 
@@ -38,33 +37,38 @@ export function useWebRTC(roomName: string) {
     getMedia,
   });
 
-  const negotiationDataChannels = () => {
+  const negotiationDataChannels = ({ roomName }: { roomName: string }) => {
     closeRTCPeerConnection();
     closeDataChannels();
-    makeRTCPeerConnection();
+    makeRTCPeerConnection({ roomName });
     initDataChannels();
     addTracks();
   };
 
   const { initSignalingSocket } = useSignalingSocket({
-    roomName,
     peerConnectionRef,
     negotiationDataChannels,
   });
 
-  const startWebRTC = async () => {
+  const startWebRTC = async ({ roomName, password }: { roomName: string; password: string }) => {
     await getMedia({});
-    initSignalingSocket();
-    makeRTCPeerConnection();
+    initSignalingSocket({ roomName });
+    makeRTCPeerConnection({ roomName });
     initDataChannels();
     addTracks();
-    socketEmit('joinRoom', roomName);
+
+    if (password) {
+    } else {
+      socketEmit('joinRoom', roomName);
+    }
   };
 
   const endWebRTC = () => {
-    closeRTCPeerConnection();
-    closeDataChannels();
-    disconnectSocket();
+    if (isSocketConnected()) {
+      closeRTCPeerConnection();
+      closeDataChannels();
+      disconnectSocket();
+    }
   };
 
   return {

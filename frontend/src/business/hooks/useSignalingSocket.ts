@@ -1,25 +1,25 @@
 import { useSocket } from './useSocket';
 
 interface useSignalingSocketProps {
-  roomName: string;
+  // roomName: string;
   peerConnectionRef: React.MutableRefObject<RTCPeerConnection | undefined>;
-  negotiationDataChannels: () => void;
+  negotiationDataChannels: ({ roomName }: { roomName: string }) => void;
 }
 
-export function useSignalingSocket({ roomName, peerConnectionRef, negotiationDataChannels }: useSignalingSocketProps) {
+export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels }: useSignalingSocketProps) {
   const { connectSocket, socketEmit, socketOn } = useSocket('WebRTC');
 
-  const initSignalingSocket = () => {
+  const initSignalingSocket = ({ roomName }: { roomName: string }) => {
     connectSocket(import.meta.env.VITE_HUMAN_SOCKET_URL);
 
     socketOn('welcome', (users: { id: string }[]) => {
       if (users.length > 0) {
-        createOffer();
+        createOffer({ roomName });
       }
     });
 
     socketOn('offer', (sdp: RTCSessionDescription) => {
-      createAnswer(sdp);
+      createAnswer({ roomName, sdp });
     });
 
     socketOn('answer', async (sdp: RTCSessionDescription) => {
@@ -35,17 +35,17 @@ export function useSignalingSocket({ roomName, peerConnectionRef, negotiationDat
     });
 
     socketOn('userExit', async () => {
-      negotiationDataChannels();
+      negotiationDataChannels({ roomName });
     });
   };
 
-  const createOffer = async () => {
+  const createOffer = async ({ roomName }: { roomName: string }) => {
     const sdp = await peerConnectionRef.current?.createOffer();
     peerConnectionRef.current?.setLocalDescription(sdp);
     socketEmit('offer', sdp, roomName);
   };
 
-  const createAnswer = async (sdp: RTCSessionDescription) => {
+  const createAnswer = async ({ roomName, sdp }: { roomName: string; sdp: RTCSessionDescription }) => {
     peerConnectionRef.current?.setRemoteDescription(sdp);
     const answerSdp = await peerConnectionRef.current?.createAnswer();
     peerConnectionRef.current?.setLocalDescription(answerSdp);

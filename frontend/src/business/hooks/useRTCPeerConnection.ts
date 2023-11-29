@@ -5,16 +5,15 @@ import { iceServers } from '@constants/urls';
 import { useSocket } from './useSocket';
 
 interface useRTCPeerConnectionProps {
-  roomName: string;
   remoteVideoRef: React.RefObject<HTMLVideoElement | undefined>;
 }
 
-export function useRTCPeerConnection({ roomName, remoteVideoRef }: useRTCPeerConnectionProps) {
+export function useRTCPeerConnection({ remoteVideoRef }: useRTCPeerConnectionProps) {
   const peerConnectionRef = useRef<RTCPeerConnection>();
 
   const { socketEmit } = useSocket('WebRTC');
 
-  const makeRTCPeerConnection = async () => {
+  const makeRTCPeerConnection = async ({ roomName }: { roomName: string }) => {
     peerConnectionRef.current = new RTCPeerConnection({ iceServers: [{ urls: iceServers }] });
 
     peerConnectionRef.current.addEventListener('track', e => {
