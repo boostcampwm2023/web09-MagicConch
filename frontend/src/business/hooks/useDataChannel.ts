@@ -20,7 +20,10 @@ export function useDataChannel({ peerConnectionRef }: useDataChannelProps) {
       negotiated: true,
       id: 0,
     });
-    chatChannel.current = peerConnectionRef.current?.createDataChannel('chat');
+    chatChannel.current = peerConnectionRef.current?.createDataChannel('chat', {
+      negotiated: true,
+      id: 1,
+    });
 
     mediaInfoChannel.current?.addEventListener('message', ({ data }) => {
       const mediaInfoArray = JSON.parse(data);
