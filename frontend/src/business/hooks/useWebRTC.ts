@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-
 import { useControllMedia } from './useControllMedia';
 import { useDataChannel } from './useDataChannel';
 import { useMedia } from './useMedia';
@@ -9,7 +7,7 @@ import { useSignalingSocket } from './useSignalingSocket';
 import { useSocket } from './useSocket';
 
 export function useWebRTC(roomName: string) {
-  const { socketEmit } = useSocket('WebRTC');
+  const { socketEmit, disconnectSocket } = useSocket('WebRTC');
 
   const { mediaInfos } = useMediaInfoContext();
   const {
@@ -27,6 +25,7 @@ export function useWebRTC(roomName: string) {
     roomName,
     remoteVideoRef,
   });
+
   const { mediaInfoChannel, chatChannel, initDataChannels, closeDataChannels } = useDataChannel({
     peerConnectionRef,
   });
@@ -53,23 +52,20 @@ export function useWebRTC(roomName: string) {
     negotiationDataChannels,
   });
 
-  useEffect(() => {
-    const initOnMount = async () => {
-      await getMedia({});
-      initSignalingSocket();
-      makeRTCPeerConnection();
-      initDataChannels();
-      addTracks();
-      socketEmit('joinRoom', roomName);
-    };
+  const startWebRTC = async () => {
+    await getMedia({});
+    initSignalingSocket();
+    makeRTCPeerConnection();
+    initDataChannels();
+    addTracks();
+    socketEmit('joinRoom', roomName);
+  };
 
-    initOnMount();
-
-    return () => {
-      closeRTCPeerConnection();
-      closeDataChannels();
-    };
-  }, []);
+  const endWebRTC = () => {
+    closeRTCPeerConnection();
+    closeDataChannels();
+    disconnectSocket();
+  };
 
   return {
     cameraOptions,
@@ -87,5 +83,7 @@ export function useWebRTC(roomName: string) {
     getAudiosOptions,
     getCamerasOptions,
     getMedia,
+    startWebRTC,
+    endWebRTC,
   };
 }
