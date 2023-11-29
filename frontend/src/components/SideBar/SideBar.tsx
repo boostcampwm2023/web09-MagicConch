@@ -1,10 +1,15 @@
-import { PropsWithChildren, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { CustomButton } from '@components/Buttons';
 
 import { Icon } from '@iconify/react';
 
-function SideBar({ children }: PropsWithChildren) {
+interface SideBarProps {
+  onSide?: (showed: boolean) => void;
+  children: React.ReactNode;
+}
+
+function SideBar({ onSide, children }: SideBarProps) {
   const [hidden, setHidden] = useState(true);
   const [opened, setOpened] = useState(false);
   const [animating, setAnimating] = useState(false);
@@ -12,6 +17,8 @@ function SideBar({ children }: PropsWithChildren) {
   const toggleOpened = () => {
     if (!animating) setOpened(!opened);
     if (hidden) setHidden(false);
+
+    onSide?.(!opened);
   };
 
   useEffect(() => {

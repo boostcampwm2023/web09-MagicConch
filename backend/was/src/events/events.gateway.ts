@@ -1,4 +1,3 @@
-import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
   OnGatewayConnection,
@@ -11,13 +10,15 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ChatService, ChattingInfo } from 'src/chat/chat.service';
+import { ERR_MSG } from 'src/common/constants/errors';
+import { LoggerService } from 'src/logger/logger.service';
 import { TarotService } from 'src/tarot/tarot.service';
-import ClovaStudio from './clova-studio';
 import {
   askTarotCardCandidates,
   tarotCardNames,
   welcomeMessage,
-} from './constants';
+} from '../common/constants/events';
+import ClovaStudio from './clova-studio';
 import {
   chatLog2createChattingMessageDtos,
   result2createTarotResultDto,
@@ -37,6 +38,7 @@ export class EventsGateway
     private readonly configService: ConfigService,
     private readonly chatService: ChatService,
     private readonly tarotService: TarotService,
+    private readonly logger: LoggerService,
   ) {
     const X_NCP_APIGW_API_KEY = this.configService.get('X_NCP_APIGW_API_KEY');
     const X_NCP_CLOVASTUDIO_API_KEY = this.configService.get(
@@ -52,18 +54,16 @@ export class EventsGateway
   @WebSocketServer()
   server: Server;
 
-  private readonly logger: Logger = new Logger('EventsGateway');
-
   afterInit(server: Server) {
-    this.logger.log('🚀 웹소켓 서버 초기화');
+    this.logger.info('🚀 웹소켓 서버 초기화');
   }
 
   handleDisconnect(client: Socket) {
-    this.logger.log(`🚀 Client Disconnected : ${client.id}`);
+    this.logger.debug(`🚀 Client Disconnected : ${client.id}`);
   }
 
   handleConnection(client: MySocket, ...args: any[]) {
-    this.logger.log(`🚀 Client Connected : ${client.id}`);
+    this.logger.debug(`🚀 Client Connected : ${client.id}`);
 
     client.chatLog = [];
     this.clovaStudio.initChatLog(client.chatLog);
@@ -77,13 +77,14 @@ export class EventsGateway
 
   @SubscribeMessage('message')
   async handleMessageEvent(client: MySocket, message: string) {
-    this.logger.log(`🚀 Received a message from ${client.id}: ${message}`);
-    if (client.chatEnd) return;
+    this.logger.debug(`🚀 Received a message from ${client.id}`);
 
+    if (client.chatEnd) {
+      return;
+    }
     client.emit('streamStart');
 
     const stream = await this.clovaStudio.createTalk(client.chatLog, message);
-
     if (stream) {
       const sentMessage = await this.streamMessage(client, stream);
 
@@ -98,8 +99,8 @@ export class EventsGateway
 
   @SubscribeMessage('tarotRead')
   async handleTarotReadEvent(client: MySocket, cardIdx: number) {
-    this.logger.log(
-      `🚀 TarotRead request received from ${client.id}: ${cardIdx}번 ${tarotCardNames[cardIdx]}`,
+    this.logger.debug(
+      `🚀 TarotRead request received from ${client.id}: ${cardIdx}번`,
     );
 
     client.emit('streamStart');
@@ -140,7 +141,7 @@ export class EventsGateway
     const onStreaming = (token: string) => client.emit('streaming', token);
     const sentMessage = await readTokenStream(stream, onStreaming);
 
-    this.logger.log(`🚀 Send a message to ${client.id}: ${sentMessage}`);
+    this.logger.debug(`🚀 Send a message to ${client.id}`);
     client.emit('streamEnd');
 
     return sentMessage;
@@ -155,8 +156,14 @@ export class EventsGateway
         client.chatRoomId,
         createChattingMessageDto,
       );
-    } catch (err) {
-      throw new WsException('채팅 로그를 저장하는데 실패했습니다.');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        this.logger.error(
+          `🚀 Failed to save chat log : ${err.message}`,
+          err.stack,
+        );
+      }
+      throw new WsException(ERR_MSG.SAVE_CHATTING_LOG);
     }
   }
 
@@ -167,8 +174,14 @@ export class EventsGateway
     try {
       const createTarotResultDto = result2createTarotResultDto(cardIdx, result);
       return await this.tarotService.createTarotResult(createTarotResultDto);
-    } catch (err) {
-      throw new WsException('타로 결과를 저장하는데 실패했습니다.');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        this.logger.error(
+          `🚀 Failed to create share link ID : ${err.message}`,
+          err.stack,
+        );
+      }
+      throw new WsException(ERR_MSG.SAVE_TAROT_RESULT);
     }
   }
 }
