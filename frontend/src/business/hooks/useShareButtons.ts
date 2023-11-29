@@ -33,7 +33,7 @@ export function useShareButtons({ cardUrl, resultSharePageRef }: useShareButtonP
   };
 
   const copyLink = () => {
-    navigator.clipboard.writeText(`${import.meta.env.VITE_BASE_URL}/result/${id}`);
+    navigator.clipboard.writeText(`${import.meta.env.VITE_BASE_URL_DEV}/result/${id}`);
   };
 
   const shareButtons: Record<string, ShareButton> = {
