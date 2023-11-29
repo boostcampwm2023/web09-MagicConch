@@ -6,7 +6,7 @@ import type { MessageButton } from '@components/ChatContainer';
 
 export function useAiChatMessage(tarotId: number | undefined, setTarotId: (tarotId: number | undefined) => void) {
   const { messages, pushMessage, updateMessage } = useChatMessage();
-  const [inputDisabled, setInputDisabled] = useState(false);
+  const [inputDisabled, setInputDisabled] = useState(true);
   const { socketEmit, socketOn } = useSocket('AIChat');
 
   const addMessage = (type: 'left' | 'right', message: string, button?: MessageButton) => {
