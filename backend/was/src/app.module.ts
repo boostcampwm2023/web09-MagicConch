@@ -9,6 +9,7 @@ import { Member } from 'src/members/entities/member.entity';
 import { MembersModule } from 'src/members/members.module';
 import { MembersService } from 'src/members/members.service';
 import { TarotModule } from 'src/tarot/tarot.module';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { TarotModule } from 'src/tarot/tarot.module';
     TarotModule,
     TypeOrmModule.forFeature([Member]),
     EventsModule,
+    LoggerModule,
   ],
   controllers: [AppController],
   providers: [MembersService],
