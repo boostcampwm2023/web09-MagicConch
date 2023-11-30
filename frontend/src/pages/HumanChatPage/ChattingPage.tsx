@@ -16,7 +16,7 @@ export default function ChattingPage() {
     toggleAudio,
     mediaInfos,
     getMedia,
-    requestTarotSpread,
+    tarotButtonClick,
     tarotButtonDisabled,
   }: OutletContext = useOutletContext();
 
@@ -33,7 +33,7 @@ export default function ChattingPage() {
         toggleAudio={toggleAudio}
         cameraConnected={{ local: mediaInfos.myVideoOn, remote: mediaInfos.remoteVideoOn }}
         audioConnected={{ local: mediaInfos.myMicOn, remote: mediaInfos.remoteMicOn }}
-        requestTarotSpread={requestTarotSpread}
+        tarotButtonClick={tarotButtonClick}
         tarotButtonDisabled={tarotButtonDisabled}
       />
       <div className="absolute top-72 left-25">

@@ -1,5 +1,8 @@
+import useOverlay from '../useOverlay';
 import { useTarotSpread } from '../useTarotSpread';
 import { useEffect, useState } from 'react';
+
+import Popup from '@components/Popup';
 
 import { HumanChatEvents } from '@constants/events';
 
@@ -17,13 +20,26 @@ export default function useHumanTarotSpread(
     setTarotId(idx);
   };
 
+  const { openTarotSpread } = useTarotSpread(pickCard);
+
+  const { open } = useOverlay();
+
+  const tarotButtonClick = () => {
+    open(({ close }) => (
+      <Popup
+        close={close}
+        onConfirm={requestTarotSpread}
+      >
+        상담자에게 타로 카드가 펼쳐집니다.
+      </Popup>
+    ));
+  };
+
   const requestTarotSpread = () => {
     setTarotButtonDisabled(true);
     const payload = { type: TAROT_SPREAD };
     chatChannel.current?.send(JSON.stringify(payload));
   };
-
-  const { openTarotSpread } = useTarotSpread(pickCard);
 
   useEffect(() => {
     if (chatChannel.current) {
@@ -44,5 +60,5 @@ export default function useHumanTarotSpread(
     }
   }, [chatChannel.current]);
 
-  return { requestTarotSpread, tarotButtonDisabled };
+  return { tarotButtonClick, tarotButtonDisabled };
 }

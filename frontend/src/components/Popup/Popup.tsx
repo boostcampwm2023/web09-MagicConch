@@ -26,7 +26,10 @@ export default function Popup({ close, onCancel, onConfirm, children }: PopupPro
           <CustomButton
             size="m"
             color="active"
-            onClick={onConfirm}
+            onClick={() => {
+              close();
+              onConfirm?.();
+            }}
           >
             확인하기
           </CustomButton>
