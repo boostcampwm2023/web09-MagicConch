@@ -43,11 +43,11 @@ export function useShareButtons({ cardUrl, resultSharePageRef }: useShareButtonP
       iconColor: 'kakaoIcon',
       onClick: share2Kakao,
     },
-    download: {
-      text: '다운로드',
-      icon: 'ic:round-download',
-      onClick: download,
-    },
+    // download: {
+    //   text: '다운로드',
+    //   icon: 'ic:round-download',
+    //   onClick: download,
+    // },
     copyLink: {
       text: 'copyLink',
       icon: 'bxs:copy',
