@@ -1,9 +1,7 @@
 import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
-import path from 'path';
 import { v4 } from 'uuid';
-const __dirname = path.resolve();
 
 const app = express();
 
