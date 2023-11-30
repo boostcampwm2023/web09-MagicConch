@@ -11,7 +11,7 @@ export default function useTOLD() {
     open(({ close }) => {
       const interval = setInterval(() => {
         const container = document.querySelector('#told-container');
-        if (container && !container?.innerHTML) {
+        if (container && !container.innerHTML) {
           return;
         }
         close();
