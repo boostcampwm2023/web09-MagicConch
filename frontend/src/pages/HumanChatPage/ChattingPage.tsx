@@ -17,18 +17,24 @@ export default function ChattingPage() {
   useEffect(() => {
     startWebRTC({ roomName: roomName as string });
 
-    if (roomName && !state?.host) {
-      joinRoom({
-        roomName,
-        onFull: () => {
-          alert('방이 꽉 찼습니다, 첫페이지로 이동합니다.');
-          navigate('/');
-        },
-        onFail: () => {
-          alert('잘못된 링크거나 비밀번호가 틀렸습니다.');
-        },
-      });
+    if (!roomName || state?.host) {
+      return;
     }
+
+    joinRoom({
+      roomName,
+      onFull: () => {
+        alert('방이 꽉 찼습니다, 첫페이지로 이동합니다.');
+        navigate('/');
+      },
+      onFail: () => {
+        alert('잘못된 링크거나 비밀번호가 틀렸습니다.');
+      },
+      onHostExit: () => {
+        navigate('/');
+        alert('호스트가 방을 나갔습니다, 첫페이지로 이동합니다.');
+      },
+    });
   }, []);
 
   return (

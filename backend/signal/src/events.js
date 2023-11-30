@@ -16,7 +16,7 @@ export function createRoom(socket, password) {
   socket.join(roomID);
   socket.emit('roomCreated', roomID);
 
-  console.log('room created: ', roomID, password, socketRooms);
+  console.log('room created: ', userID, roomID, password, users);
 }
 
 export function joinRoom(socket, roomID, password) {
@@ -45,23 +45,33 @@ export function joinRoom(socket, roomID, password) {
   socket.to(roomID).emit('welcome', ohterUsers);
 
   socket.emit('joinRoomSuccess', roomID);
+  console.log('joinRoomSuccess', userID, roomID, users);
 }
 
 export function disconnectSocket(socket) {
   const userID = socket.id;
-  const { roomID, role } = users[userID];
+  const user = users[userID];
 
-  if (socketRooms[roomID]) {
-    socketRooms[roomID].users = socketRooms[roomID].users.filter(userID => userID !== socket.id);
+  if (!user) return;
 
-    if (socketRooms[roomID].users.length === 0) {
-      delete socketRooms[roomID];
-      return;
-    }
+  const { roomID, role } = user;
+
+  delete users[userID];
+
+  if (!socketRooms[roomID]) {
+    return;
   }
-  //
-  delete users[roomID];
 
-  socket.to(roomID).emit('userExit', { id: socket.id });
-  console.log('exit user: ', socketRooms, roomID);
+  if (role === 'host') {
+    socket.to(roomID).emit('hostExit');
+    delete socketRooms[roomID];
+
+    console.log('host exit: ', userID, roomID, users);
+  } else if (role === 'guest') {
+    socketRooms[roomID].users = socketRooms[roomID].users.filter(_userID => _userID !== userID);
+
+    socket.to(roomID).emit('userExit', { id: socket.id });
+
+    console.log('exit user: ', userID, roomID, users);
+  }
 }

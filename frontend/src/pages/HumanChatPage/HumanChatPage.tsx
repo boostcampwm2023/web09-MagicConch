@@ -27,13 +27,15 @@ export default function HumanChatPage() {
       connectSocket(import.meta.env.VITE_HUMAN_SOCKET_URL);
     }
 
-    if (!roomName && state?.host) {
-      webRTCData.createRoom({
-        onSuccess: ({ roomName }) => {
-          navigate(roomName, { state: { host: true } });
-        },
-      });
+    if (roomName || !state?.host) {
+      return;
     }
+
+    webRTCData.createRoom({
+      onSuccess: ({ roomName }) => {
+        navigate(roomName, { state: { host: true } });
+      },
+    });
 
     return () => {
       webRTCData.endWebRTC();
