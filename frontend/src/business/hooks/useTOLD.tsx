@@ -18,7 +18,11 @@ export default function useTOLD() {
         clearInterval(interval);
       }, 1000);
 
-      return <span className="loading loading-spinner loading-lg"></span>;
+      return (
+        <div className="w-h-screen flex-with-center">
+          <span className="loading loading-spinner loading-lg"></span>
+        </div>
+      );
     });
   };
 
