@@ -8,10 +8,11 @@ export function createRoom(socket, password) {
   // const roomID = v4();
   // 테스트용으로 roomID를 1로 고정, 완료되면 위의 코드로 변경
   const roomID = '1';
+  const userID = socket.id;
 
-  socketRooms[roomID] = { users: [socket.id], password: password };
+  socketRooms[roomID] = { users: [userID], password: password };
 
-  users[socket.id] = { roomID, role: 'host' };
+  users[userID] = { roomID, role: 'host' };
   socket.join(roomID);
   socket.emit('roomCreated', roomID);
 
@@ -34,18 +35,21 @@ export function joinRoom(socket, roomID, password) {
     return;
   }
 
-  socketRooms[roomID].users.push(socket.id);
-  users[socket.id] = { roomID, role: 'guest' };
+  const userID = socket.id;
+
+  socketRooms[roomID].users.push(userID);
+  users[userID] = { roomID, role: 'guest' };
   socket.join(roomID);
 
-  const ohterUsers = socketRooms[roomID].users.filter(userID => userID !== socket.id);
+  const ohterUsers = socketRooms[roomID].users.filter(_userID => _userID !== userID);
   socket.to(roomID).emit('welcome', ohterUsers);
 
   socket.emit('joinRoomSuccess', roomID);
 }
 
 export function disconnectSocket(socket) {
-  const roomID = users[socket.id];
+  const userID = socket.id;
+  const { roomID, role } = users[userID];
 
   if (socketRooms[roomID]) {
     socketRooms[roomID].users = socketRooms[roomID].users.filter(userID => userID !== socket.id);
@@ -55,6 +59,7 @@ export function disconnectSocket(socket) {
       return;
     }
   }
+  //
   delete users[roomID];
 
   socket.to(roomID).emit('userExit', { id: socket.id });
