@@ -46,8 +46,11 @@ export default function useHumanTarotSpread(
   useEffect(() => {
     if (chatChannel.current) {
       chatChannel.current.addEventListener('open', () => {
-        console.log('chat channel opened');
         setTarotButtonDisabled(false);
+      });
+
+      chatChannel.current.addEventListener('close', () => {
+        setTarotButtonDisabled(true);
       });
 
       chatChannel.current.addEventListener('message', event => {

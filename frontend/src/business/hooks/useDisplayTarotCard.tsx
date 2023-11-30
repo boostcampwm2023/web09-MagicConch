@@ -7,14 +7,16 @@ export default function useDisplayTarotCard() {
 
   const displayTarotCard = (tarotId: number) => {
     open(({ close }) => {
-      setTimeout(close, 3000);
+      setTimeout(close, 5000);
 
       return (
-        <TarotCard
-          width={240}
-          height={400}
-          tarotId={tarotId}
-        />
+        <div className="animate-shining">
+          <TarotCard
+            width={240}
+            height={400}
+            tarotId={tarotId}
+          />
+        </div>
       );
     });
   };
