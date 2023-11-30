@@ -24,7 +24,7 @@ function App() {
           element={<AIChatPage />}
         />
         <Route
-          path="/chat/human/:roomName"
+          path="/chat/human/:roomName?"
           element={
             <MediaInfoProvider>
               <HumanChatPage />
