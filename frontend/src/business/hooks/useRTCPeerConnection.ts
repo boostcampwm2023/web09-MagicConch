@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { iceServers } from '@constants/urls';
 
@@ -10,6 +10,7 @@ interface useRTCPeerConnectionProps {
 
 export function useRTCPeerConnection({ remoteVideoRef }: useRTCPeerConnectionProps) {
   const peerConnectionRef = useRef<RTCPeerConnection>();
+  const peerStreamRef = useRef<MediaStream | null>(null);
 
   const { socketEmit } = useSocket('WebRTC');
 
@@ -22,6 +23,7 @@ export function useRTCPeerConnection({ remoteVideoRef }: useRTCPeerConnectionPro
       }
 
       remoteVideoRef.current.srcObject = e.streams[0];
+      peerStreamRef.current = e.streams[0];
     });
 
     peerConnectionRef.current.addEventListener('icecandidate', e => {
@@ -37,5 +39,17 @@ export function useRTCPeerConnection({ remoteVideoRef }: useRTCPeerConnectionPro
     peerConnectionRef.current?.close();
   };
 
-  return { makeRTCPeerConnection, closeRTCPeerConnection, peerConnectionRef };
+  const isConnectedPeerConnection = () => {
+    return peerConnectionRef.current?.iceConnectionState === 'connected';
+  };
+
+  useEffect(() => {
+    if (!remoteVideoRef.current) {
+      return;
+    }
+
+    remoteVideoRef.current.srcObject = peerStreamRef.current;
+  }, [remoteVideoRef.current]);
+
+  return { makeRTCPeerConnection, closeRTCPeerConnection, peerConnectionRef, isConnectedPeerConnection };
 }

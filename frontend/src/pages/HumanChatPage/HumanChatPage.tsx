@@ -14,7 +14,6 @@ import { useWebRTC } from '@business/hooks/useWebRTC';
 export type OutletContext = ReturnType<typeof useWebRTC>;
 
 export default function HumanChatPage() {
-  // const { disconnectSocket } = useSocket('WebRTC');
   const webRTCData = useWebRTC();
 
   const { roomName } = useParams();

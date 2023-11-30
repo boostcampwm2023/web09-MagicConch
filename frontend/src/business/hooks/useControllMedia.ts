@@ -15,7 +15,13 @@ export function useControllMedia({
   mediaInfoChannel,
   getMedia,
 }: useContorollMediaProps) {
-  const { toggleMyVideo, toggleMyMic, setSelectedAudioID, setSelectedCameraID } = useMediaInfoContext();
+  const {
+    toggleMyVideo,
+    toggleMyMic,
+    setSelectedAudioID,
+    setSelectedCameraID,
+    mediaInfos: { selectedAudioID, selectedCameraID },
+  } = useMediaInfoContext();
 
   const addTracks = () => {
     if (localStreamRef.current === undefined) {
@@ -66,15 +72,19 @@ export function useControllMedia({
     );
   };
 
-  const changeMyVideoTrack = async (id: string) => {
-    setSelectedCameraID(id);
-    await getMedia({ cameraID: id });
+  const changeMyVideoTrack = async (id?: string) => {
+    const cameraID = id || selectedCameraID;
+
+    setSelectedCameraID(cameraID);
+    await getMedia({ cameraID });
     changeVideoTrack();
   };
 
-  const changeMyAudioTrack = async (id: string) => {
-    setSelectedAudioID(id);
-    await getMedia({ audioID: id });
+  const changeMyAudioTrack = async (id?: string) => {
+    const audioID = id || selectedAudioID;
+
+    setSelectedAudioID(audioID);
+    await getMedia({ audioID: audioID });
     changeAudioTrack();
   };
 

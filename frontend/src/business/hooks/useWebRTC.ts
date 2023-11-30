@@ -23,9 +23,10 @@ export function useWebRTC() {
     getCamerasOptions,
   } = useMedia();
 
-  const { peerConnectionRef, makeRTCPeerConnection, closeRTCPeerConnection } = useRTCPeerConnection({
-    remoteVideoRef,
-  });
+  const { peerConnectionRef, makeRTCPeerConnection, closeRTCPeerConnection, isConnectedPeerConnection } =
+    useRTCPeerConnection({
+      remoteVideoRef,
+    });
 
   const { mediaInfoChannel, chatChannel, initDataChannels, closeDataChannels } = useDataChannel({
     peerConnectionRef,
@@ -98,5 +99,6 @@ export function useWebRTC() {
     endWebRTC,
     createRoom,
     joinRoom,
+    isConnectedPeerConnection,
   };
 }

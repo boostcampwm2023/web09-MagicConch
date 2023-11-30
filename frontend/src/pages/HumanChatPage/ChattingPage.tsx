@@ -7,14 +7,27 @@ import CamContainer from '@components/CamContainer';
 import type { OutletContext } from './HumanChatPage';
 
 export default function ChattingPage() {
-  const { localVideoRef, remoteVideoRef, toggleVideo, toggleAudio, mediaInfos, startWebRTC, joinRoom }: OutletContext =
-    useOutletContext();
+  const {
+    localVideoRef,
+    remoteVideoRef,
+    toggleVideo,
+    toggleAudio,
+    mediaInfos,
+    startWebRTC,
+    joinRoom,
+    isConnectedPeerConnection,
+    changeMyVideoTrack,
+  }: OutletContext = useOutletContext();
 
   const { roomName } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (isConnectedPeerConnection()) {
+      changeMyVideoTrack();
+      return;
+    }
     startWebRTC({ roomName: roomName as string });
 
     if (!roomName || state?.host) {
