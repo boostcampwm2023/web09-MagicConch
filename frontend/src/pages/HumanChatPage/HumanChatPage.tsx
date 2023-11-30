@@ -9,36 +9,27 @@ import Header from '@components/Header';
 import SideBar from '@components/SideBar';
 
 import { useHumanChatMessage, useHumanTarotSpread } from '@business/hooks/useHumanChat';
-import { useSocket } from '@business/hooks/useSocket';
 import { useWebRTC } from '@business/hooks/useWebRTC';
 
 export type OutletContext = ReturnType<typeof useWebRTC>;
 
 export default function HumanChatPage() {
-  const { connectSocket, disconnectSocket, isSocketConnected } = useSocket('WebRTC');
   const webRTCData = useWebRTC();
 
   const { roomName } = useParams();
-  const { state } = useLocation();
+  const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isSocketConnected()) {
-      connectSocket(import.meta.env.VITE_HUMAN_SOCKET_URL);
+    if (roomName || !location.state?.host) {
+      return;
     }
 
-    if (!roomName && state?.host) {
-      webRTCData.createRoom({
-        onSuccess: ({ roomName }) => {
-          navigate(roomName, { state: { host: true } });
-        },
-      });
-    }
-
-    return () => {
-      webRTCData.endWebRTC();
-      disconnectSocket();
-    };
+    webRTCData.createRoom({
+      onSuccess: ({ roomName }) => {
+        navigate(roomName, { state: { host: true } });
+      },
+    });
   }, []);
 
   const [tarotId, setTarotId] = useState<number>();
