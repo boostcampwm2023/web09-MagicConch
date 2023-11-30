@@ -26,11 +26,11 @@ export default function ChattingPage() {
         cameraConnected={{ local: mediaInfos.myVideoOn, remote: mediaInfos.remoteVideoOn }}
         audioConnected={{ local: mediaInfos.myMicOn, remote: mediaInfos.remoteMicOn }}
       />
-      <div className="absolute top-72 left-25">
+      <div className="absolute top-[10vh] right-90">
         <IconButton
           icon="uil:setting"
           iconColor="textWhite"
-          iconSize={36}
+          iconSize={30}
           buttonSize="m"
           buttonColor="cancel"
           circle

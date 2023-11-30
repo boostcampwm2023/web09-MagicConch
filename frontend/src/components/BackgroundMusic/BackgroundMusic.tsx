@@ -19,7 +19,7 @@ function BackgroundMusic() {
   };
 
   return (
-    <div className="h-50 w-50 overflow-hidden fixed top-[10vh] right-[5vw]">
+    <div className="h-50 w-50 overflow-hidden fixed top-[10vh] right-25">
       <div className="absolute top-0 left-0">
         <CustomButton
           color={playing ? 'active' : 'cancel'}
