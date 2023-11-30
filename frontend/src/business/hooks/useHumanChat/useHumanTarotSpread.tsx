@@ -1,3 +1,4 @@
+import useDisplayTarotCard from '../useDisplayTarotCard';
 import useOverlay from '../useOverlay';
 import { useTarotSpread } from '../useTarotSpread';
 import { useEffect, useState } from 'react';
@@ -21,6 +22,7 @@ export default function useHumanTarotSpread(
   };
 
   const { openTarotSpread } = useTarotSpread(pickCard);
+  const { displayTarotCard } = useDisplayTarotCard();
 
   const { open } = useOverlay();
 
@@ -44,17 +46,19 @@ export default function useHumanTarotSpread(
   useEffect(() => {
     if (chatChannel.current) {
       chatChannel.current.addEventListener('open', () => {
+        console.log('chat channel opened');
         setTarotButtonDisabled(false);
       });
 
       chatChannel.current.addEventListener('message', event => {
-        const data = JSON.parse(event.data);
+        const message = JSON.parse(event.data);
 
-        if (data.type === TAROT_SPREAD) {
+        if (message.type === TAROT_SPREAD) {
           setTimeout(openTarotSpread, 1000);
         }
-        if (data.type === PICK_CARD) {
+        if (message.type === PICK_CARD) {
           setTimeout(() => setTarotButtonDisabled(false), 5000);
+          displayTarotCard(message.content);
         }
       });
     }
