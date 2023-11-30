@@ -48,7 +48,7 @@ export default function CamContainer({
           disabledIcon="mingcute:mic-off-line"
           iconSize={28}
           buttonSize="l"
-          active={cameraConnected.local}
+          active={audioConnected.local}
           onClick={toggleAudio}
         />
       </div>

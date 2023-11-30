@@ -33,7 +33,7 @@ export default function CustomSelect({ width, options, autoFocus, onChange }: Cu
 
   return (
     <div className="relative">
-      <div className={`absolute collapse ${width ?? 'w-300'} min-h-48 bg-white border border-gray-300`}>
+      <div className={`collapse ${width ?? 'w-300'} min-h-48 bg-white border border-gray-300`}>
         <input
           title={selected.label}
           ref={inputRef}
@@ -50,7 +50,7 @@ export default function CustomSelect({ width, options, autoFocus, onChange }: Cu
           />
         </div>
         <div
-          className={`collapse-content w-full max-h-130 overflow-auto`}
+          className={`collapse-content w-full max-h-130 overflow-auto z-1000`}
           autoFocus={autoFocus}
         >
           {options.map(({ value, label }) => (
