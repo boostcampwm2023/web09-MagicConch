@@ -53,7 +53,7 @@ function MessageBox({ tarotId, type, message, profile, button, shareLinkId }: Me
           {button && (
             <div
               id="TOLD"
-              className="relative left-70 w-80"
+              className="relative left-70"
             >
               <CustomButton
                 size="s"
