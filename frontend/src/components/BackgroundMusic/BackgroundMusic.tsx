@@ -23,7 +23,6 @@ function BackgroundMusic() {
       <div className="absolute top-0 left-0">
         <CustomButton
           color={playing ? 'active' : 'cancel'}
-          size="l"
           circle
         >
           <Icon

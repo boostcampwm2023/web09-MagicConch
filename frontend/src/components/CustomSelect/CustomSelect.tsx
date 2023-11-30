@@ -50,7 +50,7 @@ export default function CustomSelect({ width, options, autoFocus, onChange }: Cu
           />
         </div>
         <div
-          className={`collapse-content w-full max-h-130 overflow-auto z-1000`}
+          className={`collapse-content w-full max-h-130 overflow-auto`}
           autoFocus={autoFocus}
         >
           {options.map(({ value, label }) => (

@@ -70,16 +70,20 @@ export default function ProfileSetting({
               placeholder="닉네임을 입력하세요."
             />
           </div>
-          <DeviceSelect
-            name="카메라"
-            deviceList={camList}
-            onChange={changeMyCamera}
-          />
-          <DeviceSelect
-            name="마이크"
-            deviceList={micList}
-            onChange={changeMyAudio}
-          />
+          <div className="z-20">
+            <DeviceSelect
+              name="카메라"
+              deviceList={camList}
+              onChange={changeMyCamera}
+            />
+          </div>
+          <div className="z-10">
+            <DeviceSelect
+              name="마이크"
+              deviceList={micList}
+              onChange={changeMyAudio}
+            />
+          </div>
           <CustomButton
             onClick={onConfirm}
             color="dark"
