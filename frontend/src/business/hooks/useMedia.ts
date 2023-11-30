@@ -4,7 +4,7 @@ import { useMediaInfoContext } from './useMediaInfoContext';
 
 export function useMedia() {
   const {
-    mediaInfos: { selectedAudioID, selectedCameraID },
+    mediaInfos: { selectedAudioID, selectedCameraID, myMicOn, myVideoOn },
   } = useMediaInfoContext();
 
   const [cameraOptions, setCameraOptions] = useState<MediaDeviceInfo[]>([]);
@@ -40,9 +40,12 @@ export function useMedia() {
       default: { facingMode: 'user', width: 320, height: 320 },
     };
 
+    const audioOption = _audioID ? audioOptions.withAudioId : audioOptions.default;
+    const videoOption = _cameraID ? videoOptions.withCameraId : videoOptions.default;
+
     const stream = await navigator.mediaDevices.getUserMedia({
-      audio: _audioID ? audioOptions.withAudioId : audioOptions.default,
-      video: _cameraID ? videoOptions.withCameraId : videoOptions.default,
+      audio: myMicOn ? audioOption : false,
+      video: myVideoOn ? videoOption : false,
     });
 
     if (localVideoRef.current) {
