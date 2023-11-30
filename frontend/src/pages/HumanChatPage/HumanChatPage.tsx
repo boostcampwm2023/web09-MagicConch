@@ -9,7 +9,6 @@ import Header from '@components/Header';
 import SideBar from '@components/SideBar';
 
 import { useHumanChatMessage, useHumanTarotSpread } from '@business/hooks/useHumanChat';
-import { useSocket } from '@business/hooks/useSocket';
 import { useWebRTC } from '@business/hooks/useWebRTC';
 
 export type OutletContext = ReturnType<typeof useWebRTC>;
