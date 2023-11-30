@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 import { useControllMedia } from './useControllMedia';
 import { useDataChannel } from './useDataChannel';
 import { useMedia } from './useMedia';
@@ -7,7 +9,7 @@ import { useSignalingSocket } from './useSignalingSocket';
 import { useSocket } from './useSocket';
 
 export function useWebRTC() {
-  const { isSocketConnected } = useSocket('WebRTC');
+  const { isSocketConnected, disconnectSocket, connectSocket } = useSocket('WebRTC');
 
   const { mediaInfos } = useMediaInfoContext();
   const {
@@ -64,6 +66,17 @@ export function useWebRTC() {
       closeDataChannels();
     }
   };
+
+  useEffect(() => {
+    if (!isSocketConnected()) {
+      connectSocket(import.meta.env.VITE_HUMAN_SOCKET_URL);
+    }
+
+    return () => {
+      endWebRTC();
+      disconnectSocket();
+    };
+  }, []);
 
   return {
     cameraOptions,

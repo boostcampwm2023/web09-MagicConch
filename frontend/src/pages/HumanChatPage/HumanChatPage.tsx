@@ -15,19 +15,15 @@ import { useWebRTC } from '@business/hooks/useWebRTC';
 export type OutletContext = ReturnType<typeof useWebRTC>;
 
 export default function HumanChatPage() {
-  const { connectSocket, disconnectSocket, isSocketConnected } = useSocket('WebRTC');
+  // const { disconnectSocket } = useSocket('WebRTC');
   const webRTCData = useWebRTC();
 
   const { roomName } = useParams();
-  const { state } = useLocation();
+  const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isSocketConnected()) {
-      connectSocket(import.meta.env.VITE_HUMAN_SOCKET_URL);
-    }
-
-    if (roomName || !state?.host) {
+    if (roomName || !location.state?.host) {
       return;
     }
 
@@ -36,11 +32,6 @@ export default function HumanChatPage() {
         navigate(roomName, { state: { host: true } });
       },
     });
-
-    return () => {
-      webRTCData.endWebRTC();
-      disconnectSocket();
-    };
   }, []);
 
   const [tarotId, setTarotId] = useState<number>();
