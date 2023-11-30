@@ -14,6 +14,7 @@ interface SocketTypesMap {
       | 'candidate'
       | 'roomFull'
       | 'userExit'
+      | 'hostExit'
       | 'roomCreated'
       | 'joinRoomFailed'
       | 'joinRoomSuccess'
