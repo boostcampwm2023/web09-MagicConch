@@ -64,7 +64,7 @@ export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels 
   }) => {
     openPasswordPopup({
       host: true,
-      onClose: () => {
+      onCancel: () => {
         navigate('..');
       },
       onSubmit: ({ password, close }) => {
@@ -93,7 +93,7 @@ export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels 
     onHostExit?: () => void;
   }) => {
     openPasswordPopup({
-      onClose: () => {
+      onCancel: () => {
         navigate('/');
       },
       onSubmit: ({ password, close }) => {

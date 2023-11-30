@@ -17,6 +17,8 @@ export default function ChattingPage() {
     joinRoom,
     isConnectedPeerConnection,
     changeMyVideoTrack,
+    tarotButtonClick,
+    tarotButtonDisabled,
   }: OutletContext = useOutletContext();
 
   const { roomName } = useParams();
@@ -59,6 +61,8 @@ export default function ChattingPage() {
         toggleAudio={toggleAudio}
         cameraConnected={{ local: mediaInfos.myVideoOn, remote: mediaInfos.remoteVideoOn }}
         audioConnected={{ local: mediaInfos.myMicOn, remote: mediaInfos.remoteMicOn }}
+        tarotButtonClick={tarotButtonClick}
+        tarotButtonDisabled={tarotButtonDisabled}
       />
       <div className="absolute top-72 left-25">
         <IconButton

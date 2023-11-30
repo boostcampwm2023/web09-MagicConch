@@ -27,7 +27,7 @@ function ChatList({ messages }: ChatListProps) {
             className={`flex ${message && 'mb-40'} ${type == 'right' && 'justify-end'}`}
           >
             <MessageBox
-              tarotId={index == 0 ? undefined : tarotId}
+              tarotId={tarotId}
               type={type}
               message={message}
               profile={profile}
