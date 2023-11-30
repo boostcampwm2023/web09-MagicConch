@@ -69,7 +69,6 @@ export class EventsGateway
     socket.emit('roomCreated', roomId);
 
     this.logger.debug(`🚀 Room Created : ${roomId}`);
-    this.logger.debug(this.socketRooms);
   }
 
   @SubscribeMessage('joinRoom')
@@ -107,19 +106,28 @@ export class EventsGateway
   }
 
   @SubscribeMessage('offer')
-  handleOfferEvent(socket: Socket, [sdp, roomName]: [any, string]) {
+  handleOfferEvent(
+    socket: Socket,
+    [sdp, roomName]: [RTCSessionDescription, string],
+  ) {
     this.logger.debug(`🚀 Offer Received from ${socket.id}`);
     socket.to(roomName).emit('offer', sdp);
   }
 
   @SubscribeMessage('answer')
-  handleAnswerEvent(socket: Socket, [sdp, roomName]: [any, string]) {
+  handleAnswerEvent(
+    socket: Socket,
+    [sdp, roomName]: [RTCSessionDescription, string],
+  ) {
     this.logger.debug(`🚀 Answer Received from ${socket.id}`);
     socket.to(roomName).emit('answer', sdp);
   }
 
   @SubscribeMessage('candidate')
-  handleCandidateEvent(socket: Socket, [candidate, roomName]: [any, string]) {
+  handleCandidateEvent(
+    socket: Socket,
+    [candidate, roomName]: [RTCIceCandidate, string],
+  ) {
     this.logger.debug(`🚀 Candidate Received from ${socket.id}`);
     socket.to(roomName).emit('candidate', candidate);
   }
