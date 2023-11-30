@@ -39,7 +39,9 @@ export function joinRoom(socket, roomID, password) {
   users[userID] = { roomID, role: 'guest' };
   socket.join(roomID);
 
-  const ohterUsers = socketRooms[roomID].users.filter(_userID => _userID !== userID);
+  const ohterUsers = socketRooms[roomID].users.filter(
+    (_userID) => _userID !== userID,
+  );
   socket.to(roomID).emit('welcome', ohterUsers);
 
   socket.emit('joinRoomSuccess', roomID);
@@ -66,7 +68,9 @@ export function disconnectSocket(socket) {
 
     console.log('host exit: ', userID, roomID, users);
   } else if (role === 'guest') {
-    socketRooms[roomID].users = socketRooms[roomID].users.filter(_userID => _userID !== userID);
+    socketRooms[roomID].users = socketRooms[roomID].users.filter(
+      (_userID) => _userID !== userID,
+    );
 
     socket.to(roomID).emit('userExit', { id: socket.id });
 
