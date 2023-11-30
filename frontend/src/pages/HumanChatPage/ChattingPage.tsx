@@ -17,6 +17,7 @@ export default function ChattingPage() {
     mediaInfos,
     getMedia,
     requestTarotSpread,
+    tarotButtonDisabled,
   }: OutletContext = useOutletContext();
 
   useEffect(() => {
@@ -33,6 +34,7 @@ export default function ChattingPage() {
         cameraConnected={{ local: mediaInfos.myVideoOn, remote: mediaInfos.remoteVideoOn }}
         audioConnected={{ local: mediaInfos.myMicOn, remote: mediaInfos.remoteMicOn }}
         requestTarotSpread={requestTarotSpread}
+        tarotButtonDisabled={tarotButtonDisabled}
       />
       <div className="absolute top-72 left-25">
         <IconButton

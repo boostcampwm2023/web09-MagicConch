@@ -12,6 +12,7 @@ import { useWebRTC } from '@business/hooks/useWebRTC';
 
 export interface OutletContext extends ReturnType<typeof useWebRTC> {
   requestTarotSpread: () => void;
+  tarotButtonDisabled: boolean;
 }
 
 export default function HumanChatPage() {
@@ -20,7 +21,7 @@ export default function HumanChatPage() {
 
   const [tarotId, setTarotId] = useState<number>();
 
-  const { requestTarotSpread } = useHumanTarotSpread(webRTCData.chatChannel, setTarotId);
+  const { requestTarotSpread, tarotButtonDisabled } = useHumanTarotSpread(webRTCData.chatChannel, setTarotId);
   const { messages, onSubmitMessage, inputDisabled } = useHumanChatMessage(webRTCData.chatChannel, tarotId, setTarotId);
 
   const [contentAnimation, setContentAnimation] = useState<string>('');
@@ -54,7 +55,7 @@ export default function HumanChatPage() {
       />
       <div className="w-h-screen">
         <div className={`flex-with-center h-full ${contentAnimation}`}>
-          <Outlet context={{ ...webRTCData, requestTarotSpread }} />
+          <Outlet context={{ ...webRTCData, requestTarotSpread, tarotButtonDisabled }} />
         </div>
       </div>
     </Background>

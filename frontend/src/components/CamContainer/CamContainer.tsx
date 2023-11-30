@@ -11,6 +11,7 @@ interface CamContainerProps {
   cameraConnected: { local: boolean; remote: boolean };
   audioConnected: { local: boolean; remote: boolean };
   requestTarotSpread: () => void;
+  tarotButtonDisabled: boolean;
 }
 
 export default function CamContainer({
@@ -21,6 +22,7 @@ export default function CamContainer({
   cameraConnected,
   audioConnected,
   requestTarotSpread,
+  tarotButtonDisabled,
 }: CamContainerProps) {
   return (
     <div className="flex-with-center flex-col gap-80 pt-80">
@@ -42,6 +44,8 @@ export default function CamContainer({
         <CustomButton
           size="m"
           onClick={requestTarotSpread}
+          disabled={tarotButtonDisabled}
+          color={tarotButtonDisabled ? 'disabled' : 'active'}
         >
           <Icon
             width="17"

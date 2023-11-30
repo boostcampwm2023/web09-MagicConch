@@ -1,5 +1,5 @@
 import { useTarotSpread } from '../useTarotSpread';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { HumanChatEvents } from '@constants/events';
 
@@ -9,6 +9,8 @@ export default function useHumanTarotSpread(
   chatChannel: React.MutableRefObject<RTCDataChannel | undefined>,
   setTarotId: (idx: number) => void,
 ) {
+  const [tarotButtonDisabled, setTarotButtonDisabled] = useState(true);
+
   const pickCard = (idx: number) => {
     const payload = { type: PICK_CARD, content: idx };
     chatChannel.current?.send(JSON.stringify(payload));
@@ -16,6 +18,7 @@ export default function useHumanTarotSpread(
   };
 
   const requestTarotSpread = () => {
+    setTarotButtonDisabled(true);
     const payload = { type: TAROT_SPREAD };
     chatChannel.current?.send(JSON.stringify(payload));
   };
@@ -24,15 +27,22 @@ export default function useHumanTarotSpread(
 
   useEffect(() => {
     if (chatChannel.current) {
+      chatChannel.current.addEventListener('open', () => {
+        setTarotButtonDisabled(false);
+      });
+
       chatChannel.current.addEventListener('message', event => {
         const data = JSON.parse(event.data);
 
         if (data.type === TAROT_SPREAD) {
           setTimeout(openTarotSpread, 1000);
         }
+        if (data.type === PICK_CARD) {
+          setTimeout(() => setTarotButtonDisabled(false), 5000);
+        }
       });
     }
   }, [chatChannel.current]);
 
-  return { requestTarotSpread };
+  return { requestTarotSpread, tarotButtonDisabled };
 }
