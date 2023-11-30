@@ -15,8 +15,6 @@ services:
       - SECRET_KEY=${SECRET_KEY}
       - X_NCP_CLOVASTUDIO_API_KEY=${X_NCP_CLOVASTUDIO_API_KEY}
       - X_NCP_APIGW_API_KEY=${X_NCP_APIGW_API_KEY}
-    extra_hosts:
-      - "host.docker.internal:172.17.0.1"
     expose:
       - "3000"
 

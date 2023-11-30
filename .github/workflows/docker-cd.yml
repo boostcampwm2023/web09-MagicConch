@@ -2,7 +2,7 @@ name: Dockerized CD
 
 on:
   push:
-    branches: ["dev"]
+    branches: ["dev", "BE/feature/#273-시그널-서버-배포-스크립트-작성"]
 
 jobs:
   build:
@@ -107,5 +107,5 @@ jobs:
             while [ -z "$(docker ps -qaf "name=was")" ]; do
               sleep 5
             done
-            sleep 60
+            sleep 30
             rm .env
