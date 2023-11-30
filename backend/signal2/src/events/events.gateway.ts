@@ -28,8 +28,8 @@ export class EventsGateway
   @WebSocketServer()
   server: Server;
 
-  private socketRooms = {};
-  private users = {};
+  private socketRooms: any = {};
+  private users: any = {};
 
   afterInit(server: Server) {
     this.logger.info('🚀 시그널링 서버 초기화');
@@ -44,23 +44,22 @@ export class EventsGateway
 
     const roomId: string = this.users[socket.id];
     if (this.socketRooms[roomId]) {
-      this.socketRooms[roomId].users = this.socketRooms[roomId].filter(
+      this.socketRooms[roomId].users = this.socketRooms[roomId].users.filter(
         (userId: string) => userId !== socket.id,
       );
       if (this.socketRooms[roomId].users.length === 0) {
         delete this.socketRooms[roomId];
-        this.logger.debug( `🚀 Room Deleted : ${roomId}`);
+        this.logger.debug(`🚀 Room Deleted : ${roomId}`);
         return;
       }
     }
     delete this.users[roomId];
 
     socket.to(roomId).emit('userExit', { id: socket.id });
-    this.logger.debug( `🚀 User Exit from ${roomId}`);
+    this.logger.debug(`🚀 User Exit from ${roomId}`);
   }
 
-
-  @SubscribeMessage('createRoom') 
+  @SubscribeMessage('createRoom')
   handleCreateRoomEvent(socket: Socket, password: string) {
     const roomId: string = v4();
     this.socketRooms[roomId] = { users: [socket.id], password: password };
@@ -70,25 +69,29 @@ export class EventsGateway
     socket.emit('roomCreated', roomId);
 
     this.logger.debug(`🚀 Room Created : ${roomId}`);
+    this.logger.debug(this.socketRooms);
   }
 
   @SubscribeMessage('joinRoom')
-  handleJoinRoomEvent(socket: Socket, roomId: string, password: string) {
-    const existRoom = this.socketRooms[roomId];
-    const wrongPassword = this.socketRooms[roomId].password !== password;
-    
+  handleJoinRoomEvent(socket: Socket, [roomId, password]: [string, string]) {
+    const existRoom: any = this.socketRooms[roomId];
+    const wrongPassword: boolean =
+      this.socketRooms[roomId].password !== password;
+
     if (!existRoom || wrongPassword) {
       socket.emit('joinRoomFailed');
-      const logMessage: string = (existRoom) ? `🚀 Invalid Room : ${roomId}` : `🚀 Wrong Password for ${roomId}`;
+      const logMessage: string = existRoom
+        ? `🚀 Invalid Room : ${roomId}`
+        : `🚀 Wrong Password for ${roomId}`;
       this.logger.debug(logMessage);
       return;
     }
 
-    const fullRoom = this.socketRooms[roomId].users.length === MAXIMUM;
-    if(fullRoom) {
+    const fullRoom: boolean = this.socketRooms[roomId].users.length === MAXIMUM;
+    if (fullRoom) {
       this.logger.debug(`🚀 Cannot Join to full room ${roomId}`);
-        socket.emit('roomFull');
-        return;
+      socket.emit('roomFull');
+      return;
     }
 
     this.socketRooms[roomId].users.push(socket.id);
@@ -96,7 +99,7 @@ export class EventsGateway
     socket.join(roomId);
     this.logger.debug(`🚀 Join to room ${roomId}`);
 
-    const otherUsers = this.socketRooms[roomId].filter(
+    const otherUsers = this.socketRooms[roomId].users.filter(
       (userId: string) => userId !== socket.id,
     );
     socket.to(roomId).emit('welcome', otherUsers);
@@ -104,19 +107,19 @@ export class EventsGateway
   }
 
   @SubscribeMessage('offer')
-  handleOfferEvent(socket: Socket, sdp, roomName: string) {
+  handleOfferEvent(socket: Socket, [sdp, roomName]: [any, string]) {
     this.logger.debug(`🚀 Offer Received from ${socket.id}`);
     socket.to(roomName).emit('offer', sdp);
   }
 
   @SubscribeMessage('answer')
-  handleAnswerEvent(socket: Socket, sdp, roomName: string) {
+  handleAnswerEvent(socket: Socket, [sdp, roomName]: [any, string]) {
     this.logger.debug(`🚀 Answer Received from ${socket.id}`);
     socket.to(roomName).emit('answer', sdp);
   }
 
   @SubscribeMessage('candidate')
-  handleCandidateEvent(socket: Socket, candidate, roomName: string) {
+  handleCandidateEvent(socket: Socket, [candidate, roomName]: [any, string]) {
     this.logger.debug(`🚀 Candidate Received from ${socket.id}`);
     socket.to(roomName).emit('candidate', candidate);
   }
