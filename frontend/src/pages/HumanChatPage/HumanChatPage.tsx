@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 
 import Background from '@components/Background';
@@ -16,8 +17,23 @@ export interface OutletContext extends ReturnType<typeof useWebRTC> {
 }
 
 export default function HumanChatPage() {
+  const webRTCData = useWebRTC();
+
   const { roomName } = useParams();
-  const webRTCData = useWebRTC(roomName as string);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (roomName || !location.state?.host) {
+      return;
+    }
+
+    webRTCData.createRoom({
+      onSuccess: ({ roomName }) => {
+        navigate(roomName, { state: { host: true } });
+      },
+    });
+  }, []);
 
   const [tarotId, setTarotId] = useState<number>();
 

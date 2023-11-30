@@ -33,7 +33,7 @@ export function useShareButtons({ cardUrl, resultSharePageRef }: useShareButtonP
   };
 
   const copyLink = () => {
-    navigator.clipboard.writeText(`${import.meta.env.VITE_BASE_URL}/result/${id}`);
+    navigator.clipboard.writeText(`${import.meta.env.VITE_BASE_URL_DEV}/result/${id}`);
   };
 
   const shareButtons: Record<string, ShareButton> = {
@@ -43,11 +43,11 @@ export function useShareButtons({ cardUrl, resultSharePageRef }: useShareButtonP
       iconColor: 'kakaoIcon',
       onClick: share2Kakao,
     },
-    download: {
-      text: '다운로드',
-      icon: 'ic:round-download',
-      onClick: download,
-    },
+    // download: {
+    //   text: '다운로드',
+    //   icon: 'ic:round-download',
+    //   onClick: download,
+    // },
     copyLink: {
       text: 'copyLink',
       icon: 'bxs:copy',
