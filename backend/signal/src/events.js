@@ -5,9 +5,7 @@ const users = {};
 const MAXIMUM = 2;
 
 export function createRoom(socket, password) {
-  // const roomID = v4();
-  // 테스트용으로 roomID를 1로 고정, 완료되면 위의 코드로 변경
-  const roomID = '1';
+  const roomID = v4();
   const userID = socket.id;
 
   socketRooms[roomID] = { users: [userID], password: password };
