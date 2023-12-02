@@ -64,11 +64,11 @@ export default function ChattingPage() {
         tarotButtonClick={tarotButtonClick}
         tarotButtonDisabled={tarotButtonDisabled}
       />
-      <div className="absolute top-72 left-25">
+      <div className="absolute top-[10vh] right-90">
         <IconButton
           icon="uil:setting"
           iconColor="textWhite"
-          iconSize={36}
+          iconSize={30}
           buttonSize="m"
           buttonColor="cancel"
           circle

@@ -33,7 +33,7 @@ export default function ProfileSetting({
   return (
     <div className="w-[100vw] h-[100vh] flex-with-center">
       <div className="flex gap-48 rounded-lg p-64 surface-box">
-        <div className="flex flex-col gap-24">
+        <div className="flex flex-col justify-between">
           <CamBox
             videoRef={videoRef}
             cameraConnected={cameraConnected.local}
@@ -47,7 +47,7 @@ export default function ProfileSetting({
             toggleAudio={toggleAudio}
           />
         </div>
-        <div className="flex flex-col gap-24">
+        <div className="flex flex-col gap-20">
           <div className="flex-with-center gap-12">
             <div className="flex flex-col gap-4 w-240">
               <span className="text-strong display-bold14">프로필 이미지를 설정하세요.</span>
@@ -70,16 +70,20 @@ export default function ProfileSetting({
               placeholder="닉네임을 입력하세요."
             />
           </div>
-          <DeviceSelect
-            name="카메라"
-            deviceList={camList}
-            onChange={changeMyCamera}
-          />
-          <DeviceSelect
-            name="마이크"
-            deviceList={micList}
-            onChange={changeMyAudio}
-          />
+          <div className="z-20">
+            <DeviceSelect
+              name="카메라"
+              deviceList={camList}
+              onChange={changeMyCamera}
+            />
+          </div>
+          <div className="z-10">
+            <DeviceSelect
+              name="마이크"
+              deviceList={micList}
+              onChange={changeMyAudio}
+            />
+          </div>
           <CustomButton
             onClick={onConfirm}
             color="dark"

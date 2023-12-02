@@ -158,7 +158,8 @@ export default {
     },
     ({ addComponents }) => {
       const shadowTheme = {
-        '.shadow-chat': { boxShadow: '0px 0px 8px 8px rgba(255, 255, 255, 0.10);' },
+        '.shadow-point': { boxShadow: '0px 0px 15px 15px rgba(120, 144, 231, 0.4);' },
+        '.shadow-white': { boxShadow: '0px 0px 10px 10px rgba(255, 255, 255, 0.15);' },
         '.shadow-popup': { boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)' },
       };
       addComponents(shadowTheme);

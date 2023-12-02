@@ -33,7 +33,7 @@ export default function CustomSelect({ width, options, autoFocus, onChange }: Cu
 
   return (
     <div className="relative">
-      <div className={`absolute collapse ${width ?? 'w-300'} min-h-48 bg-white border border-gray-300`}>
+      <div className={`collapse ${width ?? 'w-300'} min-h-48 bg-white border border-gray-300`}>
         <input
           title={selected.label}
           ref={inputRef}
@@ -41,16 +41,16 @@ export default function CustomSelect({ width, options, autoFocus, onChange }: Cu
           className="min-h-48"
           onClick={() => setOpened(!opened)}
         />
-        <div className="collapse-title w-full leading-48 min-h-48 focus:outline-none flex justify-between py-0 px-15">
+        <div className="relative collapse-title w-full leading-48 min-h-48 focus:outline-none  py-0 px-15">
           {selected.label}
           <Icon
             icon="teenyicons:down-solid"
-            className="h-48 transition-transform"
+            className="h-48 transition-transform absolute top-0 right-15"
             transform={`${opened ? 'rotate(180)' : 'rotate(0)'}`}
           />
         </div>
         <div
-          className={`collapse-content w-full`}
+          className={`collapse-content w-full max-h-130 overflow-auto`}
           autoFocus={autoFocus}
         >
           {options.map(({ value, label }) => (
