@@ -44,7 +44,7 @@ export const FindByDecorator = (
 ) => {
   return applyDecorators(
     ApiOperation({ summary: getSummary(summary) }),
-    ApiParam({ type: param.type, name: param.name }),
+    ApiParam(param),
     ApiOkResponse({
       description: getResponseDescription(ok.description),
       type: ok.type,
@@ -69,7 +69,7 @@ export const UpdateByIdDecorator = (
 ) => {
   return applyDecorators(
     ApiOperation({ summary: getSummary(summary) }),
-    ApiParam({ type: param.type, name: param.name }),
+    ApiParam(param),
     ApiBody({ type: body }),
     ApiOkResponse({
       description: getResponseDescription(ok.description),
@@ -94,7 +94,7 @@ export const DeleteByIdDecorator = (
 ) => {
   return applyDecorators(
     ApiOperation({ summary: getSummary(summary) }),
-    ApiParam({ type: param.type, name: param.name }),
+    ApiParam(param),
     ApiOkResponse({
       description: getResponseDescription(ok.description),
       type: ok.type,
