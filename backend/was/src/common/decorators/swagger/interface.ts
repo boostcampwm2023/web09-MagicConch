@@ -1,6 +1,6 @@
 import { CrudOperation } from 'src/common/constants/apis';
 
-export interface Summary {
+export interface OperationSummary {
   target: string;
   operation: CrudOperation;
 }
@@ -10,17 +10,17 @@ export interface Param {
   name: string;
 }
 
-export interface Result {
+export interface CrudResult {
   operation: CrudOperation;
-  result: string;
+  succeed: boolean;
 }
 
 export interface Description {
   target: string;
-  result: Result;
+  result: CrudResult;
 }
 
-export interface Response {
+export interface SwaggerResponse {
   description: Description | string;
   type?: any;
 }

@@ -9,12 +9,18 @@ import {
   ApiParam,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { Description, Param, Response, Result, Summary } from './interface';
+import {
+  CrudResult,
+  Description,
+  OperationSummary,
+  Param,
+  SwaggerResponse,
+} from './interface';
 
 export const FindByWithoutParamDecorator = (
-  summary: Summary,
-  ok: Response,
-  unauth: Response,
+  summary: OperationSummary,
+  ok: SwaggerResponse,
+  unauth: SwaggerResponse,
 ) => {
   return applyDecorators(
     ApiOperation({ summary: getSummary(summary) }),
@@ -31,10 +37,10 @@ export const FindByWithoutParamDecorator = (
 
 export const FindByDecorator = (
   param: Param,
-  summary: Summary,
-  ok: Response,
-  unauth: Response,
-  notfound: Response,
+  summary: OperationSummary,
+  ok: SwaggerResponse,
+  unauth: SwaggerResponse,
+  notfound: SwaggerResponse,
 ) => {
   return applyDecorators(
     ApiOperation({ summary: getSummary(summary) }),
@@ -56,10 +62,10 @@ export const FindByDecorator = (
 export const UpdateByIdDecorator = (
   param: Param,
   body: any,
-  summary: Summary,
-  ok: Response,
-  forbidden: Response,
-  notfound: Response,
+  summary: OperationSummary,
+  ok: SwaggerResponse,
+  forbidden: SwaggerResponse,
+  notfound: SwaggerResponse,
 ) => {
   return applyDecorators(
     ApiOperation({ summary: getSummary(summary) }),
@@ -81,10 +87,10 @@ export const UpdateByIdDecorator = (
 
 export const DeleteByIdDecorator = (
   param: Param,
-  summary: Summary,
-  ok: Response,
-  forbidden: Response,
-  notfound: Response,
+  summary: OperationSummary,
+  ok: SwaggerResponse,
+  forbidden: SwaggerResponse,
+  notfound: SwaggerResponse,
 ) => {
   return applyDecorators(
     ApiOperation({ summary: getSummary(summary) }),
@@ -103,12 +109,12 @@ export const DeleteByIdDecorator = (
   );
 };
 
-function getSummary(summary: Summary): string {
+function getSummary(summary: OperationSummary): string {
   return `${summary.target} ${summary.operation} API`;
 }
 
-function getResult(result: Result): string {
-  return `${result.operation} ${result.result}`;
+function getCrudResult(result: CrudResult): string {
+  return `${result.operation} ${result.succeed ? '성공' : '실패'}`;
 }
 
 function getResponseDescription(
@@ -116,5 +122,7 @@ function getResponseDescription(
 ): string {
   return typeof responseDescription === 'string'
     ? responseDescription
-    : `${responseDescription.target} ${getResult(responseDescription.result)}`;
+    : `${responseDescription.target} ${getCrudResult(
+        responseDescription.result,
+      )}`;
 }

@@ -5,7 +5,7 @@ import {
   FindByWithoutParamDecorator,
   UpdateByIdDecorator,
 } from '../decorator';
-import { Description, Param, Result } from '../interface';
+import { CrudResult, Description, Param } from '../interface';
 import {
   createDescription,
   createErrorResponse,
@@ -64,7 +64,7 @@ function createOkResponse(
   crud: CrudOperation,
   returnType?: any,
 ) {
-  const okResult: Result = createResult(crud, '성공');
+  const okResult: CrudResult = createResult(crud, true);
   const okDescription: Description = createDescription(target, okResult);
   if (!returnType) {
     return createErrorResponse(okDescription);

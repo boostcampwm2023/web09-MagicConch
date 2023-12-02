@@ -1,16 +1,16 @@
 import { CrudOperation } from 'src/common/constants/apis';
 import {
+  CrudResult,
   Description,
+  OperationSummary,
   Param,
-  Response,
-  Result,
-  Summary,
+  SwaggerResponse,
 } from 'src/common/decorators/swagger/interface';
 
 export function createSummary(
   target: string,
   operation: CrudOperation,
-): Summary {
+): OperationSummary {
   return { target, operation };
 }
 
@@ -18,17 +18,23 @@ export function createParam(type: string, name: string): Param {
   return { type, name };
 }
 
-export function createResult(operation: CrudOperation, result: string): Result {
-  return { operation, result };
+export function createResult(
+  operation: CrudOperation,
+  succeed: boolean,
+): CrudResult {
+  return { operation, succeed };
 }
 
-export function createDescription(target: string, result: Result): Description {
+export function createDescription(
+  target: string,
+  result: CrudResult,
+): Description {
   return { target, result };
 }
 
 export function createErrorResponse(
   description: Description | string,
   type?: any,
-): Response {
+): SwaggerResponse {
   return { description, type };
 }
