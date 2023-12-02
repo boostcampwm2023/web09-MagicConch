@@ -74,11 +74,15 @@ export default {
           '0%': { transform: 'rotateY(0deg)' },
           '100%': { transform: 'rotateY(180deg)' },
         },
+        rotatingConch: {
+          '0%': { transform: 'rotate(0deg) translateY(-65vh)' },
+          '100%': { transform: 'rotate(360deg) translateY(-65vh)' },
+        },
       },
       animation: {
         shining: 'shining 2s ease-in-out infinite alternate',
-        fadeIn: 'fadeIn 1.5s ease-in-out',
-        fadeOut: 'fadeOut 2.5s ease-in-out forwards',
+        fadeIn: 'fadeIn 2s ease-in-out forwards',
+        fadeOut: 'fadeOut 2s ease-in-out forwards',
         tarotHovering: 'tarotHovering 0.5s ease-in-out forwards',
         tarotLeaving: 'tarotLeaving 0.3s ease-in-out forwards',
         openingSidebar: 'openingSidebar 0.5s ease-in-out forwards',
@@ -87,6 +91,7 @@ export default {
         contentSideWithClosingSidebar: 'contentSideWithClosingSidebar 0.5s ease-in-out forwards',
         flappingCard: 'flappingCard 1s ease-in-out forwards infinite alternate',
         flippingCard: 'flippingCard 1s ease-in-out forwards',
+        rotatingConch: 'rotatingConch 2s ease-in-out',
       },
       backgroundImage: {
         ddung: "url('/ddung.png')",
