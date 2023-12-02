@@ -51,7 +51,7 @@ function Background({ children, type = 'default' }: BackgroundProps) {
         />
 
         <button
-          className={`absolute -bottom-[20%] -translate-y-[65vh] hover:scale-105 transition-transform
+          className={`absolute -bottom-[20%] -translate-y-[65vh] lg:hover:scale-105 transition-transform
           ${conchAnimation && 'animate-rotatingConch'}`}
           onClick={toggleTheme}
         >
