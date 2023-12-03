@@ -22,15 +22,15 @@ export function createFindByDecorator(
     return FindByDecorator(
       param,
       createSummary(target, CRUD.SELECT),
-      createOkResponse(target, CRUD.SELECT, returnType),
-      createErrorResponse(API_MSG.UNAUTH),
-      createErrorResponse(`존재하지 않는 ${target}`),
+      create200Response(target, CRUD.SELECT, returnType),
+      create403Response(),
+      create404Response(target),
     );
   }
   return FindByWithoutParamDecorator(
     createSummary(target, CRUD.SELECT),
-    createOkResponse(target, CRUD.SELECT, returnType),
-    createErrorResponse(API_MSG.UNAUTH),
+    create200Response(target, CRUD.SELECT, returnType),
+    create403Response(),
   );
 }
 
@@ -43,9 +43,9 @@ export function createUpdateByDecorator(
     param,
     body,
     createSummary(target, CRUD.UPDATE),
-    createOkResponse(target, CRUD.UPDATE),
-    createErrorResponse(API_MSG.FORBIDDEN),
-    createErrorResponse(`존재하지 않는 ${target}`),
+    create200Response(target, CRUD.UPDATE),
+    create403Response(),
+    create404Response(target),
   );
 }
 
@@ -53,13 +53,13 @@ export function createDeleteByDecorator(target: string, param: Param) {
   return DeleteByIdDecorator(
     param,
     createSummary(target, CRUD.DELETE),
-    createOkResponse(target, CRUD.DELETE),
-    createErrorResponse(API_MSG.FORBIDDEN),
-    createErrorResponse(`존재하지 않는 ${target}`),
+    create200Response(target, CRUD.DELETE),
+    create403Response(),
+    create404Response(target),
   );
 }
 
-function createOkResponse(
+function create200Response(
   target: string,
   crud: CrudOperation,
   returnType?: any,
@@ -70,4 +70,12 @@ function createOkResponse(
     return createErrorResponse(okDescription);
   }
   return createErrorResponse(okDescription, returnType);
+}
+
+function create403Response() {
+  return createErrorResponse(API_MSG.FORBIDDEN);
+}
+
+function create404Response(target: string) {
+  return createErrorResponse(`존재하지 않는 ${target}`);
 }
