@@ -20,7 +20,7 @@ import {
   welcomeMessage,
 } from '../common/constants/events';
 import ClovaStudio from './clova-studio';
-import { chatLog2createChattingMessageDtos } from './create-dto-helper';
+import { createChattingMessageDtos } from './create-dto-helper';
 import { readTokenStream, string2TokenStream } from './stream';
 import type { MySocket } from './type';
 
@@ -147,7 +147,8 @@ export class EventsGateway
 
   private async saveChatLog(client: MySocket) {
     try {
-      const createChattingMessageDto = chatLog2createChattingMessageDtos(
+      const createChattingMessageDto = createChattingMessageDtos(
+        client.chatRoomId,
         client.chatLog,
       );
       this.chatService.createMessage(

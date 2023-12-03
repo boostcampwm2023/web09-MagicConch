@@ -1,24 +1,29 @@
 import { CreateChattingMessageDto } from 'src/chat/dto/create-chatting-message.dto';
-import type { Chat } from './type';
+import type { Chat, Message } from './type';
 
-export function chatLog2createChattingMessageDtos(
+export function createChattingMessageDtos(
+  roomId: string,
   chatLog: Chat[],
 ): CreateChattingMessageDto[] {
-  const parsingMessage: CreateChattingMessageDto[] = chatLog
-    .map(chat2MessageDTO)
+  const messages: Message[] = chatLog.map((chat: Chat): Message => {
+    return {
+      roomId: roomId,
+      chat: chat,
+    };
+  });
+  const parsingMessage: CreateChattingMessageDto[] = messages
+    .map(createChattingMessageDto)
     .filter(isCreateChattingMessageDto);
-
   return parsingMessage.slice(0, -2).concat(parsingMessage.slice(-1));
 }
 
-function chat2MessageDTO(message: Chat): CreateChattingMessageDto | undefined {
-  if (message.role === 'system') {
+function createChattingMessageDto(
+  message: Message,
+): CreateChattingMessageDto | undefined {
+  if (message.chat.role === 'system') {
     return undefined;
   }
-  const messageDto: CreateChattingMessageDto = new CreateChattingMessageDto();
-  messageDto.isHost = message.role === 'assistant';
-  messageDto.message = message.content;
-  return messageDto;
+  return CreateChattingMessageDto.fromMessage(message);
 }
 
 function isCreateChattingMessageDto(
