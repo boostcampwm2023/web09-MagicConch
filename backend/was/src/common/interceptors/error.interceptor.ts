@@ -46,6 +46,9 @@ export class ErrorsInterceptor implements NestInterceptor {
     if (err.message.includes('UNIQUE')) {
       return new Error(ERR_MSG.NOT_UNIQUE);
     }
+    if (err.message.includes('FOREIGN KEY')) {
+      throw new Error(ERR_MSG.INVALID_FOREIGN_KEY);
+    }
     if (err.message.includes('optimistic lock')) {
       throw new Error(ERR_MSG.OPTIMISTIC_LOCK);
     }
