@@ -1,16 +1,5 @@
 import { CreateChattingMessageDto } from 'src/chat/dto/create-chatting-message.dto';
-import { CreateTarotResultDto } from 'src/tarot/dto/create-tarot-result.dto';
 import type { Chat } from './type';
-
-const bucketUrl: string = 'https://kr.object.ncloudstorage.com/magicconch';
-
-export function result2createTarotResultDto(cardIdx: number, result: string) {
-  const createTarotResultDto = new CreateTarotResultDto();
-  createTarotResultDto.cardUrl = `${bucketUrl}/basic/${cardIdx}.jpg`;
-  createTarotResultDto.message = result;
-
-  return createTarotResultDto;
-}
 
 export function chatLog2createChattingMessageDtos(
   chatLog: Chat[],
@@ -23,14 +12,12 @@ export function chatLog2createChattingMessageDtos(
 }
 
 function chat2MessageDTO(message: Chat): CreateChattingMessageDto | undefined {
-  const messageDto = new CreateChattingMessageDto();
-
   if (message.role === 'system') {
     return undefined;
   }
+  const messageDto: CreateChattingMessageDto = new CreateChattingMessageDto();
   messageDto.isHost = message.role === 'assistant';
   messageDto.message = message.content;
-
   return messageDto;
 }
 
