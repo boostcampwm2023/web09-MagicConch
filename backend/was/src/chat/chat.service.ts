@@ -5,9 +5,8 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ERR_MSG } from 'src/common/constants/errors';
-import { LoggerService } from 'src/logger/logger.service';
 import { Member } from 'src/members/entities/member.entity';
-import { QueryFailedError, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { ChattingMessageResponseDto } from './dto/chatting-messag-response.dto';
 import { ChattingRoomResponseDto } from './dto/chatting-room-response.dto';
 import { CreateChattingMessageDto } from './dto/create-chatting-message.dto';
@@ -29,7 +28,6 @@ export class ChatService {
     private readonly chattingMessageRepository: Repository<ChattingMessage>,
     @InjectRepository(Member)
     private readonly membersRepository: Repository<Member>,
-    private readonly logger: LoggerService,
   ) {}
 
   async createRoom(memberId: string): Promise<ChattingInfo> {
@@ -54,17 +52,7 @@ export class ChatService {
         await this.chattingRoomRepository.save(room);
       return { memeberId: savedMember.id, roomId: savedRoom.id };
     } catch (err: unknown) {
-      if (err instanceof QueryFailedError) {
-        this.logger.error(
-          `Failed to create chatting room : ${err.message}`,
-          err.stack,
-        );
-        if (err.message.includes('UNIQUE')) {
-          throw new Error(ERR_MSG.NOT_UNIQUE);
-        }
-        throw new Error(ERR_MSG.UNKNOWN_DATABASE);
-      }
-      throw new Error(ERR_MSG.UNKNOWN);
+      throw err;
     }
   }
 
@@ -77,9 +65,6 @@ export class ChatService {
         id: roomId,
       });
     if (!room) {
-      this.logger.error(
-        `Failed to create chatting message : ${ERR_MSG.CHATTING_ROOM_NOT_FOUND}`,
-      );
       throw new NotFoundException(ERR_MSG.CHATTING_ROOM_NOT_FOUND);
     }
     try {
@@ -93,17 +78,7 @@ export class ChatService {
         },
       );
     } catch (err: unknown) {
-      if (err instanceof QueryFailedError) {
-        this.logger.error(
-          `Failed to create chatting message : ${err.message}`,
-          err.stack,
-        );
-        if (err.message.includes('UNIQUE')) {
-          throw new Error(ERR_MSG.NOT_UNIQUE);
-        }
-        throw new Error(ERR_MSG.UNKNOWN_DATABASE);
-      }
-      throw new Error(ERR_MSG.UNKNOWN);
+      throw err;
     }
   }
 
@@ -139,15 +114,9 @@ export class ChatService {
     const room: ChattingRoom | null =
       await this.chattingRoomRepository.findOneBy({ id });
     if (!room) {
-      this.logger.error(
-        `Failed to update chatting room : ${ERR_MSG.CHATTING_ROOM_NOT_FOUND}`,
-      );
       throw new NotFoundException(ERR_MSG.CHATTING_ROOM_NOT_FOUND);
     }
     if (room.participant.id !== memberId) {
-      this.logger.error(
-        `Failed to update chatting room : ${ERR_MSG.DELETE_CHATTING_ROOM_FORBIDDEN}`,
-      );
       throw new ForbiddenException(ERR_MSG.UPDATE_CHATTING_ROOM_FORBIDDEN);
     }
     try {
@@ -156,17 +125,7 @@ export class ChatService {
         { title: updateChattingRoomDto.title },
       );
     } catch (err: unknown) {
-      if (err instanceof QueryFailedError) {
-        this.logger.error(
-          `Failed to update chatting room : ${err.message}`,
-          err.stack,
-        );
-        if (err.message.includes('FOREIGN KEY')) {
-          throw new Error(ERR_MSG.INVALID_FOREIGN_KEY);
-        }
-        throw new Error(ERR_MSG.UNKNOWN_DATABASE);
-      }
-      throw new Error(ERR_MSG.UNKNOWN);
+      throw err;
     }
   }
 
@@ -174,31 +133,15 @@ export class ChatService {
     const room: ChattingRoom | null =
       await this.chattingRoomRepository.findOneBy({ id });
     if (!room) {
-      this.logger.error(
-        `Failed to delete chatting room : ${ERR_MSG.CHATTING_ROOM_NOT_FOUND}`,
-      );
       throw new NotFoundException(ERR_MSG.CHATTING_ROOM_NOT_FOUND);
     }
     if (room.participant.id !== memberId) {
-      this.logger.error(
-        `Failed to delete chatting room : ${ERR_MSG.DELETE_CHATTING_ROOM_FORBIDDEN}`,
-      );
       throw new ForbiddenException(ERR_MSG.DELETE_CHATTING_ROOM_FORBIDDEN);
     }
     try {
       await this.chattingRoomRepository.softDelete({ id });
     } catch (err: unknown) {
-      if (err instanceof QueryFailedError) {
-        this.logger.error(
-          `Failed to delete chatting room : ${err.message}`,
-          err.stack,
-        );
-        if (err.message.includes('optimistic lock')) {
-          throw new Error(ERR_MSG.OPTIMISTIC_LOCK);
-        }
-        throw new Error(ERR_MSG.UNKNOWN_DATABASE);
-      }
-      throw new Error(ERR_MSG.UNKNOWN);
+      throw err;
     }
   }
 }
