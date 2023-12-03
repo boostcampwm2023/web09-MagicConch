@@ -11,8 +11,8 @@ export const FindRoomsDecorator = (target: string, returnType: any) => {
 
 export const FindMessagesDecorator = (
   target: string,
-  returnType: any,
   param: Param,
+  returnType: any,
 ) => {
   return createFindByDecorator(target, returnType, param);
 };

@@ -20,10 +20,11 @@ export class TarotController {
   constructor(private readonly tarotService: TarotService) {}
 
   @Get('card/:id')
-  @FindTarotCardDecorator('타로 카드 이미지', TarotCardResponseDto, {
-    type: 'integer',
-    name: 'id',
-  })
+  @FindTarotCardDecorator(
+    '타로 카드 이미지',
+    { type: 'integer', name: 'id' },
+    TarotCardResponseDto,
+  )
   async findTarotCardById(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<TarotCardResponseDto> {
@@ -31,10 +32,11 @@ export class TarotController {
   }
 
   @Get('result/:id')
-  @FindTarotResultDecorator('타로 결과', TarotResultResponseDto, {
-    type: 'uuid',
-    name: 'id',
-  })
+  @FindTarotResultDecorator(
+    '타로 결과',
+    { type: 'uuid', name: 'id' },
+    TarotResultResponseDto,
+  )
   async findTarotResultById(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<TarotResultResponseDto> {

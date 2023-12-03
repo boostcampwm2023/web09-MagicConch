@@ -36,10 +36,9 @@ export class ChatController {
   }
 
   @Get('ai/:id')
-  @FindMessagesDecorator('채팅 메시지', [ChattingMessageResponseDto], {
-    type: 'uuid',
-    name: 'id',
-  })
+  @FindMessagesDecorator('채팅 메시지', { type: 'uuid', name: 'id' }, [
+    ChattingMessageResponseDto,
+  ])
   async findMessages(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<ChattingMessageResponseDto[]> {

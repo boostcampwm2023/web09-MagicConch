@@ -3,16 +3,16 @@ import { Param } from './interface';
 
 export const FindTarotCardDecorator = (
   target: string,
-  returnType: any,
   param: Param,
+  returnType: any,
 ) => {
   return createFindByDecorator(target, returnType, param);
 };
 
 export const FindTarotResultDecorator = (
   target: string,
-  returnType: any,
   param: Param,
+  returnType: any,
 ) => {
   return createFindByDecorator(target, returnType, param);
 };
