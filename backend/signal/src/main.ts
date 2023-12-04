@@ -1,3 +1,4 @@
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { LoggerService } from './logger/logger.service';
@@ -13,9 +14,9 @@ async function bootstrap() {
     credentials: true,
   });
 
-  /**
-   * TODO : 추후 동적으로 포트번호 설정하도록 수정
-   */
-  await app.listen(3001);
+  const configService: ConfigService = app.get(ConfigService);
+  const wasPort: number = configService.get<number>('WAS_PORT') || 3000;
+  const port: number = wasPort + 1;
+  await app.listen(port);
 }
 bootstrap();
