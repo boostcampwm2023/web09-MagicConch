@@ -7,8 +7,20 @@ interface SocketTypesMap {
     EmitEventName: 'message' | 'tarotRead' | 'tarotRead';
   };
   WebRTC: {
-    OnEventName: 'welcome' | 'offer' | 'answer' | 'candidate' | 'roomFull' | 'userExit';
-    EmitEventName: 'offer' | 'answer' | 'candidate' | 'joinRoom';
+    OnEventName:
+      | 'welcome'
+      | 'offer'
+      | 'answer'
+      | 'candidate'
+      | 'roomFull'
+      | 'userExit'
+      | 'hostExit'
+      | 'roomCreated'
+      | 'joinRoomFailed'
+      | 'joinRoomSuccess'
+      | 'createRoomFailed'
+      | 'createRoomSuccess';
+    EmitEventName: 'offer' | 'answer' | 'candidate' | 'joinRoom' | 'createRoom';
   };
 }
 
@@ -20,7 +32,7 @@ type SocketType = keyof SocketTypesMap;
 
 const sockets = {} as Record<SocketType, Socket>;
 
-export function useSocket<T extends SocketType>(socketType: T) {
+export function useSocket<T extends SocketType>(socketType: T, path?: string) {
   const navigate = useNavigate();
 
   const ConnectSocketDefaultOptions = {
@@ -34,7 +46,7 @@ export function useSocket<T extends SocketType>(socketType: T) {
       }
       sockets[socketType].disconnect();
     }
-    sockets[socketType] = io(url);
+    sockets[socketType] = io(url, { path });
   }
 
   function disconnectSocket() {
@@ -61,5 +73,9 @@ export function useSocket<T extends SocketType>(socketType: T) {
     sockets[socketType].emit(eventName, ...eventArgs);
   }
 
-  return { connectSocket, disconnectSocket, socketOn, socketEmit };
+  function isSocketConnected() {
+    return Boolean(sockets[socketType]);
+  }
+
+  return { connectSocket, disconnectSocket, socketOn, socketEmit, isSocketConnected };
 }

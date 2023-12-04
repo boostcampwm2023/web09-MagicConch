@@ -1,5 +1,9 @@
 import useChatMessage from '../useChatMessage';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+
+import { HumanChatEvents } from '@constants/events';
+
+const { PICK_CARD, CHAT_MESSAGE } = HumanChatEvents;
 
 export default function useHumanChatMessage(
   chatChannel: React.MutableRefObject<RTCDataChannel | undefined>,
@@ -7,6 +11,7 @@ export default function useHumanChatMessage(
   setTarotId: (tarotId: number | undefined) => void,
 ) {
   const { messages, pushMessage } = useChatMessage();
+  const [inputDisabled, setInputDisabled] = useState(true);
 
   const addMessage = (type: 'left' | 'right', message: string) => {
     // TODO: host인지에 따라서 프로필 사진을 다르게 해야함
@@ -17,23 +22,30 @@ export default function useHumanChatMessage(
   const onSubmitMessage = (message: string) => {
     addMessage('right', message);
 
-    const payload = { type: 'message', message };
+    const payload = { type: CHAT_MESSAGE, content: message };
     chatChannel.current?.send(JSON.stringify(payload));
   };
 
   useEffect(() => {
     if (chatChannel.current) {
-      chatChannel.current.onmessage = (event: MessageEvent) => {
-        const data = JSON.parse(event.data);
+      chatChannel.current.addEventListener('open', () => {
+        setInputDisabled(false);
+      });
 
-        if (data.type === 'message') {
-          addMessage('left', data.message);
-        }
+      chatChannel.current.addEventListener('close', () => {
+        setInputDisabled(true);
+      });
 
-        if (data.type == 'pickCard') {
-          pushMessage({ type: 'right', profile: '/sponge.png', tarotId: data.tarotId });
+      chatChannel.current.addEventListener('message', event => {
+        const message = JSON.parse(event.data);
+
+        if (message.type === CHAT_MESSAGE) {
+          addMessage('left', message.content);
         }
-      };
+        if (message.type == PICK_CARD) {
+          pushMessage({ type: 'right', profile: '/sponge.png', tarotId: message.content });
+        }
+      });
     }
   }, [chatChannel.current]);
 
@@ -45,5 +57,5 @@ export default function useHumanChatMessage(
     }
   }, [tarotId]);
 
-  return { messages, onSubmitMessage };
+  return { messages, onSubmitMessage, inputDisabled };
 }

@@ -16,7 +16,7 @@ function MessageBox({ tarotId, type, message, profile, button, shareLinkId }: Me
 
   return (
     <div className="relative max-w-[70%] sm:max-w-[85%]">
-      <div className="relative left-75">
+      <div className={`relative ${type === 'left' ? 'left-75' : 'right-75'}`}>
         {tarotId && (
           <img
             className="w-120 h-200 min-w-120 rounded-lg"

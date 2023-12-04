@@ -1,13 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ERR_MSG } from 'src/common/constants/errors';
 import { Repository } from 'typeorm';
 import { CreateTarotResultDto } from './dto/create-tarot-result.dto';
 import { TarotCardResponseDto } from './dto/tarot-card-response.dto';
 import { TarotResultResponseDto } from './dto/tarot-result-response.dto';
 import { TarotCard } from './entities/tarot-card.entity';
 import { TarotResult } from './entities/tarot-result.entity';
-
-const bucketUrl = 'https://kr.object.ncloudstorage.com/magicconch';
 
 @Injectable()
 export class TarotService {
@@ -43,23 +42,17 @@ export class TarotService {
         cardPack: undefined,
       });
     if (!tarotCard) {
-      throw new NotFoundException();
+      throw new NotFoundException(ERR_MSG.TAROT_CARD_NOT_FOUND);
     }
-    const cardDto = new TarotCardResponseDto();
-    const url: string = `${bucketUrl}/basic/${id}${tarotCard.ext}`;
-    cardDto.cardUrl = url;
-    return cardDto;
+    return TarotCardResponseDto.fromEntity(tarotCard);
   }
 
   async findTarotResultById(id: string): Promise<TarotResultResponseDto> {
     const tarotResult: TarotResult | null =
       await this.tarotResultRepository.findOneBy({ id });
     if (!tarotResult) {
-      throw new NotFoundException();
+      throw new NotFoundException(ERR_MSG.TAROT_RESULT_NOT_FOUND);
     }
-    const resultDto = new TarotResultResponseDto();
-    resultDto.cardUrl = tarotResult.cardUrl;
-    resultDto.message = tarotResult.message;
-    return resultDto;
+    return TarotResultResponseDto.fromEntity(tarotResult);
   }
 }

@@ -5,7 +5,7 @@ import {
   talkSystemMessage,
   tarotMaxTokens,
   tarotReadingSystemMessage,
-} from './constants';
+} from '../common/constants/events';
 import { convertClovaEventStream2TokenStream } from './stream';
 import type { Chat } from './type';
 

@@ -4,9 +4,10 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ERR_MSG } from 'src/common/constants/errors';
 import { Member } from 'src/members/entities/member.entity';
 import { Repository } from 'typeorm';
-import { ChattingMessageResponseDto } from './dto/chatting-messag-response.dto';
+import { ChattingMessageResponseDto } from './dto/chatting-message-response.dto';
 import { ChattingRoomResponseDto } from './dto/chatting-room-response.dto';
 import { CreateChattingMessageDto } from './dto/create-chatting-message.dto';
 import { UpdateChattingRoomDto } from './dto/update-chatting-room.dto';
@@ -64,7 +65,7 @@ export class ChatService {
         id: roomId,
       });
     if (!room) {
-      throw new NotFoundException();
+      throw new NotFoundException(ERR_MSG.CHATTING_ROOM_NOT_FOUND);
     }
     try {
       createChattingMessageDto.forEach(
@@ -85,24 +86,17 @@ export class ChatService {
     const rooms: ChattingRoom[] = await this.chattingRoomRepository.findBy({
       id,
     });
-    return rooms.map((room: ChattingRoom) => {
-      const roomDto: ChattingRoomResponseDto = new ChattingRoomResponseDto();
-      roomDto.id = room.id;
-      roomDto.title = room.title;
-      return roomDto;
-    });
+    return rooms.map((room: ChattingRoom) =>
+      ChattingRoomResponseDto.fromEntity(room),
+    );
   }
 
   async findMessagesById(id: string): Promise<ChattingMessageResponseDto[]> {
     const messages: ChattingMessage[] =
       await this.chattingMessageRepository.findBy({ id });
-    return messages.map((message: ChattingMessage) => {
-      const messageDto = new ChattingMessageResponseDto();
-      messageDto.id = message.id;
-      messageDto.isHost = message.isHost;
-      messageDto.message = message.message;
-      return messageDto;
-    });
+    return messages.map((message: ChattingMessage) =>
+      ChattingMessageResponseDto.fromEntity(message),
+    );
   }
 
   async updateRoom(
@@ -113,10 +107,10 @@ export class ChatService {
     const room: ChattingRoom | null =
       await this.chattingRoomRepository.findOneBy({ id });
     if (!room) {
-      throw new NotFoundException();
+      throw new NotFoundException(ERR_MSG.CHATTING_ROOM_NOT_FOUND);
     }
     if (room.participant.id !== memberId) {
-      throw new ForbiddenException();
+      throw new ForbiddenException(ERR_MSG.UPDATE_CHATTING_ROOM_FORBIDDEN);
     }
     try {
       await this.chattingRoomRepository.update(
@@ -132,10 +126,10 @@ export class ChatService {
     const room: ChattingRoom | null =
       await this.chattingRoomRepository.findOneBy({ id });
     if (!room) {
-      throw new NotFoundException();
+      throw new NotFoundException(ERR_MSG.CHATTING_ROOM_NOT_FOUND);
     }
     if (room.participant.id !== memberId) {
-      throw new ForbiddenException();
+      throw new ForbiddenException(ERR_MSG.DELETE_CHATTING_ROOM_FORBIDDEN);
     }
     try {
       await this.chattingRoomRepository.softDelete({ id });
