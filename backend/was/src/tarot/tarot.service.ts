@@ -8,8 +8,6 @@ import { TarotResultResponseDto } from './dto/tarot-result-response.dto';
 import { TarotCard } from './entities/tarot-card.entity';
 import { TarotResult } from './entities/tarot-result.entity';
 
-const bucketUrl = 'https://kr.object.ncloudstorage.com/magicconch';
-
 @Injectable()
 export class TarotService {
   constructor(
@@ -46,10 +44,7 @@ export class TarotService {
     if (!tarotCard) {
       throw new NotFoundException(ERR_MSG.TAROT_CARD_NOT_FOUND);
     }
-    const cardDto = new TarotCardResponseDto();
-    const url: string = `${bucketUrl}/basic/${id}${tarotCard.ext}`;
-    cardDto.cardUrl = url;
-    return cardDto;
+    return TarotCardResponseDto.fromEntity(tarotCard);
   }
 
   async findTarotResultById(id: string): Promise<TarotResultResponseDto> {
@@ -58,9 +53,6 @@ export class TarotService {
     if (!tarotResult) {
       throw new NotFoundException(ERR_MSG.TAROT_RESULT_NOT_FOUND);
     }
-    const resultDto = new TarotResultResponseDto();
-    resultDto.cardUrl = tarotResult.cardUrl;
-    resultDto.message = tarotResult.message;
-    return resultDto;
+    return TarotResultResponseDto.fromEntity(tarotResult);
   }
 }

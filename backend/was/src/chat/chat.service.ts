@@ -86,24 +86,17 @@ export class ChatService {
     const rooms: ChattingRoom[] = await this.chattingRoomRepository.findBy({
       id,
     });
-    return rooms.map((room: ChattingRoom) => {
-      const roomDto: ChattingRoomResponseDto = new ChattingRoomResponseDto();
-      roomDto.id = room.id;
-      roomDto.title = room.title;
-      return roomDto;
-    });
+    return rooms.map((room: ChattingRoom) =>
+      ChattingRoomResponseDto.fromEntity(room),
+    );
   }
 
   async findMessagesById(id: string): Promise<ChattingMessageResponseDto[]> {
     const messages: ChattingMessage[] =
       await this.chattingMessageRepository.findBy({ id });
-    return messages.map((message: ChattingMessage) => {
-      const messageDto = new ChattingMessageResponseDto();
-      messageDto.id = message.id;
-      messageDto.isHost = message.isHost;
-      messageDto.message = message.message;
-      return messageDto;
-    });
+    return messages.map((message: ChattingMessage) =>
+      ChattingMessageResponseDto.fromEntity(message),
+    );
   }
 
   async updateRoom(

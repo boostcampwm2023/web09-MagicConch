@@ -23,7 +23,7 @@ import {
 import { Request } from 'express';
 import { AuthGuard } from 'src/common/auth/auth.guard';
 import { ChatService } from './chat.service';
-import { ChattingMessageResponseDto } from './dto/chatting-messag-response.dto';
+import { ChattingMessageResponseDto } from './dto/chatting-message-response.dto';
 import { ChattingRoomResponseDto } from './dto/chatting-room-response.dto';
 import { UpdateChattingRoomDto } from './dto/update-chatting-room.dto';
 

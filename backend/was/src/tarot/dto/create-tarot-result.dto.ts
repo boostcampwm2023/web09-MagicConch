@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsUrl } from 'class-validator';
+import { BUCKET_URL } from 'src/common/constants/etc';
 
 export class CreateTarotResultDto {
   /**
@@ -7,9 +8,16 @@ export class CreateTarotResultDto {
    */
   @IsUrl()
   @ApiProperty({ description: '타로 카드 URL', required: true })
-  cardUrl: string;
+  readonly cardUrl: string;
 
   @IsString()
   @ApiProperty({ description: '타로 해설 결과', required: true })
-  message: string;
+  readonly message: string;
+
+  static fromResult(cardNo: number, message: string): CreateTarotResultDto {
+    return {
+      cardUrl: `${BUCKET_URL}/basic/${cardNo}.jpg`,
+      message: message,
+    };
+  }
 }

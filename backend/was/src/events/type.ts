@@ -1,5 +1,7 @@
 import { Socket } from 'socket.io';
 
+type Role = 'user' | 'system' | 'assistant';
+
 export interface MySocket extends Socket {
   memberId: string;
   chatLog: Chat[];
@@ -8,8 +10,13 @@ export interface MySocket extends Socket {
 }
 
 export type Chat = {
-  role: 'user' | 'system' | 'assistant';
+  role: Role;
   content: string;
+};
+
+export type Message = {
+  roomId: string;
+  chat: Chat;
 };
 
 export type ClovaEvent = {
