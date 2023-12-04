@@ -1,14 +1,19 @@
 import useChatMessage from '../useChatMessage';
-import { useSocket } from '../useSocket';
 import useTOLD from '../useTOLD';
 import { useEffect, useState } from 'react';
 
 import type { MessageButton } from '@components/ChatContainer';
 
+import { AISocketManager } from '@business/services/SocketManager';
+
+import { REQUSET_FEEDBACK_MESSAGE } from '@constants/message';
+import { TAROT_RESULT_TO_REQUSET_FEEDBACK } from '@constants/time';
+
 export function useAiChatMessage(tarotId: number | undefined, setTarotId: (tarotId: number | undefined) => void) {
+  const socketManager = new AISocketManager();
+
   const { messages, pushMessage, updateMessage } = useChatMessage();
   const [inputDisabled, setInputDisabled] = useState(true);
-  const { socketEmit, socketOn } = useSocket('AIChat');
 
   const { displayTold } = useTOLD();
 
@@ -19,28 +24,35 @@ export function useAiChatMessage(tarotId: number | undefined, setTarotId: (tarot
 
   const onSubmitMessage = (message: string) => {
     addMessage('right', message);
-    socketEmit('message', message);
+    socketManager.emit('message', message);
   };
 
   useEffect(() => {
-    socketOn('streamStart', () => {
+    socketManager.connect();
+  }, []);
+
+  useEffect(() => {
+    if (!AISocketManager.socket) return;
+
+    socketManager.on('streamStart', () => {
       setInputDisabled(true);
       addMessage('left', '');
     });
-    socketOn('streaming', (text: string) => updateMessage(message => ({ ...message, message: text })));
-    socketOn('streamEnd', () => setInputDisabled(false));
 
-    socketOn('tarotCard', () => setInputDisabled(true));
+    socketManager.on('streaming', (text: string) => updateMessage(message => ({ ...message, message: text })));
 
-    const requestFeedbackMessage = '이번 상담은 어땠어?\n피드백을 남겨주면 내가 더 발전할 수 있어!';
-    const button = { content: '피드백하기', onClick: displayTold };
+    socketManager.on('streamEnd', () => setInputDisabled(false));
 
-    socketOn('chatEnd', (id: string) => {
+    socketManager.on('tarotCard', () => setInputDisabled(true));
+
+    socketManager.on('chatEnd', (id: string) => {
       const shareLinkId: string = id;
       updateMessage(message => ({ ...message, shareLinkId }));
-      setTimeout(() => addMessage('left', requestFeedbackMessage, button), 5000);
+
+      const button = { content: '피드백하기', onClick: displayTold };
+      setTimeout(() => addMessage('left', REQUSET_FEEDBACK_MESSAGE, button), TAROT_RESULT_TO_REQUSET_FEEDBACK);
     });
-  }, []);
+  }, [AISocketManager.socket]);
 
   useEffect(() => {
     if (tarotId) {

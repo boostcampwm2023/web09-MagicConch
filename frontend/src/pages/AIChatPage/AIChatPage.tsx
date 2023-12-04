@@ -11,8 +11,8 @@ interface AIChatPageProps {}
 function AIChatPage({}: AIChatPageProps) {
   const [tarotId, setTarotId] = useState<number>();
 
-  useAiTarotSpread(setTarotId);
   const { messages, inputDisabled, onSubmitMessage } = useAiChatMessage(tarotId, setTarotId);
+  useAiTarotSpread(setTarotId);
 
   return (
     <Background type="dynamic">
