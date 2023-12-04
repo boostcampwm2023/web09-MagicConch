@@ -105,3 +105,5 @@ jobs:
             while [ -z "$(docker ps -qaf "name=was")" ]; do
               sleep 5
             done
+            sleep 60
+            rm .env
