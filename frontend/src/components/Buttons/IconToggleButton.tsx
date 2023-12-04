@@ -22,7 +22,7 @@ export default function IconToggleButton({
     <IconButton
       icon={active ? activeIcon : disabledIcon}
       iconSize={iconSize}
-      iconColor={active ? 'textWhite' : 'textDefault'}
+      iconColor={'textWhite'}
       buttonSize={buttonSize}
       buttonColor={active ? 'active' : 'cancel'}
       onClick={onClick}

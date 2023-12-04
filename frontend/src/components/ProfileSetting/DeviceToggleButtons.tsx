@@ -14,7 +14,7 @@ export default function DeviceToggleButtons({
   toggleAudio,
 }: DeviceToggleButtonsProps) {
   return (
-    <div className="flex-with-center gap-36">
+    <div className="flex-with-center gap-20">
       <IconToggleButton
         activeIcon="pepicons-pop:camera"
         disabledIcon="pepicons-pop:camera-off"
