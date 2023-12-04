@@ -10,7 +10,7 @@ export function useAiChatMessage(tarotId: number | undefined, setTarotId: (tarot
   const [inputDisabled, setInputDisabled] = useState(true);
   const { socketEmit, socketOn } = useSocket('AIChat');
 
-  const { displayTold } = useTOLD();
+  const { displayTold } = useTOLD('AI');
 
   const addMessage = (type: 'left' | 'right', message: string, button?: MessageButton) => {
     const profile = type == 'left' ? '/moon.png' : '/sponge.png';
