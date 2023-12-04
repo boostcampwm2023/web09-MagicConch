@@ -4,6 +4,8 @@ import { useLocation, useNavigate, useOutletContext, useParams } from 'react-rou
 import { IconButton } from '@components/Buttons';
 import CamContainer from '@components/CamContainer';
 
+import useSpeakerHighlighter from '@business/hooks/useSpeakerHighlighter';
+
 import type { OutletContext } from './HumanChatPage';
 
 export default function ChattingPage() {
@@ -24,6 +26,9 @@ export default function ChattingPage() {
   const { roomName } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();
+
+  useSpeakerHighlighter(localVideoRef);
+  useSpeakerHighlighter(remoteVideoRef);
 
   useEffect(() => {
     if (isConnectedPeerConnection()) {
