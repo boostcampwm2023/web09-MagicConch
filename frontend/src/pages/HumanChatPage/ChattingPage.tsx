@@ -4,6 +4,8 @@ import { useLocation, useNavigate, useOutletContext, useParams } from 'react-rou
 import { IconButton } from '@components/Buttons';
 import CamContainer from '@components/CamContainer';
 
+import useVolumeAnalyser from '@business/hooks/useVolumeAnalyser';
+
 import type { OutletContext } from './HumanChatPage';
 
 export default function ChattingPage() {
@@ -24,6 +26,9 @@ export default function ChattingPage() {
   const { roomName } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();
+
+  useVolumeAnalyser(localVideoRef);
+  useVolumeAnalyser(remoteVideoRef);
 
   useEffect(() => {
     if (isConnectedPeerConnection()) {
