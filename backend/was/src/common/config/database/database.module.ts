@@ -16,9 +16,13 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
           password: configService.get('DB_PASSWORD'),
           database: configService.get('DB_DATABASE'),
           entities: [],
-          synchronize: true,
           autoLoadEntities: true,
           namingStrategy: new SnakeNamingStrategy(),
+          extra: {
+            connectionLimit: 10,
+            connectTimeout: 15000,
+            acquireTimeout: 15000,
+          },
         };
       },
     }),
