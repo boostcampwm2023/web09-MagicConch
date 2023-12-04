@@ -4,6 +4,9 @@ import { useLocation, useNavigate, useOutletContext, useParams } from 'react-rou
 import { IconButton } from '@components/Buttons';
 import CamContainer from '@components/CamContainer';
 
+import { useBlocker } from '@business/hooks/useBlocker';
+import useSpeakerHighlighter from '@business/hooks/useSpeakerHighlighter';
+
 import type { OutletContext } from './HumanChatPage';
 
 export default function ChattingPage() {
@@ -19,14 +22,22 @@ export default function ChattingPage() {
     changeMyVideoTrack,
     tarotButtonClick,
     tarotButtonDisabled,
+    socketConnected,
   }: OutletContext = useOutletContext();
 
   const { roomName } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();
 
+  useBlocker({
+    when: ({ nextLocation }) => nextLocation.pathname === '/' || nextLocation.pathname === '/chat/human',
+    onConfirm: () => navigate('/'),
+  });
+  useSpeakerHighlighter(localVideoRef);
+  useSpeakerHighlighter(remoteVideoRef);
+
   useEffect(() => {
-    if (isConnectedPeerConnection()) {
+    if (isConnectedPeerConnection() || socketConnected) {
       changeMyVideoTrack();
       return;
     }
@@ -38,6 +49,9 @@ export default function ChattingPage() {
 
     joinRoom({
       roomName,
+      onSuccess: ({ close }) => {
+        close();
+      },
       onFull: () => {
         alert('방이 꽉 찼습니다, 첫페이지로 이동합니다.');
         navigate('/');

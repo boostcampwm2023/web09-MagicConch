@@ -1,45 +1,41 @@
-import { useNavigate } from 'react-router-dom';
+import { HumanSocketManager } from '@business/services/SocketManager';
 
 import { usePasswordPopup } from './useHumanChat';
-import { useSocket } from './useSocket';
 
 interface useSignalingSocketProps {
-  // roomName: string;
   peerConnectionRef: React.MutableRefObject<RTCPeerConnection | undefined>;
   negotiationDataChannels: ({ roomName }: { roomName: string }) => void;
 }
 
 export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels }: useSignalingSocketProps) {
-  const { socketEmit, socketOn } = useSocket('WebRTC');
-
-  const navigate = useNavigate();
+  const socketManager = new HumanSocketManager();
 
   const { openPasswordPopup } = usePasswordPopup();
 
   const initSignalingSocket = ({ roomName }: { roomName: string }) => {
-    socketOn('welcome', (users: { id: string }[]) => {
+    socketManager.on('welcome', (users: { id: string }[]) => {
       if (users.length > 0) {
         createOffer({ roomName });
       }
     });
 
-    socketOn('offer', (sdp: RTCSessionDescription) => {
+    socketManager.on('offer', (sdp: RTCSessionDescription) => {
       createAnswer({ roomName, sdp });
     });
 
-    socketOn('answer', async (sdp: RTCSessionDescription) => {
+    socketManager.on('answer', async (sdp: RTCSessionDescription) => {
       await peerConnectionRef.current?.setRemoteDescription(sdp);
     });
 
-    socketOn('candidate', async (candidate: RTCIceCandidate) => {
+    socketManager.on('candidate', async (candidate: RTCIceCandidate) => {
       await peerConnectionRef.current?.addIceCandidate(candidate);
     });
 
-    socketOn('roomFull', () => {
+    socketManager.on('roomFull', () => {
       alert('room is full');
     });
 
-    socketOn('userExit', async () => {
+    socketManager.on('userExit', async () => {
       negotiationDataChannels({ roomName });
     });
   };
@@ -47,33 +43,35 @@ export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels 
   const createOffer = async ({ roomName }: { roomName: string }) => {
     const sdp = await peerConnectionRef.current?.createOffer();
     await peerConnectionRef.current?.setLocalDescription(sdp);
-    socketEmit('offer', sdp, roomName);
+    socketManager.emit('offer', sdp, roomName);
   };
 
   const createAnswer = async ({ roomName, sdp }: { roomName: string; sdp: RTCSessionDescription }) => {
     await peerConnectionRef.current?.setRemoteDescription(sdp);
     const answerSdp = await peerConnectionRef.current?.createAnswer();
     peerConnectionRef.current?.setLocalDescription(answerSdp);
-    socketEmit('answer', answerSdp, roomName);
+    socketManager.emit('answer', answerSdp, roomName);
   };
 
   const createRoom = async ({
     onSuccess,
+    onClose,
   }: {
-    onSuccess?: ({ roomName, password }: { roomName: string; password: string }) => void;
+    onSuccess?: ({ roomName, password, close }: { roomName: string; password: string; close: () => void }) => void;
+    onClose?: ({ close }: { close: () => void }) => void;
   }) => {
     openPasswordPopup({
       host: true,
-      onCancel: () => {
-        navigate('..');
+      onClose: () => {
+        onClose?.({ close });
       },
       onSubmit: ({ password, close }) => {
-        socketEmit('createRoom', password);
+        socketManager.emit('createRoom', password);
 
-        close();
+        // close();
 
-        socketOn('roomCreated', (roomName: string) => {
-          onSuccess?.({ roomName, password });
+        socketManager.on('roomCreated', (roomName: string) => {
+          onSuccess?.({ roomName, password, close });
         });
       },
     });
@@ -89,30 +87,26 @@ export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels 
     roomName: string;
     onFull?: () => void;
     onFail?: () => void;
-    onSuccess?: () => void;
+    onSuccess?: ({ close }: { close: () => void }) => void;
     onHostExit?: () => void;
   }) => {
     openPasswordPopup({
-      onCancel: () => {
-        navigate('/');
-      },
       onSubmit: ({ password, close }) => {
-        socketEmit('joinRoom', roomName, password);
+        socketManager.emit('joinRoom', roomName, password);
 
-        socketOn('joinRoomFailed', () => {
+        socketManager.on('joinRoomFailed', () => {
           onFail?.();
         });
 
-        socketOn('roomFull', () => {
+        socketManager.on('roomFull', () => {
           onFull?.();
         });
 
-        socketOn('joinRoomSuccess', async () => {
-          close();
-          onSuccess?.();
+        socketManager.on('joinRoomSuccess', async () => {
+          onSuccess?.({ close });
         });
 
-        socketOn('hostExit', () => {
+        socketManager.on('hostExit', () => {
           onHostExit?.();
         });
       },

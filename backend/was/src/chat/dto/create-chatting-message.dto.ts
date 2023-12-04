@@ -1,14 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsString, IsUUID } from 'class-validator';
+import { Message } from 'src/events/type';
 
 export class CreateChattingMessageDto {
   @IsUUID()
   @ApiProperty({ description: '채팅방 ID', required: true })
-  roomId: string;
+  readonly roomId: string;
 
   @IsBoolean()
   @ApiProperty({ description: '호스트 여부', required: true })
-  isHost: boolean;
+  readonly isHost: boolean;
 
   @IsString()
   @ApiProperty({
@@ -17,5 +18,13 @@ export class CreateChattingMessageDto {
     maxLength: 1000,
     required: true,
   })
-  message: string;
+  readonly message: string;
+
+  static fromMessage(message: Message): CreateChattingMessageDto {
+    return {
+      roomId: message.roomId,
+      isHost: message.chat.role === 'assistant',
+      message: message.chat.content,
+    };
+  }
 }

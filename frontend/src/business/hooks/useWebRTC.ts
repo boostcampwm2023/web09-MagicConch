@@ -1,17 +1,19 @@
 import { useEffect } from 'react';
 
+import { HumanSocketManager } from '@business/services/SocketManager';
+
 import { useControllMedia } from './useControllMedia';
 import { useDataChannel } from './useDataChannel';
 import { useMedia } from './useMedia';
 import { useMediaInfoContext } from './useMediaInfoContext';
 import { useRTCPeerConnection } from './useRTCPeerConnection';
 import { useSignalingSocket } from './useSignalingSocket';
-import { useSocket } from './useSocket';
 
 export function useWebRTC() {
-  const { isSocketConnected, disconnectSocket, connectSocket } = useSocket('WebRTC');
+  const socketManager = new HumanSocketManager();
 
   const { mediaInfos } = useMediaInfoContext();
+
   const {
     localVideoRef,
     remoteVideoRef,
@@ -24,13 +26,9 @@ export function useWebRTC() {
   } = useMedia();
 
   const { peerConnectionRef, makeRTCPeerConnection, closeRTCPeerConnection, isConnectedPeerConnection } =
-    useRTCPeerConnection({
-      remoteVideoRef,
-    });
+    useRTCPeerConnection({ remoteVideoRef });
 
-  const { mediaInfoChannel, chatChannel, initDataChannels, closeDataChannels } = useDataChannel({
-    peerConnectionRef,
-  });
+  const { mediaInfoChannel, chatChannel, initDataChannels, closeDataChannels } = useDataChannel({ peerConnectionRef });
 
   const { addTracks, changeMyAudioTrack, changeMyVideoTrack, toggleAudio, toggleVideo } = useControllMedia({
     localStreamRef,
@@ -62,20 +60,18 @@ export function useWebRTC() {
   };
 
   const endWebRTC = () => {
-    if (isSocketConnected()) {
+    if (socketManager.connected) {
       closeRTCPeerConnection();
       closeDataChannels();
     }
   };
 
   useEffect(() => {
-    if (!isSocketConnected()) {
-      connectSocket(import.meta.env.VITE_HUMAN_SOCKET_URL);
-    }
+    socketManager.connect();
 
     return () => {
       endWebRTC();
-      disconnectSocket();
+      socketManager.disconnect();
     };
   }, []);
 
@@ -100,5 +96,6 @@ export function useWebRTC() {
     createRoom,
     joinRoom,
     isConnectedPeerConnection,
+    socketConnected: socketManager.connected,
   };
 }

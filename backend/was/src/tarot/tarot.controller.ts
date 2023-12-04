@@ -5,14 +5,11 @@ import {
   ParseIntPipe,
   ParseUUIDPipe,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import {
-  ApiInternalServerErrorResponse,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiParam,
-  ApiTags,
-} from '@nestjs/swagger';
+  FindTarotCardDecorator,
+  FindTarotResultDecorator,
+} from 'src/common/decorators/swagger/tarot.decorator';
 import { TarotCardResponseDto } from './dto/tarot-card-response.dto';
 import { TarotResultResponseDto } from './dto/tarot-result-response.dto';
 import { TarotService } from './tarot.service';
@@ -23,14 +20,11 @@ export class TarotController {
   constructor(private readonly tarotService: TarotService) {}
 
   @Get('card/:id')
-  @ApiOperation({ summary: '타로 카드 이미지 URL 조회 API' })
-  @ApiParam({ type: 'integer', name: 'id' })
-  @ApiOkResponse({
-    description: '타로 카드 이미지 URL 조회 성공',
-    type: TarotCardResponseDto,
-  })
-  @ApiNotFoundResponse({ description: '존재하지 않는 카드' })
-  @ApiInternalServerErrorResponse()
+  @FindTarotCardDecorator(
+    '타로 카드 이미지',
+    { type: 'integer', name: 'id' },
+    TarotCardResponseDto,
+  )
   async findTarotCardById(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<TarotCardResponseDto> {
@@ -38,14 +32,11 @@ export class TarotController {
   }
 
   @Get('result/:id')
-  @ApiOperation({ summary: '타로 결과 조회 API' })
-  @ApiParam({ type: 'uuid', name: 'id' })
-  @ApiOkResponse({
-    description: '타로 결과 조회 성공',
-    type: TarotResultResponseDto,
-  })
-  @ApiNotFoundResponse({ description: '존재하지 않는 타로 결과' })
-  @ApiInternalServerErrorResponse()
+  @FindTarotResultDecorator(
+    '타로 결과',
+    { type: 'uuid', name: 'id' },
+    TarotResultResponseDto,
+  )
   async findTarotResultById(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<TarotResultResponseDto> {

@@ -10,16 +10,12 @@ import { Server, Socket } from 'socket.io';
 import { LoggerService } from 'src/logger/logger.service';
 import { v4 } from 'uuid';
 
-const cors: any = {
-  origin: '*',
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['my-custom-header'],
-  credentials: true,
-};
-
 const MAXIMUM = 2;
 
-@WebSocketGateway({ cors: cors })
+@WebSocketGateway({
+  cors: { origin: '*' },
+  path: '/signal',
+})
 export class EventsGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
@@ -42,29 +38,47 @@ export class EventsGateway
   handleDisconnect(socket: Socket) {
     this.logger.debug(`🚀 Client Disconnected : ${socket.id}`);
 
-    const roomId: string = this.users[socket.id];
-    if (this.socketRooms[roomId]) {
-      this.socketRooms[roomId].users = this.socketRooms[roomId].users.filter(
-        (userId: string) => userId !== socket.id,
-      );
-      if (this.socketRooms[roomId].users.length === 0) {
-        delete this.socketRooms[roomId];
-        this.logger.debug(`🚀 Room Deleted : ${roomId}`);
-        return;
-      }
-    }
-    delete this.users[roomId];
+    const userId = socket.id;
+    const user = this.users[userId];
 
-    socket.to(roomId).emit('userExit', { id: socket.id });
-    this.logger.debug(`🚀 User Exit from ${roomId}`);
+    if (!user) {
+      this.logger.debug(`🚀 접속된 유저가 존재하지 않음 userId: ${userId}`);
+      return;
+    }
+
+    const { roomId, role } = user;
+
+    delete this.users[userId];
+
+    if (!this.socketRooms[roomId]) {
+      this.logger.debug(`🚀 존재하지 않는 roomId: ${roomId}`);
+      return;
+    }
+
+    if (role === 'host') {
+      socket.to(roomId).emit('hostExit');
+      delete this.socketRooms[roomId];
+
+      this.logger.debug(`🚀 host Exit from ${roomId}`);
+      this.logger.debug(`🚀 Room Deleted : ${roomId}`);
+    } else if (role === 'guest') {
+      this.socketRooms[roomId].users = this.socketRooms[roomId].users.filter(
+        (_userId: string) => _userId !== userId,
+      );
+
+      socket.to(roomId).emit('userExit', { id: userId });
+
+      this.logger.debug(`🚀 User Exit from ${roomId}`);
+    }
   }
 
   @SubscribeMessage('createRoom')
   handleCreateRoomEvent(socket: Socket, password: string) {
     const roomId: string = v4();
-    this.socketRooms[roomId] = { users: [socket.id], password: password };
+    const userId = socket.id;
+    this.socketRooms[roomId] = { users: [userId], password: password };
 
-    this.users[socket.id] = roomId;
+    this.users[userId] = { roomId, role: 'host' };
     socket.join(roomId);
     socket.emit('roomCreated', roomId);
 
@@ -73,6 +87,8 @@ export class EventsGateway
 
   @SubscribeMessage('joinRoom')
   handleJoinRoomEvent(socket: Socket, [roomId, password]: [string, string]) {
+    const userId = socket.id;
+
     const existRoom: any = this.socketRooms[roomId];
     const wrongPassword: boolean =
       this.socketRooms[roomId].password !== password;
@@ -93,13 +109,13 @@ export class EventsGateway
       return;
     }
 
-    this.socketRooms[roomId].users.push(socket.id);
-    this.users[socket.id] = roomId;
+    this.socketRooms[roomId].users.push(userId);
+    this.users[userId] = { roomId, role: 'guest' };
     socket.join(roomId);
     this.logger.debug(`🚀 Join to room ${roomId}`);
 
     const otherUsers = this.socketRooms[roomId].users.filter(
-      (userId: string) => userId !== socket.id,
+      (_userId: string) => _userId !== userId,
     );
     socket.to(roomId).emit('welcome', otherUsers);
     socket.emit('joinRoomSuccess', roomId);

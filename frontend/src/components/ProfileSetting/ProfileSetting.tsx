@@ -31,7 +31,7 @@ export default function ProfileSetting({
   onConfirm,
 }: ProfileSettingProps) {
   return (
-    <div className="w-[100vw] h-[100vh] flex-with-center">
+    <div className="w-[100vw] h-[100vh] flex-with-center z-10">
       <div className="flex gap-48 rounded-lg p-64 surface-box">
         <div className="flex flex-col justify-between">
           <CamBox

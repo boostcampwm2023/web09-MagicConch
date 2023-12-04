@@ -3,8 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import { Kakao } from '@business/services/Kakao';
 
-import { downloadImage } from '@utils/downloadImage';
-
+//import { downloadImage } from '@utils/downloadImage';
 import { IconColor } from '@constants/colors';
 
 type ShareButton = {
@@ -20,7 +19,7 @@ interface useShareButtonProps {
   resultSharePageRef: RefObject<HTMLDivElement>;
 }
 
-export function useShareButtons({ cardUrl, resultSharePageRef }: useShareButtonProps) {
+export function useShareButtons({ cardUrl }: useShareButtonProps) {
   const { id } = useParams<{ id: string }>();
 
   const share2Kakao = async () => {
@@ -28,9 +27,9 @@ export function useShareButtons({ cardUrl, resultSharePageRef }: useShareButtonP
     await Kakao.shareSendDefault({ cardUrl, id: id as string });
   };
 
-  const download = () => {
-    downloadImage(resultSharePageRef);
-  };
+  // const download = () => {
+  //   downloadImage(resultSharePageRef);
+  // };
 
   const copyLink = () => {
     navigator.clipboard.writeText(`${import.meta.env.VITE_BASE_URL_DEV}/result/${id}`);

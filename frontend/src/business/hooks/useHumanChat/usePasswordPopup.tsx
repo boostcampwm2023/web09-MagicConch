@@ -10,18 +10,18 @@ export default function usePasswordPopup() {
   const openPasswordPopup = ({
     host,
     onSubmit,
-    onCancel,
+    onClose,
   }: {
     host?: boolean;
     onSubmit?: ({ password, close }: { password: string; close: () => void }) => void;
-    onCancel?: () => void;
+    onClose?: ({ close }: { close: () => void }) => void;
   }) => {
     const defaultValue = host ? randomString() : '';
 
     open(({ close }) => (
       <PasswordPopup
         close={close}
-        onCancel={onCancel}
+        onCancel={() => onClose?.({ close })}
         onSubmit={password => {
           onSubmit?.({ password, close });
         }}
