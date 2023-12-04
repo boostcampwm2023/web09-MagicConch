@@ -1,13 +1,15 @@
-import { useSocket } from '../useSocket';
-import { useTarotSpread } from '../useTarotSpread';
 import { useEffect } from 'react';
 
-export function useAiTarotSpread(setTarotId: (idx: number) => void) {
+import { useSocket } from '@business/hooks/useSocket';
+
+import { useTarotSpread } from './useTarotSpread';
+
+export function useAiTarotSpread(onPickCard: (idx: number) => void) {
   const { socketEmit, socketOn } = useSocket('AIChat');
 
   const pickCard = (idx: number) => {
     socketEmit('tarotRead', idx);
-    setTarotId(idx);
+    onPickCard(idx);
   };
 
   const { openTarotSpread } = useTarotSpread(pickCard);

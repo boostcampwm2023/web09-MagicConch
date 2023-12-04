@@ -1,6 +1,6 @@
 import TarotSpread from '@components/TarotSpread';
 
-import useOverlay from './useOverlay';
+import useOverlay from '@business/hooks/useOverlay';
 
 export function useTarotSpread(setTarotId: (idx: number) => void) {
   const { open } = useOverlay();

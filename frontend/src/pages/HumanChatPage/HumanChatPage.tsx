@@ -8,7 +8,8 @@ import ChatContainer from '@components/ChatContainer';
 import Header from '@components/Header';
 import SideBar from '@components/SideBar';
 
-import { useHumanChatMessage, useHumanTarotSpread } from '@business/hooks/useHumanChat';
+import { useHumanChatMessage } from '@business/hooks/useChatMessage';
+import { useHumanTarotSpread } from '@business/hooks/useTarotSpread';
 import { useWebRTC } from '@business/hooks/useWebRTC';
 
 export interface OutletContext extends ReturnType<typeof useWebRTC> {
@@ -44,10 +45,8 @@ export default function HumanChatPage() {
     });
   }, []);
 
-  const [tarotId, setTarotId] = useState<number>();
-
-  const { tarotButtonClick, tarotButtonDisabled } = useHumanTarotSpread(webRTCData.chatChannel, setTarotId);
-  const { messages, onSubmitMessage, inputDisabled } = useHumanChatMessage(webRTCData.chatChannel, tarotId, setTarotId);
+  const { messages, onSubmitMessage, inputDisabled, addPickCardMessage } = useHumanChatMessage(webRTCData.chatChannel);
+  const { tarotButtonClick, tarotButtonDisabled } = useHumanTarotSpread(webRTCData.chatChannel, addPickCardMessage);
 
   const [contentAnimation, setContentAnimation] = useState<string>('');
 
