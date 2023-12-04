@@ -48,10 +48,6 @@ docker exec $NGINX_ID /bin/bash -c "sed -i 's/was-$STOP_TARGET:$WAS_STOP_PORT/wa
 docker exec $NGINX_ID /bin/bash -c "sed -i 's/signal-$STOP_TARGET:$((WAS_STOP_PORT + 1))/signal-$RUN_TARGET:$((WAS_RUN_PORT + 1))/' $NGINX_CONFIG"
 docker exec $NGINX_ID nginx -s reload
 
-while [ -z "$(docker ps --filter "name=was-$RUN_TARGET" --quiet)" ]; do
-  sleep 3
-done
-
 sleep 60
 rm .env
 
