@@ -61,7 +61,9 @@ function Background({ children, type = 'default' }: BackgroundProps) {
             alt="빛나는 마법의 소라 고둥"
           />
         </button>
-        {type != 'default' && <div className={`absolute w-h-screen bg-black/75 ${fadeInIfDynamic}`} />}
+        {type != 'default' && (
+          <div className={`absolute w-h-screen ${darkMode ? 'bg-black/75' : 'bg-neutral-500/60'} ${fadeInIfDynamic}`} />
+        )}
       </div>
 
       {children}
