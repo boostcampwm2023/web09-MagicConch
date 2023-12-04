@@ -15,10 +15,15 @@ services:
       - SECRET_KEY=${SECRET_KEY}
       - X_NCP_CLOVASTUDIO_API_KEY=${X_NCP_CLOVASTUDIO_API_KEY}
       - X_NCP_APIGW_API_KEY=${X_NCP_APIGW_API_KEY}
-    extra_hosts:
-      - "host.docker.internal:172.17.0.1"
     expose:
       - "3000"
+
+  signal:
+    build:
+      context: .
+      dockerfile: Dockerfile.signal
+    expose:
+      - "3001"
 
   nginx:
     build:
@@ -29,6 +34,7 @@ services:
       - "443:443"
     depends_on:
       - was
+      - signal
       - certbot
 
   certbot:

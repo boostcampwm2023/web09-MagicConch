@@ -1,12 +1,11 @@
 import useOverlay from './useOverlay';
 
-export default function useTOLD() {
-  const event = new Event('TOLD');
-
+export default function useTOLD(event: 'AI' | 'HUMAN') {
+  const global = window as any;
   const { open } = useOverlay();
 
   const displayTold = () => {
-    window.dispatchEvent(event);
+    global.dataLayer.push({ event });
 
     open(({ close }) => {
       const interval = setInterval(() => {
