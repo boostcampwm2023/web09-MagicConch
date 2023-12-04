@@ -1,11 +1,12 @@
-import useChatMessage from '../useChatMessage';
 import { useEffect, useState } from 'react';
 
 import { HumanChatEvents } from '@constants/events';
 
+import useChatMessage from './useChatMessage';
+
 const { PICK_CARD, CHAT_MESSAGE } = HumanChatEvents;
 
-export default function useHumanChatMessage(
+export function useHumanChatMessage(
   chatChannel: React.MutableRefObject<RTCDataChannel | undefined>,
   tarotId: number | undefined,
   setTarotId: (tarotId: number | undefined) => void,

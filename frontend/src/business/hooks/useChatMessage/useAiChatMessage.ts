@@ -1,9 +1,11 @@
-import useChatMessage from '../useChatMessage';
-import { useSocket } from '../useSocket';
-import useTOLD from '../useTOLD';
 import { useEffect, useState } from 'react';
 
 import type { MessageButton } from '@components/ChatContainer';
+
+import { useSocket } from '@business/hooks/useSocket';
+import useTOLD from '@business/hooks/useTOLD';
+
+import useChatMessage from './useChatMessage';
 
 export function useAiChatMessage(tarotId: number | undefined, setTarotId: (tarotId: number | undefined) => void) {
   const { messages, pushMessage, updateMessage } = useChatMessage();
