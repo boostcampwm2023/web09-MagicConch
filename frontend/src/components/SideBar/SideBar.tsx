@@ -4,12 +4,17 @@ import { CustomButton } from '@components/Buttons';
 
 import { Icon } from '@iconify/react';
 
+interface IconType {
+  open: string;
+  close: string;
+}
 interface SideBarProps {
+  icon: IconType;
   onSide?: (showed: boolean) => void;
   children: React.ReactNode;
 }
 
-function SideBar({ onSide, children }: SideBarProps) {
+function SideBar({ onSide, children, icon }: SideBarProps) {
   const [hidden, setHidden] = useState(true);
   const [opened, setOpened] = useState(false);
   const [animating, setAnimating] = useState(false);
@@ -40,12 +45,12 @@ function SideBar({ onSide, children }: SideBarProps) {
       >
         <Icon
           className="text-25"
-          icon={`${opened ? 'carbon:side-panel-open' : 'carbon:side-panel-close'}`}
+          icon={`${opened ? icon.open : icon.close}`}
         />
       </CustomButton>
       <div
         className={`${!hidden && (opened ? 'animate-openingSidebar' : 'animate-closingSidebar')}
-                    surface-alt w-500 h-[calc(100vh-48px)] absolute -right-500 top-48 flex-with-center overflow-hidden`}
+                    surface-alt w-[100vw] lg:w-500 h-[calc(100vh-48px)] absolute -right-[100%] top-48 flex-with-center overflow-hidden`}
       >
         {children}
       </div>
