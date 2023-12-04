@@ -41,7 +41,7 @@ services:
       - signal-blue
       - certbot
     volumes:
-      - /var/log/nginx:/app/logs/nginx
+      - /var/log/nginx:/var/log/nginx
 
   certbot:
     image: certbot/certbot
