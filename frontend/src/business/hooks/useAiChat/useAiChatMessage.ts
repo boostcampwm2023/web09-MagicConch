@@ -29,10 +29,6 @@ export function useAiChatMessage(tarotId: number | undefined, setTarotId: (tarot
 
   useEffect(() => {
     socketManager.connect();
-  }, []);
-
-  useEffect(() => {
-    if (!AISocketManager.socket || AISocketManager.socket.connected) return;
 
     socketManager.on('streamStart', () => {
       setInputDisabled(true);
@@ -46,13 +42,15 @@ export function useAiChatMessage(tarotId: number | undefined, setTarotId: (tarot
     socketManager.on('tarotCard', () => setInputDisabled(true));
 
     socketManager.on('chatEnd', (id: string) => {
+      setInputDisabled(true);
+
       const shareLinkId: string = id;
       updateMessage(message => ({ ...message, shareLinkId }));
 
       const button = { content: '피드백하기', onClick: displayTold };
       setTimeout(() => addMessage('left', REQUSET_FEEDBACK_MESSAGE, button), TAROT_RESULT_TO_REQUSET_FEEDBACK);
     });
-  }, [AISocketManager.socket]);
+  }, []);
 
   useEffect(() => {
     if (tarotId) {
