@@ -13,14 +13,14 @@ const { PICK_CARD, TAROT_SPREAD } = HumanChatEvents;
 
 export function useHumanTarotSpread(
   chatChannel: React.MutableRefObject<RTCDataChannel | undefined>,
-  setTarotId: (idx: number) => void,
+  onPickCard: (idx: number) => void,
 ) {
   const [tarotButtonDisabled, setTarotButtonDisabled] = useState(true);
 
   const pickCard = (idx: number) => {
     const payload = { type: PICK_CARD, content: idx };
     chatChannel.current?.send(JSON.stringify(payload));
-    setTarotId(idx);
+    onPickCard(idx);
   };
 
   const { openTarotSpread } = useTarotSpread(pickCard);

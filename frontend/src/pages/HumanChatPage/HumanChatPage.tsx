@@ -36,10 +36,8 @@ export default function HumanChatPage() {
     });
   }, []);
 
-  const [tarotId, setTarotId] = useState<number>();
-
-  const { tarotButtonClick, tarotButtonDisabled } = useHumanTarotSpread(webRTCData.chatChannel, setTarotId);
-  const { messages, onSubmitMessage, inputDisabled } = useHumanChatMessage(webRTCData.chatChannel, tarotId, setTarotId);
+  const { messages, onSubmitMessage, inputDisabled, addPickCardMessage } = useHumanChatMessage(webRTCData.chatChannel);
+  const { tarotButtonClick, tarotButtonDisabled } = useHumanTarotSpread(webRTCData.chatChannel, addPickCardMessage);
 
   const [contentAnimation, setContentAnimation] = useState<string>('');
 
