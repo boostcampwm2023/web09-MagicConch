@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
 
-import { iceServers } from '@constants/urls';
+import { HumanSocketManager } from '@business/services/SocketManager';
 
-import { useSocket } from './useSocket';
+import { iceServers } from '@constants/urls';
 
 interface useRTCPeerConnectionProps {
   remoteVideoRef: React.RefObject<HTMLVideoElement | undefined>;
@@ -12,7 +12,7 @@ export function useRTCPeerConnection({ remoteVideoRef }: useRTCPeerConnectionPro
   const peerConnectionRef = useRef<RTCPeerConnection>();
   const peerStreamRef = useRef<MediaStream | null>(null);
 
-  const { socketEmit } = useSocket('WebRTC');
+  const socketManager = new HumanSocketManager();
 
   const makeRTCPeerConnection = async ({ roomName }: { roomName: string }) => {
     peerConnectionRef.current = new RTCPeerConnection({ iceServers: [{ urls: iceServers }] });
@@ -31,7 +31,7 @@ export function useRTCPeerConnection({ remoteVideoRef }: useRTCPeerConnectionPro
         return;
       }
 
-      socketEmit('candidate', e.candidate, roomName);
+      socketManager.emit('candidate', e.candidate, roomName);
     });
   };
 

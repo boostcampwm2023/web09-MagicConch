@@ -1,20 +1,20 @@
 import { useEffect } from 'react';
 
-import { useSocket } from '@business/hooks/useSocket';
+import { AISocketManager } from '@business/services/SocketManager';
 
 import { useTarotSpread } from './useTarotSpread';
 
 export function useAiTarotSpread(onPickCard: (idx: number) => void) {
-  const { socketEmit, socketOn } = useSocket('AIChat');
+  const socketManager = new AISocketManager();
 
   const pickCard = (idx: number) => {
-    socketEmit('tarotRead', idx);
+    socketManager.emit('tarotRead', idx);
     onPickCard(idx);
   };
 
   const { openTarotSpread } = useTarotSpread(pickCard);
 
   useEffect(() => {
-    socketOn('tarotCard', () => setTimeout(openTarotSpread, 1000));
+    socketManager.on('tarotCard', () => setTimeout(openTarotSpread, 1000));
   }, []);
 }

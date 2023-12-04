@@ -1,0 +1,53 @@
+import { Socket, io } from 'socket.io-client';
+
+class SocketManager {
+  static #socket: Socket | undefined;
+
+  #url: string;
+  #path?: string;
+
+  constructor(url: string, path?: string) {
+    this.#url = url;
+    this.#path = path;
+  }
+
+  get socket(): Socket | undefined {
+    return SocketManager.#socket;
+  }
+
+  get connected(): boolean {
+    if (!this.socket) return false;
+    return this.socket.connected;
+  }
+
+  connect() {
+    if (this.socket) {
+      this.socket.disconnect();
+    }
+    SocketManager.#socket = io(this.#url, { path: this.#path });
+  }
+
+  disconnect() {
+    if (!this.socket) {
+      throw new Error('소켓이 존재하지 않습니다.');
+    }
+    this.socket.disconnect();
+    SocketManager.#socket = undefined;
+  }
+
+  on<U>(eventName: string, eventListener: (args: U) => void) {
+    if (!this.socket) {
+      throw new Error('소켓이 존재하지 않습니다.');
+    }
+    this.socket.on(eventName, eventListener);
+  }
+
+  emit(eventName: string, ...eventArgs: unknown[]) {
+    if (!this.socket) {
+      throw new Error('소켓이 존재하지 않습니다.');
+    }
+    this.socket.emit(eventName, ...eventArgs);
+  }
+}
+
+export default SocketManager;

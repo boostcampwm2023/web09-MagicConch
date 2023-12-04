@@ -3,12 +3,13 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import ProfileSetting from '@components/ProfileSetting';
 
-import { useSocket } from '@business/hooks/useSocket';
+import { HumanSocketManager } from '@business/services/SocketManager';
 
 import type { OutletContext } from './HumanChatPage';
 
 export default function ChattingPage() {
-  const { isSocketConnected } = useSocket('WebRTC');
+  const socketManager = new HumanSocketManager();
+
   const navigate = useNavigate();
 
   const {
@@ -27,7 +28,7 @@ export default function ChattingPage() {
   const micList = audioOptions.map(({ deviceId, label }) => ({ label, value: deviceId }));
 
   useEffect(() => {
-    if (!isSocketConnected()) {
+    if (!socketManager.connected) {
       navigate('..');
     }
     getMedia({});
