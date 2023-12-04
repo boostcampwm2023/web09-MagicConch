@@ -29,4 +29,7 @@ echo "<<< Reload Complete..." >> debug.log
 while [ -z "$(docker ps --filter "name=was-$RUN_TARGET" --quiet)" ]; do
   sleep 3
 done
+
+sleep 60
+rm .env
 docker rm -f $(docker ps --filter "name=$STOP_TARGET" --quiet)
