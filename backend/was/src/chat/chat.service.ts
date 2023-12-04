@@ -7,7 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ERR_MSG } from 'src/common/constants/errors';
 import { Member } from 'src/members/entities/member.entity';
 import { Repository } from 'typeorm';
-import { ChattingMessageResponseDto } from './dto/chatting-messag-response.dto';
+import { ChattingMessageResponseDto } from './dto/chatting-message-response.dto';
 import { ChattingRoomResponseDto } from './dto/chatting-room-response.dto';
 import { CreateChattingMessageDto } from './dto/create-chatting-message.dto';
 import { UpdateChattingRoomDto } from './dto/update-chatting-room.dto';
