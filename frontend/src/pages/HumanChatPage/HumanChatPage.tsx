@@ -65,11 +65,12 @@ export default function HumanChatPage() {
           <SideBar
             key="chat-side-bar"
             onSide={changeContentAnimation}
+            icon={{ open: 'mdi:message-off', close: 'mdi:message' }}
           >
             <ChatContainer
-              width="w-400"
-              height="h-4/5"
-              position="top-40"
+              width="w-[90%]"
+              height="h-[80%]"
+              position="top-[5vh]"
               messages={messages}
               onSubmitMessage={onSubmitMessage}
               inputDisabled={inputDisabled}
