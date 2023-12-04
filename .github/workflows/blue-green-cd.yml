@@ -56,8 +56,8 @@ jobs:
 
       - name: Build Docker Images (Blue)
         run: |
-          docker-compose -f docker-compose.blue.yml build -t "${{ secrets.DOCKER_USERNAME }}/magicconch:latest-blue"
           cp docker-compose.blue.yml docker-compose.${{ github.sha }}.blue.yml
+          docker-compose -f docker-compose.${{ github.sha }}.blue.yml build -t "${{ secrets.DOCKER_USERNAME }}/magicconch:latest-blue"
 
       - name: Push Docker Images to Registry (Blue)
         uses: docker/login-action@v3
@@ -68,8 +68,8 @@ jobs:
 
       - name: Build Docker Images (Green)
         run: |
-          docker-compose -f docker-compose.green.yml build -t "${{ secrets.DOCKER_USERNAME }}/magicconch:latest-green"
           cp docker-compose.green.yml docker-compose.${{ github.sha }}.green.yml
+          docker-compose -f docker-compose.${{ github.sha }}.green.yml build -t "${{ secrets.DOCKER_USERNAME }}/magicconch:latest-green"
 
       - name: Push Docker Images to Registry (Green)
         uses: docker/login-action@v3
