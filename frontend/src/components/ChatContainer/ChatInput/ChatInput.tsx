@@ -25,7 +25,7 @@ function ChatInput({ disabled, sendChatMessage }: ChatInputProps) {
   };
 
   return (
-    <div className={`form-control flex flex-row w-[105%]`}>
+    <div className={`form-control flex flex-row w-[102%]`}>
       <input
         ref={inputRef}
         onKeyUp={detectEnter}
