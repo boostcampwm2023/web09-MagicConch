@@ -1,15 +1,17 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config/dist';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from 'src/app.controller';
-import { ChatModule } from 'src/chat/chat.module';
-import { DatabaseModule } from 'src/common/config/database/database.module';
-import { EventsModule } from 'src/events/events.module';
-import { Member } from 'src/members/entities/member.entity';
-import { MembersModule } from 'src/members/members.module';
-import { MembersService } from 'src/members/members.service';
-import { TarotModule } from 'src/tarot/tarot.module';
+import { AppController } from './app.controller';
+import { ChatModule } from './chat/chat.module';
+import { DatabaseModule } from './common/config/database/database.module';
+import { ErrorsInterceptor } from './common/interceptors/error.interceptor';
+import { EventsModule } from './events/events.module';
 import { LoggerModule } from './logger/logger.module';
+import { Member } from './members/entities/member.entity';
+import { MembersModule } from './members/members.module';
+import { MembersService } from './members/members.service';
+import { TarotModule } from './tarot/tarot.module';
 
 @Module({
   imports: [
@@ -23,6 +25,12 @@ import { LoggerModule } from './logger/logger.module';
     LoggerModule,
   ],
   controllers: [AppController],
-  providers: [MembersService],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ErrorsInterceptor,
+    },
+    MembersService,
+  ],
 })
 export class AppModule {}
