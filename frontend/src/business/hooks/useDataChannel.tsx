@@ -1,3 +1,4 @@
+import BG from '/bg.png';
 import { useRef } from 'react';
 
 import { useMediaInfoContext } from './useMediaInfoContext';
@@ -14,15 +15,13 @@ export function useDataChannel({ peerConnectionRef }: useDataChannelProps) {
 
   const mediaInfoChannel = useRef<RTCDataChannel>();
   const chatChannel = useRef<RTCDataChannel>();
+  const profileChannel = useRef<RTCDataChannel>();
+  const nicknameChannel = useRef<RTCDataChannel>();
 
-  const initDataChannels = () => {
+  const initMediaInfoChannel = () => {
     mediaInfoChannel.current = peerConnectionRef.current?.createDataChannel('mediaInfoChannel', {
       negotiated: true,
       id: 0,
-    });
-    chatChannel.current = peerConnectionRef.current?.createDataChannel('chat', {
-      negotiated: true,
-      id: 1,
     });
 
     mediaInfoChannel.current?.addEventListener('message', ({ data }) => {
@@ -47,10 +46,49 @@ export function useDataChannel({ peerConnectionRef }: useDataChannelProps) {
     });
   };
 
+  const initChatChannel = () => {
+    chatChannel.current = peerConnectionRef.current?.createDataChannel('chat', {
+      negotiated: true,
+      id: 1,
+    });
+  };
+
+  const initProfileChannel = () => {
+    profileChannel.current = peerConnectionRef.current?.createDataChannel('profile', {
+      negotiated: true,
+      id: 2,
+    });
+
+    profileChannel.current?.addEventListener('message', ({ data }) => {
+      console.log('profileChannel', data);
+    });
+
+    profileChannel.current?.addEventListener('open', () => {
+      const image = new Image();
+      image.src = BG;
+
+      profileChannel.current?.send(image.src);
+    });
+  };
+
+  const initNicknameChannel = () => {
+    nicknameChannel.current = peerConnectionRef.current?.createDataChannel('nickname', {
+      negotiated: true,
+      id: 3,
+    });
+  };
+
+  const initDataChannels = () => {
+    initMediaInfoChannel();
+    initChatChannel();
+    initProfileChannel();
+    initNicknameChannel();
+  };
+
   const closeDataChannels = () => {
     mediaInfoChannel.current?.close();
     chatChannel.current?.close();
   };
 
-  return { mediaInfoChannel, chatChannel, initDataChannels, closeDataChannels };
+  return { mediaInfoChannel, chatChannel, profileChannel, nicknameChannel, initDataChannels, closeDataChannels };
 }

@@ -22,6 +22,7 @@ export default function ChattingPage() {
     changeMyVideoTrack,
     changeMyAudioTrack,
     getMedia,
+    profileChannel,
   }: OutletContext = useOutletContext();
 
   const camList = cameraOptions.map(({ deviceId, label }) => ({ label, value: deviceId }));
@@ -34,7 +35,16 @@ export default function ChattingPage() {
     getMedia({});
   }, []);
 
-  const sendImage = (e: ChangeEvent<HTMLInputElement>) => {};
+  const sendImage = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    const arrayBuffer = await file.arrayBuffer();
+
+    profileChannel.current?.send(arrayBuffer);
+  };
 
   return (
     <ProfileSetting

@@ -28,7 +28,10 @@ export function useWebRTC() {
   const { peerConnectionRef, makeRTCPeerConnection, closeRTCPeerConnection, isConnectedPeerConnection } =
     useRTCPeerConnection({ remoteVideoRef });
 
-  const { mediaInfoChannel, chatChannel, initDataChannels, closeDataChannels } = useDataChannel({ peerConnectionRef });
+  const { mediaInfoChannel, chatChannel, initDataChannels, closeDataChannels, profileChannel, nicknameChannel } =
+    useDataChannel({
+      peerConnectionRef,
+    });
 
   const { addTracks, changeMyAudioTrack, changeMyVideoTrack, toggleAudio, toggleVideo } = useControllMedia({
     localStreamRef,
@@ -82,6 +85,8 @@ export function useWebRTC() {
     remoteVideoRef,
     mediaInfoChannel,
     chatChannel,
+    profileChannel,
+    nicknameChannel,
     mediaInfos,
     toggleAudio,
     toggleVideo,
