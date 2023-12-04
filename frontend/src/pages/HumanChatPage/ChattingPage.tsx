@@ -4,6 +4,8 @@ import { useLocation, useNavigate, useOutletContext, useParams } from 'react-rou
 import { IconButton } from '@components/Buttons';
 import CamContainer from '@components/CamContainer';
 
+import { useBlocker } from '@business/hooks/useBlocker';
+
 import type { OutletContext } from './HumanChatPage';
 
 export default function ChattingPage() {
@@ -24,6 +26,11 @@ export default function ChattingPage() {
   const { roomName } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();
+
+  useBlocker({
+    when: ({ nextLocation }) => nextLocation.pathname === '/',
+    onConfirm: () => navigate('/'),
+  });
 
   useEffect(() => {
     if (isConnectedPeerConnection()) {
