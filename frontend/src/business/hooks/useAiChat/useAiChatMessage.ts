@@ -32,7 +32,7 @@ export function useAiChatMessage(tarotId: number | undefined, setTarotId: (tarot
   }, []);
 
   useEffect(() => {
-    if (!AISocketManager.socket) return;
+    if (!AISocketManager.socket || AISocketManager.socket.connected) return;
 
     socketManager.on('streamStart', () => {
       setInputDisabled(true);
