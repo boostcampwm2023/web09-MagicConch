@@ -22,6 +22,7 @@ export default function ChattingPage() {
     changeMyVideoTrack,
     tarotButtonClick,
     tarotButtonDisabled,
+    isSocketConnected,
   }: OutletContext = useOutletContext();
 
   const { roomName } = useParams();
@@ -36,7 +37,7 @@ export default function ChattingPage() {
   useSpeakerHighlighter(remoteVideoRef);
 
   useEffect(() => {
-    if (isConnectedPeerConnection()) {
+    if (isConnectedPeerConnection() || isSocketConnected()) {
       changeMyVideoTrack();
       return;
     }
@@ -48,6 +49,9 @@ export default function ChattingPage() {
 
     joinRoom({
       roomName,
+      onSuccess: ({ close }) => {
+        close();
+      },
       onFull: () => {
         alert('방이 꽉 찼습니다, 첫페이지로 이동합니다.');
         navigate('/');

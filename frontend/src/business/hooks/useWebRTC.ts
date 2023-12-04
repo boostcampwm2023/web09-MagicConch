@@ -97,5 +97,6 @@ export function useWebRTC() {
     createRoom,
     joinRoom,
     isConnectedPeerConnection,
+    isSocketConnected,
   };
 }

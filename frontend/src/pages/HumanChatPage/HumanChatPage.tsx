@@ -23,6 +23,11 @@ export default function HumanChatPage() {
   const { roomName } = useParams();
 
   useEffect(() => {
+    if (!roomName && !location.state?.host) {
+      alert('잘못된 접근입니다.');
+      navigate('/');
+    }
+
     if (roomName || !location.state?.host) {
       return;
     }
