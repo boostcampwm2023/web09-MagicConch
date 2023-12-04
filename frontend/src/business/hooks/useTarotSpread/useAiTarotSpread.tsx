@@ -1,6 +1,8 @@
-import { useSocket } from '../useSocket';
-import { useTarotSpread } from '../useTarotSpread';
 import { useEffect } from 'react';
+
+import { useSocket } from '@business/hooks/useSocket';
+
+import { useTarotSpread } from './useTarotSpread';
 
 export function useAiTarotSpread(setTarotId: (idx: number) => void) {
   const { socketEmit, socketOn } = useSocket('AIChat');
