@@ -15,16 +15,25 @@ else
   WAS_STOP_PORT=3002
 fi
 
-echo ">>> Start building... docker-compose.$GITHUB_SHA.$RUN_TARGET.yml" > debug.log
+echo ">>> Start image building... docker-compose.$GITHUB_SHA.$RUN_TARGET.yml" > debug.log
+
 docker-compose -f "docker-compose.$GITHUB_SHA.$RUN_TARGET.yml" pull
 docker-compose -f "docker-compose.$GITHUB_SHA.$RUN_TARGET.yml" up -d
+
 echo "<<< Build Complete..." >> debug.log
 
-echo ">>> Start reloading..." >> debug.log
-sed -i "s/was-$STOP_TARGET:$WAS_STOP_PORT/was-$RUN_TARGET:$WAS_RUN_PORT/" config/nginx/default.conf
-sed -i "s/signal-$STOP_TARGET:$((WAS_STOP_PORT + 1))/signal-$RUN_TARGET:$((WAS_RUN_PORT + 1))/" config/nginx/default.conf
-docker-compose -f "docker-compose.$GITHUB_SHA.$RUN_TARGET.yml" exec nginx nginx -s reload
+
+echo ">>> Start nginx reloading..." >> debug.log
+
+NGINX_ID=$(docker ps --filter "name=nginx" -q)
+NGINX_CONFIG="/etc/nginx/conf.d/default.conf"
+
+docker exec $NGINX_ID /bin/bash -c "sed -i 's/was-$STOP_TARGET:$WAS_STOP_PORT/was-$RUN_TARGET:$WAS_RUN_PORT/' $NGINX_CONFIG"
+docker exec $NGINX_ID /bin/bash -c "sed -i 's/signal-$STOP_TARGET:$((WAS_STOP_PORT + 1))/signal-$RUN_TARGET:$((WAS_RUN_PORT + 1))/' $NGINX_CONFIG"
+docker exec $NGINX_ID nginx -s reload
+
 echo "<<< Reload Complete..." >> debug.log
+
 
 while [ -z "$(docker ps --filter "name=was-$RUN_TARGET" --quiet)" ]; do
   sleep 3
