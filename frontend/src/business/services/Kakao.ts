@@ -26,7 +26,7 @@ export const Kakao = {
     }
 
     const { Kakao } = window;
-    const BASE_URL = import.meta.env.VITE_WAS_URL;
+    const BASE_URL = import.meta.env.VITE_BASE_URL_DEV;
 
     Kakao.Share.sendDefault({
       objectType: 'feed',

@@ -64,7 +64,7 @@ export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels 
   }) => {
     openPasswordPopup({
       host: true,
-      onClose: () => {
+      onCancel: () => {
         navigate('..');
       },
       onSubmit: ({ password, close }) => {
@@ -84,14 +84,16 @@ export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels 
     onFull,
     onFail,
     onSuccess,
+    onHostExit,
   }: {
     roomName: string;
     onFull?: () => void;
     onFail?: () => void;
     onSuccess?: () => void;
+    onHostExit?: () => void;
   }) => {
     openPasswordPopup({
-      onClose: () => {
+      onCancel: () => {
         navigate('/');
       },
       onSubmit: ({ password, close }) => {
@@ -108,6 +110,10 @@ export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels 
         socketOn('joinRoomSuccess', async () => {
           close();
           onSuccess?.();
+        });
+
+        socketOn('hostExit', () => {
+          onHostExit?.();
         });
       },
     });

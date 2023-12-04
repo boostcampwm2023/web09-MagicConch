@@ -10,16 +10,12 @@ import { Server, Socket } from 'socket.io';
 import { LoggerService } from 'src/logger/logger.service';
 import { v4 } from 'uuid';
 
-const cors: any = {
-  origin: '*',
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['my-custom-header'],
-  credentials: true,
-};
-
 const MAXIMUM = 2;
 
-@WebSocketGateway({ cors: cors })
+@WebSocketGateway({
+  cors: { origin: '*' },
+  path: '/signal',
+})
 export class EventsGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
