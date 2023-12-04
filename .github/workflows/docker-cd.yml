@@ -2,7 +2,7 @@ name: Dockerized CD
 
 on:
   push:
-    branches: ["dev", "BE/feature/#273-시그널-서버-배포-스크립트-작성"]
+    branches: ["dev"]
 
 jobs:
   build:
