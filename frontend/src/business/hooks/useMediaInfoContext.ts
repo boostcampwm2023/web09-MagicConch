@@ -1,4 +1,4 @@
-import { MediaInfoContext } from '../providers/MediaInfoProvider';
+import { MediaInfoContext } from '../../stores/providers/MediaInfoProvider';
 import { useCallback, useContext } from 'react';
 
 export function useMediaInfoContext() {
