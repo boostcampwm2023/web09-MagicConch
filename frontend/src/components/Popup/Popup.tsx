@@ -7,7 +7,7 @@ interface PopupProps {
   children: React.ReactNode;
 }
 
-export default function Popup({ close, onCancel, onConfirm, children }: PopupProps) {
+export default function Popup({ onCancel, onConfirm, children }: PopupProps) {
   return (
     <div className="w-[100vw] h-[100vh] flex-with-center">
       <div className="surface-content rounded p-16 gap-16">
