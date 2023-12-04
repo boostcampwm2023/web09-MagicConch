@@ -28,7 +28,7 @@ export default function ChattingPage() {
   const navigate = useNavigate();
 
   useBlocker({
-    when: ({ nextLocation }) => nextLocation.pathname === '/',
+    when: ({ nextLocation }) => nextLocation.pathname === '/' || nextLocation.pathname === '/chat/human',
     onConfirm: () => navigate('/'),
   });
 
