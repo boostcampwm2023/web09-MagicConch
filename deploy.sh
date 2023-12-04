@@ -28,6 +28,8 @@ echo "<<< Build Complete..." >> debug.log
 echo ">>> Start was reloading..." >> debug.log
 
 WAS_ID=$(docker ps --filter "name=was-$RUN_TARGET" -q)
+WAS_PID=$(lsof -t -i:$WAS_RUN_PORT)
+kill -9 $WAS_PID
 
 docker exec $WAS_ID /bin/bash -c "sed -i 's/port: number = $WAS_STOP_PORT/port: number = $WAS_RUN_PORT/' $MAIN_SCRIPT"
 docker exec $WAS_ID /bin/bash -c "$NPM_BUILD"
@@ -39,6 +41,8 @@ echo "<<< Reload Complete..." >> debug.log
 echo ">>> Start signal reloading..." >> debug.log
 
 SIGNAL_ID=$(docker ps --filter "name=signal-$RUN_TARGET" -q)
+SIGNAL_PID=$(lsof -t -i:$((WAS_RUN_PORT + 1)))
+kill -9 $SIGNAL_PID
 
 docker exec $SIGNAL_ID /bin/bash -c "sed -i 's/port: number = $((WAS_STOP_PORT + 1))/port: number = $((WAS_RUN_PORT + 1))/' $MAIN_SCRIPT"
 docker exec $SIGNAL_ID /bin/bash -c "$NPM_BUILD"
