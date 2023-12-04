@@ -32,7 +32,7 @@ type SocketType = keyof SocketTypesMap;
 
 const sockets = {} as Record<SocketType, Socket>;
 
-export function useSocket<T extends SocketType>(socketType: T) {
+export function useSocket<T extends SocketType>(socketType: T, path?: string) {
   const navigate = useNavigate();
 
   const ConnectSocketDefaultOptions = {
@@ -46,7 +46,7 @@ export function useSocket<T extends SocketType>(socketType: T) {
       }
       sockets[socketType].disconnect();
     }
-    sockets[socketType] = io(url);
+    sockets[socketType] = io(url, { path });
   }
 
   function disconnectSocket() {
