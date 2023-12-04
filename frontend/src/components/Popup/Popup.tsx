@@ -17,7 +17,6 @@ export default function Popup({ close, onCancel, onConfirm, children }: PopupPro
             size="m"
             color="dark"
             onClick={() => {
-              close();
               onCancel?.();
             }}
           >
@@ -27,7 +26,6 @@ export default function Popup({ close, onCancel, onConfirm, children }: PopupPro
             size="m"
             color="active"
             onClick={() => {
-              close();
               onConfirm?.();
             }}
           >
