@@ -2,6 +2,7 @@
 
 GITHUB_SHA=$1
 MAIN_SCRIPT="src/main.ts"
+DEBUG_LOG="debug.log"
 NPM_BUILD="npm run build"
 NPM_PROD="npm run start:prod"
 
@@ -17,38 +18,36 @@ else
   WAS_STOP_PORT=3002
 fi
 
-echo ">>> Start image building... docker-compose.$GITHUB_SHA.$RUN_TARGET.yml" > debug.log
+DOCKER_COMPOSE_FILE="docker-compose.$GITHUB_SHA.$RUN_TARGET.yml"
 
-docker-compose -f "docker-compose.$GITHUB_SHA.$RUN_TARGET.yml" pull
-docker-compose -f "docker-compose.$GITHUB_SHA.$RUN_TARGET.yml" up -d
+echo ">>> Start image building... $DOCKER_COMPOSE_FILE" > $DEBUG_LOG
 
-echo "<<< Build Complete..." >> debug.log
+docker-compose -f "$DOCKER_COMPOSE_FILE" pull
+docker-compose -f "$DOCKER_COMPOSE_FILE" up -d
 
+echo "<<< Build Complete..." >> $DEBUG_LOG
 
-echo ">>> Start was reloading..." >> debug.log
+reload_application() {
+  local CONTAINER_NAME="$1"
+  local RUN_PORT="$2"
+  local STOP_PORT="$3"
+  local CMD="$4"
 
-WAS_ID=$(docker ps --filter "name=was-$RUN_TARGET" -q)
-WAS_PID=$(lsof -t -i:$WAS_RUN_PORT)
-kill -9 $WAS_PID
+  echo ">>> Start $CONTAINER_NAME reloading..." >> $DEBUG_LOG
 
-docker exec $WAS_ID /bin/bash -c "sed -i 's/port: number = $WAS_STOP_PORT/port: number = $WAS_RUN_PORT/' $MAIN_SCRIPT"
-docker exec $WAS_ID /bin/bash -c "$NPM_BUILD"
-docker exec $WAS_ID /bin/bash -c "$NPM_PROD"
+  CONTAINER_ID=$(docker ps --filter "name=$CONTAINER_NAME" -q)
 
-echo "<<< Reload Complete..." >> debug.log
+  PID=$(docker exec $CONTAINER_ID /bin/bash -c "lsof -t -i:$RUN_PORT")
+  docker exec $CONTAINER_ID /bin/bash -c "kill -9 $PID"
 
+  docker exec $CONTAINER_ID /bin/bash -c "sed -i 's/port: number = $STOP_PORT/port: number = $RUN_PORT/' $MAIN_SCRIPT"
+  docker exec $CONTAINER_ID /bin/bash -c "$CMD"
 
-echo ">>> Start signal reloading..." >> debug.log
+  echo "<<< Reload Complete..." >> $DEBUG_LOG
+}
 
-SIGNAL_ID=$(docker ps --filter "name=signal-$RUN_TARGET" -q)
-SIGNAL_PID=$(lsof -t -i:$((WAS_RUN_PORT + 1)))
-kill -9 $SIGNAL_PID
-
-docker exec $SIGNAL_ID /bin/bash -c "sed -i 's/port: number = $((WAS_STOP_PORT + 1))/port: number = $((WAS_RUN_PORT + 1))/' $MAIN_SCRIPT"
-docker exec $SIGNAL_ID /bin/bash -c "$NPM_BUILD"
-docker exec $SIGNAL_ID /bin/bash -c "$NPM_PROD"
-
-echo "<<< Reload Complete..." >> debug.log
+reload_application "was-$RUN_TARGET" $WAS_RUN_PORT $WAS_STOP_PORT "$NPM_BUILD && $NPM_PROD"
+reload_application "signal-$RUN_TARGET" $((WAS_RUN_PORT + 1)) $((WAS_STOP_PORT + 1)) "$NPM_BUILD && $NPM_PROD"
 
 
 echo ">>> Start nginx reloading..." >> debug.log
