@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { ChangeEvent, useEffect } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import ProfileSetting from '@components/ProfileSetting';
@@ -34,6 +34,8 @@ export default function ChattingPage() {
     getMedia({});
   }, []);
 
+  const sendImage = (e: ChangeEvent<HTMLInputElement>) => {};
+
   return (
     <ProfileSetting
       toggleVideo={toggleVideo}
@@ -46,6 +48,7 @@ export default function ChattingPage() {
       micList={micList}
       videoRef={localVideoRef}
       onConfirm={() => navigate('..')}
+      onChangeProfileImage={sendImage}
     />
   );
 }
