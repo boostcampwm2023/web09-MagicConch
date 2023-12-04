@@ -91,8 +91,8 @@ jobs:
 
       - name: Remove local docker-compose copied file
         run: |
-          rm docker-compose.blue.${{ github.sha }}.yml
-          rm docker-compose.green.${{ github.sha }}.yml
+          rm docker-compose.${{ github.sha }}.blue.yml
+          rm docker-compose.${{ github.sha }}.green.yml
 
   deploy:
     needs: build
