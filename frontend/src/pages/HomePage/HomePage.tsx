@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
 import Background from '@components/Background';
-import { CustomButton } from '@components/Buttons';
+import { Button } from '@components/Buttons';
 
 import { useSocket } from '@business/hooks/useSocket';
 
@@ -21,19 +21,19 @@ function HomePage() {
   return (
     <Background>
       <div className="relative top-75 flex gap-36 z-1">
-        <CustomButton
+        <Button
           size="m"
           onClick={moveAiChat}
         >
           AI에게 타로보기
-        </CustomButton>
-        <CustomButton
+        </Button>
+        <Button
           onClick={moveHumanChat}
           size="m"
           color="dark"
         >
           채팅방 개설하기
-        </CustomButton>
+        </Button>
       </div>
     </Background>
   );

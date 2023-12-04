@@ -1,4 +1,4 @@
-import { ButtonSize } from './CustomButton';
+import { ButtonSize } from './Button';
 import IconButton from './IconButton';
 
 interface IconToggleButtonProps {

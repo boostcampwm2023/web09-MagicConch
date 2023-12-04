@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import { CustomButton, IconButton } from '@components/Buttons';
+import { Button, IconButton } from '@components/Buttons';
 import type { Message as MessageType } from '@components/ChatContainer';
 
 import { getTarotImageQuery } from '@stores/queries/getTarotImageQuery';
@@ -55,13 +55,13 @@ function MessageBox({ tarotId, type, message, profile, button, shareLinkId }: Me
               id="TOLD"
               className="relative left-70"
             >
-              <CustomButton
+              <Button
                 size="s"
                 color="active"
                 onClick={button.onClick}
               >
                 {button.content}
-              </CustomButton>
+              </Button>
             </div>
           )}
         </div>

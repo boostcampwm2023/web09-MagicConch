@@ -1,4 +1,4 @@
-import { CustomButton, IconToggleButton } from '@components/Buttons';
+import { Button, IconToggleButton } from '@components/Buttons';
 import CamBox from '@components/CamBox';
 
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -41,7 +41,7 @@ export default function CamContainer({
         />
       </div>
       <div className="flex flex-col gap-30">
-        <CustomButton
+        <Button
           size="m"
           onClick={tarotButtonClick}
           disabled={tarotButtonDisabled}
@@ -53,7 +53,7 @@ export default function CamContainer({
             icon="tabler:cards-filled"
           />
           타로 카드 펼치기
-        </CustomButton>
+        </Button>
         <div className="flex-with-center gap-48">
           <IconToggleButton
             activeIcon="pepicons-pop:camera"

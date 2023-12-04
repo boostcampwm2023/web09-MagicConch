@@ -2,7 +2,7 @@ import { IconColor, iconColors } from '@constants/colors';
 
 import { Icon } from '@iconify/react';
 
-import CustomButton, { ButtonColor, ButtonSize } from './CustomButton';
+import Button, { ButtonColor, ButtonSize } from './Button';
 
 export interface IconButton {
   id?: string;
@@ -31,7 +31,7 @@ export default function IconButton({
   onClick,
 }: IconButtonProps & IconButton) {
   return (
-    <CustomButton
+    <Button
       size={buttonSize}
       color={buttonColor}
       onClick={onClick}
@@ -45,6 +45,6 @@ export default function IconButton({
         />
       )}
       {text && <span>{text}</span>}
-    </CustomButton>
+    </Button>
   );
 }

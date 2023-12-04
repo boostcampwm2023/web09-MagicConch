@@ -1,4 +1,4 @@
-import { CustomButton, IconButton } from '@components/Buttons';
+import { Button, IconButton } from '@components/Buttons';
 import CamBox from '@components/CamBox';
 import { CustomSelectOptions } from '@components/CustomSelect';
 
@@ -84,12 +84,12 @@ export default function ProfileSetting({
               onChange={changeMyAudio}
             />
           </div>
-          <CustomButton
+          <Button
             onClick={onConfirm}
             color="dark"
           >
             확인
-          </CustomButton>
+          </Button>
         </div>
       </div>
     </div>

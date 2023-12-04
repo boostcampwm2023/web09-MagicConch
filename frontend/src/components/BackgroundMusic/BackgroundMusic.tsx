@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { CustomButton } from '@components/Buttons';
+import { Button } from '@components/Buttons';
 
 import { getBgmQuery } from '@stores/queries/getBgmQuery';
 
@@ -13,7 +13,7 @@ function BackgroundMusic() {
   return (
     <div className="h-50 w-50 overflow-hidden fixed top-[10vh] right-25">
       <div className="absolute top-0 left-0">
-        <CustomButton
+        <Button
           color={playing ? 'active' : 'cancel'}
           circle
         >
@@ -21,7 +21,7 @@ function BackgroundMusic() {
             className="text-26"
             icon={playing ? 'ic:baseline-music-note' : 'ic:baseline-music-off'}
           />
-        </CustomButton>
+        </Button>
       </div>
       <audio
         className="opacity-0 absolute -top-30 -left-2 h-80"

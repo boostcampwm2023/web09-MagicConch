@@ -1,4 +1,4 @@
-import { CustomButton } from '@components/Buttons';
+import { Button } from '@components/Buttons';
 
 interface PopupProps {
   close: () => void;
@@ -13,7 +13,7 @@ export default function Popup({ close, onCancel, onConfirm, children }: PopupPro
       <div className="surface-content rounded p-16 gap-16">
         <div className="flex-with-center p-16 display-bold16">{children}</div>
         <div className="flex justify-around p-12">
-          <CustomButton
+          <Button
             size="m"
             color="dark"
             onClick={() => {
@@ -22,8 +22,8 @@ export default function Popup({ close, onCancel, onConfirm, children }: PopupPro
             }}
           >
             취소하기
-          </CustomButton>
-          <CustomButton
+          </Button>
+          <Button
             size="m"
             color="active"
             onClick={() => {
@@ -32,7 +32,7 @@ export default function Popup({ close, onCancel, onConfirm, children }: PopupPro
             }}
           >
             확인하기
-          </CustomButton>
+          </Button>
         </div>
       </div>
     </div>

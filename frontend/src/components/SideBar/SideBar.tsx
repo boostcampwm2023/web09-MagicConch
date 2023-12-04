@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { CustomButton } from '@components/Buttons';
+import { Button } from '@components/Buttons';
 
 import { Icon } from '@iconify/react';
 
@@ -33,7 +33,7 @@ function SideBar({ onSide, children }: SideBarProps) {
 
   return (
     <>
-      <CustomButton
+      <Button
         color="transparent"
         circle
         onClick={toggleOpened}
@@ -42,7 +42,7 @@ function SideBar({ onSide, children }: SideBarProps) {
           className="text-25"
           icon={`${opened ? 'carbon:side-panel-open' : 'carbon:side-panel-close'}`}
         />
-      </CustomButton>
+      </Button>
       <div
         className={`${!hidden && (opened ? 'animate-openingSidebar' : 'animate-closingSidebar')}
                     surface-alt w-500 h-[calc(100vh-48px)] absolute -right-500 top-48 flex-with-center overflow-hidden`}

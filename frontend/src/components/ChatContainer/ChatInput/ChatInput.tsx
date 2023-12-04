@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 
-import { CustomButton } from '@components/Buttons';
+import { Button } from '@components/Buttons';
 
 import { Icon } from '@iconify/react';
 
@@ -34,7 +34,7 @@ function ChatInput({ disabled, sendChatMessage }: ChatInputProps) {
         placeholder="Type Here"
         className="input input-bordered w-full display-medium16 sm:text-14"
       />
-      <CustomButton
+      <Button
         color="transparent"
         circle
         onClick={submitMessage}
@@ -43,7 +43,7 @@ function ChatInput({ disabled, sendChatMessage }: ChatInputProps) {
           icon="ion:send"
           className="text-white text-28"
         />
-      </CustomButton>
+      </Button>
     </div>
   );
 }
