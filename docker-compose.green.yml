@@ -18,7 +18,7 @@ services:
     expose:
       - "3002"
     volumes:
-      - /app/was/logs:/app/logs/was
+      - /var/log/was:/app/was/logs
 
   signal-green:
     build:
@@ -28,8 +28,6 @@ services:
       - WAS_PORT=${WAS_PORT}
     expose:
       - "3003"
-    volumes:
-      - /var/log/nginx:/app/logs/nginx
 
   nginx:
     build:
@@ -42,6 +40,8 @@ services:
       - was-green
       - signal-green
       - certbot
+    volumes:
+      - /var/log/nginx:/app/logs/nginx
 
   certbot:
     image: certbot/certbot
