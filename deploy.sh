@@ -2,7 +2,7 @@
 
 GITHUB_SHA=$1
 
-if docker ps --filter "name=was-blue" --quiet; then
+if docker ps --filter "name=was-blue" --format '{{.ID}}' | grep -E .; then
   RUN_TARGET="green"
   STOP_TARGET="blue"
   WAS_RUN_PORT=3002
