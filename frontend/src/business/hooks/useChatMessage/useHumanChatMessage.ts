@@ -33,7 +33,7 @@ export function useHumanChatMessage(chatChannel: React.MutableRefObject<RTCDataC
         if (message.type === CHAT_MESSAGE) {
           addMessage('left', message.content);
         }
-        if (message.type == PICK_CARD) {
+        if (message.type === PICK_CARD) {
           addMessage('right', { tarotId: message.content });
         }
       });
