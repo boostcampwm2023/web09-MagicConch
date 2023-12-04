@@ -4,7 +4,8 @@ import Background from '@components/Background';
 import ChatContainer from '@components/ChatContainer';
 import Header from '@components/Header';
 
-import { useAiChatMessage, useAiTarotSpread } from '@business/hooks/useAiChat';
+import { useAiChatMessage } from '@business/hooks/useChatMessage';
+import { useAiTarotSpread } from '@business/hooks/useTarotSpread';
 
 interface AIChatPageProps {}
 
