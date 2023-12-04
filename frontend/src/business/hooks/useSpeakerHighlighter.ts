@@ -16,32 +16,40 @@ export default function useSpeakerHighlighter(videoRef: React.RefObject<HTMLVide
 
     const stream = videoElement.captureStream();
 
+    let interval: NodeJS.Timeout;
+
     stream.onactive = () => {
       const audioContext = new window.AudioContext();
 
       const analyser = audioContext.createAnalyser();
+      analyser.fftSize = FFT_SIZE;
+
       const source = audioContext.createMediaStreamSource(stream);
       source.connect(analyser);
 
-      detectSpreaker(videoElement, analyser);
+      let prevVolume = 0;
+      const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+      if (interval) {
+        clearInterval(interval);
+      }
+
+      interval = setInterval(() => {
+        analyser.getByteFrequencyData(dataArray);
+        const curVolume = calculateAverage(dataArray);
+
+        animateHighLight(videoElement, prevVolume, curVolume);
+
+        prevVolume = curVolume;
+      }, INTERVAL_TIME);
+    };
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
     };
   }, [videoRef.current]);
-}
-
-function detectSpreaker(videoElement: HTMLVideoElement, analyser: AnalyserNode) {
-  analyser.fftSize = FFT_SIZE;
-  const dataArray = new Uint8Array(analyser.frequencyBinCount);
-
-  let prevVolume = 0;
-
-  setInterval(() => {
-    analyser.getByteFrequencyData(dataArray);
-    const curVolume = calculateAverage(dataArray);
-
-    animateHighLight(videoElement, prevVolume, curVolume);
-
-    prevVolume = curVolume;
-  }, INTERVAL_TIME);
 }
 
 function animateHighLight(videoElement: HTMLVideoElement, startLength: number, endLength: number) {
