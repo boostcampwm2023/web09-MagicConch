@@ -9,7 +9,7 @@ import { useSignalingSocket } from './useSignalingSocket';
 import { useSocket } from './useSocket';
 
 export function useWebRTC() {
-  const { isSocketConnected, disconnectSocket, connectSocket } = useSocket('WebRTC');
+  const { isSocketConnected, disconnectSocket, connectSocket } = useSocket('WebRTC', '/signal');
 
   const { mediaInfos } = useMediaInfoContext();
   const {
