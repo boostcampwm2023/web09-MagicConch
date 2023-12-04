@@ -12,6 +12,7 @@ import { Server, Socket } from 'socket.io';
 import { ChatService, ChattingInfo } from 'src/chat/chat.service';
 import { ERR_MSG } from 'src/common/constants/errors';
 import { LoggerService } from 'src/logger/logger.service';
+import { CreateTarotResultDto } from 'src/tarot/dto/create-tarot-result.dto';
 import { TarotService } from 'src/tarot/tarot.service';
 import {
   askTarotCardCandidates,
@@ -19,10 +20,7 @@ import {
   welcomeMessage,
 } from '../common/constants/events';
 import ClovaStudio from './clova-studio';
-import {
-  chatLog2createChattingMessageDtos,
-  result2createTarotResultDto,
-} from './create-dto-helper';
+import { createChattingMessageDtos } from './create-dto-helper';
 import { readTokenStream, string2TokenStream } from './stream';
 import type { MySocket } from './type';
 
@@ -149,7 +147,8 @@ export class EventsGateway
 
   private async saveChatLog(client: MySocket) {
     try {
-      const createChattingMessageDto = chatLog2createChattingMessageDtos(
+      const createChattingMessageDto = createChattingMessageDtos(
+        client.chatRoomId,
         client.chatLog,
       );
       this.chatService.createMessage(
@@ -172,7 +171,8 @@ export class EventsGateway
     result: string,
   ): Promise<string> {
     try {
-      const createTarotResultDto = result2createTarotResultDto(cardIdx, result);
+      const createTarotResultDto: CreateTarotResultDto =
+        CreateTarotResultDto.fromResult(cardIdx, result);
       return await this.tarotService.createTarotResult(createTarotResultDto);
     } catch (err: unknown) {
       if (err instanceof Error) {
