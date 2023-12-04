@@ -1,24 +1,26 @@
-import useDisplayTarotCard from '../useDisplayTarotCard';
-import useOverlay from '../useOverlay';
-import { useTarotSpread } from '../useTarotSpread';
 import { useEffect, useState } from 'react';
 
 import Popup from '@components/Popup';
 
+import useOverlay from '@business/hooks/useOverlay';
+
 import { HumanChatEvents } from '@constants/events';
+
+import useDisplayTarotCard from './useDisplayTarotCard';
+import { useTarotSpread } from './useTarotSpread';
 
 const { PICK_CARD, TAROT_SPREAD } = HumanChatEvents;
 
-export default function useHumanTarotSpread(
+export function useHumanTarotSpread(
   chatChannel: React.MutableRefObject<RTCDataChannel | undefined>,
-  setTarotId: (idx: number) => void,
+  onPickCard: (idx: number) => void,
 ) {
   const [tarotButtonDisabled, setTarotButtonDisabled] = useState(true);
 
   const pickCard = (idx: number) => {
     const payload = { type: PICK_CARD, content: idx };
     chatChannel.current?.send(JSON.stringify(payload));
-    setTarotId(idx);
+    onPickCard(idx);
   };
 
   const { openTarotSpread } = useTarotSpread(pickCard);

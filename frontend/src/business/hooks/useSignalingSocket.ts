@@ -1,19 +1,14 @@
-import { useNavigate } from 'react-router-dom';
-
 import { HumanSocketManager } from '@business/services/SocketManager';
 
 import { usePasswordPopup } from './useHumanChat';
 
 interface useSignalingSocketProps {
-  // roomName: string;
   peerConnectionRef: React.MutableRefObject<RTCPeerConnection | undefined>;
   negotiationDataChannels: ({ roomName }: { roomName: string }) => void;
 }
 
 export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels }: useSignalingSocketProps) {
   const socketManager = new HumanSocketManager();
-
-  const navigate = useNavigate();
 
   const { openPasswordPopup } = usePasswordPopup();
 
@@ -60,21 +55,23 @@ export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels 
 
   const createRoom = async ({
     onSuccess,
+    onClose,
   }: {
-    onSuccess?: ({ roomName, password }: { roomName: string; password: string }) => void;
+    onSuccess?: ({ roomName, password, close }: { roomName: string; password: string; close: () => void }) => void;
+    onClose?: ({ close }: { close: () => void }) => void;
   }) => {
     openPasswordPopup({
       host: true,
-      onCancel: () => {
-        navigate('..');
+      onClose: () => {
+        onClose?.({ close });
       },
       onSubmit: ({ password, close }) => {
         socketManager.emit('createRoom', password);
 
-        close();
+        // close();
 
         socketManager.on('roomCreated', (roomName: string) => {
-          onSuccess?.({ roomName, password });
+          onSuccess?.({ roomName, password, close });
         });
       },
     });
@@ -90,13 +87,10 @@ export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels 
     roomName: string;
     onFull?: () => void;
     onFail?: () => void;
-    onSuccess?: () => void;
+    onSuccess?: ({ close }: { close: () => void }) => void;
     onHostExit?: () => void;
   }) => {
     openPasswordPopup({
-      onCancel: () => {
-        navigate('/');
-      },
       onSubmit: ({ password, close }) => {
         socketManager.emit('joinRoom', roomName, password);
 
@@ -109,8 +103,7 @@ export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels 
         });
 
         socketManager.on('joinRoomSuccess', async () => {
-          close();
-          onSuccess?.();
+          onSuccess?.({ close });
         });
 
         socketManager.on('hostExit', () => {

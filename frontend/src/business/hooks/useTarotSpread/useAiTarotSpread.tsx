@@ -1,14 +1,15 @@
-import { useTarotSpread } from '../useTarotSpread';
 import { useEffect } from 'react';
 
 import { AISocketManager } from '@business/services/SocketManager';
 
-export function useAiTarotSpread(setTarotId: (idx: number) => void) {
+import { useTarotSpread } from './useTarotSpread';
+
+export function useAiTarotSpread(onPickCard: (idx: number) => void) {
   const socketManager = new AISocketManager();
 
   const pickCard = (idx: number) => {
     socketManager.emit('tarotRead', idx);
-    setTarotId(idx);
+    onPickCard(idx);
   };
 
   const { openTarotSpread } = useTarotSpread(pickCard);
