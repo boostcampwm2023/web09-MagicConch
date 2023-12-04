@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Location, unstable_useBlocker, useNavigate } from 'react-router-dom';
+import { Location, useBlocker as reactRouterUserBlocker, useNavigate } from 'react-router-dom';
 
 import { useExitPopup } from './useHumanChat/useExitPopup';
 
@@ -18,7 +18,7 @@ export function useBlocker({
 
   const { openExitPopup } = useExitPopup();
 
-  unstable_useBlocker(args => {
+  reactRouterUserBlocker(args => {
     if (!blockedGoBack) {
       return false;
     }
