@@ -22,18 +22,18 @@ export class ErrorsInterceptor implements NestInterceptor {
     return next.handle().pipe(
       catchError((err: unknown) => {
         if (err instanceof QueryFailedError) {
-          this.logger.error(`${logMessage} : ${err.message}`, err.stack);
-          return throwError(() => this.handleQueryFailedError(err));
+          return throwError(() =>
+            this.handleQueryFailedError(
+              err,
+              this.makeErrorLogMessage(logMessage, err),
+            ),
+          );
         }
 
+        this.logger.error(this.makeErrorLogMessage(logMessage, err));
         if (err instanceof Error) {
-          this.logger.error(
-            `${logMessage} : ${err.message || ERR_MSG.UNKNOWN}`,
-          );
           return throwError(() => err);
         }
-
-        this.logger.error(`${logMessage} : ${ERR_MSG.UNKNOWN}`);
         return throwError(() => new Error(ERR_MSG.UNKNOWN));
       }),
     );
@@ -42,7 +42,16 @@ export class ErrorsInterceptor implements NestInterceptor {
   /**
    * TypeORM Exception
    */
-  private handleQueryFailedError(err: QueryFailedError): Error {
+  private handleQueryFailedError(
+    err: QueryFailedError,
+    logMessage: string,
+  ): Error {
+    const isFatal: boolean = err.message.includes('ETIMEOUT');
+    this.logQueryFailedError(logMessage, isFatal, err.stack);
+
+    if (err.message.includes('ETIMEOUT')) {
+      return new Error(ERR_MSG.ETIMEOUT);
+    }
     if (err.message.includes('UNIQUE')) {
       return new Error(ERR_MSG.NOT_UNIQUE);
     }
@@ -53,5 +62,20 @@ export class ErrorsInterceptor implements NestInterceptor {
       throw new Error(ERR_MSG.OPTIMISTIC_LOCK);
     }
     return new Error(ERR_MSG.UNKNOWN_DATABASE);
+  }
+
+  private logQueryFailedError(
+    logMessage: string,
+    isFatal: boolean,
+    trace?: string,
+  ): void {
+    if (isFatal) {
+      return this.logger.fatal(logMessage, trace);
+    }
+    this.logger.error(logMessage, trace);
+  }
+
+  private makeErrorLogMessage(logMessage: string, err: any): string {
+    return `${logMessage} : ${err.message || ERR_MSG.UNKNOWN}`;
   }
 }
