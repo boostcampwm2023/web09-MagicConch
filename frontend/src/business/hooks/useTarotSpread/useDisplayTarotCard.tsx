@@ -1,4 +1,4 @@
-import useOverlay from '../useOverlay';
+import useOverlay from '@business/hooks/useOverlay';
 
 import { getTarotImageQuery } from '@stores/queries/getTarotImageQuery';
 
