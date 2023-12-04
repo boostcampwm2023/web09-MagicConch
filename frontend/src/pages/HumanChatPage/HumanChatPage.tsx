@@ -17,11 +17,10 @@ export interface OutletContext extends ReturnType<typeof useWebRTC> {
 }
 
 export default function HumanChatPage() {
-  const webRTCData = useWebRTC();
-
-  const { roomName } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
+  const webRTCData = useWebRTC();
+  const { roomName } = useParams();
 
   useEffect(() => {
     if (roomName || !location.state?.host) {
@@ -29,8 +28,13 @@ export default function HumanChatPage() {
     }
 
     webRTCData.createRoom({
-      onSuccess: ({ roomName }) => {
+      onSuccess: ({ roomName, close }) => {
+        close();
         navigate(roomName, { state: { host: true } });
+      },
+      onClose: ({ close }) => {
+        close();
+        navigate('/');
       },
     });
   }, []);

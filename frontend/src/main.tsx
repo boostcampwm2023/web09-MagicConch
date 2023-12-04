@@ -1,7 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
 
 import { OverlayProvider } from './business/hooks/useOverlay/OverlayProvider';
 
@@ -21,9 +20,7 @@ const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <QueryClientProvider client={queryClient}>
     <OverlayProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <App />
     </OverlayProvider>
     <ReactQueryDevtools initialIsOpen={false} />
   </QueryClientProvider>,

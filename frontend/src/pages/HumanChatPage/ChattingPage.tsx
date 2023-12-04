@@ -4,6 +4,7 @@ import { useLocation, useNavigate, useOutletContext, useParams } from 'react-rou
 import { IconButton } from '@components/Buttons';
 import CamContainer from '@components/CamContainer';
 
+import { useBlocker } from '@business/hooks/useBlocker';
 import useSpeakerHighlighter from '@business/hooks/useSpeakerHighlighter';
 
 import type { OutletContext } from './HumanChatPage';
@@ -27,6 +28,10 @@ export default function ChattingPage() {
   const { state } = useLocation();
   const navigate = useNavigate();
 
+  useBlocker({
+    when: ({ nextLocation }) => nextLocation.pathname === '/' || nextLocation.pathname === '/chat/human',
+    onConfirm: () => navigate('/'),
+  });
   useSpeakerHighlighter(localVideoRef);
   useSpeakerHighlighter(remoteVideoRef);
 

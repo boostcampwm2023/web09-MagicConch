@@ -1,18 +1,13 @@
-import { useNavigate } from 'react-router-dom';
-
 import { usePasswordPopup } from './useHumanChat';
 import { useSocket } from './useSocket';
 
 interface useSignalingSocketProps {
-  // roomName: string;
   peerConnectionRef: React.MutableRefObject<RTCPeerConnection | undefined>;
   negotiationDataChannels: ({ roomName }: { roomName: string }) => void;
 }
 
 export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels }: useSignalingSocketProps) {
   const { socketEmit, socketOn } = useSocket('WebRTC');
-
-  const navigate = useNavigate();
 
   const { openPasswordPopup } = usePasswordPopup();
 
@@ -59,21 +54,23 @@ export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels 
 
   const createRoom = async ({
     onSuccess,
+    onClose,
   }: {
-    onSuccess?: ({ roomName, password }: { roomName: string; password: string }) => void;
+    onSuccess?: ({ roomName, password, close }: { roomName: string; password: string; close: () => void }) => void;
+    onClose?: ({ close }: { close: () => void }) => void;
   }) => {
     openPasswordPopup({
       host: true,
-      onCancel: () => {
-        navigate('..');
+      onClose: () => {
+        onClose?.({ close });
       },
       onSubmit: ({ password, close }) => {
         socketEmit('createRoom', password);
 
-        close();
+        // close();
 
         socketOn('roomCreated', (roomName: string) => {
-          onSuccess?.({ roomName, password });
+          onSuccess?.({ roomName, password, close });
         });
       },
     });
@@ -93,9 +90,6 @@ export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels 
     onHostExit?: () => void;
   }) => {
     openPasswordPopup({
-      onCancel: () => {
-        navigate('/');
-      },
       onSubmit: ({ password, close }) => {
         socketEmit('joinRoom', roomName, password);
 
