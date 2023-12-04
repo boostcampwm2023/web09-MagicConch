@@ -13,15 +13,24 @@ else
   WAS_STOP_PORT=3002
 fi
 
+echo $RUN_TARGET
+echo $STOP_TARGET
+
+echo "start building..."
+docker-compose -f "docker-compose.${RUN_TARGET}.${{ github.sha }}.yml" pull
 docker-compose -f "docker-compose.${RUN_TARGET}.${{ github.sha }}.yml" up -d
+
+echo "nginx reload..."
 sed -i "s/was-${STOP_TARGET}:${WAS_STOP_PORT}/was-${RUN_TARGET}:${WAS_RUN_PORT}/" config/nginx/default.conf
 sed -i "s/signal-${STOP_TARGET}:${WAS_STOP_PORT + 1}/signal-${RUN_TARGET}:${WAS_RUN_PORT + 1}/" config/nginx/default.conf
 docker-compose -f "docker-compose.${RUN_TARGET}.${{ github.sha }}.yml" exec nginx nginx -s reload
-            
+
+echo "wait new version...."
 while [ -z "$(docker ps --filter "name=was-${RUN_TARGET}" --quiet)" ]; do
-  sleep 5
+  sleep 3
 done
 sleep 60
 
+echo "delete old version..."
 rm .env
 docker rm -f $(docker ps --filter "name=${STOP_TARGET}" --quiet)
