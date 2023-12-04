@@ -117,4 +117,4 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd ~/app
-            source deploy.sh "$GITHUB_SHA"
+            source deploy.sh "${{ github.sha }}"
