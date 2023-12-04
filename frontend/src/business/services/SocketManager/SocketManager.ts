@@ -1,7 +1,7 @@
 import { Socket, io } from 'socket.io-client';
 
 class SocketManager {
-  static socket: Socket | undefined;
+  static #socket: Socket | undefined;
 
   #url: string;
   #path?: string;
@@ -11,33 +11,42 @@ class SocketManager {
     this.#path = path;
   }
 
+  get socket(): Socket | undefined {
+    return SocketManager.#socket;
+  }
+
+  get connected(): boolean {
+    if (!this.socket) return false;
+    return this.socket.connected;
+  }
+
   connect() {
-    if (SocketManager.socket) {
-      SocketManager.socket.disconnect();
+    if (this.socket) {
+      this.socket.disconnect();
     }
-    SocketManager.socket = io(this.#url, { path: this.#path });
+    SocketManager.#socket = io(this.#url, { path: this.#path });
   }
 
   disconnect() {
-    if (!SocketManager.socket) {
+    if (!this.socket) {
       throw new Error('소켓이 존재하지 않습니다.');
     }
-    SocketManager.socket.disconnect();
-    SocketManager.socket = undefined;
+    this.socket.disconnect();
+    SocketManager.#socket = undefined;
   }
 
   on<U>(eventName: string, eventListener: (args: U) => void) {
-    if (!SocketManager.socket) {
+    if (!this.socket) {
       throw new Error('소켓이 존재하지 않습니다.');
     }
-    SocketManager.socket.on(eventName, eventListener);
+    this.socket.on(eventName, eventListener);
   }
 
   emit(eventName: string, ...eventArgs: unknown[]) {
-    if (!SocketManager.socket) {
+    if (!this.socket) {
       throw new Error('소켓이 존재하지 않습니다.');
     }
-    SocketManager.socket.emit(eventName, ...eventArgs);
+    this.socket.emit(eventName, ...eventArgs);
   }
 }
 
