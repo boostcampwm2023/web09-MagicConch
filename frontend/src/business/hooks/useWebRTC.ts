@@ -1,15 +1,16 @@
 import { useEffect } from 'react';
 
+import { HumanSocketManager } from '@business/services/SocketManager';
+
 import { useControllMedia } from './useControllMedia';
 import { useDataChannel } from './useDataChannel';
 import { useMedia } from './useMedia';
 import { useMediaInfoContext } from './useMediaInfoContext';
 import { useRTCPeerConnection } from './useRTCPeerConnection';
 import { useSignalingSocket } from './useSignalingSocket';
-import { useSocket } from './useSocket';
 
 export function useWebRTC() {
-  const { isSocketConnected, disconnectSocket, connectSocket } = useSocket('WebRTC', '/signal');
+  const socketManager = new HumanSocketManager();
 
   const { mediaInfos } = useMediaInfoContext();
   const {
@@ -62,20 +63,18 @@ export function useWebRTC() {
   };
 
   const endWebRTC = () => {
-    if (isSocketConnected()) {
+    if (socketManager.connected) {
       closeRTCPeerConnection();
       closeDataChannels();
     }
   };
 
   useEffect(() => {
-    if (!isSocketConnected()) {
-      connectSocket(import.meta.env.VITE_HUMAN_SOCKET_URL);
-    }
+    socketManager.connect();
 
     return () => {
       endWebRTC();
-      disconnectSocket();
+      socketManager.disconnect();
     };
   }, []);
 
