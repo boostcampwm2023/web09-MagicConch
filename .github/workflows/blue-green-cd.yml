@@ -2,7 +2,7 @@ name: Blue/Green CD
 
 on:
   push:
-    branches: ["dev", "BE/bugfix/#345-nginx-reload"]
+    branches: ["dev"]
 
 jobs:
   build:
