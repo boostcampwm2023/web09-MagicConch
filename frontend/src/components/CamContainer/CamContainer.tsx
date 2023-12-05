@@ -40,7 +40,7 @@ export default function CamContainer({
           defaultImage="bg-sponge"
         />
       </div>
-      <div className="flex flex-col gap-30">
+      <div className="flex flex-col gap-30 z-10">
         <CustomButton
           size="m"
           onClick={tarotButtonClick}
