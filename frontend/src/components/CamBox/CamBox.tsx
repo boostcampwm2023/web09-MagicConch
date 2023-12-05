@@ -25,6 +25,7 @@ const CamBox = ({
   nickname,
   defaultNickname,
 }: CamBoxProps) => {
+  console.log(nickname);
   const loading = useMemo(() => !videoRef.current?.srcObject, [videoRef.current?.srcObject]);
   const hidden = useMemo(() => !cameraConnected, [cameraConnected]);
 
@@ -49,22 +50,24 @@ const CamBox = ({
           autoPlay
           playsInline
         />
-        <div className="absolute bottom-0 left-0 p-30 flex gap-5 text-white sm:p-20">
-          <Icon
-            icon={`${cameraConnected ? 'pepicons-pop:camera' : 'pepicons-pop:camera-off'}`}
-            className={`rounded-full w-40 h-40 sm:w-30 sm:h-30 p-8 sm:p-4 ${
-              cameraConnected ? 'surface-point-alt' : 'surface-disabled'
-            }`}
-          />
-          <Icon
-            icon={`${audioConnected ? 'mingcute:mic-line' : 'mingcute:mic-off-line'}`}
-            className={`rounded-full w-40 h-40 sm:w-30 sm:h-30 p-8 sm:p-4 ${
-              audioConnected ? 'surface-point-alt' : 'surface-disabled'
-            }`}
-          />
-        </div>
-        <div className="flex-1 flex-with-center rounded-full w-40 h-40 p-8 surface-disabled">
-          {nickname ?? defaultNickname}
+        <div className="w-full absolute bottom-0 left-0 p-30 flex gap-[10%] text-white sm:p-20">
+          <div className="flex gap-5">
+            <Icon
+              icon={`${cameraConnected ? 'pepicons-pop:camera' : 'pepicons-pop:camera-off'}`}
+              className={`rounded-full w-40 h-40 sm:w-30 sm:h-30 p-8 sm:p-4 ${
+                cameraConnected ? 'surface-point-alt' : 'surface-disabled'
+              }`}
+            />
+            <Icon
+              icon={`${audioConnected ? 'mingcute:mic-line' : 'mingcute:mic-off-line'}`}
+              className={`rounded-full w-40 h-40 sm:w-30 sm:h-30 p-8 sm:p-4 ${
+                audioConnected ? 'surface-point-alt' : 'surface-disabled'
+              }`}
+            />
+          </div>
+          <div className="flex-1 flex-with-center rounded-full  w-40 h-40 sm:w-30 sm:h-30 p-8 sm:p-4 surface-disabled line-clamp-1">
+            {nickname ?? defaultNickname}
+          </div>
         </div>
       </div>
     </>

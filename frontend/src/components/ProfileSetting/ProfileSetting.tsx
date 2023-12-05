@@ -1,5 +1,6 @@
 import { Button, IconButton, InputFileButton } from '@components/Buttons';
 import CamBox from '@components/CamBox';
+import InputText from '@components/InputText';
 import { SelectOptions } from '@components/Select';
 
 import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
@@ -58,26 +59,12 @@ export default function ProfileSetting({
             nickname={myNickname}
             defaultNickname="나"
           />
-          <DeviceToggleButtons
-            cameraActive={myVideoOn}
-            micActive={myMicOn}
-            toggleVideo={toggleVideo}
-            toggleAudio={toggleAudio}
-          />
           <div className="flex flex-col gap-24 sm:gap-10 sm:w-[80vw] sm:scale-90">
             <div className="flex justify-between gap-12">
               <div className="flex flex-col gap-4 w-240">
                 <span className="text-strong display-bold14">프로필 이미지를 설정하세요.</span>
                 <span className="text-strong display-medium12">카메라가 off 되었을 때 표시됩니다.</span>
               </div>
-              <IconButton
-                icon="ph:camera-bold"
-                iconColor="textWhite"
-                buttonColor="dark"
-              />
-            </div>
-            <div className="flex flex-col gap-4">
-              <span className="text-strong display-bold14">상대방에게 표시될 이름을 입력하세요.</span>
               <InputFileButton
                 onChange={onChangeProfileImage}
                 accept="image/*"
@@ -88,6 +75,10 @@ export default function ProfileSetting({
                   buttonColor="dark"
                 />
               </InputFileButton>
+            </div>
+            <div className="flex flex-col gap-4">
+              <span className="text-strong display-bold14">상대방에게 표시될 이름을 입력하세요.</span>
+              <InputText onChange={onChangeNickname} />
             </div>
             <div className="z-20">
               <DeviceSelect
