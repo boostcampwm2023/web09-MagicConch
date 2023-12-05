@@ -15,12 +15,12 @@ run_docker() {
 
   DOCKER_COMPOSE_FILE="docker-compose.$GITHUB_SHA.$RUN_TARGET.yml"
 
-  echo "<<< Run docker compose ... $DOCKER_COMPOSE_FILE" > $DEBUG_LOG
+  echo "<<< Run docker compose : $DOCKER_COMPOSE_FILE" > $DEBUG_LOG
 
   docker-compose -f "$DOCKER_COMPOSE_FILE" pull
   docker-compose -f "$DOCKER_COMPOSE_FILE" up -d
 
-  echo ">>> Run complete ..." >> $DEBUG_LOG
+  echo ">>> Run complete" >> $DEBUG_LOG
   print_line
 }
 
@@ -29,13 +29,13 @@ change_port() {
   local RUN_PORT="$2"
   local STOP_PORT="$3"
 
-  echo "kill process running on $STOP_PORT ..." >> $DEBUG_LOG
+  echo "* kill process running on $STOP_PORT" >> $DEBUG_LOG
   docker exec $CONTAINER_ID /bin/bash -c "pkill -f ':$STOP_PORT'"
     
-  echo "change port ... ($STOP_PORT to $RUN_PORT)" >> $DEBUG_LOG
+  echo "* change port : $STOP_PORT to $RUN_PORT" >> $DEBUG_LOG
   docker exec $CONTAINER_ID /bin/bash -c "sed -i 's/port: number = $STOP_PORT/port: number = $RUN_PORT/' $MAIN_SCRIPT"
 
-  echo "restart application ..." >> $DEBUG_LOG
+  echo "* restart application : " >> $DEBUG_LOG
   docker exec -d $CONTAINER_ID /bin/bash -c "$NPM_BUILD && $NPM_PROD"
 }
 
@@ -45,13 +45,13 @@ reload_application() {
   local STOP_PORT="$3"
 
   CONTAINER_ID=$(docker ps --filter "name=$CONTAINER_NAME" -q)
-  echo "<<< Reload $CONTAINER_NAME($CONTAINER_ID)..." >> $DEBUG_LOG
+  echo "<<< Reload $CONTAINER_NAME ( $CONTAINER_ID )" >> $DEBUG_LOG
 
   if ((RUN_PORT > 3001)); then
     change_port "$CONTAINER_ID" $RUN_PORT $STOP_PORT
-    echo ">>> Reload complete ... $CONTAINER_NAME running on $RUN_PORT" >> $DEBUG_LOG
+    echo ">>> Reload complete : $CONTAINER_NAME running on $RUN_PORT" >> $DEBUG_LOG
   else
-    echo ">>> Reload pass ... $CONTAINER_NAME running on $RUN_PORT" >> $DEBUG_LOG
+    echo ">>> Reload pass : $CONTAINER_NAME running on $RUN_PORT" >> $DEBUG_LOG
   fi
   print_line
 }
@@ -62,7 +62,7 @@ reload_nginx() {
   local WAS_RUN_PORT="$3"
   local WAS_STOP_PORT="$4"
 
-  echo "<<< Reload nginx ..." >> $DEBUG_LOG
+  echo "<<< Reload nginx" >> $DEBUG_LOG
 
   NGINX_ID=$(docker ps --filter "name=nginx" -q)
   NGINX_CONFIG="/etc/nginx/conf.d/default.conf"
@@ -71,7 +71,7 @@ reload_nginx() {
   docker exec $NGINX_ID /bin/bash -c "sed -i 's/signal-$STOP_TARGET:$((WAS_STOP_PORT + 1))/signal-$RUN_TARGET:$((WAS_RUN_PORT + 1))/' $NGINX_CONFIG"
   docker exec $NGINX_ID /bin/bash -c "nginx -s reload"
 
-  echo ">>> Reload complete..." >> $DEBUG_LOG
+  echo ">>> Reload complete" >> $DEBUG_LOG
   print_line
 }
 
@@ -88,11 +88,11 @@ blue_green() {
 
   reload_nginx "$RUN_TARGET" "$STOP_TARGET" $WAS_RUN_PORT $WAS_STOP_PORT
 
-  echo "Delete .env file ..." >> $DEBUG_LOG
+  echo "Delete .env file" >> $DEBUG_LOG
   print_line
   rm .env
 
-  echo "Down old version ..." >> $DEBUG_LOG
+  echo "Down old version" >> $DEBUG_LOG
   STOP_CONTAINER_ID=$(docker ps --filter "name=$STOP_TARGET" --quiet)
   if [ -n "$STOP_CONTAINER_ID" ]; then
     docker rm -f $STOP_CONTAINER_ID
