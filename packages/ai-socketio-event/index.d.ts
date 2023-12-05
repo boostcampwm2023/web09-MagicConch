@@ -1,1 +1,2 @@
-export type CustomType = number;
+type ServerEvent = "tarotCard" | "chatEnd" | "streamStart" | "streaming" | "streamEnd";
+type ClientEvent = "message" | "tarotRead" | "tarotRead";
