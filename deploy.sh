@@ -5,37 +5,46 @@ MAIN_SCRIPT="src/main.ts"
 DEBUG_LOG="debug.log"
 NPM_BUILD="npm run build"
 NPM_PROD="npm run start:prod"
+CMD="$NPM_BUILD; $NPM_PROD"
 
 print_line() {
   echo " " >> $DEBUG_LOG
+}
+
+change_port() {
+  local CONTAINER_ID="$1"
+  local RUN_PORT="$2"
+  local STOP_PORT="$3"
+  
+  NODE_PROCESS=$(docker exec $CONTAINER_ID /bin/bash -c "ps aux | grep 'npm run start' | grep -v grep | awk '{print \$2}'")
+
+  if [ -n "$NODE_PROCESS" ]; then
+    echo "kill PID #$NODE_PROCESS..." >> $DEBUG_LOG
+    docker exec $CONTAINER_ID /bin/bash -c "kill -9 $NODE_PROCESS"
+    sleep 10
+  fi
+    
+  echo "change port... ($STOP_PORT to $RUN_PORT)" >> $DEBUG_LOG
+  docker exec $CONTAINER_ID /bin/bash -c "sed -i 's/port: number = $STOP_PORT/port: number = $RUN_PORT/' $MAIN_SCRIPT"
+
+  echo "restart application ... $CMD" >> $DEBUG_LOG
+  docker exec $CONTAINER_ID /bin/bash -c "$CMD"
 }
 
 reload_application() {
   local CONTAINER_NAME="$1"
   local RUN_PORT="$2"
   local STOP_PORT="$3"
-  local CMD="$4"
-
-  echo "<<< Reload $CONTAINER_NAME..." >> $DEBUG_LOG
 
   CONTAINER_ID=$(docker ps --filter "name=$CONTAINER_NAME" -q)
-  NODE_PROCESS=$(docker exec $CONTAINER_ID /bin/bash -c "ps aux | grep 'npm run start' | grep -v grep | awk '{print \$2}'")
+  echo "<<< Reload $CONTAINER_NAME($CONTAINER_ID)..." >> $DEBUG_LOG
 
-  if [ -n "$NODE_PROCESS" ]; then
-    echo "kill PID #$NODE_PROCESS..." >> $DEBUG_LOG
-    docker exec -it $CONTAINER_ID /bin/bash -c "kill -9 $NODE_PROCESS"
-    sleep 10
+  if ((RUN_PORT > 3001)); then
+    change_port "$CONTAINER_ID" $RUN_PORT $STOP_PORT
+    echo ">>> Reload complete... $CONTAINER_NAME running on $RUN_PORT" >> $DEBUG_LOG
+  else
+    echo ">>> Reload pass... $CONTAINER_NAME running on $RUN_PORT" >> $DEBUG_LOG
   fi
-
-  echo "change port... ($STOP_PORT to $RUN_PORT)" >> $DEBUG_LOG
-  docker exec $CONTAINER_ID /bin/bash -c "sed -i 's/port: number = $STOP_PORT/port: number = $RUN_PORT/' $MAIN_SCRIPT"
-
-  echo "restart nest application ... $CMD" >> $DEBUG_LOG
-  docker exec -t $CONTAINER_ID /bin/bash -c "$CMD"
-  CMD_EXIT_CODE=$?
-  echo "exit code... $CMD_EXIT_CODE" >> $DEBUG_LOG
-
-  echo ">>> Reload complete... $CONTAINER_NAME running on $RUN_PORT" >> $DEBUG_LOG
   print_line
 }
 
@@ -61,8 +70,8 @@ docker-compose -f "$DOCKER_COMPOSE_FILE" up -d
 echo ">>> Run complete..." >> $DEBUG_LOG
 print_line
 
-reload_application "was-$RUN_TARGET" $WAS_RUN_PORT $WAS_STOP_PORT "$NPM_BUILD; $NPM_PROD"
-reload_application "signal-$RUN_TARGET" $((WAS_RUN_PORT + 1)) $((WAS_STOP_PORT + 1)) "$NPM_BUILD; $NPM_PROD"
+reload_application "was-$RUN_TARGET" $WAS_RUN_PORT $WAS_STOP_PORT
+reload_application "signal-$RUN_TARGET" $((WAS_RUN_PORT + 1)) $((WAS_STOP_PORT + 1))
 
 echo "<<< Reload nginx..." >> $DEBUG_LOG
 
