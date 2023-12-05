@@ -59,21 +59,14 @@ export default function ChattingPage() {
   };
 
   const sendProfileInfoWithNavigate = () => {
-    if (profileChannel.current?.readyState === 'open') {
-      if (!myProfile) {
-        return;
-      }
-
+    if (profileChannel.current?.readyState === 'open' && myProfile) {
       const dataArray = arrayBuffer2Array(myProfile.arrayBuffer);
       const sendJson = JSON.stringify({ arrayBuffer: dataArray, type: myProfile.type });
 
       profileChannel.current?.send?.(sendJson);
     }
 
-    if (nicknameChannel.current?.readyState === 'open') {
-      if (!myNickname) {
-        return;
-      }
+    if (nicknameChannel.current?.readyState === 'open' && myNickname) {
       nicknameChannel.current?.send?.(myNickname);
     }
 
