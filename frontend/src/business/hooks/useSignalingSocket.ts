@@ -1,13 +1,13 @@
 import { HumanSocketManager } from '@business/services/SocketManager';
 
-import { usePasswordPopup } from './useHumanChat';
+import { usePasswordPopup } from './usePopup';
 
-interface useSignalingSocketProps {
+interface useSignalingSocketParams {
   peerConnectionRef: React.MutableRefObject<RTCPeerConnection | undefined>;
   negotiationDataChannels: ({ roomName }: { roomName: string }) => void;
 }
 
-export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels }: useSignalingSocketProps) {
+export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels }: useSignalingSocketParams) {
   const socketManager = new HumanSocketManager();
 
   const { openPasswordPopup } = usePasswordPopup();
