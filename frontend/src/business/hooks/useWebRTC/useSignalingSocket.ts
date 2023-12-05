@@ -1,6 +1,6 @@
-import { HumanSocketManager } from '@business/services/SocketManager';
+import { usePasswordPopup } from '../usePopup';
 
-import { usePasswordPopup } from './usePopup';
+import { HumanSocketManager } from '@business/services/SocketManager';
 
 interface useSignalingSocketParams {
   peerConnectionRef: React.MutableRefObject<RTCPeerConnection | undefined>;
