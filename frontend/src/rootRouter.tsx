@@ -5,7 +5,7 @@ import HomePage from '@pages/HomePage';
 import HumanChatPage, { ChattingPage, SettingPage } from '@pages/HumanChatPage';
 import ResultSharePage from '@pages/ResultSharePage';
 
-import { MediaInfoProvider } from '@business/providers/MediaInfoProvider';
+import { MediaInfoProvider } from '@stores/providers/MediaInfoProvider';
 
 export const rootRouter = createBrowserRouter(
   createRoutesFromElements(
