@@ -16,7 +16,7 @@ reload_application() {
   local STOP_PORT="$3"
   local CMD="$4"
 
-  echo "<<< Reload $CONTAINER_NAME... ($STOP_PORT to $RUN_PORT)" >> $DEBUG_LOG
+  echo "<<< Reload $CONTAINER_NAME..." >> $DEBUG_LOG
 
   CONTAINER_ID=$(docker ps --filter "name=$CONTAINER_NAME" -q)
   NODE_PROCESS=$(docker exec $CONTAINER_ID /bin/bash -c "ps aux | grep 'npm run start' | grep -v grep | awk '{print \$2}'")
@@ -27,8 +27,10 @@ reload_application() {
     sleep 10
   fi
 
-  echo "change port..." >> $DEBUG_LOG
+  echo "change port... ($STOP_PORT to $RUN_PORT)" >> $DEBUG_LOG
   docker exec $CONTAINER_ID /bin/bash -c "sed -i 's/port: number = $STOP_PORT/port: number = $RUN_PORT/' $MAIN_SCRIPT"
+
+  echo "restart nest application ... $CMD" >> $DEBUG_LOG
   docker exec $CONTAINER_ID /bin/bash -c "$CMD"
 
   echo ">>> Reload complete... $CONTAINER_NAME running on $RUN_PORT" >> $DEBUG_LOG
