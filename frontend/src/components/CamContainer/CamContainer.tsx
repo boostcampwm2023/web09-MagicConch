@@ -29,7 +29,6 @@ export default function CamContainer({
   const {
     profileInfos: { myNickname, myProfile, remoteNickname, remoteProfile },
   } = useProfileInfoContext();
-  console.log(myProfile, remoteProfile);
 
   return (
     <div className="flex-with-center flex-col gap-80 pt-80">
