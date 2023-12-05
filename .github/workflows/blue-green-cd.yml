@@ -29,12 +29,13 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
-          source: ".env,deploy.sh,config"
+          source: "backend/.env,backend/deploy.sh,backend/config"
           target: "~/app/"
           overwrite: true
 
       - name: Build Docker Images (Blue)
         run: |
+          cd backend
           cp docker-compose.blue.yml docker-compose.${{ github.sha }}.blue.yml
           docker-compose -f docker-compose.${{ github.sha }}.blue.yml build --no-cache -t "${{ secrets.DOCKER_USERNAME }}/magicconch:latest-blue"
 
@@ -43,10 +44,11 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-      - run: docker-compose -f docker-compose.${{ github.sha }}.blue.yml push
+      - run: docker-compose -f backend/docker-compose.${{ github.sha }}.blue.yml push
 
       - name: Build Docker Images (Green)
         run: |
+          cd backend
           cp docker-compose.green.yml docker-compose.${{ github.sha }}.green.yml
           docker-compose -f docker-compose.${{ github.sha }}.green.yml build --no-cache -t "${{ secrets.DOCKER_USERNAME }}/magicconch:latest-green"
 
@@ -55,7 +57,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-      - run: docker-compose -f docker-compose.${{ github.sha }}.green.yml push
+      - run: docker-compose -f backend/docker-compose.${{ github.sha }}.green.yml push
 
       - name: Copy Dockerfiles to Remote Server
         uses: appleboy/scp-action@master
@@ -64,12 +66,13 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
-          source: "docker-compose.${{ github.sha }}.blue.yml,docker-compose.${{ github.sha }}.green.yml,Dockerfile.nginx,Dockerfile.was,Dockerfile.signal"
+          source: "backend/docker-compose.${{ github.sha }}.blue.yml,backend/docker-compose.${{ github.sha }}.green.yml,backend/Dockerfile.nginx,backend/Dockerfile.was,backend/Dockerfile.signal"
           target: "~/app/"
           overwrite: true
 
       - name: Remove local docker-compose copied file
         run: |
+          cd backend
           rm docker-compose.${{ github.sha }}.blue.yml
           rm docker-compose.${{ github.sha }}.green.yml
 
@@ -93,5 +96,5 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            cd ~/app
+            cd ~/app/backend
             source deploy.sh "${{ github.sha }}"
