@@ -1,0 +1,13 @@
+{
+  "name": "@tarotmilktea/human-socketio-event",
+  "version": "1.0.0",
+  "description": "`@tarotmilktea/human-socketio-event` is a TypeScript library facilitating consistent and type-safe communication between frontend and backend WebSocket components, ensuring cross-layer reliability and ease of maintenance.",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "index.d.ts"
+  ],
+  "author": "tarotmilktea <tarotmilktea.tea@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/HeoJiye/react-fixed-resolution/packages/human-socketio-event#readme"
+}

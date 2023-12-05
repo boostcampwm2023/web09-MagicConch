@@ -14,6 +14,9 @@ dependencies:
   '@tarotmilktea/ai-socketio-event':
     specifier: ^1.0.2
     version: 1.0.2
+  '@tarotmilktea/human-socketio-event':
+    specifier: ^1.0.0
+    version: 1.0.0
   axios:
     specifier: ^1.6.2
     version: 1.6.2
@@ -3730,6 +3733,10 @@ packages:
 
   /@tarotmilktea/ai-socketio-event@1.0.2:
     resolution: {integrity: sha512-E6oTN1oxzgiQQRraYAJtWa0pUznN210VBOAfeHo/S0FuRW5Xe3NM/48jnZb3Uc1zKYw9+sYJK8KBb/r+Wu1sfw==}
+    dev: false
+
+  /@tarotmilktea/human-socketio-event@1.0.0:
+    resolution: {integrity: sha512-vTk9X+1jlUHpHgAdw8L1+MG85vStebbpoUUA3BfI3i29wvjDVckYnVBPfudvkRbp5w0gGZFPNjVpEJrma3CJLw==}
     dev: false
 
   /@testing-library/dom@9.3.3:
