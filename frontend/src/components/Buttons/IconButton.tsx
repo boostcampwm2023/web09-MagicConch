@@ -1,6 +1,7 @@
 import type { ButtonColor, IconColor } from '@constants/colors';
 import { iconColorMap } from '@constants/colors';
 import type { ButtonSize } from '@constants/sizes';
+import { iconSizeMap } from '@constants/sizes';
 
 import { Icon } from '@iconify/react/dist/iconify.js';
 
@@ -8,10 +9,10 @@ import Button from './Button';
 
 interface IconButtonProps {
   icon: string;
-  iconSize?: number;
   iconColor?: IconColor;
-  buttonSize?: ButtonSize;
+  size?: ButtonSize;
   buttonColor?: ButtonColor;
+  disabled?: boolean;
   onClick?: () => void;
   children?: React.ReactNode;
 }
@@ -19,22 +20,23 @@ interface IconButtonProps {
 export default function IconButton({
   icon,
   iconColor = 'textWhite',
-  iconSize = 28,
-  buttonSize = 'm',
+  size = 'm',
   buttonColor = 'active',
+  disabled = false,
   onClick,
   children,
 }: IconButtonProps) {
   return (
     <Button
-      size={buttonSize}
+      size={size}
       color={buttonColor}
       onClick={onClick}
+      disabled={disabled}
       circle={children === undefined}
     >
       <Icon
         icon={icon}
-        fontSize={iconSize}
+        fontSize={iconSizeMap[size]}
         className={iconColorMap[iconColor]}
       />
       {children}

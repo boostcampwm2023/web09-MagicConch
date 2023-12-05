@@ -7,10 +7,9 @@ interface IconToggleButtonProps {
   activeIcon: string;
   inactiveIcon: string;
   iconColor?: IconColor;
-  iconSize?: number;
+  size?: ButtonSize;
   buttonActiveColor?: ButtonColor;
   buttonInactiveColor?: ButtonColor;
-  buttonSize?: ButtonSize;
   onClick?: () => void;
   active: boolean;
 }
@@ -19,19 +18,17 @@ export default function IconToggleButton({
   activeIcon,
   inactiveIcon,
   iconColor = 'textWhite',
-  iconSize,
   buttonActiveColor = 'active',
   buttonInactiveColor = 'cancel',
-  buttonSize,
+  size = 'm',
   onClick,
   active,
 }: IconToggleButtonProps) {
   return (
     <IconButton
       icon={active ? activeIcon : inactiveIcon}
-      iconSize={iconSize}
+      size={size}
       iconColor={iconColor}
-      buttonSize={buttonSize}
       buttonColor={active ? buttonActiveColor : buttonInactiveColor}
       onClick={onClick}
     />
