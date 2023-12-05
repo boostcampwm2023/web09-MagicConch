@@ -11,9 +11,11 @@ export interface ProfileInfoState {
   remoteProfile?: ProfileInfo;
 }
 
-export const ProfileInfoContext = createContext<
-  { profileInfos: ProfileInfoState; setProfileInfos: Dispatch<SetStateAction<ProfileInfoState>> } | undefined
->(undefined);
+interface ProfileInfoProviderProps {
+  profileInfos: ProfileInfoState;
+  setProfileInfos: Dispatch<SetStateAction<ProfileInfoState>>;
+}
+export const ProfileInfoContext = createContext<ProfileInfoProviderProps | undefined>(undefined);
 
 export function ProfileInfoProvider({ children }: PropsWithChildren) {
   const [profileInfos, setProfileInfos] = useState<ProfileInfoState>({});
