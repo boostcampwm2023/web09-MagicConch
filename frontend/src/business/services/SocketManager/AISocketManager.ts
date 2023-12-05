@@ -1,18 +1,17 @@
-import SocketManager from './SocketManager';
+import { AIClientEvent, AIServerEvent } from '@tarotmilktea/ai-socketio-event';
 
-type OnEventNames = 'tarotCard' | 'chatEnd' | 'streamStart' | 'streaming' | 'streamEnd';
-type EmitEventNames = 'message' | 'tarotRead' | 'tarotRead';
+import SocketManager from './SocketManager';
 
 class AISocketManager extends SocketManager {
   constructor() {
     super(import.meta.env.VITE_WAS_URL);
   }
 
-  on<U>(eventName: OnEventNames, eventListener: (args: U) => void) {
+  on<U>(eventName: AIServerEvent, eventListener: (args: U) => void) {
     super.on(eventName, eventListener);
   }
 
-  emit(eventName: EmitEventNames, ...eventArgs: unknown[]) {
+  emit(eventName: AIClientEvent, ...eventArgs: unknown[]) {
     super.emit(eventName, ...eventArgs);
   }
 }
