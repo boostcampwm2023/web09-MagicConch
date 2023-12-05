@@ -2,7 +2,7 @@ FROM node:20
 
 WORKDIR /app
 
-COPY backend/signal ./signal
+COPY signal ./signal
 
 WORKDIR /app/signal
 

@@ -2,7 +2,7 @@ FROM node:20
 
 WORKDIR /app
 
-COPY backend/was ./was
+COPY was ./was
 
 WORKDIR /app/was
 
