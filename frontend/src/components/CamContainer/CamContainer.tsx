@@ -40,8 +40,8 @@ export default function CamContainer({
   }));
 
   return (
-    <div className="flex-with-center flex-col gap-80 pt-80">
-      <div className="flex justify-center gap-64 h-320">
+    <div className="flex-with-center flex-col gap-80 pt-80 sm:gap-20">
+      <div className="flex justify-center gap-64 sm:flex-col sm:gap-20">
         <CamBox
           videoRef={localVideoRef}
           cameraConnected={myVideoOn}
@@ -61,7 +61,7 @@ export default function CamContainer({
           defaultNickname="상대방"
         />
       </div>
-      <div className="flex flex-col gap-30">
+      <div className="z-10 flex flex-col gap-30">
         <CustomButton
           size="m"
           onClick={tarotButtonClick}

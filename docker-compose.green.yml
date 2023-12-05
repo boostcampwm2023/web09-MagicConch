@@ -24,8 +24,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.signal
-    environment:
-      - WAS_PORT=${WAS_PORT}
     expose:
       - "3003"
 

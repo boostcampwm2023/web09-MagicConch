@@ -40,29 +40,31 @@ const CamBox = ({
 
   return (
     <>
-      <div className="flex relative w-320 h-320 rounded-[55px] overflow-hidden shadow-white">
+      <div className="flex relative w-320 h-320 sm:w-[30vh] sm:h-[30vh] rounded-[55px] sm:rounded-[50px]  overflow-hidden shadow-white">
         {loading && <div className="absolute skeleton w-h-full"></div>}
         {hidden && (bgImage ? <img src={bgImage} /> : <div className={`absolute w-h-full ${defaultImage} bg-cover`} />)}
         <video
-          className="flex-1 w-h-full max-w-full"
+          className={`flex-1 w-h-full min-w-full min-h-full`}
           ref={videoRef}
           autoPlay
           playsInline
         />
-        <div className="w-full absolute bottom-0 left-0 p-30 flex justify-between gap-30  text-white">
-          <div className="flex gap-5">
-            <Icon
-              icon={`${cameraConnected ? 'pepicons-pop:camera' : 'pepicons-pop:camera-off'}`}
-              className={`rounded-full w-40 h-40 p-8 ${cameraConnected ? 'surface-point-alt' : 'surface-disabled'}`}
-            />
-            <Icon
-              icon={`${audioConnected ? 'mingcute:mic-line' : 'mingcute:mic-off-line'}`}
-              className={`rounded-full w-40 h-40 p-8 ${audioConnected ? 'surface-point-alt' : 'surface-disabled'}`}
-            />
-          </div>
-          <div className="flex-1 flex-with-center rounded-full w-40 h-40 p-8 surface-disabled">
-            {nickname ?? defaultNickname}
-          </div>
+        <div className="absolute bottom-0 left-0 p-30 flex gap-5 text-white sm:p-20">
+          <Icon
+            icon={`${cameraConnected ? 'pepicons-pop:camera' : 'pepicons-pop:camera-off'}`}
+            className={`rounded-full w-40 h-40 sm:w-30 sm:h-30 p-8 sm:p-4 ${
+              cameraConnected ? 'surface-point-alt' : 'surface-disabled'
+            }`}
+          />
+          <Icon
+            icon={`${audioConnected ? 'mingcute:mic-line' : 'mingcute:mic-off-line'}`}
+            className={`rounded-full w-40 h-40 sm:w-30 sm:h-30 p-8 sm:p-4 ${
+              audioConnected ? 'surface-point-alt' : 'surface-disabled'
+            }`}
+          />
+        </div>
+        <div className="flex-1 flex-with-center rounded-full w-40 h-40 p-8 surface-disabled">
+          {nickname ?? defaultNickname}
         </div>
       </div>
     </>

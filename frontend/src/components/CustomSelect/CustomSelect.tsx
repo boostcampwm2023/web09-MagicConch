@@ -41,7 +41,7 @@ export default function CustomSelect({ width, options, autoFocus, onChange }: Cu
           className="min-h-48"
           onClick={() => setOpened(!opened)}
         />
-        <div className="relative collapse-title w-full leading-48 min-h-48 focus:outline-none  py-0 px-15">
+        <div className="truncate collapse-title w-full leading-48 min-h-48 focus:outline-none flex justify-between py-0 px-15">
           {selected.label}
           <Icon
             icon="teenyicons:down-solid"
@@ -50,7 +50,7 @@ export default function CustomSelect({ width, options, autoFocus, onChange }: Cu
           />
         </div>
         <div
-          className={`collapse-content w-full max-h-130 overflow-auto`}
+          className={`truncate collapse-content w-full max-h-110 sm:max-h-80 overflow-auto`}
           autoFocus={autoFocus}
         >
           {options.map(({ value, label }) => (

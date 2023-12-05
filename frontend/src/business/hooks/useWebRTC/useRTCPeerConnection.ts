@@ -4,11 +4,11 @@ import { HumanSocketManager } from '@business/services/SocketManager';
 
 import { iceServers } from '@constants/urls';
 
-interface useRTCPeerConnectionProps {
+interface useRTCPeerConnectionParams {
   remoteVideoRef: React.RefObject<HTMLVideoElement | undefined>;
 }
 
-export function useRTCPeerConnection({ remoteVideoRef }: useRTCPeerConnectionProps) {
+export function useRTCPeerConnection({ remoteVideoRef }: useRTCPeerConnectionParams) {
   const peerConnectionRef = useRef<RTCPeerConnection>();
   const peerStreamRef = useRef<MediaStream | null>(null);
 
