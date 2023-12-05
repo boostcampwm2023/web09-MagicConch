@@ -1,2 +1,2 @@
-export type HumanServerEvent = "welcome" | "offer" | "answer" | "candidate" | "roomFull" | "userExit" | "hostExit" | "roomCreated" | "joinRoomFailed" | "joinRoomSuccess" | "createRoomFailed" | "createRoomSuccess";
-export type HumanClientEvent = "offer" | "answer" | "candidate" | "joinRoom" | "createRoom";
+export type HumanServerEvent = "WELCOME" | "OFFER" | "ANSWER" | "CANDIDATE" | "ROOM_FULL" | "USER_EXIT" | "HOST_EXIT" | "ROOM_CREATED" | "JOIN_ROOM_FAILED" | "JOIN_ROOM_SUCCESS" | "CREATE_ROOM_FAILED" | "CREATE_ROOM_SUCCESS";
+export type HumanClientEvent = "OFFER" | "ANSWER" | "CANDIDATE" | "JOIN_ROOM" | "CREATE_ROOM";
