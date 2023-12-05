@@ -2,10 +2,10 @@ import { useRef } from 'react';
 
 import { useMediaInfoContext } from './useMediaInfoContext';
 
-interface useDataChannelProps {
+interface useDataChannelParams {
   peerConnectionRef: React.MutableRefObject<RTCPeerConnection | undefined>;
 }
-export function useDataChannel({ peerConnectionRef }: useDataChannelProps) {
+export function useDataChannel({ peerConnectionRef }: useDataChannelParams) {
   const {
     mediaInfos: { myMicOn, myVideoOn },
     setRemoteMicOn,
