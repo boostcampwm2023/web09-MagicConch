@@ -1,6 +1,9 @@
 import { CustomButton, IconButton, InputFileButton } from '@components/Buttons';
 import CamBox from '@components/CamBox';
 import { CustomSelectOptions } from '@components/CustomSelect';
+import InputText from '@components/InputText';
+
+import { useProfileInfoContext } from '@business/hooks/useProfileInfoContext';
 
 import DeviceSelect from './DeviceSelect';
 import DeviceToggleButtons from './DeviceToggleButtons';
@@ -17,6 +20,7 @@ interface ProfileSettingProps {
   changeMyAudio: (deviceId: string) => void;
   onConfirm: () => void;
   onChangeProfileImage: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChangeNickname: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export default function ProfileSetting({
@@ -31,7 +35,11 @@ export default function ProfileSetting({
   changeMyAudio,
   onConfirm,
   onChangeProfileImage,
+  onChangeNickname,
 }: ProfileSettingProps) {
+  const {
+    profileInfos: { myProfile, myNickname },
+  } = useProfileInfoContext();
   return (
     <div className="w-[100vw] h-[100vh] flex-with-center z-10">
       <div className="flex gap-48 rounded-lg p-64 surface-box">
@@ -41,6 +49,9 @@ export default function ProfileSetting({
             cameraConnected={cameraConnected.local}
             audioConnected={audioConnected.local}
             defaultImage="bg-ddung"
+            profileInfo={myProfile}
+            nickname={myNickname}
+            defaultNickname="나"
           />
           <DeviceToggleButtons
             cameraActive={cameraConnected.local}
@@ -71,11 +82,7 @@ export default function ProfileSetting({
           </div>
           <div className="flex flex-col gap-4">
             <span className="text-strong display-bold14">상대방에게 표시될 이름을 입력하세요.</span>
-            <input
-              className="input input-bordered input-sm"
-              type="text"
-              placeholder="닉네임을 입력하세요."
-            />
+            <InputText onChange={onChangeNickname} />
           </div>
           <div className="z-20">
             <DeviceSelect

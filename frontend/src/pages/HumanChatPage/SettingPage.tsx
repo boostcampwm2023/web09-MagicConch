@@ -3,7 +3,10 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import ProfileSetting from '@components/ProfileSetting';
 
+import { useProfileInfoContext } from '@business/hooks/useProfileInfoContext';
 import { HumanSocketManager } from '@business/services/SocketManager';
+
+import { arrayBuffer2Array } from '@utils/array';
 
 import type { OutletContext } from './HumanChatPage';
 
@@ -23,6 +26,7 @@ export default function ChattingPage() {
     changeMyAudioTrack,
     getMedia,
     profileChannel,
+    nicknameChannel,
   }: OutletContext = useOutletContext();
 
   const camList = cameraOptions.map(({ deviceId, label }) => ({ label, value: deviceId }));
@@ -35,15 +39,45 @@ export default function ChattingPage() {
     getMedia({});
   }, []);
 
-  const sendImage = async (e: ChangeEvent<HTMLInputElement>) => {
+  const {
+    setMyNickname,
+    setMyProfileImage,
+    profileInfos: { myNickname, myProfile },
+  } = useProfileInfoContext();
+  const setLocalProfileImage = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) {
       return;
     }
 
     const arrayBuffer = await file.arrayBuffer();
+    setMyProfileImage(arrayBuffer, file.type);
+  };
 
-    profileChannel.current?.send(arrayBuffer);
+  const setLocalNickname = (e: ChangeEvent<HTMLInputElement>) => {
+    setMyNickname(e.target.value);
+  };
+
+  const sendProfileInfoWithNavigate = () => {
+    if (profileChannel.current?.readyState === 'open') {
+      if (!myProfile) {
+        return;
+      }
+
+      const dataArray = arrayBuffer2Array(myProfile.arrayBuffer);
+      const sendJson = JSON.stringify({ arrayBuffer: dataArray, type: myProfile.type });
+
+      profileChannel.current?.send?.(sendJson);
+    }
+
+    if (nicknameChannel.current?.readyState === 'open') {
+      if (!myNickname) {
+        return;
+      }
+      nicknameChannel.current?.send?.(myNickname);
+    }
+
+    navigate('..');
   };
 
   return (
@@ -57,8 +91,9 @@ export default function ChattingPage() {
       camList={camList}
       micList={micList}
       videoRef={localVideoRef}
-      onConfirm={() => navigate('..')}
-      onChangeProfileImage={sendImage}
+      onConfirm={sendProfileInfoWithNavigate}
+      onChangeProfileImage={setLocalProfileImage}
+      onChangeNickname={setLocalNickname}
     />
   );
 }

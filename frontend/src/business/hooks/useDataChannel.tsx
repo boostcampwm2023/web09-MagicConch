@@ -1,7 +1,9 @@
-import BG from '/bg.png';
 import { useRef } from 'react';
 
+import { array2ArrayBuffer } from '@utils/array';
+
 import { useMediaInfoContext } from './useMediaInfoContext';
+import { useProfileInfoContext } from './useProfileInfoContext';
 
 interface useDataChannelProps {
   peerConnectionRef: React.MutableRefObject<RTCPeerConnection | undefined>;
@@ -12,6 +14,12 @@ export function useDataChannel({ peerConnectionRef }: useDataChannelProps) {
     setRemoteMicOn,
     setRemoteVideoOn,
   } = useMediaInfoContext();
+
+  const {
+    setRemoteNickname,
+    setRemoteProfileImage,
+    profileInfos: { myNickname, myProfile },
+  } = useProfileInfoContext();
 
   const mediaInfoChannel = useRef<RTCDataChannel>();
   const chatChannel = useRef<RTCDataChannel>();
@@ -59,15 +67,22 @@ export function useDataChannel({ peerConnectionRef }: useDataChannelProps) {
       id: 2,
     });
 
-    profileChannel.current?.addEventListener('message', ({ data }) => {
-      console.log('profileChannel', data);
+    if (!profileChannel.current) {
+      return;
+    }
+
+    profileChannel.current.addEventListener('message', ({ data }) => {
+      const receivedData = JSON.parse(data);
+
+      const { type, arrayBuffer } = receivedData;
+
+      const receivedArrayBuffer = array2ArrayBuffer(arrayBuffer);
+
+      setRemoteProfileImage(receivedArrayBuffer, type);
     });
 
     profileChannel.current?.addEventListener('open', () => {
-      const image = new Image();
-      image.src = BG;
-
-      profileChannel.current?.send(image.src);
+      profileChannel.current?.send?.(JSON.stringify({ myProfile }));
     });
   };
 
@@ -75,6 +90,17 @@ export function useDataChannel({ peerConnectionRef }: useDataChannelProps) {
     nicknameChannel.current = peerConnectionRef.current?.createDataChannel('nickname', {
       negotiated: true,
       id: 3,
+    });
+
+    nicknameChannel.current?.addEventListener('message', ({ data }) => {
+      setRemoteNickname(data);
+    });
+
+    nicknameChannel.current?.addEventListener('open', () => {
+      if (!myNickname) {
+        return;
+      }
+      nicknameChannel.current?.send?.(myNickname);
     });
   };
 
