@@ -31,7 +31,9 @@ reload_application() {
   docker exec $CONTAINER_ID /bin/bash -c "sed -i 's/port: number = $STOP_PORT/port: number = $RUN_PORT/' $MAIN_SCRIPT"
 
   echo "restart nest application ... $CMD" >> $DEBUG_LOG
-  docker exec $CONTAINER_ID /bin/bash -c "$CMD"
+  docker exec -t $CONTAINER_ID /bin/bash -c "$CMD"
+  CMD_EXIT_CODE=$?
+  echo "exit code... $CMD_EXIT_CODE" >> $DEBUG_LOG
 
   echo ">>> Reload complete... $CONTAINER_NAME running on $RUN_PORT" >> $DEBUG_LOG
   print_line
