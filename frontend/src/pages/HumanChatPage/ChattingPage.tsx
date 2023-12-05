@@ -15,7 +15,6 @@ export default function ChattingPage() {
     remoteVideoRef,
     toggleVideo,
     toggleAudio,
-    mediaInfos,
     startWebRTC,
     joinRoom,
     isConnectedPeerConnection,
@@ -72,8 +71,6 @@ export default function ChattingPage() {
         remoteVideoRef={remoteVideoRef}
         toggleVideo={toggleVideo}
         toggleAudio={toggleAudio}
-        cameraConnected={{ local: mediaInfos.myVideoOn, remote: mediaInfos.remoteVideoOn }}
-        audioConnected={{ local: mediaInfos.myMicOn, remote: mediaInfos.remoteMicOn }}
         tarotButtonClick={tarotButtonClick}
         tarotButtonDisabled={tarotButtonDisabled}
       />

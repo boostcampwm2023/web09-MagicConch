@@ -20,7 +20,6 @@ export default function ChattingPage() {
     localVideoRef,
     toggleVideo,
     toggleAudio,
-    mediaInfos,
     cameraOptions,
     audioOptions,
     changeMyVideoTrack,
@@ -81,8 +80,6 @@ export default function ChattingPage() {
     <ProfileSetting
       toggleVideo={toggleVideo}
       toggleAudio={toggleAudio}
-      cameraConnected={{ local: mediaInfos.myVideoOn, remote: mediaInfos.remoteVideoOn }}
-      audioConnected={{ local: mediaInfos.myMicOn, remote: mediaInfos.remoteMicOn }}
       changeMyCamera={changeMyVideoTrack}
       changeMyAudio={changeMyAudioTrack}
       camList={camList}

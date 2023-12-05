@@ -11,8 +11,6 @@ interface CamContainerProps {
   remoteVideoRef: React.RefObject<HTMLVideoElement>;
   toggleVideo: () => void;
   toggleAudio: () => void;
-  cameraConnected: { local: boolean; remote: boolean };
-  audioConnected: { local: boolean; remote: boolean };
   tarotButtonClick: () => void;
   tarotButtonDisabled: boolean;
 }
@@ -22,8 +20,6 @@ export default function CamContainer({
   remoteVideoRef,
   toggleVideo,
   toggleAudio,
-  cameraConnected,
-  audioConnected,
   tarotButtonClick,
   tarotButtonDisabled,
 }: CamContainerProps) {
@@ -48,8 +44,8 @@ export default function CamContainer({
       <div className="flex justify-center gap-64 h-320">
         <CamBox
           videoRef={localVideoRef}
-          cameraConnected={cameraConnected.local}
-          audioConnected={audioConnected.local}
+          cameraConnected={myVideoOn}
+          audioConnected={myMicOn}
           defaultImage="bg-ddung"
           profileInfo={myProfile}
           nickname={myNickname}
@@ -57,8 +53,8 @@ export default function CamContainer({
         />
         <CamBox
           videoRef={remoteVideoRef}
-          cameraConnected={cameraConnected.remote}
-          audioConnected={audioConnected.remote}
+          cameraConnected={remoteVideoOn}
+          audioConnected={remoteMicOn}
           defaultImage="bg-sponge"
           profileInfo={remoteProfile}
           nickname={remoteNickname}
@@ -85,7 +81,7 @@ export default function CamContainer({
             disabledIcon="pepicons-pop:camera-off"
             iconSize={28}
             buttonSize="l"
-            active={cameraConnected.local}
+            active={myVideoOn}
             onClick={toggleVideo}
           />
           <IconToggleButton
@@ -93,7 +89,7 @@ export default function CamContainer({
             disabledIcon="mingcute:mic-off-line"
             iconSize={28}
             buttonSize="l"
-            active={audioConnected.local}
+            active={myMicOn}
             onClick={toggleAudio}
           />
         </div>
