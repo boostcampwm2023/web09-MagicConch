@@ -24,6 +24,7 @@ reload_application() {
   if [ -n "$NODE_PROCESS" ]; then
     echo "kill PID #$NODE_PROCESS..." >> $DEBUG_LOG
     docker exec -it $CONTAINER_ID /bin/bash -c "kill -9 $NODE_PROCESS"
+    sleep 10
   fi
 
   echo "change port..." >> $DEBUG_LOG
@@ -56,8 +57,8 @@ docker-compose -f "$DOCKER_COMPOSE_FILE" up -d
 echo ">>> Run complete..." >> $DEBUG_LOG
 print_line
 
-reload_application "was-$RUN_TARGET" $WAS_RUN_PORT $WAS_STOP_PORT "$NPM_BUILD && $NPM_PROD"
-reload_application "signal-$RUN_TARGET" $((WAS_RUN_PORT + 1)) $((WAS_STOP_PORT + 1)) "$NPM_BUILD && $NPM_PROD"
+reload_application "was-$RUN_TARGET" $WAS_RUN_PORT $WAS_STOP_PORT "$NPM_BUILD; $NPM_PROD"
+reload_application "signal-$RUN_TARGET" $((WAS_RUN_PORT + 1)) $((WAS_STOP_PORT + 1)) "$NPM_BUILD; $NPM_PROD"
 
 echo "<<< Reload nginx..." >> $DEBUG_LOG
 
@@ -71,7 +72,7 @@ docker exec $NGINX_ID /bin/bash -c "nginx -s reload"
 echo ">>> Reload complete..." >> $DEBUG_LOG
 print_line
 
-sleep 60
+sleep 30
 
 echo "Delete .env file..." >> $DEBUG_LOG
 print_line
