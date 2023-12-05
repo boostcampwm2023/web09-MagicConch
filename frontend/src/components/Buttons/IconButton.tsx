@@ -24,7 +24,7 @@ export default function IconButton({
   text,
   icon,
   iconColor = 'textDefault',
-  iconSize = 12,
+  iconSize = 28,
   buttonSize = 'm',
   buttonColor = 'cancel',
   circle = false,
