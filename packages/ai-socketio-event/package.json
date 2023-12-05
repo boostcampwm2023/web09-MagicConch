@@ -1,6 +1,6 @@
 {
   "name": "@tarotmilktea/ai-socketio-event",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "`@tarotmilktea/ai-socketio-event` is a TypeScript library facilitating consistent and type-safe communication between frontend and backend WebSocket components, ensuring cross-layer reliability and ease of maintenance.",
   "main": "index.js",
   "types": "index.d.ts",
