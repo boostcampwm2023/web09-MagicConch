@@ -73,6 +73,7 @@ jobs:
           rm docker-compose.${{ github.sha }}.green.yml
 
   deploy:
+    timeout-minutes: 30
     needs: build
     runs-on: ubuntu-latest
 
