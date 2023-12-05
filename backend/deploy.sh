@@ -10,6 +10,20 @@ print_line() {
   echo " " >> $DEBUG_LOG
 }
 
+run_docker() {
+  local RUN_TARGET="$1"
+
+  DOCKER_COMPOSE_FILE="docker-compose.$GITHUB_SHA.$RUN_TARGET.yml"
+
+  echo "<<< Run docker compose ... $DOCKER_COMPOSE_FILE" > $DEBUG_LOG
+
+  docker-compose -f "$DOCKER_COMPOSE_FILE" pull
+  docker-compose -f "$DOCKER_COMPOSE_FILE" up -d
+
+  echo ">>> Run complete ..." >> $DEBUG_LOG
+  print_line
+}
+
 change_port() {
   local CONTAINER_ID="$1"
   local RUN_PORT="$2"
@@ -61,7 +75,7 @@ reload_nginx() {
   print_line
 }
 
-deploy() {
+blue_green() {
   local RUN_TARGET="$1"
   local STOP_TARGET="$2"
   local WAS_RUN_PORT="$3"
@@ -97,14 +111,5 @@ else
   WAS_STOP_PORT=3002
 fi
 
-DOCKER_COMPOSE_FILE="docker-compose.$GITHUB_SHA.$RUN_TARGET.yml"
-
-echo "<<< Run docker compose ... $DOCKER_COMPOSE_FILE" > $DEBUG_LOG
-
-docker-compose -f "$DOCKER_COMPOSE_FILE" pull
-docker-compose -f "$DOCKER_COMPOSE_FILE" up -d
-
-echo ">>> Run complete ..." >> $DEBUG_LOG
-print_line
-
-deploy "$RUN_TARGET" "$STOP_TARGET" $WAS_RUN_PORT $WAS_STOP_PORT
+run_docker "$RUN_TARGET"
+blue_green "$RUN_TARGET" "$STOP_TARGET" $WAS_RUN_PORT $WAS_STOP_PORT
