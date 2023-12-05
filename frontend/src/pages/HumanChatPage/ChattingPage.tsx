@@ -22,7 +22,6 @@ export default function ChattingPage() {
     changeMyVideoTrack,
     tarotButtonClick,
     tarotButtonDisabled,
-    socketConnected,
   }: OutletContext = useOutletContext();
 
   const { roomName } = useParams();
@@ -37,7 +36,7 @@ export default function ChattingPage() {
   useSpeakerHighlighter(remoteVideoRef);
 
   useEffect(() => {
-    if (isConnectedPeerConnection() || socketConnected) {
+    if (isConnectedPeerConnection()) {
       changeMyVideoTrack();
       return;
     }

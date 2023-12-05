@@ -5,8 +5,6 @@ import HomePage from '@pages/HomePage';
 import HumanChatPage, { ChattingPage, SettingPage } from '@pages/HumanChatPage';
 import ResultSharePage from '@pages/ResultSharePage';
 
-import { MediaInfoProvider } from '@business/providers/MediaInfoProvider';
-
 export const rootRouter = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/">
@@ -21,11 +19,7 @@ export const rootRouter = createBrowserRouter(
       />
       <Route
         path="/chat/human/:roomName?"
-        element={
-          <MediaInfoProvider>
-            <HumanChatPage />
-          </MediaInfoProvider>
-        }
+        element={<HumanChatPage />}
       >
         <Route
           path="/chat/human/:roomName"

@@ -1,6 +1,9 @@
 import { CustomButton, IconToggleButton } from '@components/Buttons';
 import CamBox from '@components/CamBox';
 
+import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
+import { useProfileInfo } from '@stores/zustandStores/useProfileInfo';
+
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 interface CamContainerProps {
@@ -24,20 +27,42 @@ export default function CamContainer({
   tarotButtonClick,
   tarotButtonDisabled,
 }: CamContainerProps) {
+  const { myNickname, myProfile, remoteNickname, remoteProfile } = useProfileInfo(state => ({
+    myNickname: state.myNickname,
+    myProfile: state.myProfile,
+    remoteNickname: state.remoteNickname,
+    remoteProfile: state.remoteProfile,
+  }));
+
+  const { myMicOn, myVideoOn, remoteMicOn, remoteVideoOn } = useMediaInfo(state => ({
+    myMicOn: state.myMicOn,
+    myVideoOn: state.myVideoOn,
+    remoteMicOn: state.remoteMicOn,
+    remoteVideoOn: state.remoteVideoOn,
+    setRemoteMicOn: state.setRemoteMicOn,
+    setRemoteVideoOn: state.setRemoteVideoOn,
+  }));
+
   return (
     <div className="flex-with-center flex-col gap-80 pt-80 sm:gap-20">
       <div className="flex justify-center gap-64 sm:flex-col sm:gap-20">
         <CamBox
           videoRef={localVideoRef}
-          cameraConnected={cameraConnected.local}
-          audioConnected={audioConnected.local}
+          cameraConnected={myVideoOn}
+          audioConnected={myMicOn}
           defaultImage="bg-ddung"
+          profileInfo={myProfile}
+          nickname={myNickname}
+          defaultNickname="나"
         />
         <CamBox
           videoRef={remoteVideoRef}
-          cameraConnected={cameraConnected.remote}
-          audioConnected={audioConnected.remote}
+          cameraConnected={remoteVideoOn}
+          audioConnected={remoteMicOn}
           defaultImage="bg-sponge"
+          profileInfo={remoteProfile}
+          nickname={remoteNickname}
+          defaultNickname="상대방"
         />
       </div>
       <div className="z-10 flex flex-col gap-30">
@@ -54,13 +79,13 @@ export default function CamContainer({
           />
           타로 카드 펼치기
         </CustomButton>
-        <div className="flex-with-center gap-48">
+        <div className="z-10 flex-with-center gap-48">
           <IconToggleButton
             activeIcon="pepicons-pop:camera"
             disabledIcon="pepicons-pop:camera-off"
             iconSize={28}
             buttonSize="l"
-            active={cameraConnected.local}
+            active={myVideoOn}
             onClick={toggleVideo}
           />
           <IconToggleButton
@@ -68,7 +93,7 @@ export default function CamContainer({
             disabledIcon="mingcute:mic-off-line"
             iconSize={28}
             buttonSize="l"
-            active={audioConnected.local}
+            active={myMicOn}
             onClick={toggleAudio}
           />
         </div>

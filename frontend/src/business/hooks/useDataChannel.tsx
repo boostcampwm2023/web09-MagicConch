@@ -9,6 +9,7 @@ interface useDataChannelParams {
   peerConnectionRef: React.MutableRefObject<RTCPeerConnection | undefined>;
 }
 export function useDataChannel({ peerConnectionRef }: useDataChannelParams) {
+  // const {
   const { myMicOn, myVideoOn, setRemoteMicOn, setRemoteVideoOn } = useMediaInfo(state => ({
     myMicOn: state.myMicOn,
     myVideoOn: state.myVideoOn,
