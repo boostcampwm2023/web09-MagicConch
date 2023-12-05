@@ -8,10 +8,12 @@ export interface MediaInfoState {
   selectedCameraID: string;
   selectedAudioID: string;
 }
+interface MediaInfoProviderProps {
+  mediaInfos: MediaInfoState;
+  setMediaInfos: Dispatch<SetStateAction<MediaInfoState>>;
+}
 
-export const MediaInfoContext = createContext<
-  { mediaInfos: MediaInfoState; setMediaInfos: Dispatch<SetStateAction<MediaInfoState>> } | undefined
->(undefined);
+export const MediaInfoContext = createContext<MediaInfoProviderProps | undefined>(undefined);
 
 export function MediaInfoProvider({ children }: PropsWithChildren) {
   const [mediaInfos, setMediaInfos] = useState<MediaInfoState>({

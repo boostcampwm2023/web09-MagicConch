@@ -17,17 +17,15 @@ export default function DeviceToggleButtons({
     <div className="flex-with-center gap-20">
       <IconToggleButton
         activeIcon="pepicons-pop:camera"
-        disabledIcon="pepicons-pop:camera-off"
-        iconSize={28}
-        buttonSize="l"
+        inactiveIcon="pepicons-pop:camera-off"
+        size="l"
         active={cameraActive}
         onClick={toggleVideo}
       />
       <IconToggleButton
         activeIcon="mingcute:mic-line"
-        disabledIcon="mingcute:mic-off-line"
-        iconSize={28}
-        buttonSize="l"
+        inactiveIcon="mingcute:mic-off-line"
+        size="l"
         active={micActive}
         onClick={toggleAudio}
       />

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import { CustomButton, IconButton } from '@components/Buttons';
+import { Button, IconButton } from '@components/Buttons';
 import type { Message as MessageType } from '@components/ChatContainer';
 
 import { getTarotImageQuery } from '@stores/queries/getTarotImageQuery';
@@ -41,27 +41,20 @@ function MessageBox({ tarotId, type, message, profile, button, shareLinkId }: Me
                 rel="noopener noreferrer"
               >
                 <IconButton
-                  buttonColor="transparent"
-                  iconColor="textWhite"
                   icon="ion:share"
-                  iconSize={28}
-                  circle
+                  buttonColor="transparent"
                 />
               </Link>
             </div>
           )}
           {button && (
-            <div
-              id="TOLD"
-              className="relative left-70"
-            >
-              <CustomButton
+            <div className="relative left-70">
+              <Button
                 size="s"
-                color="active"
                 onClick={button.onClick}
               >
                 {button.content}
-              </CustomButton>
+              </Button>
             </div>
           )}
         </div>

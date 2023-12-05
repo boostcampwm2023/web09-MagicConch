@@ -65,7 +65,6 @@ function Background({ children, type = 'default' }: BackgroundProps) {
           <div className={`absolute w-h-screen ${darkMode ? 'bg-black/75' : 'bg-neutral-500/60'} ${fadeInIfDynamic}`} />
         )}
       </div>
-
       {children}
     </div>
   );

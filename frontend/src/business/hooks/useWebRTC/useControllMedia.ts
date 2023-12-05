@@ -1,4 +1,4 @@
-import { useMediaInfoContext } from './useMediaInfoContext';
+import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
 
 interface useContorollMediaParams {
   localStreamRef: React.MutableRefObject<MediaStream | undefined>;
@@ -15,13 +15,15 @@ export function useControllMedia({
   mediaInfoChannel,
   getMedia,
 }: useContorollMediaParams) {
-  const {
-    toggleMyVideo,
-    toggleMyMic,
-    setSelectedAudioID,
-    setSelectedCameraID,
-    mediaInfos: { selectedAudioID, selectedCameraID },
-  } = useMediaInfoContext();
+  const { selectedAudioID, selectedCameraID, setSelectedAudioID, setSelectedCameraID, toggleMyMic, toggleMyVideo } =
+    useMediaInfo(state => ({
+      toggleMyVideo: state.toggleMyVideo,
+      toggleMyMic: state.toggleMyMic,
+      setSelectedAudioID: state.setSelectedAudioID,
+      setSelectedCameraID: state.setSelectedCameraID,
+      selectedAudioID: state.selectedAudioID,
+      selectedCameraID: state.selectedCameraID,
+    }));
 
   const addTracks = () => {
     if (localStreamRef.current === undefined) {

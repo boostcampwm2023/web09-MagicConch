@@ -1,11 +1,14 @@
 import { useRef, useState } from 'react';
 
-import { useMediaInfoContext } from './useMediaInfoContext';
+import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
 
 export function useMedia() {
-  const {
-    mediaInfos: { selectedAudioID, selectedCameraID, myMicOn, myVideoOn },
-  } = useMediaInfoContext();
+  const { myMicOn, myVideoOn, selectedAudioID, selectedCameraID } = useMediaInfo(state => ({
+    selectedAudioID: state.selectedAudioID,
+    selectedCameraID: state.selectedCameraID,
+    myMicOn: state.myMicOn,
+    myVideoOn: state.myVideoOn,
+  }));
 
   const [cameraOptions, setCameraOptions] = useState<MediaDeviceInfo[]>([]);
   const [audioOptions, setAudioOptions] = useState<MediaDeviceInfo[]>([]);

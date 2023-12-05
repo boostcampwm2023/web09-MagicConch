@@ -5,14 +5,11 @@ import { HumanSocketManager } from '@business/services/SocketManager';
 import { useControllMedia } from './useControllMedia';
 import { useDataChannel } from './useDataChannel';
 import { useMedia } from './useMedia';
-import { useMediaInfoContext } from './useMediaInfoContext';
 import { useRTCPeerConnection } from './useRTCPeerConnection';
 import { useSignalingSocket } from './useSignalingSocket';
 
 export default function useWebRTC() {
   const socketManager = new HumanSocketManager();
-
-  const { mediaInfos } = useMediaInfoContext();
 
   const {
     localVideoRef,
@@ -28,7 +25,10 @@ export default function useWebRTC() {
   const { peerConnectionRef, makeRTCPeerConnection, closeRTCPeerConnection, isConnectedPeerConnection } =
     useRTCPeerConnection({ remoteVideoRef });
 
-  const { mediaInfoChannel, chatChannel, initDataChannels, closeDataChannels } = useDataChannel({ peerConnectionRef });
+  const { mediaInfoChannel, chatChannel, initDataChannels, closeDataChannels, profileChannel, nicknameChannel } =
+    useDataChannel({
+      peerConnectionRef,
+    });
 
   const { addTracks, changeMyAudioTrack, changeMyVideoTrack, toggleAudio, toggleVideo } = useControllMedia({
     localStreamRef,
@@ -82,7 +82,8 @@ export default function useWebRTC() {
     remoteVideoRef,
     mediaInfoChannel,
     chatChannel,
-    mediaInfos,
+    profileChannel,
+    nicknameChannel,
     toggleAudio,
     toggleVideo,
     addTracks,

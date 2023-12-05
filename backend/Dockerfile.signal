@@ -2,9 +2,9 @@ FROM node:20
 
 WORKDIR /app
 
-COPY backend/was ./was
+COPY signal ./signal
 
-WORKDIR /app/was
+WORKDIR /app/signal
 
 RUN npm install
 RUN npm run build
