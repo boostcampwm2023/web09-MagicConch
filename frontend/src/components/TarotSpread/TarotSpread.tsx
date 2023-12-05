@@ -85,7 +85,7 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
   const spreadTarotCards = () => {
     spreadSound.play();
     tarotCardRefs.current.forEach((ref, idx) => {
-      ref.style.transform = `rotate(${270 + idx * 4.6}deg) rotateY(0deg) perspective(800px)`;
+      ref.style.transform = `rotate(${idx * 4.6}deg) rotateY(0deg) perspective(800px)`;
       ref.style.transformStyle = 'preserve-3d';
       ref.style.transition = 'transform 1s ease-out';
     });
@@ -93,8 +93,8 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
 
   const unSpreadTarotCards = () => {
     spreadSound.play();
-    tarotSpreadRef.current!.style.transform = `translateX(-50%) rotate(0deg)`;
-    setTimeout(() => tarotCardRefs.current.forEach(ref => (ref.style.transform = `rotate(270deg)`)), 200);
+    tarotSpreadRef.current!.style.transform = `translateX(-50%) rotate(270deg)`;
+    setTimeout(() => tarotCardRefs.current.forEach(ref => (ref.style.transform = `rotate(0deg)`)), 200);
   };
 
   const flipCard = async (card: HTMLDivElement) => {
@@ -132,7 +132,7 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
         ref={tarotSpreadRef}
         {...(!__iOS__ && MouseEventHandler)}
         {...(!__iOS__ && TouchEventHandler)}
-        className="transition-all ease-out absolute w-220 h-400 sm:w-160 sm:h-270 origin-center top-1150 left-[50%] translate-x-[-50%] sm:top-[35vh] sm:-left-800 md:top-[35vh] md:-left-700"
+        className="transition-all ease-out rotate-[270deg] absolute w-220 h-400 sm:w-160 sm:h-270 origin-center top-1150 left-[50%] translate-x-[-50%] sm:top-[35vh] sm:-left-800 md:top-[35vh] md:-left-700"
       >
         {Array.from({ length: TAROT_CARDS_LENGTH }, (_, idx) => idx).map((_, idx: number) => (
           <div

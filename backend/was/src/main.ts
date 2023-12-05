@@ -1,4 +1,5 @@
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
@@ -20,6 +21,8 @@ async function bootstrap() {
 
   setupSwagger(app);
 
-  await app.listen(3000);
+  const configService: ConfigService = app.get(ConfigService);
+  const port: number = configService.get<number>('WAS_PORT') || 3000;
+  await app.listen(port);
 }
 bootstrap();
