@@ -67,7 +67,7 @@ export default function CamContainer({
           />
           타로 카드 펼치기
         </CustomButton>
-        <div className="flex-with-center gap-48">
+        <div className="z-10 flex-with-center gap-48">
           <IconToggleButton
             activeIcon="pepicons-pop:camera"
             disabledIcon="pepicons-pop:camera-off"
