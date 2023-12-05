@@ -16,13 +16,14 @@ reload_application() {
   local STOP_PORT="$3"
   local CMD="$4"
 
-  echo "<<< Start reload $CONTAINER_NAME... ($RUN_PORT)" >> $DEBUG_LOG
+  echo "<<< Start reload $CONTAINER_NAME... ($STOP_PORT to $RUN_PORT)" >> $DEBUG_LOG
 
   CONTAINER_ID=$(docker ps --filter "name=$CONTAINER_NAME" -q)
-
   PID=$(docker exec $CONTAINER_ID /bin/bash -c "lsof -t -i:$RUN_PORT")
-  echo "kill $PID..." >> $DEBUG_LOG
-  docker exec $CONTAINER_ID /bin/bash -c "kill -9 $PID"
+  if [ -n "$PID" ]; then
+    echo "kill $PID..." >> $DEBUG_LOG
+    docker exec $CONTAINER_ID /bin/bash -c "kill -9 $PID"
+  fi
 
   docker exec $CONTAINER_ID /bin/bash -c "sed -i 's/port: number = $STOP_PORT/port: number = $RUN_PORT/' $MAIN_SCRIPT"
   docker exec $CONTAINER_ID /bin/bash -c "$CMD"
