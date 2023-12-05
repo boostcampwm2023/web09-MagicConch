@@ -16,11 +16,11 @@ change_port() {
   local RUN_PORT="$2"
   local STOP_PORT="$3"
   
-  NODE_PROCESS=$(docker exec $CONTAINER_ID /bin/bash -c "ps aux | grep 'npm run start' | grep -v grep | awk '{print \$2}'")
+  NODE_PROCESS=$(docker exec $CONTAINER_ID pgrep -f 'npm run start')
 
   if [ -n "$NODE_PROCESS" ]; then
     echo "kill PID #$NODE_PROCESS..." >> $DEBUG_LOG
-    docker exec $CONTAINER_ID /bin/bash -c "kill -9 $NODE_PROCESS"
+    docker exec $CONTAINER_ID kill $NODE_PROCESS
     sleep 10
   fi
     
