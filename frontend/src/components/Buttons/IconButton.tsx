@@ -1,8 +1,10 @@
-import { IconColor, iconColors } from '@constants/colors';
+import type { ButtonColor, IconColor } from '@constants/colors';
+import { iconColorMap } from '@constants/colors';
+import type { ButtonSize } from '@constants/sizes';
 
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import Button, { ButtonColor, ButtonSize } from './Button';
+import Button from './Button';
 
 interface IconButtonProps {
   icon: string;
@@ -33,7 +35,7 @@ export default function IconButton({
       <Icon
         icon={icon}
         fontSize={iconSize}
-        className={iconColors[iconColor]}
+        className={iconColorMap[iconColor]}
       />
       {children}
     </Button>
