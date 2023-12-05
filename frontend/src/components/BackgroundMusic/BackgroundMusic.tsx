@@ -9,7 +9,7 @@ function BackgroundMusic() {
   const [playing, setPlaying] = useState(false);
 
   return (
-    <div className="h-50 w-50 overflow-hidden fixed top-[10vh] right-25">
+    <div className="h-50 w-50 fixed top-[10vh] right-25">
       <div className="absolute top-0 left-0">
         <IconToggleButton
           activeIcon="ic:baseline-music-note"
