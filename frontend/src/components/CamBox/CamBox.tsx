@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { ProfileInfo } from '@stores/providers/ProfileInfoProvider';
+import { ProfileInfo } from '@stores/zustandStores/useProfileInfo';
 
 import { arrayBuffer2Blob } from '@utils/array';
 
@@ -29,14 +29,14 @@ const CamBox = ({
   const hidden = useMemo(() => !cameraConnected, [cameraConnected]);
 
   const bgImage = useMemo(() => {
-    if (!profileInfo?.arrayBuffer) {
-      return '';
+    if (!profileInfo) {
+      return undefined;
     }
     const { arrayBuffer, type } = profileInfo;
 
     const blob = arrayBuffer2Blob(arrayBuffer, type);
     return URL.createObjectURL(blob);
-  }, [profileInfo?.arrayBuffer]);
+  }, [profileInfo]);
 
   return (
     <>
