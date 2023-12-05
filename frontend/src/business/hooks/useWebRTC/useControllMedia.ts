@@ -1,6 +1,6 @@
 import { useMediaInfoContext } from './useMediaInfoContext';
 
-interface useContorollMediaProps {
+interface useContorollMediaParams {
   localStreamRef: React.MutableRefObject<MediaStream | undefined>;
   peerConnectionRef: React.MutableRefObject<RTCPeerConnection | undefined>;
   localVideoRef: React.RefObject<HTMLVideoElement | undefined>;
@@ -14,7 +14,7 @@ export function useControllMedia({
   peerConnectionRef,
   mediaInfoChannel,
   getMedia,
-}: useContorollMediaProps) {
+}: useContorollMediaParams) {
   const {
     toggleMyVideo,
     toggleMyMic,

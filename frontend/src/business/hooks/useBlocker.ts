@@ -1,17 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Location, useBlocker as reactRouterUserBlocker, useNavigate } from 'react-router-dom';
 
-import { useExitPopup } from './useHumanChat/useExitPopup';
+import { useExitPopup } from './usePopup/useExitPopup';
 
-export function useBlocker({
-  when,
-  onConfirm,
-  onCancel,
-}: {
+type useBlockerParams = {
   when: (args: { currentLocation: Location<any>; nextLocation: Location<any> }) => boolean;
   onConfirm?: () => void;
   onCancel?: () => void;
-}) {
+};
+
+export function useBlocker({ when, onConfirm, onCancel }: useBlockerParams) {
   const [blockedGoBack, setBlockedGoBack] = useState<boolean>(true);
 
   const navigate = useNavigate();

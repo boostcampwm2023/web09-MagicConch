@@ -19,6 +19,8 @@ export function useAiChatMessage() {
   };
 
   useEffect(() => {
+    socketManager.connect();
+
     socketManager.on('streamStart', () => {
       setInputDisabled(true);
       addMessage('left', { message: '' });

@@ -9,7 +9,7 @@ import { useMediaInfoContext } from './useMediaInfoContext';
 import { useRTCPeerConnection } from './useRTCPeerConnection';
 import { useSignalingSocket } from './useSignalingSocket';
 
-export function useWebRTC() {
+export default function useWebRTC() {
   const socketManager = new HumanSocketManager();
 
   const { mediaInfos } = useMediaInfoContext();

@@ -38,7 +38,7 @@ export default function CamContainer({
           defaultImage="bg-sponge"
         />
       </div>
-      <div className="flex flex-col gap-30 z-10">
+      <div className="flex flex-col gap-30">
         <IconButton
           icon="tabler:cards-filled"
           onClick={tarotButtonClick}

@@ -2,7 +2,7 @@ import useOverlay from '../useOverlay';
 
 import Popup from '@components/Popup';
 
-interface ExitPopupProps {
+interface openExitPopupParams {
   onConfirm: () => void;
   onCancel?: () => void;
 }
@@ -10,7 +10,7 @@ interface ExitPopupProps {
 export function useExitPopup() {
   const { open } = useOverlay();
 
-  const openExitPopup = ({ onConfirm, onCancel }: ExitPopupProps) => {
+  const openExitPopup = ({ onConfirm, onCancel }: openExitPopupParams) => {
     open(({ close }) => (
       <Popup
         close={close}
