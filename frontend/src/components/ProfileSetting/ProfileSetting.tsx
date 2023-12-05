@@ -15,8 +15,6 @@ interface ProfileSettingProps {
   camList: CustomSelectOptions[];
   micList: CustomSelectOptions[];
   videoRef: React.RefObject<HTMLVideoElement>;
-  cameraConnected: { local: boolean; remote: boolean };
-  audioConnected: { local: boolean; remote: boolean };
   changeMyCamera: (deviceId: string) => void;
   changeMyAudio: (deviceId: string) => void;
   onConfirm: () => void;
@@ -30,8 +28,6 @@ export default function ProfileSetting({
   camList,
   micList,
   videoRef,
-  cameraConnected,
-  audioConnected,
   changeMyCamera,
   changeMyAudio,
   onConfirm,
@@ -56,16 +52,16 @@ export default function ProfileSetting({
         <div className="flex flex-col justify-between">
           <CamBox
             videoRef={videoRef}
-            cameraConnected={cameraConnected.local}
-            audioConnected={audioConnected.local}
+            cameraConnected={myVideoOn}
+            audioConnected={myMicOn}
             defaultImage="bg-ddung"
             profileInfo={myProfile}
             nickname={myNickname}
             defaultNickname="나"
           />
           <DeviceToggleButtons
-            cameraActive={cameraConnected.local}
-            micActive={audioConnected.local}
+            cameraActive={myVideoOn}
+            micActive={myMicOn}
             toggleVideo={toggleVideo}
             toggleAudio={toggleAudio}
           />

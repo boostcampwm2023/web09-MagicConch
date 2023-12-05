@@ -5,7 +5,7 @@ import { useProfileInfo } from '@stores/zustandStores/useProfileInfo';
 
 import { array2ArrayBuffer } from '@utils/array';
 
-interface useDataChannelProps {
+interface useDataChannelParams {
   peerConnectionRef: React.MutableRefObject<RTCPeerConnection | undefined>;
 }
 export function useDataChannel({ peerConnectionRef }: useDataChannelParams) {
