@@ -1,4 +1,4 @@
 module.exports = {
-  ServerEvent,
-  ClientEvent,
+  AIServerEvent,
+  AIClientEvent,
 };
