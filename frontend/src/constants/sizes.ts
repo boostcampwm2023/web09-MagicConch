@@ -1,12 +1,9 @@
-import { detect } from 'detect-browser';
+import { __MAC__ } from './browser';
 
 export const RESULT_SHARE_ICON_SIZE = 20;
 export const TAROT_CARDS_LENGTH = 78;
 
 export type ButtonSize = 's' | 'm' | 'l';
-
-const browser = detect();
-const __MAC__ = browser?.os?.includes('Mac');
 
 export const buttonSizeMap: Record<ButtonSize, string> = {
   s: `display-bold14 p-8 ${__MAC__ ? 'leading-18' : ''}`,
