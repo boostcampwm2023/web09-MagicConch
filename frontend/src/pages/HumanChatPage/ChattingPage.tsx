@@ -15,14 +15,12 @@ export default function ChattingPage() {
     remoteVideoRef,
     toggleVideo,
     toggleAudio,
-    mediaInfos,
     startWebRTC,
     joinRoom,
     isConnectedPeerConnection,
     changeMyVideoTrack,
     tarotButtonClick,
     tarotButtonDisabled,
-    socketConnected,
   }: OutletContext = useOutletContext();
 
   const { roomName } = useParams();
@@ -37,7 +35,7 @@ export default function ChattingPage() {
   useSpeakerHighlighter(remoteVideoRef);
 
   useEffect(() => {
-    if (isConnectedPeerConnection() || socketConnected) {
+    if (isConnectedPeerConnection()) {
       changeMyVideoTrack();
       return;
     }
@@ -73,8 +71,6 @@ export default function ChattingPage() {
         remoteVideoRef={remoteVideoRef}
         toggleVideo={toggleVideo}
         toggleAudio={toggleAudio}
-        cameraConnected={{ local: mediaInfos.myVideoOn, remote: mediaInfos.remoteVideoOn }}
-        audioConnected={{ local: mediaInfos.myMicOn, remote: mediaInfos.remoteMicOn }}
         tarotButtonClick={tarotButtonClick}
         tarotButtonDisabled={tarotButtonDisabled}
       />
