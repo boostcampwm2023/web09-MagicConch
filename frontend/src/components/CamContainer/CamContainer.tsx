@@ -1,6 +1,8 @@
 import { CustomButton, IconToggleButton } from '@components/Buttons';
 import CamBox from '@components/CamBox';
 
+import { useProfileInfoContext } from '@business/hooks/useProfileInfoContext';
+
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 interface CamContainerProps {
@@ -24,6 +26,11 @@ export default function CamContainer({
   tarotButtonClick,
   tarotButtonDisabled,
 }: CamContainerProps) {
+  const {
+    profileInfos: { myNickname, myProfile, remoteNickname, remoteProfile },
+  } = useProfileInfoContext();
+  console.log(myProfile, remoteProfile);
+
   return (
     <div className="flex-with-center flex-col gap-80 pt-80">
       <div className="flex justify-center gap-64 h-320">
@@ -32,12 +39,18 @@ export default function CamContainer({
           cameraConnected={cameraConnected.local}
           audioConnected={audioConnected.local}
           defaultImage="bg-ddung"
+          profileInfo={myProfile}
+          nickname={myNickname}
+          defaultNickname="나"
         />
         <CamBox
           videoRef={remoteVideoRef}
           cameraConnected={cameraConnected.remote}
           audioConnected={audioConnected.remote}
           defaultImage="bg-sponge"
+          profileInfo={remoteProfile}
+          nickname={remoteNickname}
+          defaultNickname="상대방"
         />
       </div>
       <div className="flex flex-col gap-30">
