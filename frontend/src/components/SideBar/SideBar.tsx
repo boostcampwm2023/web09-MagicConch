@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { Button, IconToggleButton } from '@components/Buttons';
-
-import { Icon } from '@iconify/react';
+import { IconToggleButton } from '@components/Buttons';
 
 interface SideBarProps {
   onSide?: (showed: boolean) => void;
