@@ -4,8 +4,6 @@ import { IconButton } from '@components/Buttons';
 
 import { useShareButtons } from '@business/hooks/useShareButtons';
 
-import { RESULT_SHARE_ICON_SIZE } from '@constants/sizes';
-
 interface ShareButtonListProps {
   isMobile: boolean;
   cardUrl: string;
@@ -24,13 +22,12 @@ export function ShareButtonList({ isMobile, cardUrl, resultSharePageRef }: Share
           data-tip={tooltip && tooltip}
         >
           <IconButton
-            circle={isMobile}
-            text={isMobile ? '' : text}
-            icon={icon}
+            icon={icon ?? ''}
             iconColor={iconColor}
-            iconSize={RESULT_SHARE_ICON_SIZE}
             onClick={onClick}
-          />
+          >
+            {isMobile ? undefined : text}
+          </IconButton>
         </li>
       ))}
     </ul>

@@ -1,7 +1,7 @@
-import { CustomButton, IconButton, InputFileButton } from '@components/Buttons';
+import { Button, IconButton, InputFileButton } from '@components/Buttons';
 import CamBox from '@components/CamBox';
-import { CustomSelectOptions } from '@components/CustomSelect';
 import InputText from '@components/InputText';
+import { SelectOptions } from '@components/Select';
 
 import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
 import { useProfileInfo } from '@stores/zustandStores/useProfileInfo';
@@ -12,8 +12,8 @@ import DeviceToggleButtons from './DeviceToggleButtons';
 interface ProfileSettingProps {
   toggleVideo: () => void;
   toggleAudio: () => void;
-  camList: CustomSelectOptions[];
-  micList: CustomSelectOptions[];
+  camList: SelectOptions[];
+  micList: SelectOptions[];
   videoRef: React.RefObject<HTMLVideoElement>;
   changeMyCamera: (deviceId: string) => void;
   changeMyAudio: (deviceId: string) => void;
@@ -59,61 +59,59 @@ export default function ProfileSetting({
             nickname={myNickname}
             defaultNickname="나"
           />
+          <div className="flex flex-col gap-24 sm:gap-10 sm:w-[80vw] sm:scale-90">
+            <div className="flex justify-between gap-12">
+              <div className="flex flex-col gap-4 w-240">
+                <span className="text-strong display-bold14">프로필 이미지를 설정하세요.</span>
+                <span className="text-strong display-medium12">카메라가 off 되었을 때 표시됩니다.</span>
+              </div>
+              <InputFileButton
+                onChange={onChangeProfileImage}
+                accept="image/*"
+              >
+                <IconButton
+                  icon="ph:camera-bold"
+                  iconColor="textWhite"
+                  buttonColor="dark"
+                />
+              </InputFileButton>
+            </div>
+            <div className="flex flex-col gap-4">
+              <span className="text-strong display-bold14">상대방에게 표시될 이름을 입력하세요.</span>
+              <InputText onChange={onChangeNickname} />
+            </div>
+            <div className="z-20">
+              <DeviceSelect
+                name="카메라"
+                deviceList={camList}
+                onChange={changeMyCamera}
+              />
+            </div>
+            <div className="z-10">
+              <DeviceSelect
+                name="마이크"
+                deviceList={micList}
+                onChange={changeMyAudio}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-row gap-20 justify-center sm:w-[80vw] sm:scale-90">
           <DeviceToggleButtons
             cameraActive={myVideoOn}
             micActive={myMicOn}
             toggleVideo={toggleVideo}
             toggleAudio={toggleAudio}
           />
-        </div>
-        <div className="flex flex-col gap-24 sm:gap-10 sm:w-[80vw] sm:scale-90">
-          <div className="flex justify-between gap-12">
-            <div className="flex flex-col gap-4 w-240">
-              <span className="text-strong display-bold14">프로필 이미지를 설정하세요.</span>
-              <span className="text-strong display-medium12">카메라가 off 되었을 때 표시됩니다.</span>
-            </div>
-            <IconButton
-              icon="ph:camera-bold"
-              iconColor="textWhite"
-              iconSize={24}
-              buttonSize="m"
-              buttonColor="dark"
-              circle
-            />
-          </div>
-          <div className="flex flex-col gap-4">
-            <span className="text-strong display-bold14">상대방에게 표시될 이름을 입력하세요.</span>
-
-            <InputFileButton
-              onChange={onChangeProfileImage}
-              accept="image/*"
-            >
-              <IconButton
-                icon="ph:camera-bold"
-                iconColor="textWhite"
-                iconSize={24}
-                buttonSize="m"
-                buttonColor="dark"
-                circle
-              />
-            </InputFileButton>
-          </div>
-          <div className="flex flex-row gap-20 justify-center sm:w-[80vw] sm:scale-90">
-            <DeviceToggleButtons
-              cameraActive={myVideoOn}
-              micActive={myMicOn}
-              toggleVideo={toggleVideo}
-              toggleAudio={toggleAudio}
-            />
-            <CustomButton
-              onClick={onConfirm}
-              color="dark"
-              size="l"
-              circle
-            >
-              확인
-            </CustomButton>
-          </div>
+          <Button
+            onClick={onConfirm}
+            color="dark"
+            size="l"
+            circle
+          >
+            <div className="w-32 h-32 flex-with-center">확인</div>
+          </Button>
         </div>
       </div>
     </div>

@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { CustomButton } from '@components/Buttons';
-
-import { Icon } from '@iconify/react';
+import { IconToggleButton } from '@components/Buttons';
 
 interface IconType {
   open: string;
@@ -38,16 +36,15 @@ function SideBar({ onSide, children, icon }: SideBarProps) {
 
   return (
     <>
-      <CustomButton
-        color="transparent"
-        circle
+      <IconToggleButton
+        activeIcon={icon.open}
+        inactiveIcon={icon.close}
+        active={opened}
+        iconColor="textWeak"
+        buttonActiveColor="transparent"
+        buttonInactiveColor="transparent"
         onClick={toggleOpened}
-      >
-        <Icon
-          className="text-25"
-          icon={`${opened ? icon.open : icon.close}`}
-        />
-      </CustomButton>
+      />
       <div
         className={`${!hidden && (opened ? 'animate-openingSidebar' : 'animate-closingSidebar')}
                     surface-alt w-[100vw] lg:w-500 h-[calc(100vh-48px)] absolute -right-[100%] top-48 flex-with-center overflow-hidden`}

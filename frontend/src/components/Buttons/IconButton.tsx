@@ -1,50 +1,45 @@
-import { IconColor, iconColors } from '@constants/colors';
+import type { ButtonColor, IconColor } from '@constants/colors';
+import { iconColorMap } from '@constants/colors';
+import type { ButtonSize } from '@constants/sizes';
+import { iconSizeMap } from '@constants/sizes';
 
-import { Icon } from '@iconify/react';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
-import CustomButton, { ButtonColor, ButtonSize } from './CustomButton';
-
-export interface IconButton {
-  id?: string;
-  text?: string;
-  icon?: string;
-  iconColor?: IconColor;
-  onClick?: () => void;
-}
+import Button from './Button';
 
 interface IconButtonProps {
-  iconSize?: number;
-  buttonSize?: ButtonSize;
+  icon: string;
+  iconColor?: IconColor;
+  size?: ButtonSize;
   buttonColor?: ButtonColor;
-  circle?: boolean;
+  disabled?: boolean;
   onClick?: () => void;
+  children?: React.ReactNode;
 }
 
 export default function IconButton({
-  text,
   icon,
-  iconColor = 'textDefault',
-  iconSize = 12,
-  buttonSize = 'm',
-  buttonColor = 'cancel',
-  circle = false,
+  iconColor = 'textWhite',
+  size = 'm',
+  buttonColor = 'active',
+  disabled = false,
   onClick,
-}: IconButtonProps & IconButton) {
+  children,
+}: IconButtonProps) {
   return (
-    <CustomButton
-      size={buttonSize}
+    <Button
+      size={size}
       color={buttonColor}
       onClick={onClick}
-      circle={circle}
+      disabled={disabled}
+      circle={children === undefined}
     >
-      {icon && (
-        <Icon
-          icon={icon}
-          fontSize={iconSize}
-          className={iconColors[iconColor]}
-        />
-      )}
-      {text && <span>{text}</span>}
-    </CustomButton>
+      <Icon
+        icon={icon}
+        fontSize={iconSizeMap[size]}
+        className={iconColorMap[iconColor]}
+      />
+      {children}
+    </Button>
   );
 }
