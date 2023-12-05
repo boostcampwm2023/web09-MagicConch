@@ -1,50 +1,41 @@
 import { IconColor, iconColors } from '@constants/colors';
 
-import { Icon } from '@iconify/react';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 import Button, { ButtonColor, ButtonSize } from './Button';
 
-export interface IconButton {
-  id?: string;
-  text?: string;
-  icon?: string;
-  iconColor?: IconColor;
-  onClick?: () => void;
-}
-
 interface IconButtonProps {
+  icon: string;
   iconSize?: number;
+  iconColor?: IconColor;
   buttonSize?: ButtonSize;
   buttonColor?: ButtonColor;
-  circle?: boolean;
   onClick?: () => void;
+  children?: React.ReactNode;
 }
 
 export default function IconButton({
-  text,
   icon,
-  iconColor = 'textDefault',
+  iconColor = 'textWhite',
   iconSize = 28,
   buttonSize = 'm',
-  buttonColor = 'cancel',
-  circle = false,
+  buttonColor = 'active',
   onClick,
-}: IconButtonProps & IconButton) {
+  children,
+}: IconButtonProps) {
   return (
     <Button
       size={buttonSize}
       color={buttonColor}
       onClick={onClick}
-      circle={circle}
+      circle={children !== undefined}
     >
-      {icon && (
-        <Icon
-          icon={icon}
-          fontSize={iconSize}
-          className={iconColors[iconColor]}
-        />
-      )}
-      {text && <span>{text}</span>}
+      <Icon
+        icon={icon}
+        fontSize={iconSize}
+        className={iconColors[iconColor]}
+      />
+      {children}
     </Button>
   );
 }
