@@ -1,25 +1,27 @@
 import { useRef } from 'react';
 
-import { array2ArrayBuffer } from '@utils/array';
+import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
+import { useProfileInfo } from '@stores/zustandStores/useProfileInfo';
 
-import { useMediaInfoContext } from './useMediaInfoContext';
-import { useProfileInfoContext } from './useProfileInfoContext';
+import { array2ArrayBuffer } from '@utils/array';
 
 interface useDataChannelProps {
   peerConnectionRef: React.MutableRefObject<RTCPeerConnection | undefined>;
 }
-export function useDataChannel({ peerConnectionRef }: useDataChannelProps) {
-  const {
-    mediaInfos: { myMicOn, myVideoOn },
-    setRemoteMicOn,
-    setRemoteVideoOn,
-  } = useMediaInfoContext();
-
-  const {
-    setRemoteNickname,
-    setRemoteProfileImage,
-    profileInfos: { myNickname, myProfile },
-  } = useProfileInfoContext();
+export function useDataChannel({ peerConnectionRef }: useDataChannelParams) {
+  // const {
+  const { myMicOn, myVideoOn, setRemoteMicOn, setRemoteVideoOn } = useMediaInfo(state => ({
+    myMicOn: state.myMicOn,
+    myVideoOn: state.myVideoOn,
+    setRemoteMicOn: state.setRemoteMicOn,
+    setRemoteVideoOn: state.setRemoteVideoOn,
+  }));
+  const { myNickname, myProfile, setRemoteNickname, setRemoteProfileImage } = useProfileInfo(state => ({
+    setRemoteNickname: state.setRemoteNickname,
+    setRemoteProfileImage: state.setRemoteProfile,
+    myNickname: state.myNickname,
+    myProfile: state.myProfile,
+  }));
 
   const mediaInfoChannel = useRef<RTCDataChannel>();
   const chatChannel = useRef<RTCDataChannel>();
@@ -74,11 +76,11 @@ export function useDataChannel({ peerConnectionRef }: useDataChannelProps) {
     profileChannel.current.addEventListener('message', ({ data }) => {
       const receivedData = JSON.parse(data);
 
-      const { type, arrayBuffer } = receivedData;
+      const { type, arrayBuffer: array } = receivedData;
 
-      const receivedArrayBuffer = array2ArrayBuffer(arrayBuffer);
+      const arrayBuffer = array2ArrayBuffer(array);
 
-      setRemoteProfileImage(receivedArrayBuffer, type);
+      setRemoteProfileImage({ arrayBuffer, type });
     });
 
     profileChannel.current?.addEventListener('open', () => {

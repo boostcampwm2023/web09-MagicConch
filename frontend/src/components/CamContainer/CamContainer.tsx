@@ -1,7 +1,8 @@
 import { CustomButton, IconToggleButton } from '@components/Buttons';
 import CamBox from '@components/CamBox';
 
-import { useProfileInfoContext } from '@business/hooks/useProfileInfoContext';
+import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
+import { useProfileInfo } from '@stores/zustandStores/useProfileInfo';
 
 import { Icon } from '@iconify/react/dist/iconify.js';
 
@@ -26,9 +27,21 @@ export default function CamContainer({
   tarotButtonClick,
   tarotButtonDisabled,
 }: CamContainerProps) {
-  const {
-    profileInfos: { myNickname, myProfile, remoteNickname, remoteProfile },
-  } = useProfileInfoContext();
+  const { myNickname, myProfile, remoteNickname, remoteProfile } = useProfileInfo(state => ({
+    myNickname: state.myNickname,
+    myProfile: state.myProfile,
+    remoteNickname: state.remoteNickname,
+    remoteProfile: state.remoteProfile,
+  }));
+
+  const { myMicOn, myVideoOn, remoteMicOn, remoteVideoOn } = useMediaInfo(state => ({
+    myMicOn: state.myMicOn,
+    myVideoOn: state.myVideoOn,
+    remoteMicOn: state.remoteMicOn,
+    remoteVideoOn: state.remoteVideoOn,
+    setRemoteMicOn: state.setRemoteMicOn,
+    setRemoteVideoOn: state.setRemoteVideoOn,
+  }));
 
   return (
     <div className="flex-with-center flex-col gap-80 pt-80">

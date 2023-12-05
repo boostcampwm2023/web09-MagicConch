@@ -3,7 +3,8 @@ import CamBox from '@components/CamBox';
 import { CustomSelectOptions } from '@components/CustomSelect';
 import InputText from '@components/InputText';
 
-import { useProfileInfoContext } from '@business/hooks/useProfileInfoContext';
+import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
+import { useProfileInfo } from '@stores/zustandStores/useProfileInfo';
 
 import DeviceSelect from './DeviceSelect';
 import DeviceToggleButtons from './DeviceToggleButtons';
@@ -37,9 +38,18 @@ export default function ProfileSetting({
   onChangeProfileImage,
   onChangeNickname,
 }: ProfileSettingProps) {
-  const {
-    profileInfos: { myProfile, myNickname },
-  } = useProfileInfoContext();
+  const { myNickname, myProfile } = useProfileInfo(state => ({
+    myNickname: state.myNickname,
+    myProfile: state.myProfile,
+  }));
+
+  const { myMicOn, myVideoOn } = useMediaInfo(state => ({
+    myMicOn: state.myMicOn,
+    myVideoOn: state.myVideoOn,
+    remoteMicOn: state.remoteMicOn,
+    remoteVideoOn: state.remoteVideoOn,
+  }));
+
   return (
     <div className="w-[100vw] h-[100vh] flex-with-center z-10">
       <div className="flex gap-48 rounded-lg p-64 surface-box">

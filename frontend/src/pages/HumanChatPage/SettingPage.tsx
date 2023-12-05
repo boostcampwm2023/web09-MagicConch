@@ -3,8 +3,9 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import ProfileSetting from '@components/ProfileSetting';
 
-import { useProfileInfoContext } from '@business/hooks/useProfileInfoContext';
 import { HumanSocketManager } from '@business/services/SocketManager';
+
+import { useProfileInfo } from '@stores/zustandStores/useProfileInfo';
 
 import { arrayBuffer2Array } from '@utils/array';
 
@@ -39,19 +40,22 @@ export default function ChattingPage() {
     getMedia({});
   }, []);
 
-  const {
-    setMyNickname,
-    setMyProfileImage,
-    profileInfos: { myNickname, myProfile },
-  } = useProfileInfoContext();
+  const { myNickname, myProfile, setMyNickname, setMyProfileImage } = useProfileInfo(state => ({
+    setMyNickname: state.setMyNickname,
+    setMyProfileImage: state.setMyProfile,
+    myNickname: state.myNickname,
+    myProfile: state.myProfile,
+  }));
+
   const setLocalProfileImage = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) {
       return;
     }
+    const { type } = file;
 
     const arrayBuffer = await file.arrayBuffer();
-    setMyProfileImage(arrayBuffer, file.type);
+    setMyProfileImage({ arrayBuffer, type });
   };
 
   const setLocalNickname = (e: ChangeEvent<HTMLInputElement>) => {
