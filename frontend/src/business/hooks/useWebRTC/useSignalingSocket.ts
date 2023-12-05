@@ -1,5 +1,4 @@
-import { usePasswordPopup } from '../usePopup';
-
+import { usePasswordPopup } from '@business/hooks/usePopup';
 import { HumanSocketManager } from '@business/services/SocketManager';
 
 interface useSignalingSocketParams {
