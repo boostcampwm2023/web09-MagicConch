@@ -3,7 +3,6 @@
 GITHUB_SHA=$1
 MAIN_SCRIPT="src/main.ts"
 DEBUG_LOG="debug.log"
-NPM_BUILD="npm run build"
 NPM_PROD="npm run start:prod"
 
 print_line() {
@@ -33,10 +32,10 @@ change_port() {
   docker exec $CONTAINER_ID /bin/bash -c "pkill -f ':$STOP_PORT'"
     
   echo "* change port : $STOP_PORT to $RUN_PORT" >> $DEBUG_LOG
-  docker exec $CONTAINER_ID /bin/bash -c "sed -i 's/port: number = $STOP_PORT/port: number = $RUN_PORT/' $MAIN_SCRIPT"
+  docker exec $CONTAINER_ID /bin/bash -c "export PORT=$RUN_PORT"
 
   echo "* restart application : " >> $DEBUG_LOG
-  docker exec -d $CONTAINER_ID /bin/bash -c "$NPM_BUILD && $NPM_PROD"
+  docker exec $CONTAINER_ID /bin/bash -c "$NPM_PROD"
 }
 
 reload_application() {
@@ -47,7 +46,7 @@ reload_application() {
   CONTAINER_ID=$(docker ps --filter "name=$CONTAINER_NAME" -q)
   echo "<<< Reload $CONTAINER_NAME ( $CONTAINER_ID )" >> $DEBUG_LOG
 
-  if ((RUN_PORT > 3001)); then
+  if [ "$RUN_PORT" -gt 3001 ]; then
     change_port "$CONTAINER_ID" $RUN_PORT $STOP_PORT
     echo ">>> Reload complete : $CONTAINER_NAME running on $RUN_PORT" >> $DEBUG_LOG
   else
@@ -84,8 +83,8 @@ blue_green() {
   reload_application "was-$RUN_TARGET" $WAS_RUN_PORT $WAS_STOP_PORT
   reload_application "signal-$RUN_TARGET" $((WAS_RUN_PORT + 1)) $((WAS_STOP_PORT + 1))
 
-  wait 
-
+  sleep 30
+  
   reload_nginx "$RUN_TARGET" "$STOP_TARGET" $WAS_RUN_PORT $WAS_STOP_PORT
 
   echo "Delete .env file" >> $DEBUG_LOG
