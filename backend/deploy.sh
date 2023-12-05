@@ -77,8 +77,8 @@ blue_green() {
   local WAS_RUN_PORT="$3"
   local WAS_STOP_PORT="$4"
   
-  reload_application "was-$RUN_TARGET" $WAS_RUN_PORT $WAS_STOP_PORT
-  reload_application "signal-$RUN_TARGET" $((WAS_RUN_PORT + 1)) $((WAS_STOP_PORT + 1))
+  #reload_application "was-$RUN_TARGET" $WAS_RUN_PORT $WAS_STOP_PORT
+  #reload_application "signal-$RUN_TARGET" $((WAS_RUN_PORT + 1)) $((WAS_STOP_PORT + 1))
 
   sleep 30
   
