@@ -23,8 +23,8 @@ export default function CamContainer({
   tarotButtonDisabled,
 }: CamContainerProps) {
   return (
-    <div className="flex-with-center flex-col gap-80 pt-80">
-      <div className="flex justify-center gap-64 h-320">
+    <div className="flex-with-center flex-col gap-80 pt-80 sm:gap-20">
+      <div className="flex justify-center gap-64 sm:flex-col sm:gap-20">
         <CamBox
           videoRef={localVideoRef}
           cameraConnected={cameraConnected.local}
@@ -38,7 +38,7 @@ export default function CamContainer({
           defaultImage="bg-sponge"
         />
       </div>
-      <div className="flex flex-col gap-30">
+      <div className="flex flex-col gap-30 z-10">
         <IconButton
           icon="tabler:cards-filled"
           onClick={tarotButtonClick}
