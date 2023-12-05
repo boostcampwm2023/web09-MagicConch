@@ -5,14 +5,11 @@ import { HumanSocketManager } from '@business/services/SocketManager';
 import { useControllMedia } from './useControllMedia';
 import { useDataChannel } from './useDataChannel';
 import { useMedia } from './useMedia';
-import { useMediaInfoContext } from './useMediaInfoContext';
 import { useRTCPeerConnection } from './useRTCPeerConnection';
 import { useSignalingSocket } from './useSignalingSocket';
 
 export default function useWebRTC() {
   const socketManager = new HumanSocketManager();
-
-  const { mediaInfos } = useMediaInfoContext();
 
   const {
     localVideoRef,
@@ -87,7 +84,6 @@ export default function useWebRTC() {
     chatChannel,
     profileChannel,
     nicknameChannel,
-    mediaInfos,
     toggleAudio,
     toggleVideo,
     addTracks,

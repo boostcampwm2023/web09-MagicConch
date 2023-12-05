@@ -11,8 +11,6 @@ interface CamContainerProps {
   remoteVideoRef: React.RefObject<HTMLVideoElement>;
   toggleVideo: () => void;
   toggleAudio: () => void;
-  cameraConnected: { local: boolean; remote: boolean };
-  audioConnected: { local: boolean; remote: boolean };
   tarotButtonClick: () => void;
   tarotButtonDisabled: boolean;
 }
@@ -22,8 +20,6 @@ export default function CamContainer({
   remoteVideoRef,
   toggleVideo,
   toggleAudio,
-  cameraConnected,
-  audioConnected,
   tarotButtonClick,
   tarotButtonDisabled,
 }: CamContainerProps) {
