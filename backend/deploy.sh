@@ -32,10 +32,7 @@ change_port() {
   docker exec $CONTAINER_ID /bin/bash -c "pkill -f ':$STOP_PORT'"
     
   echo "* change port : $STOP_PORT to $RUN_PORT" >> $DEBUG_LOG
-  docker exec $CONTAINER_ID /bin/bash -c "export PORT=$RUN_PORT"
-
-  echo "* restart application : " >> $DEBUG_LOG
-  docker exec $CONTAINER_ID /bin/bash -c "$NPM_PROD"
+  PORT="$RUN_PORT" docker exec $CONTAINER_ID /bin/bash -c "$NPM_PROD"
 }
 
 reload_application() {
