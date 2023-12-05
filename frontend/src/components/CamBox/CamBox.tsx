@@ -25,7 +25,6 @@ const CamBox = ({
   nickname,
   defaultNickname,
 }: CamBoxProps) => {
-  console.log(nickname);
   const loading = useMemo(() => !videoRef.current?.srcObject, [videoRef.current?.srcObject]);
   const hidden = useMemo(() => !cameraConnected, [cameraConnected]);
 
