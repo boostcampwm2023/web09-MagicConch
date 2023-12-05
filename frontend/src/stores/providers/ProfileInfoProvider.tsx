@@ -5,9 +5,9 @@ export interface ProfileInfo {
   type: string;
 }
 export interface ProfileInfoState {
-  myNickname: string;
+  myNickname?: string;
   myProfile?: ProfileInfo;
-  remoteNickname: string;
+  remoteNickname?: string;
   remoteProfile?: ProfileInfo;
 }
 
@@ -16,10 +16,7 @@ export const ProfileInfoContext = createContext<
 >(undefined);
 
 export function ProfileInfoProvider({ children }: PropsWithChildren) {
-  const [profileInfos, setProfileInfos] = useState<ProfileInfoState>({
-    myNickname: '나',
-    remoteNickname: '상대',
-  });
+  const [profileInfos, setProfileInfos] = useState<ProfileInfoState>({});
 
   const value = useMemo(() => ({ profileInfos, setProfileInfos }), [profileInfos, setProfileInfos]);
 
