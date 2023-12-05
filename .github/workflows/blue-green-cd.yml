@@ -2,7 +2,7 @@ name: Blue/Green CD
 
 on:
   push:
-    branches: ["dev", "BE/refactor/#299-백엔드-파일구조"]
+    branches: ["dev"]
 
 jobs:
   build:
