@@ -89,7 +89,7 @@ export default function ProfileSetting({
             size="l"
             circle
           >
-            확인
+            <div className="w-32 h-32 flex-with-center">확인</div>
           </Button>
         </div>
       </div>
