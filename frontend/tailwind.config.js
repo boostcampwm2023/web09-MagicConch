@@ -7,6 +7,11 @@ const px0_2000 = { ...Array.from(Array(2001)).map((_, i) => `${i / ROOT_PX}rem`)
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
+    screens: {
+      sm: { min: '280px', max: '767px' },
+      md: { min: '768px', max: '1023px' },
+      lg: { min: '1024px' },
+    },
     extend: {
       width: px0_2000,
       height: px0_2000,
@@ -45,13 +50,52 @@ export default {
           '0%': { transform: 'scale(1.02) translateY(-1000px)' },
           '100%': { transform: 'translateY(-1000px)' },
         },
+        openingSidebar: {
+          '0%': { right: '-100%' },
+          '100%': { right: 0 },
+        },
+        closingSidebar: {
+          '0%': { right: 0 },
+          '100%': { right: '-100%' },
+        },
+        contentSideWithOpeningSidebar: {
+          '0%': { width: '100%' },
+          '100%': { width: 'calc(100% - 500px)' },
+        },
+        contentSideWithClosingSidebar: {
+          '0%': { width: 'calc(100% - 500px)' },
+          '100%': { width: '100%' },
+        },
+        flappingCard: {
+          '0%': { transform: 'rotateY(0deg)' },
+          '100%': { transform: 'rotateY(30deg)' },
+        },
+        flippingCard: {
+          '0%': { transform: 'rotateY(0deg)' },
+          '100%': { transform: 'rotateY(180deg)' },
+        },
+        rotatingConch: {
+          '0%': { transform: 'rotate(0deg) translateY(-65vh)' },
+          '100%': { transform: 'rotate(360deg) translateY(-65vh)' },
+        },
       },
       animation: {
         shining: 'shining 2s ease-in-out infinite alternate',
-        fadeIn: 'fadeIn 1.5s ease-in-out',
-        fadeOut: 'fadeOut 2.5s ease-in-out forwards',
+        fadeIn: 'fadeIn 2s ease-in-out forwards',
+        fadeOut: 'fadeOut 2s ease-in-out forwards',
         tarotHovering: 'tarotHovering 0.5s ease-in-out forwards',
         tarotLeaving: 'tarotLeaving 0.3s ease-in-out forwards',
+        openingSidebar: 'openingSidebar 0.5s ease-in-out forwards',
+        closingSidebar: 'closingSidebar 0.5s ease-in-out forwards',
+        contentSideWithOpeningSidebar: 'contentSideWithOpeningSidebar 0.5s ease-in-out forwards',
+        contentSideWithClosingSidebar: 'contentSideWithClosingSidebar 0.5s ease-in-out forwards',
+        flappingCard: 'flappingCard 1s ease-in-out forwards infinite alternate',
+        flippingCard: 'flippingCard 1s ease-in-out forwards',
+        rotatingConch: 'rotatingConch 2s ease-in-out',
+      },
+      backgroundImage: {
+        ddung: "url('/ddung.png')",
+        sponge: "url('/sponge.png')",
       },
     },
   },
@@ -69,6 +113,7 @@ export default {
       };
 
       const textTheme = {
+        '.text-point': { color: '#7890E7' },
         '.text-strong': { color: '#14212B' },
         '.text-bold': { color: '#4B5966' },
         '.text-default': { color: '#5E6E76' },
@@ -118,7 +163,8 @@ export default {
     },
     ({ addComponents }) => {
       const shadowTheme = {
-        '.shadow-chat': { boxShadow: '0px 0px 8px 8px rgba(255, 255, 255, 0.10);' },
+        '.shadow-point': { boxShadow: '0px 0px 15px 15px rgba(120, 144, 231, 0.4);' },
+        '.shadow-white': { boxShadow: '0px 0px 10px 10px rgba(255, 255, 255, 0.15);' },
         '.shadow-popup': { boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)' },
       };
       addComponents(shadowTheme);
@@ -138,7 +184,7 @@ export default {
           mixBlendMode: 'difference',
           background: '#fff',
         },
-        '.cursor:has(~ div button:hover), .cursor:has(~ div input:hover), .cursor:has(~ div a:hover), .cursor:has(~ div audio:hover)':
+        '.cursor:has(~ div button:hover), .cursor:has(~ div input:hover), .cursor:has(~ div a:hover), .cursor:has(~ div audio:hover), .cursor:has(~ div .collapse-content:hover), .cursor:has(~ div .result:hover)':
           {
             transition: 'transform 0.1s ease-in-out',
             transform: 'translate(-50%, -50%) scale(2)',

@@ -31,9 +31,20 @@ img {
 
 *:hover,
 *::-webkit-media-controls-play-button {
-  cursor: none;
+  cursor: none !important;
 }
 
 ::-webkit-scrollbar {
   display: none;
+}
+
+audio::-webkit-media-controls-enclosure {
+  max-height: none;
+}
+
+audio::-webkit-media-controls-play-button {
+  height: 60px;
+  width: 60px;
+  min-width: 0;
+  padding: 30px;
 }

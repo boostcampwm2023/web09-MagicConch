@@ -1,4 +1,8 @@
+import { detect } from 'detect-browser';
 import { useEffect, useRef } from 'react';
+
+const browser = detect();
+const __iOS__ = browser?.os?.includes('iOS');
 
 function Cursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
@@ -8,7 +12,7 @@ function Cursor() {
 
     if (cursorRef.current) {
       cursorRef.current.style.left = pageX + 'px';
-      cursorRef.current.style.top = pageY - scrollY + 'px';
+      cursorRef.current.style.top = pageY + 'px';
     }
   };
 
@@ -23,10 +27,12 @@ function Cursor() {
   });
 
   return (
-    <div
-      ref={cursorRef}
-      className="cursor"
-    />
+    !__iOS__ && (
+      <div
+        ref={cursorRef}
+        className="cursor"
+      />
+    )
   );
 }
 

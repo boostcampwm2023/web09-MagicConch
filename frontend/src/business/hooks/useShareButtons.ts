@@ -3,8 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import { Kakao } from '@business/services/Kakao';
 
-import { downloadImage } from '@utils/downloadImage';
-
+//import { downloadImage } from '@utils/downloadImage';
 import { IconColor } from '@constants/colors';
 
 type ShareButton = {
@@ -15,12 +14,12 @@ type ShareButton = {
   tooltip?: string;
 };
 
-interface useShareButtonProps {
+interface useShareButtonParams {
   cardUrl: string;
   resultSharePageRef: RefObject<HTMLDivElement>;
 }
 
-export function useShareButtons({ cardUrl, resultSharePageRef }: useShareButtonProps) {
+export function useShareButtons({ cardUrl }: useShareButtonParams) {
   const { id } = useParams<{ id: string }>();
 
   const share2Kakao = async () => {
@@ -28,12 +27,12 @@ export function useShareButtons({ cardUrl, resultSharePageRef }: useShareButtonP
     await Kakao.shareSendDefault({ cardUrl, id: id as string });
   };
 
-  const download = () => {
-    downloadImage(resultSharePageRef);
-  };
+  // const download = () => {
+  //   downloadImage(resultSharePageRef);
+  // };
 
   const copyLink = () => {
-    navigator.clipboard.writeText(`${import.meta.env.VITE_BASE_URL}/result/${id}`);
+    navigator.clipboard.writeText(`${import.meta.env.VITE_BASE_URL_DEV}/result/${id}`);
   };
 
   const shareButtons: Record<string, ShareButton> = {
@@ -43,11 +42,11 @@ export function useShareButtons({ cardUrl, resultSharePageRef }: useShareButtonP
       iconColor: 'kakaoIcon',
       onClick: share2Kakao,
     },
-    download: {
-      text: '다운로드',
-      icon: 'ic:round-download',
-      onClick: download,
-    },
+    // download: {
+    //   text: '다운로드',
+    //   icon: 'ic:round-download',
+    //   onClick: download,
+    // },
     copyLink: {
       text: 'copyLink',
       icon: 'bxs:copy',

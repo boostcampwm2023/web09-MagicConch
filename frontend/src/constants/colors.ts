@@ -1,4 +1,4 @@
-export const iconColors = {
+export const iconColorMap = {
   textStrong: 'text-strong',
   textBold: 'text-bold',
   textDefault: 'text-default',
@@ -6,4 +6,15 @@ export const iconColors = {
   textWhite: 'text-white-default',
   kakaoIcon: 'kakao-icon',
 };
-export type IconColor = keyof typeof iconColors;
+
+export type IconColor = keyof typeof iconColorMap;
+
+export const ButtonColorMap: Record<string, string> = {
+  active: 'surface-point-alt text-white',
+  cancel: 'surface-disabled text-white',
+  disabled: 'surface-box text-weak',
+  dark: 'surface-alt text-white',
+  transparent: 'bg-transparent hover:bg-transparent hover:border-transparent',
+};
+
+export type ButtonColor = keyof typeof ButtonColorMap;

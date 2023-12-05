@@ -8,7 +8,7 @@
 
 ## 프로젝트 소개
 
-  <div style="display:flex; align-items: center; gap: 20px;">
+<div style="display:flex; align-items: center; gap: 20px;">
   <img width="15%" src="https://github.com/boostcampwm2023/web09-MagicConch/assets/78946499/9cd198bb-9692-48f1-82f0-2712fb643442">
   <div>
     <li>
@@ -39,12 +39,13 @@
 ## 브랜치 전략
 
 - main(기본) - dev(개발) - feature branch
-- 이슈 별로 브랜치 파기
+- 이슈별로 브랜치 생성
 - 브랜치 네이밍 규칙
-  - `feature/{issue-number}-{feature-name}`
-  - husky로 commit message 이슈 연결 자동화
-- PR merge할 때, squash & merge
-- merge된 브랜치는 삭제
+  - `{FE/BE}/feature/{issue-number}-{feature-name}`
+  - `{FE/BE}/bugfix/{issue-number}-{bugfix-name}`
+  - `{FE/BE}/refactor/{issue-number}-{refactor-name}`
+- husky로 commit message 이슈 연결 자동화
+- PR merge 시, rebase merge
 
 <br>
 
@@ -56,11 +57,11 @@
 - 코드 리뷰는 `일관성`, `가독성`, `컨벤션 확인`, `코드의 이해`를 목표로 한다.
 - 당일 PR은 당일 리뷰를 목표로 한다.
 - 코드 리뷰 단계적 코멘트를 적용한다.
-  - `P1`: 꼭 반영해주세요 (Request changes)
-  - `P2`: 적극적으로 고려해주세요 (Request changes)
-  - `P3`: 웬만하면 반영해 주세요 (Comment)
-  - `P4`: 반영해도 좋고 넘어가도 좋습니다 (Approve)
-  - `P5`: 그냥 사소한 의견입니다 (Approve)
+  - ⚠️ : 꼭 반영해줘 (버그/성능이슈 포함!!)
+  - ❓: 질문!
+  - 👍 : 각종 칭찬,,,
+  - ✨ : 코드 스타일 통일하자??
+  - 💬 : 그냥 comment
 - `18시`까지 PR을 날리지 못하면, 그 이유에 대해서 함께 `회고`한다.
 - `18시-19시`에는 그 날의 이슈를 공유하고, `문서화`를 하는 시간을 갖는다.
 
@@ -99,5 +100,3 @@
     </td>
   </tr>
 </table>
-
-test teest testtttt

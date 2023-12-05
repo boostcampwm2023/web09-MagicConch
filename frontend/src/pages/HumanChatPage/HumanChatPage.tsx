@@ -1,43 +1,88 @@
-import { useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
-import CustomButton from '@components/Buttons/CustomButton';
-import CustomSelect from '@components/CustomSelect';
+import Background from '@components/Background';
+import ChatContainer from '@components/ChatContainer';
+import Header from '@components/Header';
+import SideBar from '@components/SideBar';
 
-import { useWebRTC } from '@business/hooks/useWebRTC';
+import { useHumanChatMessage } from '@business/hooks/useChatMessage';
+import { useHumanTarotSpread } from '@business/hooks/useTarotSpread';
+import useWebRTC from '@business/hooks/useWebRTC';
+
+export interface OutletContext extends ReturnType<typeof useWebRTC> {
+  tarotButtonClick: () => void;
+  tarotButtonDisabled: boolean;
+}
 
 export default function HumanChatPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const webRTCData = useWebRTC();
   const { roomName } = useParams();
 
-  const { cameraOptions, localVideoRef, remoteVideoRef, toggleAudio, toggleVideo, changeCamera } = useWebRTC(
-    roomName as string,
-  );
+  useEffect(() => {
+    if (!roomName && !location.state?.host) {
+      alert('잘못된 접근입니다.');
+      navigate('/');
+    }
+
+    if (roomName || !location.state?.host) {
+      return;
+    }
+
+    webRTCData.createRoom({
+      onSuccess: ({ roomName, close }) => {
+        close();
+        navigate(roomName, { state: { host: true } });
+      },
+      onClose: ({ close }) => {
+        close();
+        navigate('/');
+      },
+    });
+  }, []);
+
+  const { messages, onSubmitMessage, inputDisabled, addPickCardMessage } = useHumanChatMessage(webRTCData.chatChannel);
+  const { tarotButtonClick, tarotButtonDisabled } = useHumanTarotSpread(webRTCData.chatChannel, addPickCardMessage);
+
+  const [contentAnimation, setContentAnimation] = useState<string>('');
+
+  const changeContentAnimation = (opendSidebar: boolean) => {
+    const newAnimation = opendSidebar
+      ? 'animate-contentSideWithOpeningSidebar'
+      : 'animate-contentSideWithClosingSidebar';
+
+    setContentAnimation(newAnimation);
+  };
 
   return (
-    <div className="w-h-full flex-with-center flex-col gap-10 ">
-      <div className="flex justify-center">
-        <video
-          className="w-320 h-180 bg-blue-200"
-          ref={localVideoRef}
-          autoPlay
-          playsInline
-        />
-        <video
-          className="w-320 h-180 bg-red-200"
-          ref={remoteVideoRef}
-          autoPlay
-          playsInline
-        />
+    <Background type="dynamic">
+      <Header
+        rightItems={[
+          <SideBar
+            key="chat-side-bar"
+            onSide={changeContentAnimation}
+            icon={{ open: 'mdi:message-off', close: 'mdi:message' }}
+          >
+            <ChatContainer
+              width="w-[90%]"
+              height="h-[80%]"
+              position="top-[5vh]"
+              messages={messages}
+              onSubmitMessage={onSubmitMessage}
+              inputDisabled={inputDisabled}
+            />
+          </SideBar>,
+        ]}
+      />
+      <div className="w-h-screen">
+        <div className={`flex-with-center h-full ${contentAnimation}`}>
+          <Outlet context={{ ...webRTCData, tarotButtonClick, tarotButtonDisabled }} />
+        </div>
       </div>
-      <div className="w-full h-10 flex justify-center gap-5">
-        <CustomButton onClick={toggleVideo}>video</CustomButton>
-        <CustomButton onClick={toggleAudio}>mic</CustomButton>
-        <CustomSelect
-          onChange={({ value }) => {
-            changeCamera(value);
-          }}
-          options={cameraOptions.map(({ deviceId, label }) => ({ label, value: deviceId }))}
-        />
-      </div>
-    </div>
+    </Background>
   );
 }
