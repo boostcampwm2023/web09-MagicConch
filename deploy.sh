@@ -5,7 +5,7 @@ MAIN_SCRIPT="src/main.ts"
 DEBUG_LOG="debug.log"
 NPM_BUILD="npm run build"
 NPM_PROD="npm run start:prod"
-CMD="$NPM_BUILD; $NPM_PROD"
+CMD="$NPM_BUILD && $NPM_PROD"
 
 print_line() {
   echo " " >> $DEBUG_LOG
