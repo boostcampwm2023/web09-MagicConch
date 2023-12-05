@@ -2,7 +2,7 @@ name: Blue/Green CD
 
 on:
   push:
-    branches: ["BE/bugfix/#364-무중단-배포"]
+    branches: ["dev"]
 
 jobs:
   build:
