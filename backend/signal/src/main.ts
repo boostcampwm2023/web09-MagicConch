@@ -13,7 +13,7 @@ async function bootstrap() {
     credentials: true,
   });
 
-  const port: number = parseInt(process.env.PORT || '3000') + 1;
+  const port: number = parseInt(process.env.PORT || '3001');
   await app.listen(port);
 }
 bootstrap();
