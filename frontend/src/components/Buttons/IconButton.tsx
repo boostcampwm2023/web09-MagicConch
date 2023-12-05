@@ -30,7 +30,7 @@ export default function IconButton({
       size={buttonSize}
       color={buttonColor}
       onClick={onClick}
-      circle={children !== undefined}
+      circle={children === undefined}
     >
       <Icon
         icon={icon}
