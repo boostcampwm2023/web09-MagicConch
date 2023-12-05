@@ -19,10 +19,11 @@ reload_application() {
   echo "<<< Start reload $CONTAINER_NAME... ($STOP_PORT to $RUN_PORT)" >> $DEBUG_LOG
 
   CONTAINER_ID=$(docker ps --filter "name=$CONTAINER_NAME" -q)
-  PID=$(docker exec $CONTAINER_ID /bin/bash -c "lsof -t -i:$RUN_PORT")
-  if [ -n "$PID" ]; then
-    echo "kill $PID..." >> $DEBUG_LOG
-    docker exec $CONTAINER_ID /bin/bash -c "kill -9 $PID"
+  NODE_PROCESS=$(docker exec $CONTAINER_ID /bin/bash -c "ps aux | grep '$NPM_PROD' | grep -v grep | awk '{print \$2}'")
+
+  if [ -n "$NODE_PROCESS" ]; then
+    echo "kill $NODE_PROCESS..." >> $DEBUG_LOG
+    docker exec $CONTAINER_ID /bin/bash -c "kill -9 $NODE_PROCESS"
   fi
 
   docker exec $CONTAINER_ID /bin/bash -c "sed -i 's/port: number = $STOP_PORT/port: number = $RUN_PORT/' $MAIN_SCRIPT"
@@ -46,12 +47,12 @@ fi
 
 DOCKER_COMPOSE_FILE="docker-compose.$GITHUB_SHA.$RUN_TARGET.yml"
 
-echo "<<< Start docker compose building... $DOCKER_COMPOSE_FILE" > $DEBUG_LOG
+echo "<<< Start docker compose running... $DOCKER_COMPOSE_FILE" > $DEBUG_LOG
 
 docker-compose -f "$DOCKER_COMPOSE_FILE" pull
 docker-compose -f "$DOCKER_COMPOSE_FILE" up -d
 
-echo ">>> Build complete..." >> $DEBUG_LOG
+echo ">>> Running complete..." >> $DEBUG_LOG
 print_line
 
 reload_application "was-$RUN_TARGET" $WAS_RUN_PORT $WAS_STOP_PORT "$NPM_BUILD && $NPM_PROD"
