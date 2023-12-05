@@ -1,6 +1,8 @@
 import useOverlay from './useOverlay';
 
-export default function useTOLD(event: 'AI' | 'HUMAN') {
+type TOLD_TYPE = 'AI' | 'HUMAN';
+
+export default function useTOLD(event: TOLD_TYPE) {
   const global = window as any;
   const { open } = useOverlay();
 
