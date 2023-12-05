@@ -4,18 +4,16 @@ import useOverlay from '@business/hooks/useOverlay';
 
 import { randomString } from '@utils/ramdom';
 
-export default function usePasswordPopup() {
+type openPasswordPopupParams = {
+  host?: boolean;
+  onSubmit?: ({ password, close }: { password: string; close: () => void }) => void;
+  onClose?: ({ close }: { close: () => void }) => void;
+};
+
+export function usePasswordPopup() {
   const { open } = useOverlay();
 
-  const openPasswordPopup = ({
-    host,
-    onSubmit,
-    onClose,
-  }: {
-    host?: boolean;
-    onSubmit?: ({ password, close }: { password: string; close: () => void }) => void;
-    onClose?: ({ close }: { close: () => void }) => void;
-  }) => {
+  const openPasswordPopup = ({ host, onSubmit, onClose }: openPasswordPopupParams) => {
     const defaultValue = host ? randomString() : '';
 
     open(({ close }) => (
