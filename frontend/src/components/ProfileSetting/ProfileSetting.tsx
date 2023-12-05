@@ -1,6 +1,6 @@
 import { Button, IconButton } from '@components/Buttons';
 import CamBox from '@components/CamBox';
-import { CustomSelectOptions } from '@components/CustomSelect';
+import { SelectOptions } from '@components/Select';
 
 import DeviceSelect from './DeviceSelect';
 import DeviceToggleButtons from './DeviceToggleButtons';
@@ -8,8 +8,8 @@ import DeviceToggleButtons from './DeviceToggleButtons';
 interface ProfileSettingProps {
   toggleVideo: () => void;
   toggleAudio: () => void;
-  camList: CustomSelectOptions[];
-  micList: CustomSelectOptions[];
+  camList: SelectOptions[];
+  micList: SelectOptions[];
   videoRef: React.RefObject<HTMLVideoElement>;
   cameraConnected: { local: boolean; remote: boolean };
   audioConnected: { local: boolean; remote: boolean };
