@@ -36,6 +36,8 @@ jobs:
       - name: Build Docker Images (Blue)
         run: |
           cd backend
+          docker builder prune -a -f
+          docker system prune -f
           cp docker-compose.blue.yml docker-compose.${{ github.sha }}.blue.yml
           docker-compose -f docker-compose.${{ github.sha }}.blue.yml build --no-cache -t "${{ secrets.DOCKER_USERNAME }}/magicconch:latest-blue"
 
