@@ -14,6 +14,7 @@ jobs:
 
       - name: Generate .env file and SSL files
         run: |
+          cd backend
           echo "${{ secrets.ENV_FILE }}" > .env
           mkdir -p config/nginx/ssl/
           echo "${{ secrets.SSL_OPTIONS }}" > config/nginx/ssl/options-ssl-nginx.conf
