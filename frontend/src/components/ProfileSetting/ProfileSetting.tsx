@@ -56,10 +56,8 @@ export default function ProfileSetting({
             <IconButton
               icon="ph:camera-bold"
               iconColor="textWhite"
-              iconSize={24}
-              buttonSize="m"
+              size="m"
               buttonColor="dark"
-              circle
             />
           </div>
           <div className="flex flex-col gap-4">

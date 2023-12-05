@@ -1,8 +1,6 @@
 import { useRef } from 'react';
 
-import { Button } from '@components/Buttons';
-
-import { Icon } from '@iconify/react';
+import { IconButton } from '@components/Buttons';
 
 interface ChatInputProps {
   disabled: boolean;
@@ -34,16 +32,11 @@ function ChatInput({ disabled, sendChatMessage }: ChatInputProps) {
         placeholder="Type Here"
         className="input input-bordered w-full display-medium16 sm:text-14"
       />
-      <Button
-        color="transparent"
-        circle
+      <IconButton
+        icon="ion:send"
+        buttonColor="transparent"
         onClick={submitMessage}
-      >
-        <Icon
-          icon="ion:send"
-          className="text-white text-28"
-        />
-      </Button>
+      />
     </div>
   );
 }

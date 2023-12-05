@@ -41,23 +41,16 @@ function MessageBox({ tarotId, type, message, profile, button, shareLinkId }: Me
                 rel="noopener noreferrer"
               >
                 <IconButton
-                  buttonColor="transparent"
-                  iconColor="textWhite"
                   icon="ion:share"
-                  iconSize={28}
-                  circle
+                  buttonColor="transparent"
                 />
               </Link>
             </div>
           )}
           {button && (
-            <div
-              id="TOLD"
-              className="relative left-70"
-            >
+            <div className="relative left-70">
               <Button
                 size="s"
-                color="active"
                 onClick={button.onClick}
               >
                 {button.content}

@@ -82,10 +82,7 @@ export default function ChattingPage() {
         <IconButton
           icon="uil:setting"
           iconColor="textWhite"
-          iconSize={30}
-          buttonSize="m"
           buttonColor="cancel"
-          circle
           onClick={() => navigate('setting')}
         />
       </div>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { Button } from '@components/Buttons';
+import { Button, IconToggleButton } from '@components/Buttons';
 
 import { Icon } from '@iconify/react';
 
@@ -33,16 +33,15 @@ function SideBar({ onSide, children }: SideBarProps) {
 
   return (
     <>
-      <Button
-        color="transparent"
-        circle
+      <IconToggleButton
+        activeIcon="carbon:side-panel-open"
+        inactiveIcon="carbon:side-panel-close"
+        active={opened}
+        iconColor="textWeak"
+        buttonActiveColor="transparent"
+        buttonInactiveColor="transparent"
         onClick={toggleOpened}
-      >
-        <Icon
-          className="text-25"
-          icon={`${opened ? 'carbon:side-panel-open' : 'carbon:side-panel-close'}`}
-        />
-      </Button>
+      />
       <div
         className={`${!hidden && (opened ? 'animate-openingSidebar' : 'animate-closingSidebar')}
                     surface-alt w-500 h-[calc(100vh-48px)] absolute -right-500 top-48 flex-with-center overflow-hidden`}

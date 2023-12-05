@@ -1,10 +1,8 @@
 import { useState } from 'react';
 
-import { Button } from '@components/Buttons';
+import { IconToggleButton } from '@components/Buttons';
 
 import { getBgmQuery } from '@stores/queries/getBgmQuery';
-
-import { Icon } from '@iconify/react';
 
 function BackgroundMusic() {
   const backgroundMusicURL = getBgmQuery().data.url;
@@ -13,15 +11,11 @@ function BackgroundMusic() {
   return (
     <div className="h-50 w-50 overflow-hidden fixed top-[10vh] right-25">
       <div className="absolute top-0 left-0">
-        <Button
-          color={playing ? 'active' : 'cancel'}
-          circle
-        >
-          <Icon
-            className="text-26"
-            icon={playing ? 'ic:baseline-music-note' : 'ic:baseline-music-off'}
-          />
-        </Button>
+        <IconToggleButton
+          activeIcon="ic:baseline-music-note"
+          inactiveIcon="ic:baseline-music-off"
+          active={playing}
+        />
       </div>
       <audio
         className="opacity-0 absolute -top-30 -left-2 h-80"
