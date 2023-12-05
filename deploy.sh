@@ -5,7 +5,6 @@ MAIN_SCRIPT="src/main.ts"
 DEBUG_LOG="debug.log"
 NPM_BUILD="npm run build"
 NPM_PROD="npm run start:prod"
-CMD="$NPM_BUILD && $NPM_PROD"
 
 print_line() {
   echo " " >> $DEBUG_LOG
@@ -16,19 +15,31 @@ change_port() {
   local RUN_PORT="$2"
   local STOP_PORT="$3"
   
-  NODE_PROCESS=$(docker exec $CONTAINER_ID pgrep -f 'npm run start')
+  #NODE_PROCESS=$(docker exec $CONTAINER_ID pgrep -f 'npm run start')
 
-  if [ -n "$NODE_PROCESS" ]; then
-    echo "kill PID #$NODE_PROCESS..." >> $DEBUG_LOG
-    docker exec $CONTAINER_ID kill $NODE_PROCESS
-    sleep 10
-  fi
+  #if [ -n "$NODE_PROCESS" ]; then
+  #  echo "kill PID #$NODE_PROCESS..." >> $DEBUG_LOG
+  #  docker exec $CONTAINER_ID kill $NODE_PROCESS
+  #  sleep 10
+  #fi
+
+  echo "kill process running on $STOP_PORT..." >> $DEBUG_LOG
+  docker exec $CONTAINER_ID /bin/bash -c "pkill -f ':$STOP_PORT'"
     
   echo "change port... ($STOP_PORT to $RUN_PORT)" >> $DEBUG_LOG
   docker exec $CONTAINER_ID /bin/bash -c "sed -i 's/port: number = $STOP_PORT/port: number = $RUN_PORT/' $MAIN_SCRIPT"
 
-  echo "restart application ... $CMD" >> $DEBUG_LOG
-  docker exec $CONTAINER_ID /bin/bash -c "$CMD"
+  echo "restart application ..." >> $DEBUG_LOG
+  docker exec $CONTAINER_ID /bin/bash -c "$NPM_BUILD"
+  echo "build success..." >> $DEBUG_LOG
+  docker exec $CONTAINER_ID /bin/bash -c "$NPM_PROD"
+  echo "run success..." >> $DEBUG_LOG
+
+  CMD_EXIT_CODE=$?
+  if [ $CMD_EXIT_CODE -ne 0 ]; then
+    echo "Error: Failed to restart application. Exit code: $CMD_EXIT_CODE" >> $DEBUG_LOG
+    exit 1
+  fi
 }
 
 reload_application() {
