@@ -63,9 +63,7 @@ export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels 
   }) => {
     openPasswordPopup({
       host: true,
-      onClose: () => {
-        onClose?.({ close });
-      },
+      onClose: () => onClose?.({ close }),
       onSubmit: ({ password, close }) => {
         socketManager.emit('createRoom', roomName, password);
 
