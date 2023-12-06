@@ -21,14 +21,13 @@ export default function ChattingPage() {
     toggleAudio,
     changeMyVideoTrack,
     changeMyAudioTrack,
-    getMedia,
   }: OutletContext = useOutletContext();
 
   useEffect(() => {
     if (!socketManager.connected) {
       navigate('..');
     }
-    getMedia({});
+    changeMyVideoTrack();
   }, []);
 
   const camList = cameraOptions.map(({ deviceId, label }) => ({ label, value: deviceId }));

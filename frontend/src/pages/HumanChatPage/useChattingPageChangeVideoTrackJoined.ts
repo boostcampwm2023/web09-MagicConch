@@ -12,7 +12,6 @@ export function useChattingPageChangeVideoTrackJoined() {
   useEffect(() => {
     if (joined) {
       changeMyVideoTrack();
-      return;
     }
-  }, []);
+  }, [joined]);
 }

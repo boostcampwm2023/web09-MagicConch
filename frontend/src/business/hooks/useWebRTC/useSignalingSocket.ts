@@ -52,7 +52,7 @@ export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels 
     socketManager.emit('answer', answerSdp, roomName);
   };
 
-  const createRoom = async ({
+  const createRoom = ({
     roomName,
     onSuccess,
     onClose,
