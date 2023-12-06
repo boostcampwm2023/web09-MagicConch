@@ -2,6 +2,7 @@ version: "3.3"
 
 services:
   was-blue:
+    image: "${DOCKER_USERNAME}/magicconch:blue-${GITHUB_SHA}"
     build:
       context: .
       dockerfile: Dockerfile.was
@@ -22,6 +23,7 @@ services:
       - /var/log/was:/app/was/logs
 
   signal-blue:
+    image: "${DOCKER_USERNAME}/magicconch:blue-${GITHUB_SHA}"
     build:
       context: .
       dockerfile: Dockerfile.signal
