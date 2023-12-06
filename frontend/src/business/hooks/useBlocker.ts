@@ -51,7 +51,7 @@ export function useBlocker({ when, onConfirm, onCancel }: useBlockerParams) {
   }, []);
 
   const unblockGoBack = useCallback((afterRunCallback: () => void) => {
-    setBlockedGoBack(true);
+    setBlockedGoBack(false);
     setAfterRunCallbacks(prev => [...prev, afterRunCallback]);
   }, []);
 
