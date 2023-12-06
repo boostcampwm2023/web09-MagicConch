@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 
 import { MessageButton } from '@components/ChatContainer';
 
-import { useHost } from '@stores/zustandStores/useHost';
 import { ProfileInfo, useProfileInfo } from '@stores/zustandStores/useProfileInfo';
 
 import { arrayBuffer2Blob } from '@utils/array';
