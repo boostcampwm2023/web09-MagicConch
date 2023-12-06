@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
+import { ERROR_MESSAGE } from '@constants/ERROR_MESSAGE';
+
 export function useHumanChatPageWrongURL() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -8,7 +10,7 @@ export function useHumanChatPageWrongURL() {
 
   useEffect(() => {
     if (!roomName && !location.state?.host) {
-      alert('잘못된 접근입니다.');
+      alert(ERROR_MESSAGE.NOT_ALLOWED);
       navigate('/');
       return;
     }

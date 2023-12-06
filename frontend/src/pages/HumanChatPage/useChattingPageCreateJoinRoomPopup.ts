@@ -3,6 +3,8 @@ import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 
 import { HumanSocketManager } from '@business/services/SocketManager';
 
+import { ERROR_MESSAGE } from '@constants/ERROR_MESSAGE';
+
 import { OutletContext } from './HumanChatPage';
 
 interface useChattingPageCreateJoinRoomParams {
@@ -29,15 +31,15 @@ export function useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack }: us
         close();
       },
       onFull: () => {
-        alert('방이 꽉 찼습니다, 첫페이지로 이동합니다.');
+        alert(ERROR_MESSAGE.FULL_ROOM);
         navigate('/');
       },
       onFail: () => {
-        alert('잘못된 링크거나 비밀번호가 틀렸습니다.');
+        alert(ERROR_MESSAGE.WRONG_PASSWORD);
       },
       onHostExit: () => {
         navigate('/');
-        alert('호스트가 방을 나갔습니다, 첫페이지로 이동합니다.');
+        alert(ERROR_MESSAGE.HOST_EXIT);
       },
     });
   };
@@ -57,7 +59,7 @@ export function useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack }: us
 
   const goRootPageWithMessage = () => {
     unblockGoBack();
-    alert('방이 존재하지 않습니다, 첫페이지로 이동합니다.');
+    alert(ERROR_MESSAGE.ROOM_NOT_EXIST);
     navigate('/');
   };
 
