@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { HumanSocketManager } from '@business/services/SocketManager';
 
-export function useHumanChatPageSocket() {
+export function useHumanChatPageCreateRoomEvent() {
   const humanSocket = new HumanSocketManager();
   const navigate = useNavigate();
   const location = useLocation();

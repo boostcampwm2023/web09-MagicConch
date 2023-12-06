@@ -11,7 +11,7 @@ import { useHumanTarotSpread } from '@business/hooks/useTarotSpread';
 import useWebRTC from '@business/hooks/useWebRTC';
 
 import { useHumanChatPageContentAnimation } from './useHumanChatPageContentAnimation';
-import { useHumanChatPageSocket } from './useHumanChatPageSocket';
+import { useHumanChatPageCreateRoomEvent } from './useHumanChatPageCreateRoomEvent';
 import { useHumanChatPageWrongURL } from './useHumanChatPageWrongURL';
 
 interface ChatPageState {
@@ -29,7 +29,7 @@ export default function HumanChatPage() {
   const webRTCData = useWebRTC();
 
   useHumanChatPageWrongURL();
-  const { chatPageState, setChatPageState } = useHumanChatPageSocket();
+  const { chatPageState, setChatPageState } = useHumanChatPageCreateRoomEvent();
 
   const { messages, onSubmitMessage, inputDisabled, addPickCardMessage } = useHumanChatMessage(webRTCData.chatChannel);
   const { tarotButtonClick, tarotButtonDisabled } = useHumanTarotSpread(webRTCData.chatChannel, addPickCardMessage);
