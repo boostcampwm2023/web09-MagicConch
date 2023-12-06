@@ -33,29 +33,19 @@ jobs:
           target: "~/app/"
           overwrite: true
 
-      - name: Build Docker Images (Blue)
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+
+      - name: Build & Push Docker Images (Blue & Green)
         run: |
           cd backend
           docker-compose -f docker-compose.blue.yml build -t "${{ secrets.DOCKER_USERNAME }}/magicconch:blue-${{ github.sha }}"
-
-      - name: Push Docker Images to Registry (Blue)
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-      - run: docker-compose -f backend/docker-compose.blue.yml push
-
-      - name: Build Docker Images (Green)
-        run: |
-          cd backend
           docker-compose -f docker-compose.green.yml build -t "${{ secrets.DOCKER_USERNAME }}/magicconch:green-${{ github.sha }}"
-
-      - name: Push Docker Images to Registry (Green)
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-      - run: docker-compose -f backend/docker-compose.green.yml push
+          docker-compose -f docker-compose.blue.yml push
+          docker-compose -f docker-compose.green.yml push
 
       - name: Copy Dockerfiles to Remote Server
         uses: appleboy/scp-action@master
@@ -89,4 +79,4 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd ~/app/backend
-            source deploy.sh
+            source deploy.sh "${{ secrets.DOCKER_USERNAME }}" "${{ github.sha }}"
