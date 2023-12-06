@@ -7,7 +7,6 @@ export function useChattingPageChangeVideoTrackJoined() {
   const {
     chatPageState: { joined },
     changeMyVideoTrack,
-    setChatPageState,
   }: OutletContext = useOutletContext();
 
   useEffect(() => {
@@ -15,6 +14,5 @@ export function useChattingPageChangeVideoTrackJoined() {
       changeMyVideoTrack();
       return;
     }
-    setChatPageState(prev => ({ ...prev, joined: true }));
   }, []);
 }

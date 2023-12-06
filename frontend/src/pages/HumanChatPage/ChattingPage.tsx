@@ -19,6 +19,7 @@ export default function ChattingPage() {
     toggleVideo,
     toggleAudio,
     tarotButtonClick,
+    setChatPageState,
   }: OutletContext = useOutletContext();
 
   const { unblockGoBack } = useBlocker({
@@ -34,6 +35,10 @@ export default function ChattingPage() {
 
   const navigate = useNavigate();
   const goSettingPage = () => navigate('setting');
+
+  useEffect(() => {
+    setChatPageState(prev => ({ ...prev, joined: true }));
+  }, []);
 
   return (
     <>
