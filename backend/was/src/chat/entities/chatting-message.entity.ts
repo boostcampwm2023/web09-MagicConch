@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { CreateChattingMessageDto } from '../dto/create-chatting-message.dto';
 import { ChattingRoom } from './chatting-room.entity';
 
 @Entity()
@@ -29,5 +30,16 @@ export class ChattingMessage {
     () => ChattingRoom,
     (chattingRoom) => chattingRoom.chattingMessages,
   )
-  roomId: ChattingRoom;
+  room: ChattingRoom;
+
+  static fromDto(
+    dto: CreateChattingMessageDto,
+    room: ChattingRoom,
+  ): ChattingMessage {
+    const message: ChattingMessage = new ChattingMessage();
+    message.room = room;
+    message.isHost = dto.isHost;
+    message.message = dto.message;
+    return message;
+  }
 }

@@ -1,6 +1,7 @@
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { Message } from 'src/events/type';
 import { Member } from 'src/members/entities/member.entity';
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
@@ -19,27 +20,35 @@ describe('ChatService', () => {
   /**
    * mock data
    */
-  const memberId = uuidv4();
-  const roomId = uuidv4();
-  const messageId = uuidv4();
+  const memberId: string = uuidv4();
+  const roomId: string = uuidv4();
+  const messageId: string = uuidv4();
 
-  const nonMemberId = uuidv4();
-  const diffMemberId = uuidv4();
-  const nonRoomId = uuidv4();
+  const nonMemberId: string = uuidv4();
+  const diffMemberId: string = uuidv4();
+  const nonRoomId: string = uuidv4();
 
-  const memberMock = new Member();
+  const memberMock: Member = new Member();
   memberMock.id = memberId;
 
-  const roomMock = new ChattingRoom();
+  const roomMock: ChattingRoom = new ChattingRoom();
   roomMock.id = roomId;
   roomMock.title = 'chatting room title';
   roomMock.participant = memberMock;
 
-  const messageMock = new ChattingMessage();
+  const message: Message = {
+    roomId: messageId,
+    chat: {
+      role: 'user',
+      content: 'chatting message content',
+    },
+  };
+
+  const messageMock: ChattingMessage = new ChattingMessage();
   messageMock.id = messageId;
-  messageMock.isHost = false;
-  messageMock.message = 'chatting message content';
-  messageMock.roomId = roomMock;
+  messageMock.isHost = message.chat.role === 'assistant';
+  messageMock.message = message.chat.content;
+  messageMock.room = roomMock;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -78,8 +87,11 @@ describe('ChatService', () => {
 
   describe('createRoom', () => {
     it('should create a room', async () => {
-      const findOneByMock = jest
-        .spyOn(membersRepository, 'findOneBy')
+      // const findOneByMock = jest
+      //   .spyOn(membersRepository, 'findOneBy')
+      //   .mockResolvedValueOnce(memberMock);
+      const saveMemberMock = jest
+        .spyOn(membersRepository, 'save')
         .mockResolvedValueOnce(memberMock);
 
       const saveMock = jest
@@ -88,21 +100,22 @@ describe('ChatService', () => {
 
       await service.createRoom(memberId);
 
-      expect(findOneByMock).toHaveBeenCalledWith({ id: memberId });
+      // expect(findOneByMock).toHaveBeenCalledWith({ id: memberId });
+      expect(saveMemberMock).toHaveBeenCalledWith({});
       expect(saveMock).toHaveBeenCalledWith({ participant: memberMock });
     });
 
-    it('should throw NotFoundException when member is not found', async () => {
-      const findOneByMock = jest
-        .spyOn(membersRepository, 'findOneBy')
-        .mockResolvedValueOnce(null);
+    // it('should throw NotFoundException when member is not found', async () => {
+    //   const findOneByMock = jest
+    //     .spyOn(membersRepository, 'findOneBy')
+    //     .mockResolvedValueOnce(null);
 
-      await expect(service.createRoom(nonMemberId)).rejects.toThrow(
-        NotFoundException,
-      );
+    //   await expect(service.createRoom(nonMemberId)).rejects.toThrow(
+    //     NotFoundException,
+    //   );
 
-      expect(findOneByMock).toHaveBeenCalledWith({ id: nonMemberId });
-    });
+    //   expect(findOneByMock).toHaveBeenCalledWith({ id: nonMemberId });
+    // });
   });
 
   describe('createMessage', () => {
@@ -115,17 +128,14 @@ describe('ChatService', () => {
         .spyOn(chattingMessageRepository, 'save')
         .mockResolvedValueOnce(messageMock);
 
-      const createChattingMessageDto = new CreateChattingMessageDto();
-      createChattingMessageDto.roomId = roomId;
-      createChattingMessageDto.isHost = messageMock.isHost;
-      createChattingMessageDto.message = messageMock.message;
+      const createChattingMessageDto: CreateChattingMessageDto =
+        CreateChattingMessageDto.fromMessage(message);
 
       await service.createMessage(roomId, [createChattingMessageDto]);
 
       expect(findOneByMock).toHaveBeenCalledWith({ id: roomId });
-
       expect(saveMock).toHaveBeenCalledWith({
-        roomId: expect.any(ChattingRoom),
+        room: expect.any(ChattingRoom),
         isHost: createChattingMessageDto.isHost,
         message: createChattingMessageDto.message,
       });
@@ -146,7 +156,7 @@ describe('ChatService', () => {
 
   describe('findRoomsById', () => {
     it('should find rooms', async () => {
-      const roomMocks = [roomMock];
+      const roomMocks: ChattingRoom[] = [roomMock];
 
       const findByMock = jest
         .spyOn(chattingRoomRepository, 'findBy')
@@ -166,7 +176,7 @@ describe('ChatService', () => {
 
   describe('findMessagesById', () => {
     it('should find messages', async () => {
-      const messageMocks = [messageMock];
+      const messageMocks: ChattingMessage[] = [messageMock];
 
       const findByMock = jest
         .spyOn(chattingMessageRepository, 'findBy')
