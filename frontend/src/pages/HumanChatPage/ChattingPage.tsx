@@ -1,11 +1,10 @@
 import { useEffect } from 'react';
-import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import { IconButton } from '@components/Buttons';
 import CamContainer from '@components/CamContainer';
 
 import { useBlocker } from '@business/hooks/useBlocker';
-import useSpeakerHighlighter from '@business/hooks/useSpeakerHighlighter';
 
 import type { OutletContext } from './HumanChatPage';
 import { useChattingPageChangeVideoTrackJoined } from './useChattingPageChangeVideoTrackJoined';
@@ -29,9 +28,6 @@ export default function ChattingPage() {
 
   useChattingPageChangeVideoTrackJoined();
   useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack });
-
-  useSpeakerHighlighter(localVideoRef);
-  useSpeakerHighlighter(remoteVideoRef);
 
   const navigate = useNavigate();
   const goSettingPage = () => navigate('setting');
