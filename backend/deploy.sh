@@ -1,5 +1,7 @@
 #!/bin/bash
 
+DOCKER_USERNAME=$1
+GITHUB_SHA=$2
 MAIN_SCRIPT="src/main.ts"
 DEBUG_LOG="debug.log"
 NPM_PROD="npm run start:prod"
@@ -8,10 +10,11 @@ run_docker() {
   local RUN_TARGET="$1"
 
   DOCKER_COMPOSE_FILE="docker-compose.$RUN_TARGET.yml"
+  DOCKER_IMAGE="$DOCKER_USERNAME/magicconch:$RUN_TARGET-$GITHUB_SHA"
 
   echo "<<< Run docker compose : $DOCKER_COMPOSE_FILE" > $DEBUG_LOG
 
-  docker-compose -f "$DOCKER_COMPOSE_FILE" pull
+  docker-compose -f "$DOCKER_COMPOSE_FILE" pull "$DOCKER_IMAGE"
   docker-compose -f "$DOCKER_COMPOSE_FILE" up -d
 
   echo ">>> Run complete" >> $DEBUG_LOG
