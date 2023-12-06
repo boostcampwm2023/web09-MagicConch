@@ -1,6 +1,8 @@
 import { usePasswordPopup } from '@business/hooks/usePopup';
 import { HumanSocketManager } from '@business/services/SocketManager';
 
+import { ERROR_MESSAGE } from '@constants/ERROR_MESSAGE';
+
 interface useSignalingSocketParams {
   peerConnectionRef: React.MutableRefObject<RTCPeerConnection | undefined>;
   negotiationDataChannels: ({ roomName }: { roomName: string }) => void;
@@ -31,7 +33,7 @@ export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels 
     });
 
     socketManager.on('roomFull', () => {
-      alert('room is full');
+      alert(ERROR_MESSAGE.FULL_ROOM);
     });
 
     socketManager.on('userExit', async () => {

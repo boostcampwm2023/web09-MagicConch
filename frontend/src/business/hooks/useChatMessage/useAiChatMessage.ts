@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 
+import { MessageButton } from '@components/ChatContainer';
+
 import useTOLD from '@business/hooks/useTOLD';
 import { AISocketManager } from '@business/services/SocketManager';
 
@@ -8,10 +10,18 @@ import useChatMessage from './useChatMessage';
 export function useAiChatMessage() {
   const socketManager = new AISocketManager();
 
-  const { messages, addMessage, updateMessage } = useChatMessage();
+  const { messages, pushMessage, updateMessage } = useChatMessage();
   const [inputDisabled, setInputDisabled] = useState(true);
 
   const { displayTold } = useTOLD('AI');
+
+  const addMessage = (
+    type: 'left' | 'right',
+    options: { message?: string; tarotId?: number; button?: MessageButton },
+  ) => {
+    const profile = type === 'left' ? '/moon.png' : '/ddung.png';
+    pushMessage(type, profile, options);
+  };
 
   const onSubmitMessage = (message: string) => {
     addMessage('right', { message });
