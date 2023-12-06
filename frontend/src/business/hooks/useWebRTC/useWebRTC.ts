@@ -42,7 +42,7 @@ export default function useWebRTC() {
     addTracks();
   };
 
-  const { initSignalingSocket, createRoom, joinRoom } = useSignalingSocket({
+  const { initSignalingSocket, createRoom, joinRoom, checkRoomExist } = useSignalingSocket({
     peerConnectionRef,
     negotiationDataChannels,
   });
@@ -92,6 +92,7 @@ export default function useWebRTC() {
     endWebRTC,
     createRoom,
     joinRoom,
+    checkRoomExist,
     isConnectedPeerConnection,
   };
 }
