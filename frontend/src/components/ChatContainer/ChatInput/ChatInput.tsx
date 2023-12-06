@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { IconButton } from '@components/Buttons';
 
@@ -21,6 +21,22 @@ function ChatInput({ disabled, sendChatMessage }: ChatInputProps) {
   const detectEnter = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') submitMessage();
   };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        inputRef.current?.focus();
+      }
+    });
+    observer.observe(inputRef.current!);
+  }, []);
+
+  useEffect(() => {
+    if (disabled) {
+      return;
+    }
+    inputRef.current?.focus();
+  }, [disabled]);
 
   return (
     <div className={`form-control flex flex-row w-[102%]`}>
