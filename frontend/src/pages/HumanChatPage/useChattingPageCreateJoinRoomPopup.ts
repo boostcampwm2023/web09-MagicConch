@@ -10,12 +10,10 @@ interface useChattingPageCreateJoinRoomParams {
 }
 export function useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack }: useChattingPageCreateJoinRoomParams) {
   const {
-    chatPageState: { host, joined },
+    chatPageState: { host },
     startWebRTC,
     joinRoom,
-    setChatPageState,
     createRoom,
-    changeMyVideoTrack,
   }: OutletContext = useOutletContext();
 
   const humanSocket = new HumanSocketManager();
@@ -24,21 +22,12 @@ export function useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack }: us
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!roomName) {
-      alert('잘못된 접근입니다.');
-      return;
-    }
-    if (joined) {
-      changeMyVideoTrack();
-      return;
-    }
-
     humanSocket.connect();
     startWebRTC({ roomName: roomName as string });
 
     if (host) {
       createRoom({
-        roomName,
+        roomName: roomName as string,
         onSuccess: ({ close }) => {
           close();
         },
@@ -49,7 +38,7 @@ export function useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack }: us
       });
     } else {
       joinRoom({
-        roomName,
+        roomName: roomName as string,
         onSuccess: ({ close }) => {
           close();
         },
@@ -71,6 +60,5 @@ export function useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack }: us
         },
       });
     }
-    setChatPageState(prev => ({ ...prev, joined: true }));
   }, []);
 }

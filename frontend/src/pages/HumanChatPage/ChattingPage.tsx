@@ -1,4 +1,5 @@
-import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 
 import { IconButton } from '@components/Buttons';
 import CamContainer from '@components/CamContainer';
@@ -7,6 +8,7 @@ import { useBlocker } from '@business/hooks/useBlocker';
 import useSpeakerHighlighter from '@business/hooks/useSpeakerHighlighter';
 
 import type { OutletContext } from './HumanChatPage';
+import { useChattingPageChangeVideoTrackJoined } from './useChattingPageChangeVideoTrackJoined';
 import { useChattingPageCreateJoinRoomPasswordPopup } from './useChattingPageCreateJoinRoomPopup';
 
 export default function ChattingPage() {
@@ -24,6 +26,7 @@ export default function ChattingPage() {
     onConfirm: () => navigate('/'),
   });
 
+  useChattingPageChangeVideoTrackJoined();
   useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack });
 
   useSpeakerHighlighter(localVideoRef);
