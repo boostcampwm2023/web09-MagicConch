@@ -31,6 +31,8 @@ export function useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack }: us
         close();
       },
       onFull: () => {
+        unblockGoBack();
+
         alert(ERROR_MESSAGE.FULL_ROOM);
         navigate('/');
       },
@@ -38,6 +40,7 @@ export function useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack }: us
         alert(ERROR_MESSAGE.WRONG_PASSWORD);
       },
       onHostExit: () => {
+        unblockGoBack();
         navigate('/');
         alert(ERROR_MESSAGE.HOST_EXIT);
       },
