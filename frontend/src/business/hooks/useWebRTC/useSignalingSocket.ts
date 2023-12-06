@@ -53,10 +53,12 @@ export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels 
   };
 
   const createRoom = async ({
+    roomName,
     onSuccess,
     onClose,
   }: {
-    onSuccess?: ({ roomName, password, close }: { roomName: string; password: string; close: () => void }) => void;
+    roomName: string;
+    onSuccess?: ({ password, close }: { password: string } & CloseFunc) => void;
     onClose?: ({ close }: { close: () => void }) => void;
   }) => {
     openPasswordPopup({
@@ -65,13 +67,9 @@ export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels 
         onClose?.({ close });
       },
       onSubmit: ({ password, close }) => {
-        socketManager.emit('createRoom', password);
+        socketManager.emit('createRoom', roomName, password);
 
-        // close();
-
-        socketManager.on('roomCreated', (roomName: string) => {
-          onSuccess?.({ roomName, password, close });
-        });
+        socketManager.on('roomCreated', () => onSuccess?.({ password, close }));
       },
     });
   };
@@ -82,34 +80,36 @@ export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels 
     onFail,
     onSuccess,
     onHostExit,
+    onRoomNotExist,
   }: {
     roomName: string;
     onFull?: () => void;
     onFail?: () => void;
-    onSuccess?: ({ close }: { close: () => void }) => void;
+    onSuccess?: ({ close }: CloseFunc) => void;
     onHostExit?: () => void;
+    onRoomNotExist?: () => void;
   }) => {
-    openPasswordPopup({
-      onSubmit: ({ password, close }) => {
-        socketManager.emit('joinRoom', roomName, password);
+    socketManager.emit('checkRoomExist', roomName);
 
-        socketManager.on('joinRoomFailed', () => {
-          onFail?.();
-        });
+    socketManager.on('roomNotExist', onRoomNotExist);
 
-        socketManager.on('roomFull', () => {
-          onFull?.();
-        });
+    socketManager.on('roomExist', _openPasswordPopup);
 
-        socketManager.on('joinRoomSuccess', async () => {
-          onSuccess?.({ close });
-        });
+    function _openPasswordPopup() {
+      openPasswordPopup({
+        onSubmit: ({ password, close }) => {
+          socketManager.emit('joinRoom', roomName, password);
 
-        socketManager.on('hostExit', () => {
-          onHostExit?.();
-        });
-      },
-    });
+          socketManager.on('joinRoomFailed', onFail);
+
+          socketManager.on('roomFull', onFull);
+
+          socketManager.on('joinRoomSuccess', () => onSuccess?.({ close }));
+
+          socketManager.on('hostExit', onHostExit);
+        },
+      });
+    }
   };
 
   return {

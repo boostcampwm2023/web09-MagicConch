@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
@@ -11,10 +11,17 @@ import SideBar from '@components/SideBar';
 import { useHumanChatMessage } from '@business/hooks/useChatMessage';
 import { useHumanTarotSpread } from '@business/hooks/useTarotSpread';
 import useWebRTC from '@business/hooks/useWebRTC';
+import { HumanSocketManager } from '@business/services/SocketManager';
 
+interface ChatPageState {
+  joined: boolean;
+  host: boolean;
+}
 export interface OutletContext extends ReturnType<typeof useWebRTC> {
   tarotButtonClick: () => void;
   tarotButtonDisabled: boolean;
+  chatPageState: ChatPageState;
+  setChatPageState: Dispatch<SetStateAction<ChatPageState>>;
 }
 
 export default function HumanChatPage() {
@@ -23,26 +30,35 @@ export default function HumanChatPage() {
   const webRTCData = useWebRTC();
   const { roomName } = useParams();
 
+  const humanSocket = new HumanSocketManager();
+
+  const [chatPageState, setChatPageState] = useState({
+    roomName: '',
+    joined: false,
+    host: false,
+  });
+
   useEffect(() => {
     if (!roomName && !location.state?.host) {
       alert('잘못된 접근입니다.');
       navigate('/');
-    }
-
-    if (roomName || !location.state?.host) {
       return;
     }
 
-    webRTCData.createRoom({
-      onSuccess: ({ roomName, close }) => {
-        close();
-        navigate(roomName, { state: { host: true } });
-      },
-      onClose: ({ close }) => {
-        close();
-        navigate('/');
-      },
+    if (!location.state?.host) {
+      return;
+    }
+    setChatPageState(prev => ({ ...prev, host: true }));
+
+    humanSocket.connect();
+    humanSocket.emit('generateRoomName');
+    humanSocket.on('roomNameGenerated', (roomName: string) => {
+      navigate(roomName);
     });
+
+    return () => {
+      humanSocket.disconnect();
+    };
   }, []);
 
   const { messages, onSubmitMessage, inputDisabled, addPickCardMessage } = useHumanChatMessage(webRTCData.chatChannel);
@@ -80,7 +96,7 @@ export default function HumanChatPage() {
       />
       <div className="w-h-screen">
         <div className={`flex-with-center h-full ${contentAnimation}`}>
-          <Outlet context={{ ...webRTCData, tarotButtonClick, tarotButtonDisabled }} />
+          <Outlet context={{ ...webRTCData, tarotButtonClick, tarotButtonDisabled, chatPageState, setChatPageState }} />
         </div>
       </div>
     </Background>
