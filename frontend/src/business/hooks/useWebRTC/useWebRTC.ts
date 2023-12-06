@@ -52,6 +52,9 @@ export default function useWebRTC() {
   });
 
   const startWebRTC = async ({ roomName }: { roomName: string }) => {
+    if (isConnectedPeerConnection()) {
+      return;
+    }
     await getMedia({});
     initSignalingSocket({ roomName });
     makeRTCPeerConnection({ roomName });
