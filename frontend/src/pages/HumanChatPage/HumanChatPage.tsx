@@ -1,28 +1,26 @@
 import { Dispatch, SetStateAction } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 import Background from '@components/Background';
 import ChatContainer from '@components/ChatContainer';
 import Header from '@components/Header';
 import SideBar from '@components/SideBar';
 
+import { useBlocker } from '@business/hooks/useBlocker';
 import { useHumanChatMessage } from '@business/hooks/useChatMessage';
 import { useHumanTarotSpread } from '@business/hooks/useTarotSpread';
 import useWebRTC from '@business/hooks/useWebRTC';
 
 import { useHumanChatPageContentAnimation } from './useHumanChatPageContentAnimation';
-import { useHumanChatPageCreateRoomEvent } from './useHumanChatPageCreateRoomEvent';
+import { ChatPageState, useHumanChatPageCreateRoomEvent } from './useHumanChatPageCreateRoomEvent';
 import { useHumanChatPageWrongURL } from './useHumanChatPageWrongURL';
 
-interface ChatPageState {
-  joined: boolean;
-  host: boolean;
-}
 export interface OutletContext extends ReturnType<typeof useWebRTC> {
   tarotButtonClick: () => void;
   tarotButtonDisabled: boolean;
   chatPageState: ChatPageState;
   setChatPageState: Dispatch<SetStateAction<ChatPageState>>;
+  unblockGoBack: () => void;
 }
 
 export default function HumanChatPage() {
@@ -35,6 +33,12 @@ export default function HumanChatPage() {
   const { tarotButtonClick, tarotButtonDisabled } = useHumanTarotSpread(webRTCData.chatChannel, addPickCardMessage);
 
   const { changeContentAnimation, contentAnimation } = useHumanChatPageContentAnimation();
+
+  const navigate = useNavigate();
+  const { unblockGoBack } = useBlocker({
+    when: ({ nextLocation }) => nextLocation.pathname === '/' || nextLocation.pathname === '/chat/human',
+    onConfirm: () => navigate('/'),
+  });
 
   return (
     <Background type="dynamic">
@@ -58,7 +62,16 @@ export default function HumanChatPage() {
       />
       <div className="w-h-screen">
         <div className={`flex-with-center h-full ${contentAnimation}`}>
-          <Outlet context={{ ...webRTCData, tarotButtonClick, tarotButtonDisabled, chatPageState, setChatPageState }} />
+          <Outlet
+            context={{
+              ...webRTCData,
+              tarotButtonClick,
+              tarotButtonDisabled,
+              chatPageState,
+              setChatPageState,
+              unblockGoBack,
+            }}
+          />
         </div>
       </div>
     </Background>
