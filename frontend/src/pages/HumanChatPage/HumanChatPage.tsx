@@ -15,6 +15,7 @@ import { HumanSocketManager } from '@business/services/SocketManager';
 
 import { useHumanChatPageContentAnimation } from './useHumanChatPageContentAnimation';
 import { useHumanChatPageSocket } from './useHumanChatPageSocket';
+import { useHumanChatPageWrongURL } from './useHumanChatPageWrongURL';
 
 interface ChatPageState {
   joined: boolean;
@@ -32,7 +33,8 @@ export default function HumanChatPage() {
   const webRTCData = useWebRTC();
   const { roomName } = useParams();
 
-  const { chatPageState, setChatPageState } = useHumanChatPageSocket(roomName, location.state?.host);
+  useHumanChatPageWrongURL(roomName, location.state?.host);
+  const { chatPageState, setChatPageState } = useHumanChatPageSocket(location.state?.host);
 
   const { messages, onSubmitMessage, inputDisabled, addPickCardMessage } = useHumanChatMessage(webRTCData.chatChannel);
   const { tarotButtonClick, tarotButtonDisabled } = useHumanTarotSpread(webRTCData.chatChannel, addPickCardMessage);
