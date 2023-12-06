@@ -1,6 +1,7 @@
 import { IconButton, IconToggleButton } from '@components/Buttons';
 import CamBox from '@components/CamBox';
 
+import { useHost } from '@stores/zustandStores/useHost';
 import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
 import { useProfileInfo } from '@stores/zustandStores/useProfileInfo';
 
@@ -37,6 +38,8 @@ export default function CamContainer({
     setRemoteVideoOn: state.setRemoteVideoOn,
   }));
 
+  const { host } = useHost(state => ({ host: state.host }));
+
   return (
     <div className="flex-with-center flex-col gap-80 pt-80 sm:gap-20">
       <div className="flex justify-center gap-64 sm:flex-col sm:gap-20">
@@ -59,14 +62,16 @@ export default function CamContainer({
           defaultNickname="상대방"
         />
       </div>
-      <div className="flex flex-col gap-30 z-10">
-        <IconButton
-          icon="tabler:cards-filled"
-          onClick={tarotButtonClick}
-          disabled={tarotButtonDisabled}
-        >
-          타로 카드 펼치기
-        </IconButton>
+      <div className="flex marker:flex-col gap-30 z-10">
+        {host && (
+          <IconButton
+            icon="tabler:cards-filled"
+            onClick={tarotButtonClick}
+            disabled={tarotButtonDisabled}
+          >
+            타로 카드 펼치기
+          </IconButton>
+        )}
         <div className="z-10 flex-with-center gap-48">
           <IconToggleButton
             activeIcon="pepicons-pop:camera"
