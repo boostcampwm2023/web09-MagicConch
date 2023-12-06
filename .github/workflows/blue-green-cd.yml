@@ -2,7 +2,7 @@ name: Blue/Green CD
 
 on:
   push:
-    branches: ["BE/bugfix/#401-깃헙-액션-배포-이슈"]
+    branches: ["dev"]
 
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -85,4 +85,4 @@ jobs:
           script: |
             cd ~/app/backend
             chmod +x deploy.sh
-            source deploy.sh "${{ secrets.DOCKER_USERNAME }}" "${{ github.sha }}"
+            source deploy.sh
