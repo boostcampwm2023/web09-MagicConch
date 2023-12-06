@@ -15,10 +15,12 @@ async function bootstrap() {
   app.useLogger(logger);
 
   const port: number = parseInt(process.env.PORT || '3001');
-  await app.listen(port);
+  const server: any = await app.listen(port);
 
   process.on('SIGTERM', async () => {
     logger.log('🖐️ Received SIGTERM signal. Start Graceful Shutdown...');
+
+    server.close();
     await app.close();
 
     logger.log('🖐️ Nest Application closed gracefully...');
