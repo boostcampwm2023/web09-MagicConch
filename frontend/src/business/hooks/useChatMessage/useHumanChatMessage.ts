@@ -1,8 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { MessageButton } from '@components/ChatContainer';
 
 import { useHost } from '@stores/zustandStores/useHost';
+import { ProfileInfo, useProfileInfo } from '@stores/zustandStores/useProfileInfo';
+
+import { arrayBuffer2Blob } from '@utils/array';
 
 import { HumanChatEvents } from '@constants/events';
 
@@ -14,18 +17,32 @@ export function useHumanChatMessage(chatChannel: React.MutableRefObject<RTCDataC
   const { messages, pushMessage } = useChatMessage();
   const [inputDisabled, setInputDisabled] = useState(true);
 
-  const { host } = useHost(state => ({ host: state.host }));
+  const myProfileRef = useRef<ProfileInfo>();
+  const remoteProfileRef = useRef<ProfileInfo>();
+
+  const { myProfile, remoteProfile } = useProfileInfo(state => ({
+    myProfile: state.myProfile,
+    remoteProfile: state.remoteProfile,
+  }));
+
+  myProfileRef.current = myProfile;
+  remoteProfileRef.current = remoteProfile;
 
   const addMessage = (
     type: 'left' | 'right',
     options: { message?: string; tarotId?: number; button?: MessageButton },
   ) => {
-    const hostSetting = type === 'left' ? '/ddung.png' : '/moon.png';
-    const notHostSetting = type === 'left' ? '/moon.png' : '/ddung.png';
+    const profile = type === 'left' ? remoteProfileRef.current : myProfileRef.current;
 
-    const profile = host ? hostSetting : notHostSetting;
-
-    pushMessage(type, profile, options);
+    if (profile === undefined || profile.type === undefined) {
+      const profileUrl = type === 'left' ? '/sponge.png' : '/ddung.png';
+      pushMessage(type, profileUrl, { ...options });
+      return;
+    }
+    const { arrayBuffer, type: profileType } = profile;
+    const blob = arrayBuffer2Blob(arrayBuffer, profileType);
+    const profileUrl = URL.createObjectURL(blob);
+    pushMessage(type, profileUrl, { ...options });
   };
 
   const onSubmitMessage = (message: string) => {
