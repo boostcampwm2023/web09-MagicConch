@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
   was-green:
-    image: "${DOCKER_USERNAME}/magicconch:green-${GITHUB_SHA}"
+    image: "${DOCKER_USERNAME}/magicconch:was-green-${GITHUB_SHA}"
     container_name: "was-green"
     build:
       context: .
@@ -24,7 +24,7 @@ services:
       - /var/log/was:/app/was/logs
 
   signal-green:
-    image: "${DOCKER_USERNAME}/magicconch:green-${GITHUB_SHA}"
+    image: "${DOCKER_USERNAME}/magicconch:signal-green-${GITHUB_SHA}"
     container_name: "signal-green"
     build:
       context: .
