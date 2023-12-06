@@ -1,6 +1,5 @@
 #!/bin/bash
 
-GITHUB_SHA=$1
 MAIN_SCRIPT="src/main.ts"
 DEBUG_LOG="debug.log"
 NPM_PROD="npm run start:prod"
@@ -8,7 +7,7 @@ NPM_PROD="npm run start:prod"
 run_docker() {
   local RUN_TARGET="$1"
 
-  DOCKER_COMPOSE_FILE="docker-compose.$GITHUB_SHA.$RUN_TARGET.yml"
+  DOCKER_COMPOSE_FILE="docker-compose.$RUN_TARGET.yml"
 
   echo "<<< Run docker compose : $DOCKER_COMPOSE_FILE" > $DEBUG_LOG
 
