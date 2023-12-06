@@ -7,7 +7,7 @@ import { useBlocker } from '@business/hooks/useBlocker';
 import useSpeakerHighlighter from '@business/hooks/useSpeakerHighlighter';
 
 import type { OutletContext } from './HumanChatPage';
-import { useChattingPageCreateJoinRoom } from './useChattingPageCreateJoinRoom';
+import { useChattingPageCreateJoinRoomPasswordPopup } from './useChattingPageCreateJoinRoomPopup';
 
 export default function ChattingPage() {
   const {
@@ -24,7 +24,7 @@ export default function ChattingPage() {
     onConfirm: () => navigate('/'),
   });
 
-  useChattingPageCreateJoinRoom({ unblockGoBack });
+  useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack });
 
   useSpeakerHighlighter(localVideoRef);
   useSpeakerHighlighter(remoteVideoRef);

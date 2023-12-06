@@ -8,7 +8,7 @@ import { OutletContext } from './HumanChatPage';
 interface useChattingPageCreateJoinRoomParams {
   unblockGoBack: () => void;
 }
-export function useChattingPageCreateJoinRoom({ unblockGoBack }: useChattingPageCreateJoinRoomParams) {
+export function useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack }: useChattingPageCreateJoinRoomParams) {
   const {
     chatPageState: { host, joined },
     startWebRTC,
