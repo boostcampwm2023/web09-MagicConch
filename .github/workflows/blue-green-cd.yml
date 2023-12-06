@@ -4,13 +4,13 @@ on:
   push:
     branches: ["BE/bugfix/#401-깃헙-액션-배포-이슈"]
 
+env:
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  GITHUB_SHA: ${{ github.sha }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    env:
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      GITHUB_SHA: ${{ github.sha }}
 
     steps:
       - name: Checkout code
@@ -83,4 +83,4 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd ~/app/backend
-            source deploy.sh "${{ secrets.DOCKER_USERNAME }}" "${{ github.sha }}"
+            source deploy.sh "${DOCKER_USERNAME}" "${GITHUB_SHA}"
