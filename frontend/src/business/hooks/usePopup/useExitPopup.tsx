@@ -3,8 +3,8 @@ import useOverlay from '../useOverlay';
 import Popup from '@components/Popup';
 
 interface openExitPopupParams {
-  onConfirm: () => void;
-  onCancel?: () => void;
+  onConfirm: ({ close }: CloseFunc) => void;
+  onCancel?: ({ close }: CloseFunc) => void;
 }
 
 export function useExitPopup() {
@@ -13,9 +13,8 @@ export function useExitPopup() {
   const openExitPopup = ({ onConfirm, onCancel }: openExitPopupParams) => {
     open(({ close }) => (
       <Popup
-        close={close}
-        onConfirm={onConfirm}
-        onCancel={onCancel}
+        onConfirm={() => onConfirm({ close })}
+        onCancel={() => onCancel?.({ close })}
       >
         <div className="flex-with-center flex-col gap-16">
           <div>나갈거야?</div>

@@ -27,8 +27,9 @@ export function useBlocker({ when, onConfirm, onCancel }: useBlockerParams) {
           setBlockedGoBack(false);
           onConfirm?.();
         },
-        onCancel: () => {
+        onCancel: ({ close }) => {
           onCancel?.();
+          close();
         },
       });
       return true;
