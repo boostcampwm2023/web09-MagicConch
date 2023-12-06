@@ -28,6 +28,8 @@ export default function useSpeakerHighlighter(videoRef: React.RefObject<HTMLVide
     const stream = videoElement.captureStream();
 
     stream.onactive = () => {
+      if (stream.getAudioTracks().length === 0) return;
+
       const audioContext = new window.AudioContext();
 
       const analyser = audioContext.createAnalyser();
