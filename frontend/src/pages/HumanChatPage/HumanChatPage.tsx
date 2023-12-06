@@ -12,6 +12,8 @@ import { useHumanChatMessage } from '@business/hooks/useChatMessage';
 import { useHumanTarotSpread } from '@business/hooks/useTarotSpread';
 import useWebRTC from '@business/hooks/useWebRTC';
 
+import { useHost } from '@stores/zustandStores/useHost';
+
 export interface OutletContext extends ReturnType<typeof useWebRTC> {
   tarotButtonClick: () => void;
   tarotButtonDisabled: boolean;
@@ -22,6 +24,8 @@ export default function HumanChatPage() {
   const navigate = useNavigate();
   const webRTCData = useWebRTC();
   const { roomName } = useParams();
+
+  const { setHost } = useHost(state => ({ setHost: state.setHost }));
 
   useEffect(() => {
     if (!roomName && !location.state?.host) {
@@ -36,6 +40,7 @@ export default function HumanChatPage() {
     webRTCData.createRoom({
       onSuccess: ({ roomName, close }) => {
         close();
+        setHost(true);
         navigate(roomName, { state: { host: true } });
       },
       onClose: ({ close }) => {
