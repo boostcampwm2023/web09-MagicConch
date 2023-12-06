@@ -1,5 +1,4 @@
 import { Dispatch, SetStateAction } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 
 import Background from '@components/Background';
