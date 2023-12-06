@@ -13,6 +13,8 @@ import { useHumanTarotSpread } from '@business/hooks/useTarotSpread';
 import useWebRTC from '@business/hooks/useWebRTC';
 import { HumanSocketManager } from '@business/services/SocketManager';
 
+import { useHumanChatPageSocket } from './useHumanChatPageSocket';
+
 interface ChatPageState {
   joined: boolean;
   host: boolean;
@@ -26,40 +28,10 @@ export interface OutletContext extends ReturnType<typeof useWebRTC> {
 
 export default function HumanChatPage() {
   const location = useLocation();
-  const navigate = useNavigate();
   const webRTCData = useWebRTC();
   const { roomName } = useParams();
 
-  const humanSocket = new HumanSocketManager();
-
-  const [chatPageState, setChatPageState] = useState({
-    roomName: '',
-    joined: false,
-    host: false,
-  });
-
-  useEffect(() => {
-    if (!roomName && !location.state?.host) {
-      alert('잘못된 접근입니다.');
-      navigate('/');
-      return;
-    }
-
-    if (!location.state?.host) {
-      return;
-    }
-    setChatPageState(prev => ({ ...prev, host: true }));
-
-    humanSocket.connect();
-    humanSocket.emit('generateRoomName');
-    humanSocket.on('roomNameGenerated', (roomName: string) => {
-      navigate(roomName);
-    });
-
-    return () => {
-      humanSocket.disconnect();
-    };
-  }, []);
+  const { chatPageState, setChatPageState } = useHumanChatPageSocket(roomName, location.state?.host);
 
   const { messages, onSubmitMessage, inputDisabled, addPickCardMessage } = useHumanChatMessage(webRTCData.chatChannel);
   const { tarotButtonClick, tarotButtonDisabled } = useHumanTarotSpread(webRTCData.chatChannel, addPickCardMessage);
