@@ -1,7 +1,6 @@
 import { Button } from '@components/Buttons';
 
 interface PopupProps {
-  close: () => void;
   onCancel?: () => void;
   onConfirm?: () => void;
   children: React.ReactNode;
@@ -16,14 +15,14 @@ export default function Popup({ onCancel, onConfirm, children }: PopupProps) {
           <Button
             size="m"
             color="dark"
-            onClick={() => onCancel?.()}
+            onClick={onCancel}
           >
             취소하기
           </Button>
           <Button
             size="m"
             color="active"
-            onClick={() => onConfirm?.()}
+            onClick={onConfirm}
           >
             확인하기
           </Button>
