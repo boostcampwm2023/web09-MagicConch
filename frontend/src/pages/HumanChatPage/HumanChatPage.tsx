@@ -1,6 +1,5 @@
-import { Dispatch, SetStateAction, useState } from 'react';
-import { useEffect } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Dispatch, SetStateAction } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 
 import Background from '@components/Background';
@@ -11,7 +10,6 @@ import SideBar from '@components/SideBar';
 import { useHumanChatMessage } from '@business/hooks/useChatMessage';
 import { useHumanTarotSpread } from '@business/hooks/useTarotSpread';
 import useWebRTC from '@business/hooks/useWebRTC';
-import { HumanSocketManager } from '@business/services/SocketManager';
 
 import { useHumanChatPageContentAnimation } from './useHumanChatPageContentAnimation';
 import { useHumanChatPageSocket } from './useHumanChatPageSocket';
