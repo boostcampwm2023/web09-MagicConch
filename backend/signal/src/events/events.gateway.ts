@@ -72,15 +72,22 @@ export class EventsGateway
     }
   }
 
-  @SubscribeMessage('createRoom')
-  handleCreateRoomEvent(socket: Socket, password: string) {
+  @SubscribeMessage('generateRoomName')
+  handleCreateRoomEvent(socket: Socket) {
     const roomId: string = v4();
+
+    socket.emit('roomNameGenerated', roomId);
+
+    this.logger.debug(`🚀 Room Name Generated : ${roomId}`);
+  }
+  @SubscribeMessage('createRoom')
+  handleSetRoomPassword(socket: Socket, [roomId, password]: [string, string]) {
     const userId = socket.id;
     this.socketRooms[roomId] = { users: [userId], password: password };
 
     this.users[userId] = { roomId, role: 'host' };
     socket.join(roomId);
-    socket.emit('roomCreated', roomId);
+    socket.emit('roomCreated');
 
     this.logger.debug(`🚀 Room Created : ${roomId}`);
   }
@@ -147,4 +154,21 @@ export class EventsGateway
     this.logger.debug(`🚀 Candidate Received from ${socket.id}`);
     socket.to(roomName).emit('candidate', candidate);
   }
+
+  @SubscribeMessage('checkRoomExist')
+  handleCheckRoomExistEvent(socket: Socket, roomName: string) {
+    const existRoom: any = this.socketRooms[roomName];
+
+    if (existRoom) {
+      socket.emit('roomExist');
+      this.logger.debug(`🚀 Room Exist : ${roomName}`);
+    } else {
+      socket.emit('roomNotExist');
+      this.logger.debug(`🚀 Room Not Exist : ${roomName}`);
+    }
+  }
 }
+
+// socketManager.emit('checkRoomExist', roomName);
+// socketManager.on('roomExist', () => {});
+// socketManaget.on('roomNotExist', () => {});

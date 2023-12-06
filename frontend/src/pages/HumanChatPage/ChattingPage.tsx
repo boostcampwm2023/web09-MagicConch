@@ -1,69 +1,39 @@
 import { useEffect } from 'react';
-import { useLocation, useNavigate, useOutletContext, useParams } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import { IconButton } from '@components/Buttons';
 import CamContainer from '@components/CamContainer';
 
 import { useBlocker } from '@business/hooks/useBlocker';
-import useSpeakerHighlighter from '@business/hooks/useSpeakerHighlighter';
 
 import type { OutletContext } from './HumanChatPage';
+import { useChattingPageChangeVideoTrackJoined } from './useChattingPageChangeVideoTrackJoined';
+import { useChattingPageCreateJoinRoomPasswordPopup } from './useChattingPageCreateJoinRoomPopup';
 
 export default function ChattingPage() {
   const {
     localVideoRef,
     remoteVideoRef,
+    tarotButtonDisabled,
     toggleVideo,
     toggleAudio,
-    startWebRTC,
-    joinRoom,
-    isConnectedPeerConnection,
-    changeMyVideoTrack,
     tarotButtonClick,
-    tarotButtonDisabled,
-    socketConnected,
+    setChatPageState,
   }: OutletContext = useOutletContext();
 
-  const { roomName } = useParams();
-  const { state } = useLocation();
-  const navigate = useNavigate();
-
-  useBlocker({
+  const { unblockGoBack } = useBlocker({
     when: ({ nextLocation }) => nextLocation.pathname === '/' || nextLocation.pathname === '/chat/human',
     onConfirm: () => navigate('/'),
   });
-  useSpeakerHighlighter(localVideoRef);
-  useSpeakerHighlighter(remoteVideoRef);
+
+  useChattingPageChangeVideoTrackJoined();
+  useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack });
+
+  const navigate = useNavigate();
+  const goSettingPage = () => navigate('setting');
 
   useEffect(() => {
-    startWebRTC({ roomName: roomName as string });
-
-    if (isConnectedPeerConnection() || socketConnected) {
-      changeMyVideoTrack();
-      return;
-    }
-
-    if (!roomName || state?.host) {
-      return;
-    }
-
-    joinRoom({
-      roomName,
-      onSuccess: ({ close }) => {
-        close();
-      },
-      onFull: () => {
-        alert('방이 꽉 찼습니다, 첫페이지로 이동합니다.');
-        navigate('/');
-      },
-      onFail: () => {
-        alert('잘못된 링크거나 비밀번호가 틀렸습니다.');
-      },
-      onHostExit: () => {
-        navigate('/');
-        alert('호스트가 방을 나갔습니다, 첫페이지로 이동합니다.');
-      },
-    });
+    setChatPageState(prev => ({ ...prev, joined: true }));
   }, []);
 
   return (
@@ -81,7 +51,7 @@ export default function ChattingPage() {
           icon="uil:setting"
           iconColor="textWhite"
           buttonColor="cancel"
-          onClick={() => navigate('setting')}
+          onClick={goSettingPage}
         />
       </div>
     </>
