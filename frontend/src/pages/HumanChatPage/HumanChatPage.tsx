@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
 import Background from '@components/Background';
@@ -20,6 +20,8 @@ export interface OutletContext extends ReturnType<typeof useWebRTC> {
   tarotButtonDisabled: boolean;
   chatPageState: ChatPageState;
   setChatPageState: Dispatch<SetStateAction<ChatPageState>>;
+  disableSideBar: () => void;
+  enableSideBar: () => void;
   unblockGoBack: () => void;
 }
 
@@ -33,6 +35,20 @@ export default function HumanChatPage() {
   const { tarotButtonClick, tarotButtonDisabled } = useHumanTarotSpread(webRTCData.chatChannel, addPickCardMessage);
 
   const { changeContentAnimation, contentAnimation } = useHumanChatPageContentAnimation();
+  const [sideBarDisabled, setSideBarDisabled] = useState<boolean>(false);
+
+  const disableSideBar = () => {
+    changeContentAnimation(false);
+    setSideBarDisabled(true);
+  };
+
+  const enableSideBar = () => {
+    setSideBarDisabled(false);
+  };
+
+  useEffect(() => {
+    disableSideBar();
+  }, []);
 
   const navigate = useNavigate();
   const { unblockGoBack } = useBlocker({
@@ -48,6 +64,7 @@ export default function HumanChatPage() {
             key="chat-side-bar"
             onSide={changeContentAnimation}
             icon={{ open: 'mdi:message-off', close: 'mdi:message' }}
+            disabled={sideBarDisabled}
           >
             <ChatContainer
               width="w-[90%]"
@@ -69,6 +86,8 @@ export default function HumanChatPage() {
               tarotButtonDisabled,
               chatPageState,
               setChatPageState,
+              disableSideBar,
+              enableSideBar,
               unblockGoBack,
             }}
           />

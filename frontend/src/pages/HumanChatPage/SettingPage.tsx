@@ -21,9 +21,12 @@ export default function ChattingPage() {
     toggleAudio,
     changeMyVideoTrack,
     changeMyAudioTrack,
+    enableSideBar,
+    disableSideBar,
   }: OutletContext = useOutletContext();
 
   useEffect(() => {
+    disableSideBar();
     if (!socketManager.connected) {
       navigate('..');
     }
@@ -45,7 +48,10 @@ export default function ChattingPage() {
       camList={camList}
       micList={micList}
       videoRef={localVideoRef}
-      onConfirm={sendProfileInfoWithNavigateBefore}
+      onConfirm={() => {
+        sendProfileInfoWithNavigateBefore();
+        enableSideBar();
+      }}
       onChangeProfileImage={setLocalProfileImage}
       onChangeNickname={setLocalNickname}
     />

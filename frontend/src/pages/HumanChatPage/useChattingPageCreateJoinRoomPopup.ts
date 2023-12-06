@@ -9,8 +9,12 @@ import { OutletContext } from './HumanChatPage';
 
 interface useChattingPageCreateJoinRoomParams {
   unblockGoBack: (cb: () => void) => void;
+  enableSideBar: () => void;
 }
-export function useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack }: useChattingPageCreateJoinRoomParams) {
+export function useChattingPageCreateJoinRoomPasswordPopup({
+  unblockGoBack,
+  enableSideBar,
+}: useChattingPageCreateJoinRoomParams) {
   const {
     chatPageState: { host, joined },
     startWebRTC,
@@ -30,6 +34,7 @@ export function useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack }: us
       onSuccess: ({ close }) => {
         navigate('setting');
         close();
+        enableSideBar();
       },
       onFull: () => {
         unblockGoBack(() => {
@@ -55,6 +60,7 @@ export function useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack }: us
       onSuccess: ({ close }) => {
         navigate('setting');
         close();
+        enableSideBar();
       },
       onClose: ({ close }) => {
         close();
