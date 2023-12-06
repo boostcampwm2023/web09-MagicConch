@@ -29,13 +29,15 @@ export function useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack }: us
         close();
       },
       onFull: () => {
-        alert('방이 꽉 찼습니다, 첫페이지로 이동합니다.');
+        unblockGoBack();
         navigate('/');
+        alert('방이 꽉 찼습니다, 첫페이지로 이동합니다.');
       },
       onFail: () => {
         alert('잘못된 링크거나 비밀번호가 틀렸습니다.');
       },
       onHostExit: () => {
+        unblockGoBack();
         navigate('/');
         alert('호스트가 방을 나갔습니다, 첫페이지로 이동합니다.');
       },

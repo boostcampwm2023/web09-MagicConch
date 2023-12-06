@@ -8,8 +8,8 @@ export function useHumanChatPageWrongURL() {
 
   useEffect(() => {
     if (!roomName && !location.state?.host) {
-      alert('잘못된 접근입니다.');
       navigate('/');
+      alert('잘못된 접근입니다.');
       return;
     }
   }, []);
