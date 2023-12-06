@@ -1,7 +1,5 @@
 import { useEffect } from 'react';
 
-import { HumanSocketManager } from '@business/services/SocketManager';
-
 import { useControllMedia } from './useControllMedia';
 import { useDataChannel } from './useDataChannel';
 import { useMedia } from './useMedia';
@@ -9,8 +7,6 @@ import { useRTCPeerConnection } from './useRTCPeerConnection';
 import { useSignalingSocket } from './useSignalingSocket';
 
 export default function useWebRTC() {
-  const socketManager = new HumanSocketManager();
-
   const {
     localVideoRef,
     remoteVideoRef,
@@ -46,7 +42,7 @@ export default function useWebRTC() {
     addTracks();
   };
 
-  const { initSignalingSocket, createRoom, joinRoom } = useSignalingSocket({
+  const { initSignalingSocket, createRoom, joinRoom, checkRoomExist } = useSignalingSocket({
     peerConnectionRef,
     negotiationDataChannels,
   });
@@ -63,18 +59,15 @@ export default function useWebRTC() {
   };
 
   const endWebRTC = () => {
-    if (socketManager.connected) {
+    if (isConnectedPeerConnection()) {
       closeRTCPeerConnection();
       closeDataChannels();
     }
   };
 
   useEffect(() => {
-    socketManager.connect();
-
     return () => {
       endWebRTC();
-      socketManager.disconnect();
     };
   }, []);
 
@@ -99,7 +92,7 @@ export default function useWebRTC() {
     endWebRTC,
     createRoom,
     joinRoom,
+    checkRoomExist,
     isConnectedPeerConnection,
-    socketConnected: socketManager.connected,
   };
 }
