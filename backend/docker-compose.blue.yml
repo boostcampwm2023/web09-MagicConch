@@ -3,6 +3,7 @@ version: "3.3"
 services:
   was-blue:
     image: "${DOCKER_USERNAME}/magicconch:blue-${GITHUB_SHA}"
+    container_name: "was-blue"
     build:
       context: .
       dockerfile: Dockerfile.was
@@ -24,6 +25,7 @@ services:
 
   signal-blue:
     image: "${DOCKER_USERNAME}/magicconch:blue-${GITHUB_SHA}"
+    container_name: "signal-blue"
     build:
       context: .
       dockerfile: Dockerfile.signal
@@ -33,6 +35,7 @@ services:
       - "3001"
 
   nginx:
+    container_name: "nginx-proxy"
     build:
       context: .
       dockerfile: Dockerfile.nginx
