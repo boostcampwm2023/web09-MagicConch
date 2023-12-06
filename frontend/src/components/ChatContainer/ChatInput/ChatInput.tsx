@@ -47,6 +47,7 @@ function ChatInput({ disabled, sendChatMessage }: ChatInputProps) {
         type="text"
         placeholder="Type Here"
         className="input input-bordered w-full display-medium16 sm:text-14"
+        maxLength={1000}
       />
       <IconButton
         icon="ion:send"
