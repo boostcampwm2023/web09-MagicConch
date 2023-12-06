@@ -2,7 +2,7 @@ name: Blue/Green CD
 
 on:
   push:
-    branches: ["dev", "BE/bugfix/#401-깃헙-액션-배포-이슈"]
+    branches: ["BE/bugfix/#401-깃헙-액션-배포-이슈"]
 
 jobs:
   build:
@@ -36,7 +36,7 @@ jobs:
       - name: Build Docker Images (Blue)
         run: |
           cd backend
-          docker-compose -f docker-compose.blue.yml build --no-cache -t "${{ secrets.DOCKER_USERNAME }}/magicconch:blue-${{ github.sha }}"
+          docker-compose -f docker-compose.blue.yml build -t "${{ secrets.DOCKER_USERNAME }}/magicconch:blue-${{ github.sha }}"
 
       - name: Push Docker Images to Registry (Blue)
         uses: docker/login-action@v3
@@ -48,7 +48,7 @@ jobs:
       - name: Build Docker Images (Green)
         run: |
           cd backend
-          docker-compose -f docker-compose.green.yml build --no-cache -t "${{ secrets.DOCKER_USERNAME }}/magicconch:green-${{ github.sha }}"
+          docker-compose -f docker-compose.green.yml build -t "${{ secrets.DOCKER_USERNAME }}/magicconch:green-${{ github.sha }}"
 
       - name: Push Docker Images to Registry (Green)
         uses: docker/login-action@v3
