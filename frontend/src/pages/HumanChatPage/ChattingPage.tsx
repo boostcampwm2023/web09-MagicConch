@@ -22,6 +22,7 @@ export default function ChattingPage() {
     tarotButtonClick,
     tarotButtonDisabled,
     socketConnected,
+    enableSideBar,
   }: OutletContext = useOutletContext();
 
   const { roomName } = useParams();
@@ -39,6 +40,7 @@ export default function ChattingPage() {
     startWebRTC({ roomName: roomName as string });
 
     if (isConnectedPeerConnection() || socketConnected) {
+      enableSideBar();
       changeMyVideoTrack();
       return;
     }
@@ -51,6 +53,7 @@ export default function ChattingPage() {
       roomName,
       onSuccess: ({ close }) => {
         close();
+        enableSideBar();
       },
       onFull: () => {
         alert('방이 꽉 찼습니다, 첫페이지로 이동합니다.');

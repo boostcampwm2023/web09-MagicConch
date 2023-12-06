@@ -15,6 +15,8 @@ import useWebRTC from '@business/hooks/useWebRTC';
 export interface OutletContext extends ReturnType<typeof useWebRTC> {
   tarotButtonClick: () => void;
   tarotButtonDisabled: boolean;
+  disableSideBar: () => void;
+  enableSideBar: () => void;
 }
 
 export default function HumanChatPage() {
@@ -23,7 +25,32 @@ export default function HumanChatPage() {
   const webRTCData = useWebRTC();
   const { roomName } = useParams();
 
+  const { messages, onSubmitMessage, inputDisabled, addPickCardMessage } = useHumanChatMessage(webRTCData.chatChannel);
+  const { tarotButtonClick, tarotButtonDisabled } = useHumanTarotSpread(webRTCData.chatChannel, addPickCardMessage);
+
+  const [contentAnimation, setContentAnimation] = useState<string>('');
+  const [sideBarDisabled, setSideBarDisabled] = useState<boolean>(false);
+
+  const changeContentAnimation = (opendSidebar: boolean) => {
+    const newAnimation = opendSidebar
+      ? 'animate-contentSideWithOpeningSidebar'
+      : 'animate-contentSideWithClosingSidebar';
+
+    setContentAnimation(newAnimation);
+  };
+
+  const disableSideBar = () => {
+    changeContentAnimation(false);
+    setSideBarDisabled(true);
+  };
+
+  const enableSideBar = () => {
+    setSideBarDisabled(false);
+  };
+
   useEffect(() => {
+    disableSideBar();
+
     if (!roomName && !location.state?.host) {
       alert('잘못된 접근입니다.');
       navigate('/');
@@ -45,19 +72,6 @@ export default function HumanChatPage() {
     });
   }, []);
 
-  const { messages, onSubmitMessage, inputDisabled, addPickCardMessage } = useHumanChatMessage(webRTCData.chatChannel);
-  const { tarotButtonClick, tarotButtonDisabled } = useHumanTarotSpread(webRTCData.chatChannel, addPickCardMessage);
-
-  const [contentAnimation, setContentAnimation] = useState<string>('');
-
-  const changeContentAnimation = (opendSidebar: boolean) => {
-    const newAnimation = opendSidebar
-      ? 'animate-contentSideWithOpeningSidebar'
-      : 'animate-contentSideWithClosingSidebar';
-
-    setContentAnimation(newAnimation);
-  };
-
   return (
     <Background type="dynamic">
       <Header
@@ -66,6 +80,7 @@ export default function HumanChatPage() {
             key="chat-side-bar"
             onSide={changeContentAnimation}
             icon={{ open: 'mdi:message-off', close: 'mdi:message' }}
+            disabled={sideBarDisabled}
           >
             <ChatContainer
               width="w-[90%]"
@@ -80,7 +95,7 @@ export default function HumanChatPage() {
       />
       <div className="w-h-screen">
         <div className={`flex-with-center h-full ${contentAnimation}`}>
-          <Outlet context={{ ...webRTCData, tarotButtonClick, tarotButtonDisabled }} />
+          <Outlet context={{ ...webRTCData, tarotButtonClick, tarotButtonDisabled, disableSideBar, enableSideBar }} />
         </div>
       </div>
     </Background>

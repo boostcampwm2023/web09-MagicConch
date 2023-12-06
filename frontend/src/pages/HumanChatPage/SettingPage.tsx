@@ -27,12 +27,15 @@ export default function ChattingPage() {
     getMedia,
     profileChannel,
     nicknameChannel,
+    enableSideBar,
+    disableSideBar,
   }: OutletContext = useOutletContext();
 
   const camList = cameraOptions.map(({ deviceId, label }) => ({ label, value: deviceId }));
   const micList = audioOptions.map(({ deviceId, label }) => ({ label, value: deviceId }));
 
   useEffect(() => {
+    disableSideBar();
     if (!socketManager.connected) {
       navigate('..');
     }
@@ -85,7 +88,10 @@ export default function ChattingPage() {
       camList={camList}
       micList={micList}
       videoRef={localVideoRef}
-      onConfirm={sendProfileInfoWithNavigate}
+      onConfirm={() => {
+        sendProfileInfoWithNavigate();
+        enableSideBar();
+      }}
       onChangeProfileImage={setLocalProfileImage}
       onChangeNickname={setLocalNickname}
     />
