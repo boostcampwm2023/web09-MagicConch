@@ -83,4 +83,5 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd ~/app/backend
-            source deploy.sh "${DOCKER_USERNAME}" "${GITHUB_SHA}"
+            chmod +x deploy.sh
+            source deploy.sh
