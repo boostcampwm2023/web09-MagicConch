@@ -10,7 +10,7 @@ interface useChattingPageCreateJoinRoomParams {
 }
 export function useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack }: useChattingPageCreateJoinRoomParams) {
   const {
-    chatPageState: { host },
+    chatPageState: { host, joined },
     startWebRTC,
     joinRoom,
     createRoom,
@@ -22,6 +22,10 @@ export function useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack }: us
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (joined) {
+      return;
+    }
+
     humanSocket.connect();
     startWebRTC({ roomName: roomName as string });
 
