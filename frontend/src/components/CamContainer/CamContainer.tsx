@@ -62,7 +62,7 @@ export default function CamContainer({
           defaultNickname="상대방"
         />
       </div>
-      <div className="flex marker:flex-col gap-30 z-10">
+      <div className="flex-with-center flex-col gap-30 z-10">
         {host && (
           <IconButton
             icon="tabler:cards-filled"
