@@ -13,6 +13,7 @@ import { useHumanTarotSpread } from '@business/hooks/useTarotSpread';
 import useWebRTC from '@business/hooks/useWebRTC';
 import { HumanSocketManager } from '@business/services/SocketManager';
 
+import { useHumanChatPageContentAnimation } from './useHumanChatPageContentAnimation';
 import { useHumanChatPageSocket } from './useHumanChatPageSocket';
 
 interface ChatPageState {
@@ -36,15 +37,7 @@ export default function HumanChatPage() {
   const { messages, onSubmitMessage, inputDisabled, addPickCardMessage } = useHumanChatMessage(webRTCData.chatChannel);
   const { tarotButtonClick, tarotButtonDisabled } = useHumanTarotSpread(webRTCData.chatChannel, addPickCardMessage);
 
-  const [contentAnimation, setContentAnimation] = useState<string>('');
-
-  const changeContentAnimation = (opendSidebar: boolean) => {
-    const newAnimation = opendSidebar
-      ? 'animate-contentSideWithOpeningSidebar'
-      : 'animate-contentSideWithClosingSidebar';
-
-    setContentAnimation(newAnimation);
-  };
+  const { changeContentAnimation, contentAnimation } = useHumanChatPageContentAnimation();
 
   return (
     <Background type="dynamic">
