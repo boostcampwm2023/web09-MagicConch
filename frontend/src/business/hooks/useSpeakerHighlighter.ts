@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import { calculateAverage } from '@utils/unit8Array';
 
 const FFT_SIZE = 32;
-const INTERVAL_TIME = 200;
+const INTERVAL_TIME = 100;
 const SHADOW_COLOR = '#0052F0';
 const MAX_SHADOW_LENGTH = 70;
 
@@ -60,7 +60,7 @@ function animateHighLight(videoElement: HTMLVideoElement, startLength: number, e
     { filter: `drop-shadow(0px 0px ${Math.min(endLength, MAX_SHADOW_LENGTH)}px ${SHADOW_COLOR}` },
   ];
   const options: KeyframeAnimationOptions = {
-    duration: 100,
+    duration: INTERVAL_TIME,
     fill: 'forwards',
   };
   videoElement.animate(frames, options);
