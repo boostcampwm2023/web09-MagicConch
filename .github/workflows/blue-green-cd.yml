@@ -20,6 +20,8 @@ jobs:
         run: |
           cd backend
           echo "${{ secrets.ENV_FILE }}" > .env
+          echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
+          echo "GITHUB_SHA=${{ github.sha }}" >> .env
           mkdir -p config/nginx/ssl/
           echo "${{ secrets.SSL_OPTIONS }}" > config/nginx/ssl/options-ssl-nginx.conf
           echo "${{ secrets.SSL_FULLCHAIN }}" > config/nginx/ssl/fullchain.pem

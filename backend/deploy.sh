@@ -15,7 +15,7 @@ run_docker() {
   DOCKER_COMPOSE_FILE="docker-compose.$RUN_TARGET.yml"
   DOCKER_IMAGE="$DOCKER_USERNAME/magicconch:$RUN_TARGET-$GITHUB_SHA"
 
-  echo "<<< Run docker compose : $DOCKER_IMAGE" >> $DEBUG_LOG
+  echo "<<< Run docker compose : $DOCKER_COMPOSE_FILE" >> $DEBUG_LOG
 
   docker-compose -f "$DOCKER_COMPOSE_FILE" pull
   docker-compose -f "$DOCKER_COMPOSE_FILE" up -d
