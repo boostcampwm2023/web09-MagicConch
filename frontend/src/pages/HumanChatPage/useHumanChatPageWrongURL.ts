@@ -1,10 +1,13 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
-export function useHumanChatPageWrongURL(roomName?: string, host?: boolean) {
+export function useHumanChatPageWrongURL() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { roomName } = useParams();
+
   useEffect(() => {
-    if (!roomName && !host) {
+    if (!roomName && !location.state?.host) {
       alert('잘못된 접근입니다.');
       navigate('/');
       return;

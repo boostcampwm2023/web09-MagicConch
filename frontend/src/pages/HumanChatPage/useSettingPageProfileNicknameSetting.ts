@@ -1,18 +1,14 @@
 import { ChangeEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import { useProfileInfo } from '@stores/zustandStores/useProfileInfo';
 
 import { arrayBuffer2Array } from '@utils/array';
 
-interface useSettingPageProfileNicknameSettingParams {
-  profileChannel: React.MutableRefObject<RTCDataChannel | undefined>;
-  nicknameChannel: React.MutableRefObject<RTCDataChannel | undefined>;
-}
-export function useSettingPageProfileNicknameSetting({
-  nicknameChannel,
-  profileChannel,
-}: useSettingPageProfileNicknameSettingParams) {
+import { OutletContext } from './HumanChatPage';
+
+export function useSettingPageProfileNicknameSetting() {
+  const { profileChannel, nicknameChannel }: OutletContext = useOutletContext();
   const navigate = useNavigate();
 
   const { myNickname, myProfile, setMyNickname, setMyProfileImage } = useProfileInfo(state => ({

@@ -17,8 +17,6 @@ export default function ChattingPage() {
     localVideoRef,
     cameraOptions,
     audioOptions,
-    profileChannel,
-    nicknameChannel,
     toggleVideo,
     toggleAudio,
     changeMyVideoTrack,
@@ -37,7 +35,7 @@ export default function ChattingPage() {
   const micList = audioOptions.map(({ deviceId, label }) => ({ label, value: deviceId }));
 
   const { setLocalNickname, setLocalProfileImage, sendProfileInfoWithNavigateBefore } =
-    useSettingPageProfileNicknameSetting({ profileChannel, nicknameChannel });
+    useSettingPageProfileNicknameSetting();
 
   return (
     <ProfileSetting

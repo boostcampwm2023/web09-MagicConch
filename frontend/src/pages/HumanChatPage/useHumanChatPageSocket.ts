@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { HumanSocketManager } from '@business/services/SocketManager';
 
-export function useHumanChatPageSocket(host?: boolean) {
+export function useHumanChatPageSocket() {
   const humanSocket = new HumanSocketManager();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [chatPageState, setChatPageState] = useState({
     roomName: '',
@@ -14,7 +15,7 @@ export function useHumanChatPageSocket(host?: boolean) {
   });
 
   useEffect(() => {
-    if (!host) {
+    if (!location.state?.host) {
       return;
     }
     setChatPageState(prev => ({ ...prev, host: true }));

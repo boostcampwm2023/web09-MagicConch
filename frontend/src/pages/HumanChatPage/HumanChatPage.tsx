@@ -27,12 +27,10 @@ export interface OutletContext extends ReturnType<typeof useWebRTC> {
 }
 
 export default function HumanChatPage() {
-  const location = useLocation();
   const webRTCData = useWebRTC();
-  const { roomName } = useParams();
 
-  useHumanChatPageWrongURL(roomName, location.state?.host);
-  const { chatPageState, setChatPageState } = useHumanChatPageSocket(location.state?.host);
+  useHumanChatPageWrongURL();
+  const { chatPageState, setChatPageState } = useHumanChatPageSocket();
 
   const { messages, onSubmitMessage, inputDisabled, addPickCardMessage } = useHumanChatMessage(webRTCData.chatChannel);
   const { tarotButtonClick, tarotButtonDisabled } = useHumanTarotSpread(webRTCData.chatChannel, addPickCardMessage);
