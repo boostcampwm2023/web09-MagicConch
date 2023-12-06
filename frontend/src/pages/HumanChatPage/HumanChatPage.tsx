@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 
 import Background from '@components/Background';
@@ -23,6 +23,8 @@ export interface OutletContext extends ReturnType<typeof useWebRTC> {
   tarotButtonDisabled: boolean;
   chatPageState: ChatPageState;
   setChatPageState: Dispatch<SetStateAction<ChatPageState>>;
+  disableSideBar: () => void;
+  enableSideBar: () => void;
 }
 
 export default function HumanChatPage() {
@@ -35,6 +37,20 @@ export default function HumanChatPage() {
   const { tarotButtonClick, tarotButtonDisabled } = useHumanTarotSpread(webRTCData.chatChannel, addPickCardMessage);
 
   const { changeContentAnimation, contentAnimation } = useHumanChatPageContentAnimation();
+  const [sideBarDisabled, setSideBarDisabled] = useState<boolean>(false);
+
+  const disableSideBar = () => {
+    changeContentAnimation(false);
+    setSideBarDisabled(true);
+  };
+
+  const enableSideBar = () => {
+    setSideBarDisabled(false);
+  };
+
+  useEffect(() => {
+    disableSideBar();
+  }, []);
 
   return (
     <Background type="dynamic">
@@ -44,6 +60,7 @@ export default function HumanChatPage() {
             key="chat-side-bar"
             onSide={changeContentAnimation}
             icon={{ open: 'mdi:message-off', close: 'mdi:message' }}
+            disabled={sideBarDisabled}
           >
             <ChatContainer
               width="w-[90%]"
@@ -58,7 +75,17 @@ export default function HumanChatPage() {
       />
       <div className="w-h-screen">
         <div className={`flex-with-center h-full ${contentAnimation}`}>
-          <Outlet context={{ ...webRTCData, tarotButtonClick, tarotButtonDisabled, chatPageState, setChatPageState }} />
+          <Outlet
+            context={{
+              ...webRTCData,
+              tarotButtonClick,
+              tarotButtonDisabled,
+              chatPageState,
+              setChatPageState,
+              disableSideBar,
+              enableSideBar,
+            }}
+          />
         </div>
       </div>
     </Background>

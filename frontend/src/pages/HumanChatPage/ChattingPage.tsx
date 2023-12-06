@@ -19,6 +19,7 @@ export default function ChattingPage() {
     toggleAudio,
     tarotButtonClick,
     setChatPageState,
+    enableSideBar,
   }: OutletContext = useOutletContext();
 
   const { unblockGoBack } = useBlocker({
@@ -27,7 +28,7 @@ export default function ChattingPage() {
   });
 
   useChattingPageChangeVideoTrackJoined();
-  useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack });
+  useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack, enableSideBar });
 
   const navigate = useNavigate();
   const goSettingPage = () => navigate('setting');
