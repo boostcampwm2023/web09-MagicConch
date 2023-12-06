@@ -1,7 +1,7 @@
 #!/bin/bash
 
-DOCKER_USERNAME=$DOCKER_USERNAME
-GITHUB_SHA=$GITHUB_SHA
+DOCKER_USERNAME=$1
+GITHUB_SHA=$2
 MAIN_SCRIPT="src/main.ts"
 DEBUG_LOG="debug.log"
 NPM_PROD="npm run start:prod"
