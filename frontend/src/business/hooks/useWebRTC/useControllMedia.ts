@@ -55,9 +55,8 @@ export function useControllMedia({
     videoTrack.getVideoTracks().forEach(track => (track.enabled = !track.enabled));
     toggleMyVideo();
     // 여기서 dataChannel로 비디오 on/off를 보내줘야 함
-    mediaInfoChannel.current?.send(
-      JSON.stringify([{ type: 'video', onOrOff: videoTrack.getVideoTracks()[0].enabled }]),
-    );
+    if (!mediaInfoChannel.current || mediaInfoChannel.current.readyState !== 'open') return;
+    mediaInfoChannel.current.send(JSON.stringify([{ type: 'video', onOrOff: videoTrack.getVideoTracks()[0].enabled }]));
   };
 
   const toggleAudio = () => {
@@ -69,9 +68,8 @@ export function useControllMedia({
     audioTrack.getAudioTracks().forEach(track => (track.enabled = !track.enabled));
     toggleMyMic();
     // 여기서 dataChannel로 오디오 on/off를 보내줘야 함
-    mediaInfoChannel.current?.send(
-      JSON.stringify([{ type: 'audio', onOrOff: audioTrack.getAudioTracks()[0].enabled }]),
-    );
+    if (!mediaInfoChannel.current || mediaInfoChannel.current.readyState !== 'open') return;
+    mediaInfoChannel.current.send(JSON.stringify([{ type: 'audio', onOrOff: audioTrack.getAudioTracks()[0].enabled }]));
   };
 
   const changeMyVideoTrack = async (id?: string) => {
