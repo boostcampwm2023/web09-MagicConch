@@ -68,8 +68,6 @@ export class EventsGateway
 
     client.chatEnd = false;
 
-    this.createRoom(client);
-
     setTimeout(() => this.welcome(client), 2000);
   }
 
@@ -149,6 +147,8 @@ export class EventsGateway
 
   private async saveChatLog(client: MySocket) {
     try {
+      this.createRoom(client);
+
       const createChattingMessageDto = createChattingMessageDtos(
         client.chatRoomId,
         client.chatLog,
