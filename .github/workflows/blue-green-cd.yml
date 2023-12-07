@@ -2,7 +2,7 @@ name: Blue/Green CD
 
 on:
   push:
-    branches: ["dev"]
+    branches: ["dev", "BE/refactor/#419-sentry"]
 
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -28,6 +28,7 @@ jobs:
           echo "TURN_SERVER_NAME=${{ secrets.TURN_SERVER_NAME }}" >> .env
           echo "TURN_SERVER_USER=${{ secrets.TURN_SERVER_USER }}" >> .env
           echo "TURN_SERVER_PASSWORD=${{ secrets.TURN_SERVER_PASSWORD }}" >> .env
+          echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env
           mkdir -p config/nginx/ssl/
           echo "${{ secrets.SSL_OPTIONS }}" > config/nginx/ssl/options-ssl-nginx.conf
           echo "${{ secrets.SSL_FULLCHAIN }}" > config/nginx/ssl/fullchain.pem
