@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
 
 interface useContorollMediaParams {
@@ -87,6 +89,22 @@ export function useControllMedia({
     await getMedia({ audioID: audioID });
     changeAudioTrack();
   };
+
+  useEffect(() => {
+    if (!mediaInfoChannel.current) return;
+
+    mediaInfoChannel.current.addEventListener('open', () => {
+      const audioTrack = localVideoRef.current?.srcObject as MediaStream;
+      const videoTrack = localVideoRef.current?.srcObject as MediaStream;
+
+      mediaInfoChannel.current?.send(
+        JSON.stringify([{ type: 'audio', onOrOff: audioTrack.getAudioTracks()[0].enabled }]),
+      );
+      mediaInfoChannel.current?.send(
+        JSON.stringify([{ type: 'video', onOrOff: videoTrack.getVideoTracks()[0].enabled }]),
+      );
+    });
+  }, [mediaInfoChannel.current]);
 
   return { addTracks, changeMyVideoTrack, changeMyAudioTrack, toggleVideo, toggleAudio };
 }
