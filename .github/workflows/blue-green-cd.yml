@@ -2,7 +2,7 @@ name: Blue/Green CD
 
 on:
   push:
-    branches: ["dev"]
+    branches: ["BE/bugfix/coturn"]
 
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -29,10 +29,10 @@ jobs:
           echo "TURN_SERVER_USER=${{ secrets.TURN_SERVER_USER }}" >> .env
           echo "TURN_SERVER_PASSWORD=${{ secrets.TURN_SERVER_PASSWORD }}" >> .env
           mkdir -p config/nginx/ssl/
-          echo "${{ secrets.SSL_OPTIONS }}" > config/nginx/ssl/options-ssl-nginx.conf
-          echo "${{ secrets.SSL_FULLCHAIN }}" > config/nginx/ssl/fullchain.pem
-          echo "${{ secrets.SSL_PRIVKEY }}" > config/nginx/ssl/privkey.pem
-          echo "${{ secrets.SSL_DHPARAMS }}" > config/nginx/ssl/ssl-dhparams.pem
+          echo "${{ secrets.SSL_OPTIONS }}" > config/ssl/options-ssl-nginx.conf
+          echo "${{ secrets.SSL_FULLCHAIN }}" > config/ssl/fullchain.pem
+          echo "${{ secrets.SSL_PRIVKEY }}" > config/ssl/privkey.pem
+          echo "${{ secrets.SSL_DHPARAMS }}" > config/ssl/ssl-dhparams.pem
 
       - name: Copy .env, deploy script, SSL files to Remote Server
         uses: appleboy/scp-action@master
@@ -54,8 +54,8 @@ jobs:
       - name: Build & Push Docker Images (Blue & Green)
         run: |
           cd backend
-          docker-compose -f docker-compose.blue.yml build
-          docker-compose -f docker-compose.green.yml build
+          docker-compose -f docker-compose.blue.yml build --no-cache
+          docker-compose -f docker-compose.green.yml build --no-cache
           docker-compose -f docker-compose.blue.yml push
           docker-compose -f docker-compose.green.yml push
 
