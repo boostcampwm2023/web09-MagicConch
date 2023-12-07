@@ -21,7 +21,6 @@ export default function ChattingPage() {
     toggleAudio,
     changeMyVideoTrack,
     changeMyAudioTrack,
-    getMedia,
     enableSideBar,
     disableSideBar,
   }: OutletContext = useOutletContext();
@@ -31,7 +30,7 @@ export default function ChattingPage() {
     if (!socketManager.connected) {
       navigate('..');
     }
-    getMedia({});
+    changeMyVideoTrack();
   }, []);
 
   const camList = cameraOptions.map(({ deviceId, label }) => ({ label, value: deviceId }));

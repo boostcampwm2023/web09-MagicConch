@@ -1,23 +1,20 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 import Background from '@components/Background';
 import ChatContainer from '@components/ChatContainer';
 import Header from '@components/Header';
 import SideBar from '@components/SideBar';
 
+import { useBlocker } from '@business/hooks/useBlocker';
 import { useHumanChatMessage } from '@business/hooks/useChatMessage';
 import { useHumanTarotSpread } from '@business/hooks/useTarotSpread';
 import useWebRTC from '@business/hooks/useWebRTC';
 
 import { useHumanChatPageContentAnimation } from './useHumanChatPageContentAnimation';
-import { useHumanChatPageCreateRoomEvent } from './useHumanChatPageCreateRoomEvent';
+import { ChatPageState, useHumanChatPageCreateRoomEvent } from './useHumanChatPageCreateRoomEvent';
 import { useHumanChatPageWrongURL } from './useHumanChatPageWrongURL';
 
-interface ChatPageState {
-  joined: boolean;
-  host: boolean;
-}
 export interface OutletContext extends ReturnType<typeof useWebRTC> {
   tarotButtonClick: () => void;
   tarotButtonDisabled: boolean;
@@ -25,6 +22,7 @@ export interface OutletContext extends ReturnType<typeof useWebRTC> {
   setChatPageState: Dispatch<SetStateAction<ChatPageState>>;
   disableSideBar: () => void;
   enableSideBar: () => void;
+  unblockGoBack: () => void;
 }
 
 export default function HumanChatPage() {
@@ -51,6 +49,12 @@ export default function HumanChatPage() {
   useEffect(() => {
     disableSideBar();
   }, []);
+
+  const navigate = useNavigate();
+  const { unblockGoBack } = useBlocker({
+    when: ({ nextLocation }) => nextLocation.pathname === '/' || nextLocation.pathname === '/chat/human',
+    onConfirm: () => navigate('/'),
+  });
 
   return (
     <Background type="dynamic">
@@ -84,6 +88,7 @@ export default function HumanChatPage() {
               setChatPageState,
               disableSideBar,
               enableSideBar,
+              unblockGoBack,
             }}
           />
         </div>

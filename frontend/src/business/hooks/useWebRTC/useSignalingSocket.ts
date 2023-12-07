@@ -54,7 +54,7 @@ export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels 
     socketManager.emit('answer', answerSdp, roomName);
   };
 
-  const createRoom = async ({
+  const createRoom = ({
     roomName,
     onSuccess,
     onClose,
@@ -65,9 +65,7 @@ export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels 
   }) => {
     openPasswordPopup({
       host: true,
-      onClose: () => {
-        onClose?.({ close });
-      },
+      onClose: () => onClose?.({ close }),
       onSubmit: ({ password, close }) => {
         socketManager.emit('createRoom', roomName, password);
 

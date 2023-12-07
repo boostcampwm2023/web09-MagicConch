@@ -8,7 +8,7 @@ import { ERROR_MESSAGE } from '@constants/ERROR_MESSAGE';
 import { OutletContext } from './HumanChatPage';
 
 interface useChattingPageCreateJoinRoomParams {
-  unblockGoBack: () => void;
+  unblockGoBack: (cb: () => void) => void;
   enableSideBar: () => void;
 }
 export function useChattingPageCreateJoinRoomPasswordPopup({
@@ -32,22 +32,24 @@ export function useChattingPageCreateJoinRoomPasswordPopup({
     joinRoom({
       roomName: roomName as string,
       onSuccess: ({ close }) => {
+        navigate('setting');
         close();
         enableSideBar();
       },
       onFull: () => {
-        unblockGoBack();
-
-        alert(ERROR_MESSAGE.FULL_ROOM);
-        navigate('/');
+        unblockGoBack(() => {
+          alert(ERROR_MESSAGE.FULL_ROOM);
+          navigate('/');
+        });
       },
       onFail: () => {
         alert(ERROR_MESSAGE.WRONG_PASSWORD);
       },
       onHostExit: () => {
-        unblockGoBack();
-        navigate('/');
-        alert(ERROR_MESSAGE.HOST_EXIT);
+        unblockGoBack(() => {
+          alert(ERROR_MESSAGE.HOST_EXIT);
+          navigate('/');
+        });
       },
     });
   };
@@ -56,6 +58,7 @@ export function useChattingPageCreateJoinRoomPasswordPopup({
     createRoom({
       roomName: roomName as string,
       onSuccess: ({ close }) => {
+        navigate('setting');
         close();
         enableSideBar();
       },
@@ -67,9 +70,10 @@ export function useChattingPageCreateJoinRoomPasswordPopup({
   };
 
   const goRootPageWithMessage = () => {
-    unblockGoBack();
-    alert(ERROR_MESSAGE.ROOM_NOT_EXIST);
-    navigate('/');
+    unblockGoBack(() => {
+      alert(ERROR_MESSAGE.ROOM_NOT_EXIST);
+      navigate('/');
+    });
   };
 
   useEffect(() => {

@@ -29,14 +29,7 @@ export function useHumanTarotSpread(
   const { open } = useOverlay();
 
   const tarotButtonClick = () => {
-    open(({ close }) => (
-      <Popup
-        close={close}
-        onConfirm={requestTarotSpread}
-      >
-        상담자에게 타로 카드가 펼쳐집니다.
-      </Popup>
-    ));
+    open(() => <Popup onConfirm={requestTarotSpread}>상담자에게 타로 카드가 펼쳐집니다.</Popup>);
   };
 
   const requestTarotSpread = () => {

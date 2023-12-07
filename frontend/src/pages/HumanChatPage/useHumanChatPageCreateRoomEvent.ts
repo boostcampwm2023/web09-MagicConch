@@ -5,6 +5,10 @@ import { HumanSocketManager } from '@business/services/SocketManager';
 
 import { useHost } from '@stores/zustandStores/useHost';
 
+export interface ChatPageState {
+  joined: boolean;
+  host: boolean;
+}
 export function useHumanChatPageCreateRoomEvent() {
   const humanSocket = new HumanSocketManager();
   const navigate = useNavigate();
@@ -12,8 +16,7 @@ export function useHumanChatPageCreateRoomEvent() {
 
   const { setHost } = useHost(state => ({ setHost: state.setHost }));
 
-  const [chatPageState, setChatPageState] = useState({
-    roomName: '',
+  const [chatPageState, setChatPageState] = useState<ChatPageState>({
     joined: false,
     host: false,
   });

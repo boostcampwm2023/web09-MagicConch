@@ -1,10 +1,7 @@
-import { useEffect } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import { IconButton } from '@components/Buttons';
 import CamContainer from '@components/CamContainer';
-
-import { useBlocker } from '@business/hooks/useBlocker';
 
 import type { OutletContext } from './HumanChatPage';
 import { useChattingPageChangeVideoTrackJoined } from './useChattingPageChangeVideoTrackJoined';
@@ -18,14 +15,10 @@ export default function ChattingPage() {
     toggleVideo,
     toggleAudio,
     tarotButtonClick,
-    setChatPageState,
     enableSideBar,
+    chatPageState: { joined },
+    unblockGoBack,
   }: OutletContext = useOutletContext();
-
-  const { unblockGoBack } = useBlocker({
-    when: ({ nextLocation }) => nextLocation.pathname === '/' || nextLocation.pathname === '/chat/human',
-    onConfirm: () => navigate('/'),
-  });
 
   useChattingPageChangeVideoTrackJoined();
   useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack, enableSideBar });
@@ -33,12 +26,8 @@ export default function ChattingPage() {
   const navigate = useNavigate();
   const goSettingPage = () => navigate('setting');
 
-  useEffect(() => {
-    setChatPageState(prev => ({ ...prev, joined: true }));
-  }, []);
-
   return (
-    <>
+    <div className={`${joined ? '' : 'hidden'}`}>
       <CamContainer
         localVideoRef={localVideoRef}
         remoteVideoRef={remoteVideoRef}
@@ -55,6 +44,6 @@ export default function ChattingPage() {
           onClick={goSettingPage}
         />
       </div>
-    </>
+    </div>
   );
 }

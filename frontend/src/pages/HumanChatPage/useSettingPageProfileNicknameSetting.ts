@@ -8,7 +8,7 @@ import { arrayBuffer2Array } from '@utils/array';
 import { OutletContext } from './HumanChatPage';
 
 export function useSettingPageProfileNicknameSetting() {
-  const { profileChannel, nicknameChannel }: OutletContext = useOutletContext();
+  const { profileChannel, nicknameChannel, setChatPageState }: OutletContext = useOutletContext();
   const navigate = useNavigate();
 
   const { myNickname, myProfile, setMyNickname, setMyProfileImage } = useProfileInfo(state => ({
@@ -44,6 +44,8 @@ export function useSettingPageProfileNicknameSetting() {
     if (nicknameChannel.current?.readyState === 'open' && myNickname) {
       nicknameChannel.current?.send?.(myNickname);
     }
+
+    setChatPageState(prev => ({ ...prev, joined: true }));
 
     navigate('..');
   };

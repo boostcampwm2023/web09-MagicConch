@@ -18,12 +18,12 @@ export function useRTCPeerConnection({ remoteVideoRef }: useRTCPeerConnectionPar
     peerConnectionRef.current = new RTCPeerConnection({ iceServers: [{ urls: iceServers }] });
 
     peerConnectionRef.current.addEventListener('track', e => {
+      peerStreamRef.current = e.streams[0];
       if (!remoteVideoRef.current) {
         return;
       }
 
       remoteVideoRef.current.srcObject = e.streams[0];
-      peerStreamRef.current = e.streams[0];
     });
 
     peerConnectionRef.current.addEventListener('icecandidate', e => {
