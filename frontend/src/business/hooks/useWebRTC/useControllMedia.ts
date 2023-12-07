@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
 
 interface useContorollMediaParams {
@@ -55,9 +57,8 @@ export function useControllMedia({
     videoTrack.getVideoTracks().forEach(track => (track.enabled = !track.enabled));
     toggleMyVideo();
     // 여기서 dataChannel로 비디오 on/off를 보내줘야 함
-    mediaInfoChannel.current?.send(
-      JSON.stringify([{ type: 'video', onOrOff: videoTrack.getVideoTracks()[0].enabled }]),
-    );
+    if (!mediaInfoChannel.current || mediaInfoChannel.current.readyState !== 'open') return;
+    mediaInfoChannel.current.send(JSON.stringify([{ type: 'video', onOrOff: videoTrack.getVideoTracks()[0].enabled }]));
   };
 
   const toggleAudio = () => {
@@ -69,9 +70,8 @@ export function useControllMedia({
     audioTrack.getAudioTracks().forEach(track => (track.enabled = !track.enabled));
     toggleMyMic();
     // 여기서 dataChannel로 오디오 on/off를 보내줘야 함
-    mediaInfoChannel.current?.send(
-      JSON.stringify([{ type: 'audio', onOrOff: audioTrack.getAudioTracks()[0].enabled }]),
-    );
+    if (!mediaInfoChannel.current || mediaInfoChannel.current.readyState !== 'open') return;
+    mediaInfoChannel.current.send(JSON.stringify([{ type: 'audio', onOrOff: audioTrack.getAudioTracks()[0].enabled }]));
   };
 
   const changeMyVideoTrack = async (id?: string) => {
@@ -89,6 +89,22 @@ export function useControllMedia({
     await getMedia({ audioID: audioID });
     changeAudioTrack();
   };
+
+  useEffect(() => {
+    if (!mediaInfoChannel.current) return;
+
+    mediaInfoChannel.current.addEventListener('open', () => {
+      const audioTrack = localVideoRef.current?.srcObject as MediaStream;
+      const videoTrack = localVideoRef.current?.srcObject as MediaStream;
+
+      mediaInfoChannel.current?.send(
+        JSON.stringify([{ type: 'audio', onOrOff: audioTrack.getAudioTracks()[0].enabled }]),
+      );
+      mediaInfoChannel.current?.send(
+        JSON.stringify([{ type: 'video', onOrOff: videoTrack.getVideoTracks()[0].enabled }]),
+      );
+    });
+  }, [mediaInfoChannel.current]);
 
   return { addTracks, changeMyVideoTrack, changeMyAudioTrack, toggleVideo, toggleAudio };
 }

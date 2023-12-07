@@ -1,6 +1,8 @@
 import { usePasswordPopup } from '@business/hooks/usePopup';
 import { HumanSocketManager } from '@business/services/SocketManager';
 
+import { ERROR_MESSAGE } from '@constants/messages';
+
 interface useSignalingSocketParams {
   peerConnectionRef: React.MutableRefObject<RTCPeerConnection | undefined>;
   negotiationDataChannels: ({ roomName }: { roomName: string }) => void;
@@ -31,7 +33,7 @@ export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels 
     });
 
     socketManager.on('roomFull', () => {
-      alert('room is full');
+      alert(ERROR_MESSAGE.FULL_ROOM);
     });
 
     socketManager.on('userExit', async () => {
@@ -52,31 +54,27 @@ export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels 
     socketManager.emit('answer', answerSdp, roomName);
   };
 
-  const createRoom = async ({
+  const createRoom = ({
+    roomName,
     onSuccess,
     onClose,
   }: {
-    onSuccess?: ({ roomName, password, close }: { roomName: string; password: string; close: () => void }) => void;
+    roomName: string;
+    onSuccess?: ({ password, close }: { password: string } & CloseFunc) => void;
     onClose?: ({ close }: { close: () => void }) => void;
   }) => {
     openPasswordPopup({
       host: true,
-      onClose: () => {
-        onClose?.({ close });
-      },
+      onClose: () => onClose?.({ close }),
       onSubmit: ({ password, close }) => {
-        socketManager.emit('createRoom', password);
+        socketManager.emit('createRoom', roomName, password);
 
-        // close();
-
-        socketManager.on('roomCreated', (roomName: string) => {
-          onSuccess?.({ roomName, password, close });
-        });
+        socketManager.on('roomCreated', () => onSuccess?.({ password, close }));
       },
     });
   };
 
-  const joinRoom = async ({
+  const joinRoom = ({
     roomName,
     onFull,
     onFail,
@@ -86,35 +84,51 @@ export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels 
     roomName: string;
     onFull?: () => void;
     onFail?: () => void;
-    onSuccess?: ({ close }: { close: () => void }) => void;
+    onSuccess?: ({ close }: CloseFunc) => void;
     onHostExit?: () => void;
   }) => {
     openPasswordPopup({
       onSubmit: ({ password, close }) => {
         socketManager.emit('joinRoom', roomName, password);
 
-        socketManager.on('joinRoomFailed', () => {
-          onFail?.();
-        });
+        if (onFail) {
+          socketManager.on('joinRoomFailed', onFail);
+        }
+        if (onFull) {
+          socketManager.on('roomFull', onFull);
+        }
+        socketManager.on('joinRoomSuccess', () => onSuccess?.({ close }));
 
-        socketManager.on('roomFull', () => {
-          onFull?.();
-        });
-
-        socketManager.on('joinRoomSuccess', async () => {
-          onSuccess?.({ close });
-        });
-
-        socketManager.on('hostExit', () => {
-          onHostExit?.();
-        });
+        if (onHostExit) {
+          socketManager.on('hostExit', onHostExit);
+        }
       },
     });
+  };
+
+  const checkRoomExist = ({
+    roomName,
+    onExistRoom,
+    onRoomNotExist,
+  }: {
+    roomName: string;
+    onExistRoom?: () => void;
+    onRoomNotExist?: () => void;
+  }) => {
+    socketManager.emit('checkRoomExist', roomName);
+
+    if (onRoomNotExist) {
+      socketManager.on('roomNotExist', onRoomNotExist);
+    }
+    if (onExistRoom) {
+      socketManager.on('roomExist', onExistRoom);
+    }
   };
 
   return {
     initSignalingSocket,
     createRoom,
     joinRoom,
+    checkRoomExist,
   };
 }

@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
 
+import useSpeakerHighlighter from '@business/hooks/useSpeakerHighlighter';
+
 import { ProfileInfo } from '@stores/zustandStores/useProfileInfo';
 
 import { arrayBuffer2Blob } from '@utils/array';
@@ -16,7 +18,7 @@ interface CamBoxProps {
   audioConnected?: boolean;
 }
 
-const CamBox = ({
+export default function CamBox({
   videoRef,
   defaultImage,
   cameraConnected,
@@ -24,12 +26,12 @@ const CamBox = ({
   profileInfo,
   nickname,
   defaultNickname,
-}: CamBoxProps) => {
+}: CamBoxProps) {
   const loading = useMemo(() => !videoRef.current?.srcObject, [videoRef.current?.srcObject]);
   const hidden = useMemo(() => !cameraConnected, [cameraConnected]);
 
   const bgImage = useMemo(() => {
-    if (!profileInfo) {
+    if (!profileInfo || !profileInfo.type) {
       return undefined;
     }
     const { arrayBuffer, type } = profileInfo;
@@ -38,17 +40,27 @@ const CamBox = ({
     return URL.createObjectURL(blob);
   }, [profileInfo]);
 
+  useSpeakerHighlighter(videoRef);
+
   return (
     <>
-      <div className="flex relative w-320 h-320 sm:w-[30vh] sm:h-[30vh] rounded-[55px] sm:rounded-[50px]  overflow-hidden shadow-white">
-        {loading && <div className="absolute skeleton w-h-full"></div>}
-        {hidden && (bgImage ? <img src={bgImage} /> : <div className={`absolute w-h-full ${defaultImage} bg-cover`} />)}
+      <div className="flex relative w-320 h-320 sm:w-[30vh] sm:h-[30vh] rounded-[55px] sm:rounded-[50px] shadow-white">
+        {loading && <div className="absolute skeleton w-h-full"></div>}{' '}
         <video
-          className={`flex-1 w-h-full min-w-full min-h-full`}
+          className={`flex-1 w-h-full rounded-[55px] sm:rounded-[50px]`}
           ref={videoRef}
           autoPlay
           playsInline
         />
+        {hidden &&
+          (bgImage ? (
+            <img
+              className={`absolute w-h-full bg-cover rounded-[55px] sm:rounded-[50px]`}
+              src={bgImage}
+            />
+          ) : (
+            <div className={`absolute w-h-full ${defaultImage} bg-cover rounded-[55px] sm:rounded-[50px]`} />
+          ))}
         <div className="w-full absolute bottom-0 left-0 p-30 flex gap-[10%] text-white sm:p-20">
           <div className="flex gap-5">
             <Icon
@@ -71,6 +83,4 @@ const CamBox = ({
       </div>
     </>
   );
-};
-
-export default CamBox;
+}

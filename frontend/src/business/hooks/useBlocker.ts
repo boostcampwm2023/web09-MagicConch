@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Location, useBlocker as reactRouterUserBlocker, useNavigate } from 'react-router-dom';
+import { Location, useBlocker as reactRouterUserBlocker } from 'react-router-dom';
 
 import { useExitPopup } from './usePopup/useExitPopup';
 
@@ -11,8 +11,7 @@ type useBlockerParams = {
 
 export function useBlocker({ when, onConfirm, onCancel }: useBlockerParams) {
   const [blockedGoBack, setBlockedGoBack] = useState<boolean>(true);
-
-  const navigate = useNavigate();
+  const [afterRunCallbacks, setAfterRunCallbacks] = useState<(() => void)[]>([]);
 
   const { openExitPopup } = useExitPopup();
 
@@ -24,11 +23,13 @@ export function useBlocker({ when, onConfirm, onCancel }: useBlockerParams) {
     if (when({ ...args })) {
       openExitPopup({
         onConfirm: () => {
-          setBlockedGoBack(false);
-          onConfirm?.();
+          unblockGoBack(() => {
+            onConfirm?.();
+          });
         },
-        onCancel: () => {
+        onCancel: ({ close }) => {
           onCancel?.();
+          close();
         },
       });
       return true;
@@ -39,7 +40,10 @@ export function useBlocker({ when, onConfirm, onCancel }: useBlockerParams) {
 
   useEffect(() => {
     if (!blockedGoBack) {
-      navigate('/');
+      afterRunCallbacks.forEach(callback => {
+        callback();
+      });
+      setAfterRunCallbacks([]);
     }
   }, [blockedGoBack]);
 
@@ -47,9 +51,10 @@ export function useBlocker({ when, onConfirm, onCancel }: useBlockerParams) {
     setBlockedGoBack(true);
   }, []);
 
-  const unblockGoBack = useCallback(() => {
+  const unblockGoBack = (afterRunCallback: () => void) => {
     setBlockedGoBack(false);
-  }, []);
+    setAfterRunCallbacks(prev => [...prev, afterRunCallback]);
+  };
 
   return { blockedGoBack, blockGoBack, unblockGoBack };
 }

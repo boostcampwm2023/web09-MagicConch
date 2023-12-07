@@ -5,6 +5,7 @@ import Popup from '@components/Popup';
 import useOverlay from '@business/hooks/useOverlay';
 
 import { HumanChatEvents } from '@constants/events';
+import { POPUP_MESSAGE } from '@constants/messages';
 
 import useDisplayTarotCard from './useDisplayTarotCard';
 import { useTarotSpread } from './useTarotSpread';
@@ -31,10 +32,13 @@ export function useHumanTarotSpread(
   const tarotButtonClick = () => {
     open(({ close }) => (
       <Popup
-        close={close}
-        onConfirm={requestTarotSpread}
+        onCancel={() => close()}
+        onConfirm={() => {
+          close();
+          requestTarotSpread();
+        }}
       >
-        상담자에게 타로 카드가 펼쳐집니다.
+        {POPUP_MESSAGE.SPREAD_TAROT_CARD}
       </Popup>
     ));
   };
@@ -48,10 +52,12 @@ export function useHumanTarotSpread(
   useEffect(() => {
     if (chatChannel.current) {
       chatChannel.current.addEventListener('open', () => {
+        console.log('datachannel open');
         setTarotButtonDisabled(false);
       });
 
       chatChannel.current.addEventListener('close', () => {
+        console.log('datachannel close');
         setTarotButtonDisabled(true);
       });
 

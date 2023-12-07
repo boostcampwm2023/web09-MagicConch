@@ -20,7 +20,9 @@ export default function Select({ width, options, autoFocus, onChange }: SelectPr
   const [selected, setSelected] = useState<SelectOptions>({ value: '', label: '' });
 
   useEffect(() => {
-    if (options.length) setSelected(options[0]);
+    if (options.length && !selected.value && !selected.label) {
+      setSelected(options[0]);
+    }
   }, [options]);
 
   const updateOption = (option: SelectOptions) => {

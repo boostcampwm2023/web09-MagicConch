@@ -8,6 +8,7 @@ import {
   WebSocketServer,
   WsException,
 } from '@nestjs/websockets';
+import { AIClientEvent, AIServerEvent } from '@tarotmilktea/ai-socketio-event';
 import { Server, Socket } from 'socket.io';
 import { ChatService, ChattingInfo } from 'src/chat/chat.service';
 import { ERR_MSG } from 'src/common/constants/errors';
@@ -68,19 +69,17 @@ export class EventsGateway
 
     client.chatEnd = false;
 
-    this.createRoom(client);
-
     setTimeout(() => this.welcome(client), 2000);
   }
 
-  @SubscribeMessage('message')
+  @SubscribeMessage<AIClientEvent>('message')
   async handleMessageEvent(client: MySocket, message: string) {
     this.logger.debug(`🚀 Received a message from ${client.id}`);
 
     if (client.chatEnd) {
       return;
     }
-    client.emit('streamStart');
+    this.eventEmit(client, 'streamStart');
 
     const stream = await this.clovaStudio.createTalk(client.chatLog, message);
     if (stream) {
@@ -90,18 +89,18 @@ export class EventsGateway
         sentMessage.includes(candidates),
       );
       if (askedTarotCard) {
-        client.emit('tarotCard');
+        this.eventEmit(client, 'tarotCard');
       }
     }
   }
 
-  @SubscribeMessage('tarotRead')
+  @SubscribeMessage<AIClientEvent>('tarotRead')
   async handleTarotReadEvent(client: MySocket, cardIdx: number) {
     this.logger.debug(
       `🚀 TarotRead request received from ${client.id}: ${cardIdx}번`,
     );
 
-    client.emit('streamStart');
+    this.eventEmit(client, 'streamStart');
 
     const stream = await this.clovaStudio.createTarotReading(
       client.chatLog,
@@ -113,8 +112,12 @@ export class EventsGateway
       this.saveChatLog(client);
       const shareLinkId = await this.createShareLinkId(cardIdx, sentMessage);
 
-      client.emit('chatEnd', shareLinkId);
+      this.eventEmit(client, 'chatEnd', shareLinkId);
     }
+  }
+
+  private eventEmit(client: MySocket, event: AIServerEvent, ...args: any[]) {
+    client.emit(event, ...args);
   }
 
   private async createRoom(client: MySocket) {
@@ -126,7 +129,7 @@ export class EventsGateway
   }
 
   private welcome(client: MySocket) {
-    client.emit('streamStart');
+    this.eventEmit(client, 'streamStart');
 
     const stream = string2TokenStream(welcomeMessage);
     this.streamMessage(client, stream);
@@ -136,17 +139,22 @@ export class EventsGateway
     client: MySocket,
     stream: ReadableStream<Uint8Array>,
   ) {
-    const onStreaming = (token: string) => client.emit('streaming', token);
+    const onStreaming = (token: string) =>
+      this.eventEmit(client, 'streaming', token);
     const sentMessage = await readTokenStream(stream, onStreaming);
 
+    client.chatLog.push({ role: 'assistant', content: sentMessage });
+
     this.logger.debug(`🚀 Send a message to ${client.id}`);
-    client.emit('streamEnd');
+    this.eventEmit(client, 'streamEnd');
 
     return sentMessage;
   }
 
   private async saveChatLog(client: MySocket) {
     try {
+      this.createRoom(client);
+
       const createChattingMessageDto = createChattingMessageDtos(
         client.chatRoomId,
         client.chatLog,

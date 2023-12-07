@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { calculateAverage } from '@utils/unit8Array';
 
@@ -6,19 +6,32 @@ const FFT_SIZE = 32;
 const INTERVAL_TIME = 100;
 const SHADOW_COLOR = '#0052F0';
 const MAX_SHADOW_LENGTH = 70;
+const THRESHOLD = 60;
+const MAX_VOLUME = 255;
 
 export default function useSpeakerHighlighter(videoRef: React.RefObject<HTMLVideoElement>) {
+  const interval = useRef<NodeJS.Timeout>();
+
+  const deleteInterval = () => {
+    if (interval.current) {
+      clearInterval(interval.current);
+      interval.current = undefined;
+    }
+  };
+
   useEffect(() => {
+    deleteInterval();
+
     if (!videoRef.current || !('captureStream' in HTMLVideoElement.prototype)) {
       return;
     }
-    const videoElement = videoRef.current as any;
 
+    const videoElement = videoRef.current as any;
     const stream = videoElement.captureStream();
 
-    let interval: NodeJS.Timeout;
-
     stream.onactive = () => {
+      if (stream.getAudioTracks().length === 0) return;
+
       const audioContext = new window.AudioContext();
 
       const analyser = audioContext.createAnalyser();
@@ -30,36 +43,33 @@ export default function useSpeakerHighlighter(videoRef: React.RefObject<HTMLVide
       let prevVolume = 0;
       const dataArray = new Uint8Array(analyser.frequencyBinCount);
 
-      if (interval) {
-        clearInterval(interval);
-      }
-
-      interval = setInterval(() => {
+      deleteInterval();
+      interval.current = setInterval(() => {
         analyser.getByteFrequencyData(dataArray);
         const curVolume = calculateAverage(dataArray);
-
         animateHighLight(videoElement, prevVolume, curVolume);
 
         prevVolume = curVolume;
       }, INTERVAL_TIME);
     };
 
-    return () => {
-      if (interval) {
-        clearInterval(interval);
-      }
-    };
+    return deleteInterval;
   }, [videoRef.current]);
 }
 
-function animateHighLight(videoElement: HTMLVideoElement, startLength: number, endLength: number) {
+function animateHighLight(videoElement: HTMLVideoElement, startVolume: number, endVolume: number) {
   const frames = [
-    { filter: `drop-shadow(0px 0px ${Math.min(startLength, MAX_SHADOW_LENGTH)}px ${SHADOW_COLOR}` },
-    { filter: `drop-shadow(0px 0px ${Math.min(endLength, MAX_SHADOW_LENGTH)}px ${SHADOW_COLOR}` },
+    { filter: `drop-shadow(0px 0px ${getShadowLength(startVolume)}px ${SHADOW_COLOR}` },
+    { filter: `drop-shadow(0px 0px ${getShadowLength(endVolume)}px ${SHADOW_COLOR}` },
   ];
   const options: KeyframeAnimationOptions = {
     duration: INTERVAL_TIME,
     fill: 'forwards',
   };
   videoElement.animate(frames, options);
+}
+
+function getShadowLength(volume: number) {
+  const thresholdedVolume = Math.max(volume - THRESHOLD, 0);
+  return (thresholdedVolume / (MAX_VOLUME - THRESHOLD)) * MAX_SHADOW_LENGTH;
 }

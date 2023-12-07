@@ -44,9 +44,7 @@ export class ChatService {
     //   throw new NotFoundException();
     // }
 
-    const room: ChattingRoom = new ChattingRoom();
-    room.participant = savedMember;
-
+    const room: ChattingRoom = ChattingRoom.fromMember(savedMember);
     try {
       const savedRoom: ChattingRoom =
         await this.chattingRoomRepository.save(room);
@@ -70,10 +68,10 @@ export class ChatService {
     try {
       createChattingMessageDto.forEach(
         async (messageDto: CreateChattingMessageDto) => {
-          const message = new ChattingMessage();
-          message.roomId = room;
-          message.isHost = messageDto.isHost;
-          message.message = messageDto.message;
+          const message: ChattingMessage = ChattingMessage.fromDto(
+            messageDto,
+            room,
+          );
           await this.chattingMessageRepository.save(message);
         },
       );

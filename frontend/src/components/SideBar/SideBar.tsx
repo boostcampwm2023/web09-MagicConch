@@ -10,9 +10,12 @@ interface SideBarProps {
   icon: IconType;
   onSide?: (showed: boolean) => void;
   children: React.ReactNode;
+  disabled?: boolean;
 }
 
-function SideBar({ onSide, children, icon }: SideBarProps) {
+function SideBar({ onSide, children, icon, disabled = false }: SideBarProps) {
+  if (disabled) return null;
+
   const [hidden, setHidden] = useState(true);
   const [opened, setOpened] = useState(false);
   const [animating, setAnimating] = useState(false);

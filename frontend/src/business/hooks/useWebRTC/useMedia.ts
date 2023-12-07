@@ -47,9 +47,16 @@ export function useMedia() {
     const videoOption = _cameraID ? videoOptions.withCameraId : videoOptions.default;
 
     const stream = await navigator.mediaDevices.getUserMedia({
-      audio: myMicOn ? audioOption : false,
-      video: myVideoOn ? videoOption : false,
+      audio: audioOption,
+      video: videoOption,
     });
+
+    if (!myVideoOn) {
+      stream.getVideoTracks().forEach(track => (track.enabled = false));
+    }
+    if (!myMicOn) {
+      stream.getAudioTracks().forEach(track => (track.enabled = false));
+    }
 
     if (localVideoRef.current) {
       localVideoRef.current.srcObject = stream;

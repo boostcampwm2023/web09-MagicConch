@@ -20,9 +20,7 @@ export class TarotService {
   async createTarotResult(
     createTarotResultDto: CreateTarotResultDto,
   ): Promise<string> {
-    const tarotResult: TarotResult = new TarotResult();
-    tarotResult.cardUrl = createTarotResultDto.cardUrl;
-    tarotResult.message = createTarotResultDto.message;
+    const tarotResult: TarotResult = TarotResult.fromDto(createTarotResultDto);
     try {
       const savedResult: TarotResult =
         await this.tarotResultRepository.save(tarotResult);

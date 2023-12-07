@@ -2,6 +2,8 @@ version: "3.3"
 
 services:
   was-blue:
+    image: "${DOCKER_USERNAME}/magicconch:was-blue-${GITHUB_SHA}"
+    container_name: "was-blue"
     build:
       context: .
       dockerfile: Dockerfile.was
@@ -15,19 +17,36 @@ services:
       - SECRET_KEY=${SECRET_KEY}
       - X_NCP_CLOVASTUDIO_API_KEY=${X_NCP_CLOVASTUDIO_API_KEY}
       - X_NCP_APIGW_API_KEY=${X_NCP_APIGW_API_KEY}
+      - PORT=3000
     expose:
       - "3000"
     volumes:
       - /var/log/was:/app/was/logs
+      - /var/log/typeorm:/app/was/typeorm.log
 
   signal-blue:
+    image: "${DOCKER_USERNAME}/magicconch:signal-blue-${GITHUB_SHA}"
+    container_name: "signal-blue"
     build:
       context: .
       dockerfile: Dockerfile.signal
+    environment:
+      - PORT=3001
     expose:
       - "3001"
 
+  coturn-server:
+    image: "coturn/coturn"
+    container_name: "coturn-server"
+    environment:
+      - TURN_SERVER_NAME=${TURN_SERVER_NAME}
+      - TURN_SERVER_USER=${TURN_SERVER_USER}
+      - TURN_SERVER_PASSWORD=${TURN_SERVER_PASSWORD}
+    expose:
+      - "3478"
+
   nginx:
+    container_name: "nginx-reverse-proxy"
     build:
       context: .
       dockerfile: Dockerfile.nginx
@@ -37,6 +56,7 @@ services:
     depends_on:
       - was-blue
       - signal-blue
+      - coturn-server
       - certbot
     volumes:
       - /var/log/nginx:/var/log/nginx

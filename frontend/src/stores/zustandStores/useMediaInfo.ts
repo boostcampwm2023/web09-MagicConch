@@ -25,7 +25,7 @@ interface MediaInfoActions {
 
 const initialState: MediaInfoState = {
   myMicOn: false,
-  myVideoOn: true,
+  myVideoOn: false,
   remoteMicOn: false,
   remoteVideoOn: false,
   selectedCameraID: '',

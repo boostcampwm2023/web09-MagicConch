@@ -23,11 +23,11 @@ interface ProfileSettingProps {
 }
 
 export default function ProfileSetting({
-  toggleVideo,
-  toggleAudio,
   camList,
   micList,
   videoRef,
+  toggleVideo,
+  toggleAudio,
   changeMyCamera,
   changeMyAudio,
   onConfirm,
