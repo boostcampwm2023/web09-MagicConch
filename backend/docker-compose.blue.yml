@@ -34,6 +34,15 @@ services:
     expose:
       - "3001"
 
+  coturn-server:
+    image: coturn/coturn
+    container_name: "coturn-server"
+    ports:
+      - "3478:3478"
+      - "3478:3478/udp"
+      - "5349:5349"
+      - "5349:5349/udp"
+
   nginx:
     container_name: "nginx-proxy"
     build:
@@ -45,6 +54,7 @@ services:
     depends_on:
       - was-blue
       - signal-blue
+      - coturn-server
       - certbot
     volumes:
       - /var/log/nginx:/var/log/nginx
