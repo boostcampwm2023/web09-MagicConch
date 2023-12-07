@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
-import { ERROR_MESSAGE } from '@constants/ERROR_MESSAGE';
+import { ERROR_MESSAGE } from '@constants/messages';
 
 export function useHumanChatPageWrongURL() {
   const navigate = useNavigate();

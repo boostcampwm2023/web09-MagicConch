@@ -3,7 +3,7 @@ import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 
 import { HumanSocketManager } from '@business/services/SocketManager';
 
-import { ERROR_MESSAGE } from '@constants/ERROR_MESSAGE';
+import { ERROR_MESSAGE } from '@constants/messages';
 
 import { OutletContext } from './HumanChatPage';
 
