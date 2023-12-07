@@ -9,4 +9,6 @@ interface ImportMetaEnv {
   readonly VITE_BASE_URL: string;
   readonly VITE_HUMAN_SOCKET_URL: string;
   readonly VITE_BASE_URL_DEV: string;
+  readonly VITE_ICE_SERVER_CREDENTIAL: string;
+  readonly VITE_ICER_SERVER_USERNAME: string;
 }
