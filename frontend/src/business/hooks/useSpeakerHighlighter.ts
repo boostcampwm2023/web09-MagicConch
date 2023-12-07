@@ -6,7 +6,7 @@ const FFT_SIZE = 32;
 const INTERVAL_TIME = 100;
 const SHADOW_COLOR = '#0052F0';
 const MAX_SHADOW_LENGTH = 70;
-const THERESHSHOLD = 60;
+const THRESHOLD = 60;
 const MAX_VOLUME = 255;
 
 export default function useSpeakerHighlighter(videoRef: React.RefObject<HTMLVideoElement>) {
@@ -70,6 +70,6 @@ function animateHighLight(videoElement: HTMLVideoElement, startVolume: number, e
 }
 
 function getShadowLength(volume: number) {
-  const thresholdedVolume = Math.max(volume - THERESHSHOLD, 0);
-  return (thresholdedVolume / (MAX_VOLUME - THERESHSHOLD)) * MAX_SHADOW_LENGTH;
+  const thresholdedVolume = Math.max(volume - THRESHOLD, 0);
+  return (thresholdedVolume / (MAX_VOLUME - THRESHOLD)) * MAX_SHADOW_LENGTH;
 }
