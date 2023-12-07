@@ -28,7 +28,7 @@ jobs:
           echo "TURN_SERVER_NAME=${{ secrets.TURN_SERVER_NAME }}" >> .env
           echo "TURN_SERVER_USER=${{ secrets.TURN_SERVER_USER }}" >> .env
           echo "TURN_SERVER_PASSWORD=${{ secrets.TURN_SERVER_PASSWORD }}" >> .env
-          mkdir -p config/nginx/ssl/
+          mkdir -p config/ssl/
           echo "${{ secrets.SSL_OPTIONS }}" > config/ssl/options-ssl-nginx.conf
           echo "${{ secrets.SSL_FULLCHAIN }}" > config/ssl/fullchain.pem
           echo "${{ secrets.SSL_PRIVKEY }}" > config/ssl/privkey.pem
