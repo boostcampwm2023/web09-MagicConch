@@ -7,6 +7,9 @@ on:
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   GITHUB_SHA: ${{ github.sha }}
+  TURN_SERVER_NAME: ${{ secrets.TURN_SERVER_NAME }}
+  TURN_SERVER_USER: ${{ secrets.TURN_SERVER_USER }}
+  TURN_SERVER_PASSWORD: ${{ secrets.TURN_SERVER_PASSWORD }}
 
 jobs:
   build:
@@ -22,6 +25,9 @@ jobs:
           echo "${{ secrets.ENV_FILE }}" > .env
           echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
           echo "GITHUB_SHA=${{ github.sha }}" >> .env
+          echo "TURN_SERVER_NAME=${{ secrets.TURN_SERVER_NAME }}" >> .env
+          echo "TURN_SERVER_USER=${{ secrets.TURN_SERVER_USER }}" >> .env
+          echo "TURN_SERVER_PASSWORD=${{ secrets.TURN_SERVER_PASSWORD }}" >> .env
           mkdir -p config/nginx/ssl/
           echo "${{ secrets.SSL_OPTIONS }}" > config/nginx/ssl/options-ssl-nginx.conf
           echo "${{ secrets.SSL_FULLCHAIN }}" > config/nginx/ssl/fullchain.pem
