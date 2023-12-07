@@ -45,7 +45,6 @@ services:
       - "3478"
 
   nginx:
-    image: "nginx-reverse-proxy"
     container_name: "nginx-reverse-proxy"
     build:
       context: .
