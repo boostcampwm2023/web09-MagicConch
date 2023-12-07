@@ -25,7 +25,7 @@ export function useRTCPeerConnection({ remoteVideoRef }: useRTCPeerConnectionPar
 
   const makeRTCPeerConnection = async ({ roomName }: { roomName: string }) => {
     peerConnectionRef.current = new RTCPeerConnection({
-      iceServers: import.meta.env.MODE === 'development' ? devIceServerConfig : prodIceServerConfig,
+      iceServers: import.meta.env.MODE === 'development' ? devIceServerConfig : devIceServerConfig,
     });
 
     peerConnectionRef.current.addEventListener('track', e => {
