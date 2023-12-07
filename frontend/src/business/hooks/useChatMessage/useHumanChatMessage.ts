@@ -1,4 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+import { MessageButton } from '@components/ChatContainer';
+
+import { ProfileInfo, useProfileInfo } from '@stores/zustandStores/useProfileInfo';
+
+import { arrayBuffer2Blob } from '@utils/array';
 
 import { HumanChatEvents } from '@constants/events';
 
@@ -7,8 +13,36 @@ import useChatMessage from './useChatMessage';
 const { PICK_CARD, CHAT_MESSAGE } = HumanChatEvents;
 
 export function useHumanChatMessage(chatChannel: React.MutableRefObject<RTCDataChannel | undefined>) {
-  const { messages, addMessage } = useChatMessage();
+  const { messages, pushMessage } = useChatMessage();
   const [inputDisabled, setInputDisabled] = useState(true);
+
+  const myProfileRef = useRef<ProfileInfo>();
+  const remoteProfileRef = useRef<ProfileInfo>();
+
+  const { myProfile, remoteProfile } = useProfileInfo(state => ({
+    myProfile: state.myProfile,
+    remoteProfile: state.remoteProfile,
+  }));
+
+  myProfileRef.current = myProfile;
+  remoteProfileRef.current = remoteProfile;
+
+  const addMessage = (
+    type: 'left' | 'right',
+    options: { message?: string; tarotId?: number; button?: MessageButton },
+  ) => {
+    const profile = type === 'left' ? remoteProfileRef.current : myProfileRef.current;
+
+    if (profile === undefined || profile.type === undefined) {
+      const profileUrl = type === 'left' ? '/sponge.png' : '/ddung.png';
+      pushMessage(type, profileUrl, { ...options });
+      return;
+    }
+    const { arrayBuffer, type: profileType } = profile;
+    const blob = arrayBuffer2Blob(arrayBuffer, profileType);
+    const profileUrl = URL.createObjectURL(blob);
+    pushMessage(type, profileUrl, { ...options });
+  };
 
   const onSubmitMessage = (message: string) => {
     addMessage('right', { message });
@@ -31,7 +65,7 @@ export function useHumanChatMessage(chatChannel: React.MutableRefObject<RTCDataC
         const message = JSON.parse(event.data);
 
         if (message.type === CHAT_MESSAGE) {
-          addMessage('left', message.content);
+          addMessage('left', { message: message.content });
         }
         if (message.type === PICK_CARD) {
           addMessage('right', { tarotId: message.content });

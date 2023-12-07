@@ -139,6 +139,8 @@ export class EventsGateway
     const onStreaming = (token: string) => client.emit('streaming', token);
     const sentMessage = await readTokenStream(stream, onStreaming);
 
+    client.chatLog.push({ role: 'assistant', content: sentMessage });
+
     this.logger.debug(`🚀 Send a message to ${client.id}`);
     client.emit('streamEnd');
 

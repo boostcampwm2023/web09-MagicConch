@@ -15,6 +15,7 @@ services:
       - SECRET_KEY=${SECRET_KEY}
       - X_NCP_CLOVASTUDIO_API_KEY=${X_NCP_CLOVASTUDIO_API_KEY}
       - X_NCP_APIGW_API_KEY=${X_NCP_APIGW_API_KEY}
+      - PORT=3002
     expose:
       - "3002"
     volumes:
@@ -24,6 +25,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.signal
+    environment:
+      - PORT=3003
     expose:
       - "3003"
 

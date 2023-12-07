@@ -32,4 +32,10 @@ export class ChattingRoom {
 
   @ManyToOne(() => Member, (member) => member.chattingRooms)
   participant: Member;
+
+  static fromMember(member: Member): ChattingRoom {
+    const room = new ChattingRoom();
+    room.participant = member;
+    return room;
+  }
 }

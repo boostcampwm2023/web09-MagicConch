@@ -3,13 +3,12 @@ import { useRef } from 'react';
 import Popup from './Popup';
 
 interface PasswordPopupProps {
-  close: () => void;
   onCancel?: () => void;
   defaultValue?: string;
   onSubmit: (password: string) => void;
 }
 
-export default function PasswordPopup({ close, onCancel, defaultValue, onSubmit }: PasswordPopupProps) {
+export default function PasswordPopup({ onCancel, defaultValue, onSubmit }: PasswordPopupProps) {
   const passwordInput = useRef<HTMLInputElement>(null);
 
   const passwordSubmit = () => {
@@ -26,7 +25,6 @@ export default function PasswordPopup({ close, onCancel, defaultValue, onSubmit 
 
   return (
     <Popup
-      close={close}
       onCancel={onCancel}
       onConfirm={passwordSubmit}
     >

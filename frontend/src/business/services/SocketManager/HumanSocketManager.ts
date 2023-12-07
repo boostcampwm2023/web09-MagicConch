@@ -3,7 +3,12 @@ import { HumanClientEvent, HumanServerEvent } from '@tarotmilktea/human-socketio
 import SocketManager from './SocketManager';
 
 class HumanSocketManager extends SocketManager {
+  static instance: HumanSocketManager | null = null;
+
   constructor() {
+    if (HumanSocketManager.instance) {
+      return HumanSocketManager.instance;
+    }
     super(import.meta.env.VITE_HUMAN_SOCKET_URL, '/signal');
   }
 

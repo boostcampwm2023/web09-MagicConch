@@ -10,8 +10,6 @@ import { TarotCard } from './entities/tarot-card.entity';
 import { TarotResult } from './entities/tarot-result.entity';
 import { TarotService } from './tarot.service';
 
-const bucketUrl = 'https://kr.object.ncloudstorage.com/magicconch';
-
 describe('TarotService', () => {
   let service: TarotService;
   let tarotCardRepository: Repository<TarotCard>;
@@ -25,6 +23,8 @@ describe('TarotService', () => {
   const cardUrlMock =
     'https://kr.object.ncloudstorage.com/magicconch/basic/0.jpg';
 
+  const tarotResultMessageMock = 'tarot result message';
+
   const tarotCardMock = new TarotCard();
   tarotCardMock.cardNo = 0;
   tarotCardMock.ext = '.jpg';
@@ -32,7 +32,7 @@ describe('TarotService', () => {
   const tarotResultMock = new TarotResult();
   tarotResultMock.id = tarotResultId;
   tarotResultMock.cardUrl = cardUrlMock;
-  tarotResultMock.message = 'tarot result message';
+  tarotResultMock.message = tarotResultMessageMock;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -64,9 +64,11 @@ describe('TarotService', () => {
 
   describe('createTarotResult', () => {
     it('should create a tarot result', async () => {
-      const createTarotResultDto = new CreateTarotResultDto();
-      createTarotResultDto.cardUrl = cardUrlMock;
-      createTarotResultDto.message = 'tarot result message';
+      const createTarotResultDto: CreateTarotResultDto =
+        CreateTarotResultDto.fromResult(
+          tarotCardMock.cardNo,
+          tarotResultMessageMock,
+        );
 
       const saveMock = jest
         .spyOn(tarotResultRepository, 'save')
@@ -85,8 +87,8 @@ describe('TarotService', () => {
 
   describe('findTarotCardById', () => {
     it('should find specific tarot card', async () => {
-      const tarotCardResponseDto = new TarotCardResponseDto();
-      tarotCardResponseDto.cardUrl = `${bucketUrl}/basic/${tarotCardMock.cardNo}${tarotCardMock.ext}`;
+      const tarotCardResponseDto: TarotCardResponseDto =
+        TarotCardResponseDto.fromEntity(tarotCardMock);
 
       const findOneByMock = jest
         .spyOn(tarotCardRepository, 'findOneBy')
@@ -122,9 +124,8 @@ describe('TarotService', () => {
 
   describe('findTarotResultById', () => {
     it('should find specific tarot result', async () => {
-      const tarotResultResponseDto = new TarotResultResponseDto();
-      tarotResultResponseDto.cardUrl = tarotResultMock.cardUrl;
-      tarotResultResponseDto.message = tarotResultMock.message;
+      const tarotResultResponseDto =
+        TarotResultResponseDto.fromEntity(tarotResultMock);
 
       const findOneByMock = jest
         .spyOn(tarotResultRepository, 'findOneBy')
