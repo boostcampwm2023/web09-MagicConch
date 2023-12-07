@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Location, useBlocker as reactRouterUserBlocker, useNavigate } from 'react-router-dom';
+import { Location, useBlocker as reactRouterUserBlocker } from 'react-router-dom';
 
 import { useExitPopup } from './usePopup/useExitPopup';
 
