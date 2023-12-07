@@ -25,7 +25,14 @@ export const debugTransports: transports.ConsoleTransportInstance =
     level: 'debug',
   });
 
-export const infoTransports: DailyRotateFile = createDailyRotateFile('info');
-export const warnTransports: DailyRotateFile = createDailyRotateFile('warn');
-export const errorTransports: DailyRotateFile = createDailyRotateFile('error');
-export const fatalTransports: DailyRotateFile = createDailyRotateFile('fatal');
+export const infoTransports: transports.FileTransportInstance =
+  new transports.File(createDailyRotateFile('info'));
+
+export const warnTransports: transports.FileTransportInstance =
+  new transports.File(createDailyRotateFile('warn'));
+
+export const errorTransports: transports.FileTransportInstance =
+  new transports.File(createDailyRotateFile('error'));
+
+export const fatalTransports: transports.FileTransportInstance =
+  new transports.File(createDailyRotateFile('fatal'));

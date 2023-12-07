@@ -22,10 +22,11 @@ export class LoggerService {
   }
 
   error(message: string, trace?: string) {
-    this.logger.log('error', message, { trace });
+    this.logger.error(`${message}${trace ? `\n${trace}` : ''}`);
   }
 
   fatal(message: string, trace?: string) {
-    this.logger.log('fatal', message, { trace });
+    this.error(message, trace);
+    this.logger.log('error', message, { trace });
   }
 }
