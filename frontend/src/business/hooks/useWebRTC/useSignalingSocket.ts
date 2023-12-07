@@ -91,13 +91,17 @@ export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels 
       onSubmit: ({ password, close }) => {
         socketManager.emit('joinRoom', roomName, password);
 
-        socketManager.on('joinRoomFailed', onFail);
-
-        socketManager.on('roomFull', onFull);
-
+        if (onFail) {
+          socketManager.on('joinRoomFailed', onFail);
+        }
+        if (onFull) {
+          socketManager.on('roomFull', onFull);
+        }
         socketManager.on('joinRoomSuccess', () => onSuccess?.({ close }));
 
-        socketManager.on('hostExit', onHostExit);
+        if (onHostExit) {
+          socketManager.on('hostExit', onHostExit);
+        }
       },
     });
   };
@@ -113,9 +117,12 @@ export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels 
   }) => {
     socketManager.emit('checkRoomExist', roomName);
 
-    socketManager.on('roomNotExist', onRoomNotExist);
-
-    socketManager.on('roomExist', onExistRoom);
+    if (onRoomNotExist) {
+      socketManager.on('roomNotExist', onRoomNotExist);
+    }
+    if (onExistRoom) {
+      socketManager.on('roomExist', onExistRoom);
+    }
   };
 
   return {
