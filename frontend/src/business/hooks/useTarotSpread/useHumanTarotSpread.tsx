@@ -30,7 +30,17 @@ export function useHumanTarotSpread(
   const { open } = useOverlay();
 
   const tarotButtonClick = () => {
-    open(() => <Popup onConfirm={requestTarotSpread}>{POPUP_MESSAGE.SPREAD_TAROT_CARD}</Popup>);
+    open(({ close }) => (
+      <Popup
+        onCancel={() => close()}
+        onConfirm={() => {
+          close();
+          requestTarotSpread();
+        }}
+      >
+        {POPUP_MESSAGE.SPREAD_TAROT_CARD}
+      </Popup>
+    ));
   };
 
   const requestTarotSpread = () => {
@@ -42,10 +52,12 @@ export function useHumanTarotSpread(
   useEffect(() => {
     if (chatChannel.current) {
       chatChannel.current.addEventListener('open', () => {
+        console.log('datachannel open');
         setTarotButtonDisabled(false);
       });
 
       chatChannel.current.addEventListener('close', () => {
+        console.log('datachannel close');
         setTarotButtonDisabled(true);
       });
 
