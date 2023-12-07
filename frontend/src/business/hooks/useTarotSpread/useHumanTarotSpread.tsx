@@ -5,6 +5,7 @@ import Popup from '@components/Popup';
 import useOverlay from '@business/hooks/useOverlay';
 
 import { HumanChatEvents } from '@constants/events';
+import { POPUP_MESSAGE } from '@constants/messages';
 
 import useDisplayTarotCard from './useDisplayTarotCard';
 import { useTarotSpread } from './useTarotSpread';
@@ -29,7 +30,7 @@ export function useHumanTarotSpread(
   const { open } = useOverlay();
 
   const tarotButtonClick = () => {
-    open(() => <Popup onConfirm={requestTarotSpread}>상담자에게 타로 카드가 펼쳐집니다.</Popup>);
+    open(() => <Popup onConfirm={requestTarotSpread}>{POPUP_MESSAGE.SPREAD_TAROT_CARD}</Popup>);
   };
 
   const requestTarotSpread = () => {
