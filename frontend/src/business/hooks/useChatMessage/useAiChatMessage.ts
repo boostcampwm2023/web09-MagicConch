@@ -44,6 +44,8 @@ export function useAiChatMessage() {
     const button = { content: '피드백하기', onClick: displayTold };
 
     socketManager.on('chatEnd', (id: string) => {
+      setInputDisabled(true);
+
       const shareLinkId: string = id;
       updateMessage(message => ({ ...message, shareLinkId }));
       setTimeout(() => addMessage('left', { message: requestFeedbackMessage, button }), 5000);
