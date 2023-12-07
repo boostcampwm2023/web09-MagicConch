@@ -35,16 +35,18 @@ services:
       - "3003"
 
   coturn-server:
-    image: coturn/coturn
+    image: "coturn/coturn"
     container_name: "coturn-server"
-    ports:
-      - "3478:3478"
-      - "3478:3478/udp"
-      - "5349:5349"
-      - "5349:5349/udp"
+    environment:
+      - TURN_SERVER_NAME=${TURN_SERVER_NAME}
+      - TURN_SERVER_USER=${TURN_SERVER_USER}
+      - TURN_SERVER_PASSWORD=${TURN_SERVER_PASSWORD}
+    expose:
+      - "3478"
 
   nginx:
-    container_name: "nginx-proxy"
+    image: "nginx-reverse-proxy"
+    container_name: "nginx-reverse-proxy"
     build:
       context: .
       dockerfile: Dockerfile.nginx
