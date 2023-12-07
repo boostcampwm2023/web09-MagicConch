@@ -1,2 +1,2 @@
-export type AIServerEvent = "TAROT_CARD" | "CHAT_END" | "STREAM_START" | "STREAM" | "STREAM_END";
-export type AIClientEvent = "MESSAGE" | "TAROT_READ";
+export type AIServerEvent = "tarotCard" | "chatEnd" | "streamStart" | "stream" | "streamEnd";
+export type AIClientEvent = "message" | "tarotRead";

@@ -12,11 +12,11 @@ dependencies:
     specifier: ^5.12.2
     version: 5.12.2(@tanstack/react-query@5.12.2)(react@18.2.0)
   '@tarotmilktea/ai-socketio-event':
-    specifier: ^1.0.2
-    version: 1.0.2
+    specifier: ^2.0.1
+    version: 2.0.1
   '@tarotmilktea/human-socketio-event':
-    specifier: ^1.0.0
-    version: 1.0.0
+    specifier: ^2.0.1
+    version: 2.0.1
   axios:
     specifier: ^1.6.2
     version: 1.6.2
@@ -3734,12 +3734,12 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@tarotmilktea/ai-socketio-event@1.0.2:
-    resolution: {integrity: sha512-E6oTN1oxzgiQQRraYAJtWa0pUznN210VBOAfeHo/S0FuRW5Xe3NM/48jnZb3Uc1zKYw9+sYJK8KBb/r+Wu1sfw==}
+  /@tarotmilktea/ai-socketio-event@2.0.1:
+    resolution: {integrity: sha512-pntwONlHKX1KpYxLuZKfabOYIFv34DNpBwqO4bLFhkFwkHlK/WuluZE4oa3AmOahQMDjsKT4uA3tmLKYQaDQ0g==}
     dev: false
 
-  /@tarotmilktea/human-socketio-event@1.0.0:
-    resolution: {integrity: sha512-vTk9X+1jlUHpHgAdw8L1+MG85vStebbpoUUA3BfI3i29wvjDVckYnVBPfudvkRbp5w0gGZFPNjVpEJrma3CJLw==}
+  /@tarotmilktea/human-socketio-event@2.0.1:
+    resolution: {integrity: sha512-V8cIxWr8dL0Yo/5DrLNoiqN0e6EQV+D02Dc148/UAK2PglSybI8P3yKx+rWyry3uPMMecybB9nUIkXe5aWMM1w==}
     dev: false
 
   /@testing-library/dom@9.3.3:
