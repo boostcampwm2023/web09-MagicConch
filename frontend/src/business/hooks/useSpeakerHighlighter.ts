@@ -6,6 +6,8 @@ const FFT_SIZE = 32;
 const INTERVAL_TIME = 100;
 const SHADOW_COLOR = '#0052F0';
 const MAX_SHADOW_LENGTH = 70;
+const THERESHSHOLD = 60;
+const MAX_VOLUME = 255;
 
 export default function useSpeakerHighlighter(videoRef: React.RefObject<HTMLVideoElement>) {
   const interval = useRef<NodeJS.Timeout>();
@@ -45,7 +47,6 @@ export default function useSpeakerHighlighter(videoRef: React.RefObject<HTMLVide
       interval.current = setInterval(() => {
         analyser.getByteFrequencyData(dataArray);
         const curVolume = calculateAverage(dataArray);
-
         animateHighLight(videoElement, prevVolume, curVolume);
 
         prevVolume = curVolume;
@@ -56,14 +57,19 @@ export default function useSpeakerHighlighter(videoRef: React.RefObject<HTMLVide
   }, [videoRef.current]);
 }
 
-function animateHighLight(videoElement: HTMLVideoElement, startLength: number, endLength: number) {
+function animateHighLight(videoElement: HTMLVideoElement, startVolume: number, endVolume: number) {
   const frames = [
-    { filter: `drop-shadow(0px 0px ${Math.min(startLength, MAX_SHADOW_LENGTH)}px ${SHADOW_COLOR}` },
-    { filter: `drop-shadow(0px 0px ${Math.min(endLength, MAX_SHADOW_LENGTH)}px ${SHADOW_COLOR}` },
+    { filter: `drop-shadow(0px 0px ${getShadowLength(startVolume)}px ${SHADOW_COLOR}` },
+    { filter: `drop-shadow(0px 0px ${getShadowLength(endVolume)}px ${SHADOW_COLOR}` },
   ];
   const options: KeyframeAnimationOptions = {
     duration: INTERVAL_TIME,
     fill: 'forwards',
   };
   videoElement.animate(frames, options);
+}
+
+function getShadowLength(volume: number) {
+  const thresholdedVolume = Math.max(volume - THERESHSHOLD, 0);
+  return (thresholdedVolume / (MAX_VOLUME - THERESHSHOLD)) * MAX_SHADOW_LENGTH;
 }
