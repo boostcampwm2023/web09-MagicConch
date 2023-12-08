@@ -31,9 +31,13 @@
            백로그 (GitHub Projects)
         </a>
     </li> 
+    <li>
+        <a href="https://github.com/boostcampwm2023/web09-MagicConch/wiki">
+           위키
+        </a>
+    </li> 
   </div>
 </div>
-
 <br>
 
 ## 시스템 아키텍처
