@@ -7,10 +7,10 @@ import { useRTCPeerConnection } from './useRTCPeerConnection';
 import { useSignalingSocket } from './useSignalingSocket';
 
 export default function useWebRTC() {
-  const { localVideoRef, remoteVideoRef, localStreamRef, remoteStreamRef, getMedia } = useMedia();
+  const { localVideoRef, remoteVideoRef, getMedia } = useMedia();
 
   const { peerConnectionRef, makeRTCPeerConnection, closeRTCPeerConnection, isConnectedPeerConnection } =
-    useRTCPeerConnection({ remoteVideoRef, remoteStreamRef });
+    useRTCPeerConnection({ remoteVideoRef });
 
   const { mediaInfoChannel, chatChannel, initDataChannels, closeDataChannels, profileChannel, nicknameChannel } =
     useDataChannel({
@@ -18,7 +18,6 @@ export default function useWebRTC() {
     });
 
   const { addTracks, changeMyAudioTrack, changeMyVideoTrack, toggleAudio, toggleVideo } = useControllMedia({
-    localStreamRef,
     peerConnectionRef,
     localVideoRef,
     mediaInfoChannel,

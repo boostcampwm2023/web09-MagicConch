@@ -4,17 +4,20 @@ import { HumanSocketManager } from '@business/services/SocketManager';
 
 import { iceServers } from '@constants/urls';
 
+import WebRTC from './WebRTC';
+
 interface useRTCPeerConnectionParams {
   remoteVideoRef: React.RefObject<HTMLVideoElement>;
-  remoteStreamRef: React.MutableRefObject<MediaStream | undefined>;
 }
 
-export function useRTCPeerConnection({ remoteVideoRef, remoteStreamRef }: useRTCPeerConnectionParams) {
+export function useRTCPeerConnection({ remoteVideoRef }: useRTCPeerConnectionParams) {
   const peerConnectionRef = useRef<RTCPeerConnection>();
 
   const socketManager = new HumanSocketManager();
 
   const devIceServerConfig = [{ urls: iceServers }];
+
+  const webRTC = WebRTC.getInstace();
 
   const makeRTCPeerConnection = async ({ roomName }: { roomName: string }) => {
     peerConnectionRef.current = new RTCPeerConnection({
@@ -22,7 +25,7 @@ export function useRTCPeerConnection({ remoteVideoRef, remoteStreamRef }: useRTC
     });
 
     peerConnectionRef.current.addEventListener('track', e => {
-      remoteStreamRef.current = e.streams[0];
+      webRTC.setRemoteStream(e.streams[0]);
       if (!remoteVideoRef.current) {
         return;
       }
@@ -48,11 +51,11 @@ export function useRTCPeerConnection({ remoteVideoRef, remoteStreamRef }: useRTC
   };
 
   useEffect(() => {
-    if (!remoteVideoRef.current || !remoteStreamRef.current) {
+    if (!remoteVideoRef.current || !webRTC.remoteStream) {
       return;
     }
 
-    remoteVideoRef.current.srcObject = remoteStreamRef.current;
+    remoteVideoRef.current.srcObject = webRTC.remoteStream;
   }, [remoteVideoRef.current]);
 
   return { makeRTCPeerConnection, closeRTCPeerConnection, peerConnectionRef, isConnectedPeerConnection };

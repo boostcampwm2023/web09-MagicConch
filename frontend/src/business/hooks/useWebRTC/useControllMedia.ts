@@ -2,8 +2,9 @@ import { useEffect } from 'react';
 
 import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
 
+import WebRTC from './WebRTC';
+
 interface useContorollMediaParams {
-  localStreamRef: React.MutableRefObject<MediaStream | undefined>;
   peerConnectionRef: React.MutableRefObject<RTCPeerConnection | undefined>;
   localVideoRef: React.RefObject<HTMLVideoElement | undefined>;
   mediaInfoChannel: React.MutableRefObject<RTCDataChannel | undefined>;
@@ -12,7 +13,6 @@ interface useContorollMediaParams {
 
 export function useControllMedia({
   localVideoRef,
-  localStreamRef,
   peerConnectionRef,
   mediaInfoChannel,
   getMedia,
@@ -27,23 +27,25 @@ export function useControllMedia({
       selectedCameraID: state.selectedCameraID,
     }));
 
+  const webRTC = WebRTC.getInstace();
+
   const addTracks = () => {
-    if (localStreamRef.current === undefined) {
+    if (webRTC.localStream === undefined) {
       return;
     }
-    localStreamRef.current.getTracks().forEach(track => {
-      peerConnectionRef.current?.addTrack(track, localStreamRef.current!);
+    webRTC.localStream.getTracks().forEach(track => {
+      peerConnectionRef.current?.addTrack(track, webRTC.localStream!);
     });
   };
 
   const changeVideoTrack = () => {
-    const nowTrack = localStreamRef.current?.getVideoTracks()[0];
+    const nowTrack = webRTC.localStream?.getVideoTracks()[0];
     const sender = peerConnectionRef.current?.getSenders().find(sender => sender.track?.kind === 'video');
     sender?.replaceTrack(nowTrack!);
   };
 
   const changeAudioTrack = () => {
-    const nowTrack = localStreamRef.current?.getAudioTracks()[0];
+    const nowTrack = webRTC.localStream?.getAudioTracks()[0];
     const sender = peerConnectionRef.current?.getSenders().find(sender => sender.track?.kind === 'audio');
     sender?.replaceTrack(nowTrack!);
   };

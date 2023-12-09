@@ -4,6 +4,8 @@ import { getUserMediaStream } from '@business/services/Media';
 
 import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
 
+import WebRTC from './WebRTC';
+
 export function useMedia() {
   const { myMicOn, myVideoOn, selectedAudioID, selectedCameraID } = useMediaInfo(state => ({
     selectedAudioID: state.selectedAudioID,
@@ -12,16 +14,15 @@ export function useMedia() {
     myVideoOn: state.myVideoOn,
   }));
 
-  const localStreamRef = useRef<MediaStream>();
-  const remoteStreamRef = useRef<MediaStream>();
+  const webRTC = WebRTC.getInstace();
 
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
 
-  const setLocalVideo = (stream: MediaStream) => {
+  const setLocalVideoWithLocalStream = (stream: MediaStream) => {
     if (localVideoRef.current) {
       localVideoRef.current.srcObject = stream;
-      localStreamRef.current = stream;
+      webRTC.setLocalStream(stream);
     }
   };
 
@@ -50,14 +51,12 @@ export function useMedia() {
       stream.getAudioTracks().forEach(track => (track.enabled = false));
     }
 
-    setLocalVideo(stream);
+    setLocalVideoWithLocalStream(stream);
   };
 
   return {
     localVideoRef,
     remoteVideoRef,
-    localStreamRef,
-    remoteStreamRef,
     getMedia,
   };
 }
