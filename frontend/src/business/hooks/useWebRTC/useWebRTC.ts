@@ -7,17 +7,7 @@ import { useRTCPeerConnection } from './useRTCPeerConnection';
 import { useSignalingSocket } from './useSignalingSocket';
 
 export default function useWebRTC() {
-  const {
-    localVideoRef,
-    remoteVideoRef,
-    localStreamRef,
-    remoteStreamRef,
-    cameraOptions,
-    audioOptions,
-    getMedia,
-    getAudiosOptions,
-    getCamerasOptions,
-  } = useMedia();
+  const { localVideoRef, remoteVideoRef, localStreamRef, remoteStreamRef, getMedia } = useMedia();
 
   const { peerConnectionRef, makeRTCPeerConnection, closeRTCPeerConnection, isConnectedPeerConnection } =
     useRTCPeerConnection({ remoteVideoRef, remoteStreamRef });
@@ -73,8 +63,8 @@ export default function useWebRTC() {
   }, []);
 
   return {
-    cameraOptions,
-    audioOptions,
+    // cameraOptions,
+    // audioOptions,
     localVideoRef,
     remoteVideoRef,
     mediaInfoChannel,
@@ -86,8 +76,8 @@ export default function useWebRTC() {
     addTracks,
     changeMyAudioTrack,
     changeMyVideoTrack,
-    getAudiosOptions,
-    getCamerasOptions,
+    // getAudiosOptions,
+    // getCamerasOptions,
     getMedia,
     startWebRTC,
     endWebRTC,

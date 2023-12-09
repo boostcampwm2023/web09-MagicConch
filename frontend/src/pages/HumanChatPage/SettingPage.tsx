@@ -6,6 +6,7 @@ import ProfileSetting from '@components/ProfileSetting';
 import { HumanSocketManager } from '@business/services/SocketManager';
 
 import type { OutletContext } from './HumanChatPage';
+import { useSettingPageMediaOptinos } from './useSettingPageMediaOptions';
 import { useSettingPageProfileNicknameSetting } from './useSettingPageProfileNicknameSetting';
 
 export default function ChattingPage() {
@@ -15,8 +16,6 @@ export default function ChattingPage() {
 
   const {
     localVideoRef,
-    cameraOptions,
-    audioOptions,
     toggleVideo,
     toggleAudio,
     changeMyVideoTrack,
@@ -30,14 +29,14 @@ export default function ChattingPage() {
     if (!socketManager.connected) {
       navigate('..');
     }
+
     changeMyVideoTrack();
   }, []);
 
-  const camList = cameraOptions.map(({ deviceId, label }) => ({ label, value: deviceId }));
-  const micList = audioOptions.map(({ deviceId, label }) => ({ label, value: deviceId }));
-
   const { setLocalNickname, setLocalProfileImage, sendProfileInfoWithNavigateBefore } =
     useSettingPageProfileNicknameSetting();
+
+  const { mediaOptions } = useSettingPageMediaOptinos();
 
   return (
     <ProfileSetting
@@ -45,8 +44,8 @@ export default function ChattingPage() {
       toggleAudio={toggleAudio}
       changeMyCamera={changeMyVideoTrack}
       changeMyAudio={changeMyAudioTrack}
-      camList={camList}
-      micList={micList}
+      camList={mediaOptions.video}
+      micList={mediaOptions.audio}
       videoRef={localVideoRef}
       onConfirm={() => {
         sendProfileInfoWithNavigateBefore();
