@@ -2,7 +2,7 @@ name: Blue/Green CD
 
 on:
   push:
-    branches: ["dev"]
+    branches: ["BE/bugfix/각종-버그"]
 
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
