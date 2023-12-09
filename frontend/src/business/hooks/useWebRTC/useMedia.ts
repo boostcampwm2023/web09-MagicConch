@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { RefObject } from 'react';
 
 import { getUserMediaStream } from '@business/services/Media';
 
@@ -16,14 +16,18 @@ export function useMedia() {
 
   const webRTC = WebRTC.getInstace();
 
-  const localVideoRef = useRef<HTMLVideoElement>(null);
-  const remoteVideoRef = useRef<HTMLVideoElement>(null);
-
-  const setLocalVideoWithLocalStream = (stream: MediaStream) => {
-    if (localVideoRef.current) {
-      localVideoRef.current.srcObject = stream;
-      webRTC.setLocalStream(stream);
+  const setLocalVideoWithLocalStream = ({
+    stream,
+    localVideoRef,
+  }: {
+    stream: MediaStream;
+    localVideoRef: RefObject<HTMLVideoElement>;
+  }) => {
+    if (!localVideoRef.current) {
+      return;
     }
+    localVideoRef.current.srcObject = stream;
+    webRTC.setLocalStream(stream);
   };
 
   const getMedia = async ({ audioID, cameraID }: { cameraID?: string; audioID?: string } = {}) => {
@@ -50,13 +54,10 @@ export function useMedia() {
     if (!myMicOn) {
       stream.getAudioTracks().forEach(track => (track.enabled = false));
     }
-
-    setLocalVideoWithLocalStream(stream);
   };
 
   return {
-    localVideoRef,
-    remoteVideoRef,
     getMedia,
+    setLocalVideoWithLocalStream,
   };
 }
