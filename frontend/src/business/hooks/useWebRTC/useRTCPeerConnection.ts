@@ -5,22 +5,15 @@ import { HumanSocketManager } from '@business/services/SocketManager';
 import { iceServers } from '@constants/urls';
 
 interface useRTCPeerConnectionParams {
-  remoteVideoRef: React.RefObject<HTMLVideoElement | undefined>;
+  remoteVideoRef: React.RefObject<HTMLVideoElement>;
+  remoteStreamRef: React.MutableRefObject<MediaStream | undefined>;
 }
 
-export function useRTCPeerConnection({ remoteVideoRef }: useRTCPeerConnectionParams) {
+export function useRTCPeerConnection({ remoteVideoRef, remoteStreamRef }: useRTCPeerConnectionParams) {
   const peerConnectionRef = useRef<RTCPeerConnection>();
-  const peerStreamRef = useRef<MediaStream | null>(null);
 
   const socketManager = new HumanSocketManager();
 
-  // const prodIceServerConfig = [
-  //   {
-  //     urls: `${import.meta.env.VITE_WAS_URL}/turn`,
-  //     credential: import.meta.env.VITE_ICE_SERVER_CREDENTIAL,
-  //     username: import.meta.env.VITE_ICER_SERVER_USERNAME,
-  //   },
-  // ];
   const devIceServerConfig = [{ urls: iceServers }];
 
   const makeRTCPeerConnection = async ({ roomName }: { roomName: string }) => {
@@ -29,7 +22,7 @@ export function useRTCPeerConnection({ remoteVideoRef }: useRTCPeerConnectionPar
     });
 
     peerConnectionRef.current.addEventListener('track', e => {
-      peerStreamRef.current = e.streams[0];
+      remoteStreamRef.current = e.streams[0];
       if (!remoteVideoRef.current) {
         return;
       }
@@ -55,11 +48,11 @@ export function useRTCPeerConnection({ remoteVideoRef }: useRTCPeerConnectionPar
   };
 
   useEffect(() => {
-    if (!remoteVideoRef.current) {
+    if (!remoteVideoRef.current || !remoteStreamRef.current) {
       return;
     }
 
-    remoteVideoRef.current.srcObject = peerStreamRef.current;
+    remoteVideoRef.current.srcObject = remoteStreamRef.current;
   }, [remoteVideoRef.current]);
 
   return { makeRTCPeerConnection, closeRTCPeerConnection, peerConnectionRef, isConnectedPeerConnection };

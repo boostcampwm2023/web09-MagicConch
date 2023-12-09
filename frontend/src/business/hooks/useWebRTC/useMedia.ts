@@ -14,6 +14,7 @@ export function useMedia() {
   const [audioOptions, setAudioOptions] = useState<MediaDeviceInfo[]>([]);
 
   const localStreamRef = useRef<MediaStream>();
+  const remoteStreamRef = useRef<MediaStream>();
 
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
@@ -30,6 +31,7 @@ export function useMedia() {
     setAudioOptions(audios);
   };
 
+  // TODO: 아래 함수도 읽기 쉽게 리팩토링 해야함, 현재는 무슨 뜻인지 나도 모르겠음
   const getMedia = async ({ audioID, cameraID }: { cameraID?: string; audioID?: string }) => {
     const _audioID = audioID || selectedAudioID;
     const _cameraID = cameraID || selectedCameraID;
@@ -77,6 +79,8 @@ export function useMedia() {
     localVideoRef,
     remoteVideoRef,
     localStreamRef,
+    remoteStreamRef,
+
     getMedia,
     getAudiosOptions,
     getCamerasOptions,

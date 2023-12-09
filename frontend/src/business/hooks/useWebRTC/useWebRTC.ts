@@ -11,6 +11,7 @@ export default function useWebRTC() {
     localVideoRef,
     remoteVideoRef,
     localStreamRef,
+    remoteStreamRef,
     cameraOptions,
     audioOptions,
     getMedia,
@@ -19,7 +20,7 @@ export default function useWebRTC() {
   } = useMedia();
 
   const { peerConnectionRef, makeRTCPeerConnection, closeRTCPeerConnection, isConnectedPeerConnection } =
-    useRTCPeerConnection({ remoteVideoRef });
+    useRTCPeerConnection({ remoteVideoRef, remoteStreamRef });
 
   const { mediaInfoChannel, chatChannel, initDataChannels, closeDataChannels, profileChannel, nicknameChannel } =
     useDataChannel({
