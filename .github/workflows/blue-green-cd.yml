@@ -2,7 +2,7 @@ name: Blue/Green CD
 
 on:
   push:
-    branches: ["BE/bugfix/#401-도커-캐시-이슈"]
+    branches: ["dev"]
 
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
