@@ -4,6 +4,9 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import * as Sentry from '@sentry/node';
+import { IncomingWebhook } from '@slack/client';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { LoggerService } from 'src/logger/logger.service';
@@ -12,7 +15,16 @@ import { ERR_MSG } from '../constants/errors';
 
 @Injectable()
 export class ErrorsInterceptor implements NestInterceptor {
-  constructor(private readonly logger: LoggerService) {}
+  private readonly slackWebhook: IncomingWebhook;
+
+  constructor(
+    private readonly logger: LoggerService,
+    private readonly configService: ConfigService,
+  ) {
+    this.slackWebhook = new IncomingWebhook(
+      this.configService.get('SLACK_WEBHOOK_FOR_BE') || '',
+    );
+  }
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const controllerName: string = context.getClass().name;
@@ -46,6 +58,8 @@ export class ErrorsInterceptor implements NestInterceptor {
     err: QueryFailedError,
     logMessage: string,
   ): Error {
+    this.sendSlackNotification(err);
+
     const isFatal: boolean = err.message.includes('ETIMEOUT');
     this.logQueryFailedError(logMessage, isFatal, err.stack);
 
@@ -77,5 +91,25 @@ export class ErrorsInterceptor implements NestInterceptor {
 
   private makeErrorLogMessage(logMessage: string, err: any): string {
     return `${logMessage} : ${err.message || ERR_MSG.UNKNOWN}`;
+  }
+
+  private sendSlackNotification(err: QueryFailedError) {
+    Sentry.captureException(err);
+    this.slackWebhook.send({
+      attachments: [
+        {
+          color: 'danger',
+          text: '📢 QueryFailedError 버그 발생',
+          fields: [
+            {
+              title: `Error Message: ${err.message}`,
+              value: err.stack || '',
+              short: false,
+            },
+          ],
+          ts: Math.floor(new Date().getTime() / 1000).toString(),
+        },
+      ],
+    });
   }
 }
