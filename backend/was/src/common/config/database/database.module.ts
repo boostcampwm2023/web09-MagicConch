@@ -25,7 +25,6 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
           },
           logging: ['query', 'error'],
           logger: 'file',
-          logFileName: 'typeorm.log',
         };
       },
     }),

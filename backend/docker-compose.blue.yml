@@ -23,7 +23,7 @@ services:
       - "3000"
     volumes:
       - /var/log/was:/app/was/logs
-      - /var/log/typeorm:/app/was/typeorm.log
+      - /var/log/typeorm:/app/was/ormLogs.log
 
   signal-blue:
     image: "${DOCKER_USERNAME}/magicconch:signal-blue-${GITHUB_SHA}"
