@@ -31,23 +31,15 @@ export default function ChattingPage() {
   }, [joined]);
 
   useEffect(() => {
-    if (
-      !remoteVideoRef.current ||
-      !webRTC.remoteStream ||
-      (remoteVideoRef.current.srcObject as MediaStream)?.id === webRTC.remoteStream?.id
-    ) {
+    const existRemoteVideo = remoteVideoRef.current;
+    const existRemoteStream = webRTC.remoteStream;
+    const remoteStreamChanged = (remoteVideoRef.current?.srcObject as MediaStream)?.id !== webRTC.remoteStream?.id;
+    if (!existRemoteVideo || !existRemoteStream || !remoteStreamChanged) {
       return;
     }
 
     remoteVideoRef.current.srcObject = webRTC.remoteStream as MediaStream;
   }, [remoteVideoRef.current]);
-
-  // useEffect(() => {
-  //   if (!remoteVideoRef.current || !webRTC.remoteStream) {
-  //     return;
-  //   }
-  //   remoteVideoRef.current.srcObject = webRTC.remoteStream as MediaStream;
-  // }, [webRTC.remoteStream?.id, remoteVideoRef.current]);
 
   useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack, enableSideBar });
 
