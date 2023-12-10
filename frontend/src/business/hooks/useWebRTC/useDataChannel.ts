@@ -1,14 +1,15 @@
+import WebRTC from '../../services/WebRTC';
+
 import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
 import { useProfileInfo } from '@stores/zustandStores/useProfileInfo';
 
 import { array2ArrayBuffer } from '@utils/array';
 
-import WebRTC from './WebRTC';
-
-export function useDataChannel() {
-  const { myMicOn, myVideoOn, setRemoteMicOn, setRemoteVideoOn } = useMediaInfo(state => ({
-    myMicOn: state.myMicOn,
-    myVideoOn: state.myVideoOn,
+interface useDataChannelParams {
+  localVideoRef: React.RefObject<HTMLVideoElement | undefined>;
+}
+export function useDataChannel({ localVideoRef }: useDataChannelParams) {
+  const { setRemoteMicOn, setRemoteVideoOn } = useMediaInfo(state => ({
     setRemoteMicOn: state.setRemoteMicOn,
     setRemoteVideoOn: state.setRemoteVideoOn,
   }));
@@ -19,10 +20,10 @@ export function useDataChannel() {
     myProfile: state.myProfile,
   }));
 
-  const { addDataChannel } = WebRTC.getInstace();
+  const webRTC = WebRTC.getInstace();
 
   const initMediaInfoChannel = () => {
-    const mediaInfoChannel = addDataChannel('mediaInfoChannel');
+    const mediaInfoChannel = webRTC.addDataChannel('mediaInfoChannel');
 
     mediaInfoChannel?.addEventListener('message', ({ data }) => {
       const mediaInfoArray = JSON.parse(data);
@@ -37,21 +38,24 @@ export function useDataChannel() {
     });
 
     mediaInfoChannel?.addEventListener('open', function () {
-      this.send(
+      const audioTrack = localVideoRef.current?.srcObject as MediaStream;
+      const videoTrack = localVideoRef.current?.srcObject as MediaStream;
+
+      mediaInfoChannel?.send(
         JSON.stringify([
-          { type: 'audio', onOrOff: myMicOn },
-          { type: 'video', onOrOff: myVideoOn },
+          { type: 'audio', onOrOff: audioTrack.getAudioTracks()[0].enabled },
+          { type: 'video', onOrOff: videoTrack.getVideoTracks()[0].enabled },
         ]),
       );
     });
   };
 
   const initChatChannel = () => {
-    addDataChannel('chatChannel');
+    webRTC.addDataChannel('chatChannel');
   };
 
   const initProfileChannel = () => {
-    const profileChannel = addDataChannel('profileChannel');
+    const profileChannel = webRTC.addDataChannel('profileChannel');
 
     profileChannel?.addEventListener('message', ({ data }) => {
       const receivedData = JSON.parse(data);
@@ -69,7 +73,7 @@ export function useDataChannel() {
   };
 
   const initNicknameChannel = () => {
-    const nicknameChannel = addDataChannel('nicknameChannel');
+    const nicknameChannel = webRTC.addDataChannel('nicknameChannel');
 
     nicknameChannel?.addEventListener('message', ({ data }) => {
       setRemoteNickname(data);

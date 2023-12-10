@@ -1,7 +1,7 @@
 import { ChangeEvent } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
-import WebRTC from '@business/hooks/useWebRTC/WebRTC';
+import WebRTC from '@business/services/WebRTC';
 
 import { useProfileInfo } from '@stores/zustandStores/useProfileInfo';
 

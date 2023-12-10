@@ -3,6 +3,7 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import ProfileSetting from '@components/ProfileSetting';
 
+import { useControllMedia } from '@business/hooks/useWebRTC/useControllMedia';
 import { HumanSocketManager } from '@business/services/SocketManager';
 
 import type { OutletContext } from './HumanChatPage';
@@ -14,15 +15,8 @@ export default function ChattingPage() {
 
   const navigate = useNavigate();
 
-  const {
-    localVideoRef,
-    toggleVideo,
-    toggleAudio,
-    changeMyVideoTrack,
-    changeMyAudioTrack,
-    enableSideBar,
-    disableSideBar,
-  }: OutletContext = useOutletContext();
+  const { localVideoRef, enableSideBar, disableSideBar }: OutletContext = useOutletContext();
+  const { changeMyAudioTrack, changeMyVideoTrack, toggleAudio, toggleVideo } = useControllMedia({ localVideoRef });
 
   useEffect(() => {
     disableSideBar();
@@ -33,8 +27,7 @@ export default function ChattingPage() {
     changeMyVideoTrack();
   }, []);
 
-  const { setLocalNickname, setLocalProfileImage, sendProfileInfoWithNavigateBefore } =
-    useSettingPageProfileNicknameSetting();
+  const { setLocalNickname, setLocalProfileImage, sendProfileInfo } = useSettingPageProfileNicknameSetting();
 
   const { mediaOptions } = useSettingPageMediaOptinos();
 
@@ -48,8 +41,9 @@ export default function ChattingPage() {
       micList={mediaOptions.audio}
       videoRef={localVideoRef}
       onConfirm={() => {
-        sendProfileInfoWithNavigateBefore();
+        sendProfileInfo();
         enableSideBar();
+        navigate('..');
       }}
       onChangeProfileImage={setLocalProfileImage}
       onChangeNickname={setLocalNickname}

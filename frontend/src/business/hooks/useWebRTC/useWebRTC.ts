@@ -1,79 +1,64 @@
-import { useEffect } from 'react';
+import WebRTC from '../../services/WebRTC';
+import { useEffect, useRef } from 'react';
 
-import WebRTC from './WebRTC';
-import { useControllMedia } from './useControllMedia';
+import { initSignalingSocket } from '@business/services/Socket';
+
 import { useDataChannel } from './useDataChannel';
 import { useMedia } from './useMedia';
-import { useRTCPeerConnection } from './useRTCPeerConnection';
-import { useSignalingSocket } from './useSignalingSocket';
 
 export default function useWebRTC() {
   const webRTC = WebRTC.getInstace();
 
-  const { localVideoRef, remoteVideoRef, getMedia } = useMedia();
+  const localVideoRef = useRef<HTMLVideoElement>(null);
+  const remoteVideoRef = useRef<HTMLVideoElement>(null);
 
-  const { makeRTCPeerConnection } = useRTCPeerConnection({ remoteVideoRef });
+  const { getLocalStream } = useMedia();
 
-  const { initDataChannels } = useDataChannel({});
-
-  const { addTracks, changeMyAudioTrack, changeMyVideoTrack, toggleAudio, toggleVideo } = useControllMedia({
-    localVideoRef,
-    getMedia,
-  });
-
-  const negotiationDataChannels = ({ roomName }: { roomName: string }) => {
-    webRTC.closeRTCPeerConnection();
-    closeDataChannels();
-    makeRTCPeerConnection({ roomName });
-    initDataChannels();
-    addTracks();
-  };
-
-  const { initSignalingSocket, createRoom, joinRoom, checkRoomExist } = useSignalingSocket({
-    negotiationDataChannels,
-  });
+  const { initDataChannels } = useDataChannel({ localVideoRef });
 
   const startWebRTC = async ({ roomName }: { roomName: string }) => {
     if (webRTC.isConnectedPeerConnection()) {
       return;
     }
-    await getMedia({});
-    initSignalingSocket({ roomName });
-    makeRTCPeerConnection({ roomName });
-    initDataChannels();
-    addTracks();
-  };
 
-  const endWebRTC = () => {
-    if (webRTC.isConnectedPeerConnection()) {
-      webRTC.closeRTCPeerConnection();
-      closeDataChannels();
-    }
+    const stream = await getLocalStream();
+    webRTC.setLocalStream(stream);
+    localVideoRef.current!.srcObject = stream;
+
+    initSignalingSocket({
+      roomName,
+      onExitUser: () => {
+        webRTC.closeRTCPeerConnection();
+        webRTC.closeDataChannels();
+        webRTC.connectRTCPeerConnection(roomName);
+        initDataChannels();
+        webRTC.addTracks();
+      },
+    });
+
+    webRTC.connectRTCPeerConnection(roomName);
+    initDataChannels();
+    webRTC.addTracks();
   };
 
   useEffect(() => {
     return () => {
-      endWebRTC();
+      webRTC.closeRTCPeerConnection();
+      webRTC.closeDataChannels();
     };
   }, []);
+
+  useEffect(() => {
+    if (!remoteVideoRef.current || !webRTC.remoteStream) {
+      return;
+    }
+    console.log('chanted track');
+    remoteVideoRef.current.srcObject = webRTC.remoteStream as MediaStream;
+  }, [webRTC.remoteStream?.id]);
 
   return {
     localVideoRef,
     remoteVideoRef,
-    mediaInfoChannel,
-    chatChannel,
-    profileChannel,
-    nicknameChannel,
-    toggleAudio,
-    toggleVideo,
-    addTracks,
-    changeMyAudioTrack,
-    changeMyVideoTrack,
-    getMedia,
     startWebRTC,
-    endWebRTC,
-    createRoom,
-    joinRoom,
-    checkRoomExist,
   };
 }

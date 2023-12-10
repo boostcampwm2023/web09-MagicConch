@@ -1,8 +1,7 @@
-import { useEffect } from 'react';
+import WebRTC from '../../services/WebRTC';
 
 import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
 
-import WebRTC from './WebRTC';
 import { useMedia } from './useMedia';
 
 interface useContorollMediaParams {
@@ -29,12 +28,7 @@ export function useControllMedia({ localVideoRef }: useContorollMediaParams) {
 
   const { getLocalStream } = useMedia();
 
-  const {
-    dataChannels,
-    replacePeerconnectionAudioTrack2NowLocalStream,
-    replacePeerconnectionVideoTrack2NowLocalStream,
-    setLocalStream,
-  } = WebRTC.getInstace();
+  const webRTC = WebRTC.getInstace();
 
   const setLocalVideoSrcObj = (stream: MediaStream) => {
     if (!localVideoRef.current) {
@@ -52,7 +46,7 @@ export function useControllMedia({ localVideoRef }: useContorollMediaParams) {
     videoTrack.getVideoTracks().forEach(toggleTrack);
     toggleMyVideoState();
 
-    const mediaInfoChannel = dataChannels.get('mediaInfoChannel');
+    const mediaInfoChannel = webRTC.dataChannels.get('mediaInfoChannel');
     if (!mediaInfoChannel || mediaInfoChannel.readyState !== 'open') {
       return;
     }
@@ -70,7 +64,7 @@ export function useControllMedia({ localVideoRef }: useContorollMediaParams) {
     audioTrack.getAudioTracks().forEach(toggleTrack);
     toggleMyMicState();
 
-    const mediaInfoChannel = dataChannels.get('mediaInfoChannel');
+    const mediaInfoChannel = webRTC.dataChannels.get('mediaInfoChannel');
     if (!mediaInfoChannel || mediaInfoChannel.readyState !== 'open') {
       return;
     }
@@ -83,31 +77,17 @@ export function useControllMedia({ localVideoRef }: useContorollMediaParams) {
     const stream = await getLocalStream({ cameraID: selectedCameraID });
 
     setLocalVideoSrcObj(stream);
-    setLocalStream(stream);
-    replacePeerconnectionVideoTrack2NowLocalStream();
+    webRTC.setLocalStream(stream);
+    webRTC.replacePeerconnectionVideoTrack2NowLocalStream();
   };
 
   const changeMyAudioTrack = async (id?: string) => {
     const stream = await getLocalStream({ audioID: id });
 
     setLocalVideoSrcObj(stream);
-    setLocalStream(stream);
-    replacePeerconnectionAudioTrack2NowLocalStream();
+    webRTC.setLocalStream(stream);
+    webRTC.replacePeerconnectionAudioTrack2NowLocalStream();
   };
-
-  // TODO mediaInfoChannel 변경되었을 떄 로직을 WebRTC 클래스로 옮기기.
-  useEffect(() => {
-    const mediaInfoChannel = dataChannels.get('mediaInfoChannel');
-    if (!mediaInfoChannel) return;
-
-    mediaInfoChannel.addEventListener('open', () => {
-      const audioTrack = localVideoRef.current?.srcObject as MediaStream;
-      const videoTrack = localVideoRef.current?.srcObject as MediaStream;
-
-      mediaInfoChannel?.send(JSON.stringify([{ type: 'audio', onOrOff: audioTrack.getAudioTracks()[0].enabled }]));
-      mediaInfoChannel?.send(JSON.stringify([{ type: 'video', onOrOff: videoTrack.getVideoTracks()[0].enabled }]));
-    });
-  }, []);
 
   return { changeMyVideoTrack, changeMyAudioTrack, toggleVideo, toggleAudio };
 }

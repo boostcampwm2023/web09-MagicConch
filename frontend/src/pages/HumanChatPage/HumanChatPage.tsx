@@ -10,7 +10,7 @@ import { useBlocker } from '@business/hooks/useBlocker';
 import { useHumanChatMessage } from '@business/hooks/useChatMessage';
 import { useHumanTarotSpread } from '@business/hooks/useTarotSpread';
 import useWebRTC from '@business/hooks/useWebRTC';
-import WebRTC from '@business/hooks/useWebRTC/WebRTC';
+import WebRTC from '@business/services/WebRTC';
 
 import { useHumanChatPageContentAnimation } from './useHumanChatPageContentAnimation';
 import { ChatPageState, useHumanChatPageCreateRoomEvent } from './useHumanChatPageCreateRoomEvent';
@@ -28,6 +28,7 @@ export interface OutletContext extends ReturnType<typeof useWebRTC> {
 
 export default function HumanChatPage() {
   const webRTCData = useWebRTC();
+  useEffect(() => {}, [webRTCData.remoteVideoRef, webRTCData.remoteVideoRef.current]);
 
   useHumanChatPageWrongURL();
   const { chatPageState, setChatPageState } = useHumanChatPageCreateRoomEvent();

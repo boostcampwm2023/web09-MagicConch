@@ -1,10 +1,13 @@
+import { useEffect } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import { IconButton } from '@components/Buttons';
 import CamContainer from '@components/CamContainer';
 
+import { useControllMedia } from '@business/hooks/useWebRTC/useControllMedia';
+import WebRTC from '@business/services/WebRTC';
+
 import type { OutletContext } from './HumanChatPage';
-import { useChattingPageChangeVideoTrackJoined } from './useChattingPageChangeVideoTrackJoined';
 import { useChattingPageCreateJoinRoomPasswordPopup } from './useChattingPageCreateJoinRoomPopup';
 
 export default function ChattingPage() {
@@ -12,15 +15,40 @@ export default function ChattingPage() {
     localVideoRef,
     remoteVideoRef,
     tarotButtonDisabled,
-    toggleVideo,
-    toggleAudio,
     tarotButtonClick,
     enableSideBar,
     chatPageState: { joined },
     unblockGoBack,
   }: OutletContext = useOutletContext();
 
-  useChattingPageChangeVideoTrackJoined();
+  const { toggleAudio, toggleVideo, changeMyVideoTrack } = useControllMedia({ localVideoRef });
+  const webRTC = WebRTC.getInstace();
+
+  useEffect(() => {
+    if (joined) {
+      changeMyVideoTrack();
+    }
+  }, [joined]);
+
+  useEffect(() => {
+    if (
+      !remoteVideoRef.current ||
+      !webRTC.remoteStream ||
+      (remoteVideoRef.current.srcObject as MediaStream)?.id === webRTC.remoteStream?.id
+    ) {
+      return;
+    }
+
+    remoteVideoRef.current.srcObject = webRTC.remoteStream as MediaStream;
+  }, [remoteVideoRef.current]);
+
+  // useEffect(() => {
+  //   if (!remoteVideoRef.current || !webRTC.remoteStream) {
+  //     return;
+  //   }
+  //   remoteVideoRef.current.srcObject = webRTC.remoteStream as MediaStream;
+  // }, [webRTC.remoteStream?.id, remoteVideoRef.current]);
+
   useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack, enableSideBar });
 
   const navigate = useNavigate();
