@@ -52,7 +52,6 @@ export default function useWebRTC() {
     if (!remoteVideoRef.current || !webRTC.remoteStream) {
       return;
     }
-    console.log('chanted track');
     remoteVideoRef.current.srcObject = webRTC.remoteStream as MediaStream;
   }, [webRTC.remoteStream?.id]);
 

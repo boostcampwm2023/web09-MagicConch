@@ -42,7 +42,6 @@ export const initSignalingSocket = ({ roomName, onExitUser }: initSignalingSocke
   });
 
   socketManager.on('userExit', async () => {
-    console.log('userExit');
     onExitUser();
   });
 };
