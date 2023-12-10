@@ -1,5 +1,7 @@
 import { ChangeEvent } from 'react';
-import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
+
+import WebRTC from '@business/hooks/useWebRTC/WebRTC';
 
 import { useProfileInfo } from '@stores/zustandStores/useProfileInfo';
 
@@ -8,8 +10,11 @@ import { arrayBuffer2Array } from '@utils/array';
 import { OutletContext } from './HumanChatPage';
 
 export function useSettingPageProfileNicknameSetting() {
-  const { profileChannel, nicknameChannel, setChatPageState }: OutletContext = useOutletContext();
-  const navigate = useNavigate();
+  const { setChatPageState }: OutletContext = useOutletContext();
+
+  const { dataChannels } = WebRTC.getInstace();
+  const profileChannel = dataChannels.get('profileChannel');
+  const nicknameChannel = dataChannels.get('nicknameChannel');
 
   const { myNickname, myProfile, setMyNickname, setMyProfileImage } = useProfileInfo(state => ({
     setMyNickname: state.setMyNickname,
@@ -33,22 +38,20 @@ export function useSettingPageProfileNicknameSetting() {
     setMyNickname(e.target.value);
   };
 
-  const sendProfileInfoWithNavigateBefore = () => {
-    if (profileChannel.current?.readyState === 'open' && myProfile) {
+  const sendProfileInfo = () => {
+    if (profileChannel?.readyState === 'open' && myProfile) {
       const dataArray = arrayBuffer2Array(myProfile.arrayBuffer);
       const sendJson = JSON.stringify({ arrayBuffer: dataArray, type: myProfile.type });
 
-      profileChannel.current?.send?.(sendJson);
+      profileChannel?.send?.(sendJson);
     }
 
-    if (nicknameChannel.current?.readyState === 'open' && myNickname) {
-      nicknameChannel.current?.send?.(myNickname);
+    if (nicknameChannel?.readyState === 'open' && myNickname) {
+      nicknameChannel?.send?.(myNickname);
     }
 
     setChatPageState(prev => ({ ...prev, joined: true }));
-
-    navigate('..');
   };
 
-  return { setLocalProfileImage, setLocalNickname, sendProfileInfoWithNavigateBefore };
+  return { setLocalProfileImage, setLocalNickname, sendProfileInfo };
 }

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { HumanSocketManager } from '@business/services/SocketManager';
 
@@ -10,14 +10,18 @@ interface useRTCPeerConnectionParams {
 
 export function useRTCPeerConnection({ remoteVideoRef }: useRTCPeerConnectionParams) {
   const socketManager = new HumanSocketManager();
+  const remoteStreamRef = useRef<MediaStream>();
 
-  const webRTC = WebRTC.getInstace();
+  const { addRTCPeerConnectionEventListener, connectRTCPeerConnection, setRemoteStream, remoteStream } =
+    WebRTC.getInstace();
 
-  const makeRTCPeerConnection = async ({ roomName }: { roomName: string }) => {
-    webRTC.connectRTCPeerConnection();
+  const makeRTCPeerConnection = ({ roomName }: { roomName: string }) => {
+    connectRTCPeerConnection();
 
-    webRTC.addRTCPeerConnectionEventListener('track', e => {
-      webRTC.setRemoteStream(e.streams[0]);
+    addRTCPeerConnectionEventListener('track', e => {
+      setRemoteStream(e.streams[0]);
+      console.log(remoteVideoRef.current, remoteVideoRef);
+
       if (!remoteVideoRef.current) {
         return;
       }
@@ -25,7 +29,7 @@ export function useRTCPeerConnection({ remoteVideoRef }: useRTCPeerConnectionPar
       remoteVideoRef.current.srcObject = e.streams[0];
     });
 
-    webRTC.addRTCPeerConnectionEventListener('icecandidate', e => {
+    addRTCPeerConnectionEventListener('icecandidate', e => {
       if (!e.candidate) {
         return;
       }
@@ -35,12 +39,13 @@ export function useRTCPeerConnection({ remoteVideoRef }: useRTCPeerConnectionPar
   };
 
   useEffect(() => {
-    if (!remoteVideoRef.current || !webRTC.remoteStream) {
+    if (!remoteVideoRef.current || !remoteStreamRef.current) {
       return;
     }
+    console.log('chanred');
 
-    remoteVideoRef.current.srcObject = webRTC.remoteStream;
-  }, [remoteVideoRef.current]);
+    remoteVideoRef.current.srcObject = remoteStreamRef.current;
+  }, [remoteVideoRef]);
 
   return { makeRTCPeerConnection };
 }

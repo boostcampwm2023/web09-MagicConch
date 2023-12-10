@@ -10,6 +10,7 @@ import { useBlocker } from '@business/hooks/useBlocker';
 import { useHumanChatMessage } from '@business/hooks/useChatMessage';
 import { useHumanTarotSpread } from '@business/hooks/useTarotSpread';
 import useWebRTC from '@business/hooks/useWebRTC';
+import WebRTC from '@business/hooks/useWebRTC/WebRTC';
 
 import { useHumanChatPageContentAnimation } from './useHumanChatPageContentAnimation';
 import { ChatPageState, useHumanChatPageCreateRoomEvent } from './useHumanChatPageCreateRoomEvent';
@@ -31,8 +32,11 @@ export default function HumanChatPage() {
   useHumanChatPageWrongURL();
   const { chatPageState, setChatPageState } = useHumanChatPageCreateRoomEvent();
 
-  const { messages, onSubmitMessage, inputDisabled, addPickCardMessage } = useHumanChatMessage(webRTCData.chatChannel);
-  const { tarotButtonClick, tarotButtonDisabled } = useHumanTarotSpread(webRTCData.chatChannel, addPickCardMessage);
+  const { dataChannels } = WebRTC.getInstace();
+  const chatDataChannel = dataChannels.get('chatChannel');
+
+  const { messages, onSubmitMessage, inputDisabled, addPickCardMessage } = useHumanChatMessage(chatDataChannel);
+  const { tarotButtonClick, tarotButtonDisabled } = useHumanTarotSpread(chatDataChannel, addPickCardMessage);
 
   const { changeContentAnimation, contentAnimation } = useHumanChatPageContentAnimation();
   const [sideBarDisabled, setSideBarDisabled] = useState<boolean>(false);

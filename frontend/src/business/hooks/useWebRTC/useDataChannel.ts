@@ -1,14 +1,11 @@
-import { useRef } from 'react';
-
 import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
 import { useProfileInfo } from '@stores/zustandStores/useProfileInfo';
 
 import { array2ArrayBuffer } from '@utils/array';
 
-interface useDataChannelParams {
-  peerConnectionRef: React.MutableRefObject<RTCPeerConnection | undefined>;
-}
-export function useDataChannel({ peerConnectionRef }: useDataChannelParams) {
+import WebRTC from './WebRTC';
+
+export function useDataChannel() {
   const { myMicOn, myVideoOn, setRemoteMicOn, setRemoteVideoOn } = useMediaInfo(state => ({
     myMicOn: state.myMicOn,
     myVideoOn: state.myVideoOn,
@@ -22,18 +19,12 @@ export function useDataChannel({ peerConnectionRef }: useDataChannelParams) {
     myProfile: state.myProfile,
   }));
 
-  const mediaInfoChannel = useRef<RTCDataChannel>();
-  const chatChannel = useRef<RTCDataChannel>();
-  const profileChannel = useRef<RTCDataChannel>();
-  const nicknameChannel = useRef<RTCDataChannel>();
+  const { addDataChannel } = WebRTC.getInstace();
 
   const initMediaInfoChannel = () => {
-    mediaInfoChannel.current = peerConnectionRef.current?.createDataChannel('mediaInfoChannel', {
-      negotiated: true,
-      id: 0,
-    });
+    const mediaInfoChannel = addDataChannel('mediaInfoChannel');
 
-    mediaInfoChannel.current?.addEventListener('message', ({ data }) => {
+    mediaInfoChannel?.addEventListener('message', ({ data }) => {
       const mediaInfoArray = JSON.parse(data);
 
       mediaInfoArray.forEach(({ type, onOrOff }: { type: string; onOrOff: boolean }) => {
@@ -45,8 +36,8 @@ export function useDataChannel({ peerConnectionRef }: useDataChannelParams) {
       });
     });
 
-    mediaInfoChannel.current?.addEventListener('open', () => {
-      mediaInfoChannel.current?.send(
+    mediaInfoChannel?.addEventListener('open', function () {
+      this.send(
         JSON.stringify([
           { type: 'audio', onOrOff: myMicOn },
           { type: 'video', onOrOff: myVideoOn },
@@ -56,23 +47,13 @@ export function useDataChannel({ peerConnectionRef }: useDataChannelParams) {
   };
 
   const initChatChannel = () => {
-    chatChannel.current = peerConnectionRef.current?.createDataChannel('chat', {
-      negotiated: true,
-      id: 1,
-    });
+    addDataChannel('chatChannel');
   };
 
   const initProfileChannel = () => {
-    profileChannel.current = peerConnectionRef.current?.createDataChannel('profile', {
-      negotiated: true,
-      id: 2,
-    });
+    const profileChannel = addDataChannel('profileChannel');
 
-    if (!profileChannel.current) {
-      return;
-    }
-
-    profileChannel.current.addEventListener('message', ({ data }) => {
+    profileChannel?.addEventListener('message', ({ data }) => {
       const receivedData = JSON.parse(data);
 
       const { type, arrayBuffer: array } = receivedData;
@@ -82,26 +63,23 @@ export function useDataChannel({ peerConnectionRef }: useDataChannelParams) {
       setRemoteProfileImage({ arrayBuffer, type });
     });
 
-    profileChannel.current?.addEventListener('open', () => {
-      profileChannel.current?.send?.(JSON.stringify({ myProfile }));
+    profileChannel?.addEventListener('open', function () {
+      this.send(JSON.stringify({ myProfile }));
     });
   };
 
   const initNicknameChannel = () => {
-    nicknameChannel.current = peerConnectionRef.current?.createDataChannel('nickname', {
-      negotiated: true,
-      id: 3,
-    });
+    const nicknameChannel = addDataChannel('nicknameChannel');
 
-    nicknameChannel.current?.addEventListener('message', ({ data }) => {
+    nicknameChannel?.addEventListener('message', ({ data }) => {
       setRemoteNickname(data);
     });
 
-    nicknameChannel.current?.addEventListener('open', () => {
+    nicknameChannel?.addEventListener('open', function () {
       if (!myNickname) {
         return;
       }
-      nicknameChannel.current?.send?.(myNickname);
+      this.send(myNickname);
     });
   };
 
@@ -112,10 +90,5 @@ export function useDataChannel({ peerConnectionRef }: useDataChannelParams) {
     initNicknameChannel();
   };
 
-  const closeDataChannels = () => {
-    mediaInfoChannel.current?.close();
-    chatChannel.current?.close();
-  };
-
-  return { mediaInfoChannel, chatChannel, profileChannel, nicknameChannel, initDataChannels, closeDataChannels };
+  return { initDataChannels };
 }

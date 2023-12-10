@@ -12,7 +12,7 @@ import useChatMessage from './useChatMessage';
 
 const { PICK_CARD, CHAT_MESSAGE } = HumanChatEvents;
 
-export function useHumanChatMessage(chatChannel: React.MutableRefObject<RTCDataChannel | undefined>) {
+export function useHumanChatMessage(chatChannel: RTCDataChannel | undefined) {
   const { messages, pushMessage } = useChatMessage();
   const [inputDisabled, setInputDisabled] = useState(true);
 
@@ -48,20 +48,20 @@ export function useHumanChatMessage(chatChannel: React.MutableRefObject<RTCDataC
     addMessage('right', { message });
 
     const payload = { type: CHAT_MESSAGE, content: message };
-    chatChannel.current?.send(JSON.stringify(payload));
+    chatChannel?.send(JSON.stringify(payload));
   };
 
   useEffect(() => {
-    if (chatChannel.current) {
-      chatChannel.current.addEventListener('open', () => {
+    if (chatChannel) {
+      chatChannel.addEventListener('open', () => {
         setInputDisabled(false);
       });
 
-      chatChannel.current.addEventListener('close', () => {
+      chatChannel.addEventListener('close', () => {
         setInputDisabled(true);
       });
 
-      chatChannel.current.addEventListener('message', event => {
+      chatChannel.addEventListener('message', event => {
         const message = JSON.parse(event.data);
 
         if (message.type === CHAT_MESSAGE) {
@@ -72,7 +72,7 @@ export function useHumanChatMessage(chatChannel: React.MutableRefObject<RTCDataC
         }
       });
     }
-  }, [chatChannel.current]);
+  }, [chatChannel]);
 
   const addPickCardMessage = (tarotId: number) => {
     addMessage('left', { tarotId });
