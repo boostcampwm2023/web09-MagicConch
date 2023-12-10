@@ -19,6 +19,7 @@ services:
       - X_NCP_APIGW_API_KEY=${X_NCP_APIGW_API_KEY}
       - PORT=3000
       - SENTRY_DSN=${SENTRY_DSN}
+      - SLACK_WEBHOOK_FOR_BE=${SLACK_WEBHOOK_FOR_BE}
     expose:
       - "3000"
     volumes:
