@@ -14,9 +14,10 @@ const toggleTrack = (track: MediaStreamTrack) => {
 
 export function useControllMedia({ localVideoRef }: useContorollMediaParams) {
   const {
-    selectedCameraID,
     toggleMyMic: toggleMyMicState,
     toggleMyVideo: toggleMyVideoState,
+    setSelectedAudioID,
+    setSelectedCameraID,
   } = useMediaInfo(state => ({
     toggleMyVideo: state.toggleMyVideo,
     toggleMyMic: state.toggleMyMic,
@@ -73,9 +74,12 @@ export function useControllMedia({ localVideoRef }: useContorollMediaParams) {
     mediaInfoChannel.send(JSON.stringify([{ type: 'audio', onOrOff: audioTrackenabled }]));
   };
 
-  const changeMyVideoTrack = async () => {
-    const stream = await getLocalStream({ cameraID: selectedCameraID });
+  const changeMyVideoTrack = async (id?: string) => {
+    const stream = await getLocalStream({ cameraID: id });
 
+    if (id) {
+      setSelectedCameraID(id);
+    }
     setLocalVideoSrcObj(stream);
     webRTC.setLocalStream(stream);
     webRTC.replacePeerconnectionVideoTrack2NowLocalStream();
@@ -84,6 +88,9 @@ export function useControllMedia({ localVideoRef }: useContorollMediaParams) {
   const changeMyAudioTrack = async (id?: string) => {
     const stream = await getLocalStream({ audioID: id });
 
+    if (id) {
+      setSelectedAudioID(id);
+    }
     setLocalVideoSrcObj(stream);
     webRTC.setLocalStream(stream);
     webRTC.replacePeerconnectionAudioTrack2NowLocalStream();
