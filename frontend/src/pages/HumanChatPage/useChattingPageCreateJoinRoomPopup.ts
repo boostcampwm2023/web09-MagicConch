@@ -21,7 +21,7 @@ export function useChattingPageCreateJoinRoomPasswordPopup({
     startWebRTC,
   }: OutletContext = useOutletContext();
 
-  const humanSocket = new HumanSocketManager();
+  const humanSocket = HumanSocketManager.getInstance();
   const { createRoom, joinRoom, checkRoomExist } = useSignalingSocket();
 
   const { roomName } = useParams();

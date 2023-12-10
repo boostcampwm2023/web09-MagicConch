@@ -2,7 +2,7 @@ import { usePasswordPopup } from '@business/hooks/usePopup';
 import { HumanSocketManager } from '@business/services/SocketManager';
 
 export function useSignalingSocket() {
-  const socketManager = new HumanSocketManager();
+  const socketManager = HumanSocketManager.getInstance();
   const { openPasswordPopup } = usePasswordPopup();
 
   const createRoom = ({

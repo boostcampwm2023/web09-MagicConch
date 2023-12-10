@@ -13,7 +13,7 @@ export default class WebRTC {
   private static instance: WebRTC | undefined;
   private nextDataChannelId = 0;
 
-  socketManager = new HumanSocketManager();
+  socketManager = HumanSocketManager.getInstance();
 
   constructor() {}
 

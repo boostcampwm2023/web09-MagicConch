@@ -11,7 +11,7 @@ import { useSettingPageMediaOptinos } from './useSettingPageMediaOptions';
 import { useSettingPageProfileNicknameSetting } from './useSettingPageProfileNicknameSetting';
 
 export default function ChattingPage() {
-  const socketManager = new HumanSocketManager();
+  const socketManager = HumanSocketManager.getInstance();
 
   const navigate = useNavigate();
 

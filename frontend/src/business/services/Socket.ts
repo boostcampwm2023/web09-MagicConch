@@ -6,7 +6,7 @@ import { HumanSocketManager } from './SocketManager';
 
 const webRTC = WebRTC.getInstace();
 
-const socketManager = new HumanSocketManager();
+const socketManager = HumanSocketManager.getInstance();
 
 interface initSignalingSocketParams {
   roomName: string;

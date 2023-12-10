@@ -1,7 +1,7 @@
 import { Socket, io } from 'socket.io-client';
 
 class SocketManager {
-  static #socket: Socket | undefined;
+  #socket: Socket | undefined;
 
   #url: string;
   #path?: string;
@@ -12,7 +12,7 @@ class SocketManager {
   }
 
   get socket(): Socket | undefined {
-    return SocketManager.#socket;
+    return this.#socket;
   }
 
   get connected(): boolean {
@@ -24,7 +24,7 @@ class SocketManager {
     if (this.socket) {
       this.socket.disconnect();
     }
-    SocketManager.#socket = io(this.#url, { path: this.#path });
+    this.#socket = io(this.#url, { path: this.#path });
   }
 
   disconnect() {
@@ -32,7 +32,7 @@ class SocketManager {
       throw new Error('소켓이 존재하지 않습니다.');
     }
     this.socket.disconnect();
-    SocketManager.#socket = undefined;
+    this.#socket = undefined;
   }
 
   on<U>(eventName: string, eventListener: (args: U) => void) {
