@@ -2,7 +2,7 @@ name: Blue/Green CD
 
 on:
   push:
-    branches: ["dev"]
+    branches: ["BE/refactor/#440-과부하-테스트"]
 
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
