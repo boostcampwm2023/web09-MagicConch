@@ -24,7 +24,7 @@ import { TarotModule } from './tarot/tarot.module';
     EventsModule,
     LoggerModule,
   ],
-  controllers: [AppController],
+  // controllers: [AppController],
   providers: [
     {
       provide: APP_INTERCEPTOR,
