@@ -24,7 +24,7 @@ services:
       - "3002"
     volumes:
       - /var/log/was:/app/was/logs
-      - /var/log/typeorm:/app/was/ormLogs.log
+      - /var/log/typeorm:/app/was/ormlogs.log
 
   signal-green:
     image: "${DOCKER_USERNAME}/magicconch:signal-green-${GITHUB_SHA}"
