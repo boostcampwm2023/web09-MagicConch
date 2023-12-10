@@ -90,7 +90,9 @@ export class ErrorsInterceptor implements NestInterceptor {
   }
 
   private makeErrorLogMessage(logMessage: string, err: any): string {
-    return `${logMessage} : ${err.message || err}`;
+    const errorMessage: string =
+      err instanceof Error ? err.message : JSON.stringify(err);
+    return `${logMessage} : ${err.message || errorMessage}`;
   }
 
   private sendSlackNotification(err: QueryFailedError) {
