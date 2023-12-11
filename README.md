@@ -1,7 +1,7 @@
 <h1>
     <div style="display:flex; gap: 10px; align-items: flex-start;">
-        <img width="5%" src="https://github.com/boostcampwm2023/web09-MagicConch/assets/78946499/9cd198bb-9692-48f1-82f0-2712fb643442">
-        <span>AI•실시간 화상 타로 상담 상담 플랫폼, 마법의 소라고둥</span>
+        <img width="4%" src="https://github.com/boostcampwm2023/web09-MagicConch/assets/78946499/9cd198bb-9692-48f1-82f0-2712fb643442">
+        <span>AI•실시간 화상 타로 상담 플랫폼, 마법의 소라고둥</span>
     </div>
 </h1>
 
