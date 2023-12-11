@@ -38,11 +38,69 @@
     </li> 
   </div>
 </div>
+
 <br>
 
 ## 시스템 아키텍처
+<div align="center">
+    <img src="https://github.com/boostcampwm2023/web09-MagicConch/assets/70785620/7d827718-a11d-447b-bd61-d1819528cd60" width="80%"/>
+</div>
 
-![image](https://github.com/boostcampwm2023/web09-MagicConch/assets/78946499/dee03d42-2b4d-4bcd-bdfa-dc10f06e973a)
+<br>
+
+## 기술 스택
+<table>
+  <th>구분</th>
+  <th>기술 스택</th>
+  <tr>
+    <td align="center"><b>common</b></td>
+    <td>
+      <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=flat&logo=typescript&logoColor=white" />
+      <img src="https://img.shields.io/badge/ESLint-4B3263?style=flat&logo=eslint&logoColor=white" />
+      <img src="https://img.shields.io/badge/Prettier-F7B93E?style=flat&logo=Prettier&logoColor=white" />
+      <img src="https://img.shields.io/badge/dotenv-ecd53f?style=flat&logo=dotenv&logoColor=white" />
+      <img src="https://img.shields.io/badge/Socket.io-black?style=flat&logo=socket.io&badgeColor=010101" />
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><b>frontend</b></td>
+    <td>
+      <img src="https://img.shields.io/badge/React-%2320232a.svg?style=flat&logo=React&logoColor=%2361DAFB" />
+      <img src="https://img.shields.io/badge/React%20Query-FF4154?style=flat&logo=react%20query&logoColor=white" />
+      <img src="https://img.shields.io/badge/Zustand-000000?style=flat&logo=zustand&logoColor=white" />
+      <img src="https://img.shields.io/badge/TailwindCss-06B6D4.svg?style=flat&logo=tailwindcss&logoColor=white" />
+      <img src="https://img.shields.io/badge/WebRTC-DB4437.svg?style=flat&logo=WebRTC&logoColor=white" />
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><b>backend</b></td>
+    <td>
+      <img src="https://img.shields.io/badge/nestjs-%23E0234E.svg?style=flat&logo=nestjs&logoColor=white" />
+      <img src="https://img.shields.io/badge/TypeORM-fe0902.svg?style=flat&logo=TypeORM&logoColor=white" />
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><b>DB<b></td>
+    <td>
+      <img src="https://img.shields.io/badge/mysql-00758f.svg?style=flat&logo=mysql&logoColor=white" />
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><b>CI/CD</b></td>
+    <td>
+      <img src="https://img.shields.io/badge/github%20actions-%232671E5.svg?style=flat&logo=githubactions&logoColor=white" />
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><b>deployment</b></td>
+    <td>
+      <img src="https://img.shields.io/badge/Cloudflare-F38020?style=flat&logo=Cloudflare&logoColor=white" />
+      <img src="https://img.shields.io/badge/docker-%230db7ed.svg?style=flat&logo=docker&logoColor=white" />
+      <img src="https://img.shields.io/badge/nginx-%23009639.svg?style=flat&logo=nginx&logoColor=white" />
+      <img src="https://img.shields.io/badge/%20Naver%20Cloud%20Platform-03C75A?logo=naver&logoColor=white" />
+    </td>
+  </tr>
+</table>
 
 <br>
 
