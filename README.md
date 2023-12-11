@@ -1,19 +1,20 @@
 <h1>
     <div style="display:flex; gap: 10px; align-items: flex-start;">
-        <img width="4%" src="https://github.com/boostcampwm2023/web09-MagicConch/assets/78946499/9cd198bb-9692-48f1-82f0-2712fb643442">
+        <img width="26px" src="https://github.com/boostcampwm2023/web09-MagicConch/assets/78946499/9cd198bb-9692-48f1-82f0-2712fb643442">
         <span>AI•실시간 화상 타로 상담 플랫폼, 마법의 소라고둥</span>
     </div>
 </h1>
 
 <div align="center">
-    <img src="https://github.com/boostcampwm2023/web09-MagicConch/assets/78946499/d38bade7-1cee-401f-9d28-1ebfd12cdea6">
+    <img src="https://github.com/boostcampwm2023/web09-MagicConch/assets/70785620/86b4bc38-c65c-4e85-bcd3-69abfd12020c">
 </div>
+
 
 <br>
 
 <div align=center>
     <h2 style="text-align: center">
-        <div>🔮 매력적인 애니메이션과 함께 즐기는 AI•실시간 화상 타로 상담 🌠</div>
+        <div>🌠매력적인 애니메이션과 함께 즐기는🌠<br> 🔮AI•실시간 화상 타로 상담🔮</div>
     </h2>
     <div><b>"한 번쯤은 타로 점을 쳐보고 싶지만, 시간과 돈을 투자하면서 보긴 귀찮아..."</b></div>
     <br>
@@ -22,14 +23,23 @@
     <div>함께 나누는 이야기를 통해, 더 나은 미래를 상상하는 시간이 되길 바라요 🔮 <br> 생동적인 애니메이션과 함께, 당신만의 특별한 타로 체험을 즐겨보세요 ✨</div>
     <br></br>
     <div>
-        <a href="https://web09-magicconch.pages.dev">배포 링크</a>
+        🔗 <a href="https://web09-magicconch.pages.dev">배포 링크</a>
         |
-        <a href="https://season-broccoli-784.notion.site/Team-note-9d1bcc23f7ba463384fae13743f42c16?pvs=4">팀 노션</a>
+        🗒️<a href="https://season-broccoli-784.notion.site/Team-note-9d1bcc23f7ba463384fae13743f42c16?pvs=4">팀 노션</a>
         |
-        <a href="https://github.com/boostcampwm2023/web09-MagicConch/wiki">위키</a>
+        🌐 <a href="https://github.com/boostcampwm2023/web09-MagicConch/wiki">위키</a>
     </div>
-    <br></br>
+    <br>
     <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fboostcampwm2023%2Fweb09-MagicConch&count_bg=%238350C6&title_bg=%23555555&icon=github.svg&icon_color=%23E7E7E7&title=hits&edge_flat=false"/></a>
+    <br><br>
+    <h3>👭 누가 사용하면 좋을까요?</h3>
+    고민을 털어놓고 싶은 분 🗣️<br>
+    미래에 궁금한 게 있는 분 🔮<br>
+    온라인에서 부업을 꿈꾸는 분 <br>
+    <br>
+    <h3>👍 우리 서비스의 장점</h3>
+    AI 챗봇을 활용해서 언제든지 편하게 타로 상담을 받아볼 수 있어요 🤖 <br>
+    실시간 화상 채팅으로 거리와 상관없이 타로 상담사와 소통할 수 있어요 🌈<br>
 </div>
 
 <br>
