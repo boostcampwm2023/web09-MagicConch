@@ -28,6 +28,8 @@
         🗒️<a href="https://season-broccoli-784.notion.site/Team-note-9d1bcc23f7ba463384fae13743f42c16?pvs=4">팀 노션</a>
         |
         🌐 <a href="https://github.com/boostcampwm2023/web09-MagicConch/wiki">위키</a>
+        |
+        🎥<a href="https://github.com/boostcampwm2023/web09-MagicConch/wiki/%F0%9F%8E%A5-%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4">시나리오</a>
     </div>
     <br>
     <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fboostcampwm2023%2Fweb09-MagicConch&count_bg=%238350C6&title_bg=%23555555&icon=github.svg&icon_color=%23E7E7E7&title=hits&edge_flat=false"/></a>
@@ -45,35 +47,82 @@
 <br>
 
 ## 주요기능
-#### AI에게 상담하기
 
-https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/862982e4-8a8f-460a-a966-f81c285afdcf
+### 🤖 AI 타로 상담 서비스
+> AI 챗봇에게 고민을 털어놓고 타로 상담을 받을 수 있어요.
 
-#### 상담 결과 공유하기
+<table>
+    <thead>
+        <th>AI 채팅 화면</th>
+        <th>카드 뽑기 화면</th>
+        <th>결과 공유 화면</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <img src="https://github.com/boostcampwm2023/web09-MagicConch/assets/70785620/7ff3d5a0-d5ee-4562-8978-af099b0fda6e" />
+            </td>
+            <td>
+                <img src ="https://github.com/boostcampwm2023/web09-MagicConch/assets/70785620/e09bada9-bff9-4afc-8197-6dedde43d600" />
+            </td>
+            <td>
+                <img src="https://github.com/boostcampwm2023/web09-MagicConch/assets/70785620/fa7af072-6b1f-4ad4-99ce-ae3b974614bc">
+            </td>
+        </tr>
+    </tbody>
+</table>
 
-https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/12967650-654e-47e8-aa81-6ef6b34f7a92
+<br> 
 
-<img width="256" alt="3 카카오톡으로 공유가 된다" src="https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/7cc2fde8-6ace-428b-81a4-98d551ac13e3"/>
 
-#### 방 생성 후 올바른 암호 입력해야 입장 가능
+### 🗣️ 실시간 화상 타로 상담 서비스
+> 화상 상담 서비스를 이용하여 실제 타로 상담사에게 타로 상담을 받을 수 있어요. <br>
+> 우측 상단의 채팅 버튼으로 타로 카드와 해설 내용을 주고 받을 수도 있어요. 
 
-https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/9471a299-1256-4a43-8796-077154453642
-
-#### 방에는 최대 2명만 들어갈 수 있음
-
-https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/df87cf58-08a2-4975-be6f-ce9fb13f8cef
-
-#### 닉네임과 프로필 사진의 설정이 가능함
-
-https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/28b8975a-ab5a-4ad6-b1cf-8a78af6e1407
-
-#### 호스트가 게스트에게 카드를 뽑게하고, 결과를 볼 수 있음
-
-https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/f4d3c979-a655-429f-9652-30e908eacce5
-
-#### 채팅기능
-
-https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/c1943d53-efda-4b65-b7e4-919872eacad3
+<table>
+    <thead>
+        <th>호스트 화면 (상담사)</th>
+        <th>게스트 화면 (상담자)</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <img src="https://github.com/boostcampwm2023/web09-MagicConch/assets/70785620/783c4533-7bbb-43dd-bb15-6ab9dd1a1532" />
+            </td>
+            <td>
+                <img src="https://github.com/boostcampwm2023/web09-MagicConch/assets/70785620/11da9fdd-d45e-4670-90dc-b6a43078b3a8" />
+            </td>
+        </tr>
+        <tr>
+            <td>호스트가 타로 상담을 진행하기 위해 위해 채팅방을 개설해요</td>
+            <td>게스트가 타로 상담을 받기 위해 채팅방에 들어가요</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="https://github.com/boostcampwm2023/web09-MagicConch/assets/70785620/048996b2-4ff7-4db9-acd0-fed0ce75373c" />
+            </td>
+            <td>
+                <img src="https://github.com/boostcampwm2023/web09-MagicConch/assets/70785620/eada2848-197a-46e8-98bd-bd28ae369fb7" />
+            </td>
+        </tr>
+        <tr>
+            <td>호스트는 방에 입장할 때 닉네임 및 프로필을 설정할 수 있어요</td>
+            <td>게스트는 방에 입장할 때 닉네임 및 프로필을 설정할 수 있어요</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="https://github.com/boostcampwm2023/web09-MagicConch/assets/70785620/a600aa6f-d05d-44b7-8c62-67efe1b8a8f4" />
+            </td>
+            <td>
+                <img src="https://github.com/boostcampwm2023/web09-MagicConch/assets/70785620/406b9360-aa7b-4b96-8730-67f75c34fc5e" />
+            </td>
+        </tr>
+        <tr>
+            <td>호스트는 타로 카드 펼치기 버튼으로 게스트에게 카드를 펼쳐요</td>
+            <td>게스트는 펼쳐진 카드 더미에서 타로 카드를 뽑을 수 있어요</td>
+        </tr>
+    </tbody>
+</table>
 
 <br>
 
