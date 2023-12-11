@@ -13,6 +13,8 @@ import { LoggerService } from 'src/logger/logger.service';
 import { QueryFailedError } from 'typeorm';
 import { ERR_MSG } from '../constants/errors';
 
+const fatalError: RegExp = /ETIMEOUT|ECONNRESET/g;
+
 @Injectable()
 export class ErrorsInterceptor implements NestInterceptor {
   private readonly slackWebhook: IncomingWebhook;
@@ -29,20 +31,16 @@ export class ErrorsInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const controllerName: string = context.getClass().name;
     const methodName: string = context.getHandler().name;
-    const logMessage: string = `Failed to execute <${controllerName} - ${methodName}>`;
+    const logContext: string = `Failed to execute <${controllerName} - ${methodName}>`;
 
     return next.handle().pipe(
       catchError((err: unknown) => {
+        const logMessage: string = this.makeErrorLogMessage(logContext, err);
         if (err instanceof QueryFailedError) {
-          return throwError(() =>
-            this.handleQueryFailedError(
-              err,
-              this.makeErrorLogMessage(logMessage, err),
-            ),
-          );
+          return throwError(() => this.handleQueryFailedError(err, logMessage));
         }
 
-        this.logger.error(this.makeErrorLogMessage(logMessage, err));
+        this.logger.error(logMessage);
         if (err instanceof Error) {
           return throwError(() => err);
         }
@@ -58,11 +56,14 @@ export class ErrorsInterceptor implements NestInterceptor {
     err: QueryFailedError,
     logMessage: string,
   ): Error {
-    this.sendSlackNotification(err);
+    this.sendNotification(err);
 
-    const isFatal: boolean = err.message.includes('ETIMEOUT');
+    const isFatal: boolean = fatalError.test(err.message);
     this.logQueryFailedError(logMessage, isFatal, err.stack);
 
+    if (err.message.includes('ECONNRESET')) {
+      return new Error(ERR_MSG.ECONNRESET);
+    }
     if (err.message.includes('ETIMEOUT')) {
       return new Error(ERR_MSG.ETIMEOUT);
     }
@@ -95,7 +96,7 @@ export class ErrorsInterceptor implements NestInterceptor {
     return `${logMessage} : ${err.message || errorMessage}`;
   }
 
-  private sendSlackNotification(err: QueryFailedError) {
+  private sendNotification(err: QueryFailedError): void {
     Sentry.captureException(err);
     this.slackWebhook.send({
       attachments: [
@@ -105,7 +106,7 @@ export class ErrorsInterceptor implements NestInterceptor {
           fields: [
             {
               title: `Error Message: ${err.message}`,
-              value: err.stack || '',
+              value: err.stack || JSON.stringify(err),
               short: false,
             },
           ],

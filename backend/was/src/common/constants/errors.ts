@@ -20,6 +20,7 @@ export const ERR_MSG = {
   UNKNOWN_DATABASE: '알 수 없는 데이터베이스 오류가 발생했습니다.',
   OPTIMISTIC_LOCK: '다른 사용자에 의해 데이터가 변경되었습니다.',
   ETIMEOUT: '커넥션 타임아웃이 발생했습니다.',
+  ECONNRESET: 'TCP 연결이 예기치 않게 종료되었습니다.',
 
   /**
    * socket
