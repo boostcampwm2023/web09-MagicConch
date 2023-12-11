@@ -11,7 +11,7 @@
 
 <br>
 
-<div style="text-align: center">
+<div align=center>
     <h2 style="text-align: center">
         <div>🔮 매력적인 애니메이션과 함께 즐기는 AI•실시간 화상 타로 상담 🌠</div>
     </h2>
@@ -20,18 +20,11 @@
     <div>걱정하지 마세요! AI 타로 상담사와 함께 언제 어디서든 무료로 타로 상담을 즐길 수 있어요 💫 <br> 원하는 타로 상담사와 실시간 화상 타로 상담도 가능하답니다. <br> 고민이나 궁금증, 어떤 주제든 자유롭게 이야기해보세요! 🌌</div>
     <br>
     <div>함께 나누는 이야기를 통해, 더 나은 미래를 상상하는 시간이 되길 바라요 🔮 <br> 생동적인 애니메이션과 함께, 당신만의 특별한 타로 체험을 즐겨보세요✨</div>
-    <br><br>
-    <ul style="display: flex; list-style-type: none;">
-        <li>
-            <a href="https://web09-magicconch.pages.dev">서비스</a>
-        </li>
-        <li>
-            <a href="https://season-broccoli-784.notion.site/Team-note-9d1bcc23f7ba463384fae13743f42c16?pvs=4">팀 노트 ( Notion )</a>
-        </li>
-        <li>
-            <a href="https://github.com/boostcampwm2023/web09-MagicConch/wiki">위키</a>
-        </li>
-    </ul>
+    <br></br>
+    
+[서비스](https://web09-magicconch.pages.dev)  
+[팀 노트](https://season-broccoli-784.notion.site/Team-note-9d1bcc23f7ba463384fae13743f42c16?pvs=4)   
+[위키](https://github.com/boostcampwm2023/web09-MagicConch/wiki) 
 </div>
 
 <br>
