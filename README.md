@@ -1,7 +1,7 @@
 <h1>
     <div style="display:flex; gap: 10px; align-items: flex-start;">
         <img width="5%" src="https://github.com/boostcampwm2023/web09-MagicConch/assets/78946499/9cd198bb-9692-48f1-82f0-2712fb643442">
-        <span>AI 타로 상담 플랫폼, 마법의 소라고둥</span>
+        <span>AI • 실시간 화상 타로 상담 상담 플랫폼, 마법의 소라고둥</span>
     </div>
 </h1>
 
@@ -15,16 +15,21 @@
     <h2 style="text-align: center">
         <div>🔮 매력적인 애니메이션과 함께 즐기는 AI•실시간 화상 타로 상담 🌠</div>
     </h2>
-    <div><b>한 번쯤은 타로 점을 쳐보고 싶지만, 시간과 돈을 투자하면서 보긴 귀찮아..."</b></div>
+    <div><b>"한 번쯤은 타로 점을 쳐보고 싶지만, 시간과 돈을 투자하면서 보긴 귀찮아..."</b></div>
     <br>
-    <div>걱정하지 마세요! AI 타로 상담사와 함께 언제 어디서든 무료로 타로 상담을 즐길 수 있어요 💫 <br> 원하는 타로 상담사와 실시간 화상 타로 상담도 가능하답니다. <br> 고민이나 궁금증, 어떤 주제든 자유롭게 이야기해보세요! 🌌</div>
+    <div>걱정하지 마세요!<br><b>AI 타로 상담사</b>와 함께 언제 어디서든 무료로 타로 상담을 즐길 수 있어요 💫 <br> 원하는 타로 상담사와 <b>실시간 화상 타로 상담</b>도 가능하답니다. <br> 고민이나 궁금증, 어떤 주제든 자유롭게 이야기해보세요 🌌</div>
     <br>
-    <div>함께 나누는 이야기를 통해, 더 나은 미래를 상상하는 시간이 되길 바라요 🔮 <br> 생동적인 애니메이션과 함께, 당신만의 특별한 타로 체험을 즐겨보세요✨</div>
+    <div>함께 나누는 이야기를 통해, 더 나은 미래를 상상하는 시간이 되길 바라요 🔮 <br> 생동적인 애니메이션과 함께, 당신만의 특별한 타로 체험을 즐겨보세요 ✨</div>
     <br></br>
-    
-[서비스](https://web09-magicconch.pages.dev)  
-[팀 노트](https://season-broccoli-784.notion.site/Team-note-9d1bcc23f7ba463384fae13743f42c16?pvs=4)   
-[위키](https://github.com/boostcampwm2023/web09-MagicConch/wiki) 
+    <div>
+        <a href="https://web09-magicconch.pages.dev">배포 링크</a>
+        |
+        <a href="https://season-broccoli-784.notion.site/Team-note-9d1bcc23f7ba463384fae13743f42c16?pvs=4">팀 노션</a>
+        |
+        <a href="https://github.com/boostcampwm2023/web09-MagicConch/wiki">위키</a>
+    </div>
+    <br></br>
+    <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fboostcampwm2023%2Fweb09-MagicConch&count_bg=%238350C6&title_bg=%23555555&icon=github.svg&icon_color=%23E7E7E7&title=hits&edge_flat=false"/></a>
 </div>
 
 <br>
