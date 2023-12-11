@@ -48,6 +48,36 @@
 
 <br>
 
+## 주요기능
+### AI에게 상담하기
+
+https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/862982e4-8a8f-460a-a966-f81c285afdcf
+
+### 상담 결과 공유하기
+
+https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/12967650-654e-47e8-aa81-6ef6b34f7a92
+
+<img width="256" alt="3 카카오톡으로 공유가 된다" src="https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/7cc2fde8-6ace-428b-81a4-98d551ac13e3"/>
+### 방 생성 후 올바른 암호 입력해야 입장 가능
+
+https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/9471a299-1256-4a43-8796-077154453642
+
+### 방에는 최대 2명만 들어갈 수 있음
+
+https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/df87cf58-08a2-4975-be6f-ce9fb13f8cef
+
+### 닉네임과 프로필 사진의 설정이 가능함
+
+https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/28b8975a-ab5a-4ad6-b1cf-8a78af6e1407
+
+### 호스트가 게스트에게 카드를 뽑게하고, 결과를 볼 수 있음
+
+https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/f4d3c979-a655-429f-9652-30e908eacce5
+
+### 채팅기능
+
+https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/c1943d53-efda-4b65-b7e4-919872eacad3
+
 ## 기술 스택
 <table>
   <th>구분</th>
