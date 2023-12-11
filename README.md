@@ -1,4 +1,9 @@
-# 🐚 AI 타로 상담 플랫폼, 마법의 소라고둥
+<h1>
+    <div style="display:flex; gap: 10px; align-items: flex-start;">
+        <img width="5%" src="https://github.com/boostcampwm2023/web09-MagicConch/assets/78946499/9cd198bb-9692-48f1-82f0-2712fb643442">
+        <span>AI 타로 상담 플랫폼, 마법의 소라고둥</span>
+    </div>
+</h1>
 
 <div align="center">
     <img src="https://github.com/boostcampwm2023/web09-MagicConch/assets/78946499/d38bade7-1cee-401f-9d28-1ebfd12cdea6">
@@ -6,38 +11,61 @@
 
 <br>
 
-## 프로젝트 소개
-
-<div style="display:flex; align-items: center; gap: 20px;">
-  <img width="15%" src="https://github.com/boostcampwm2023/web09-MagicConch/assets/78946499/9cd198bb-9692-48f1-82f0-2712fb643442">
-  <div>
-    <li>
-        <a href="https://season-broccoli-784.notion.site/Team-note-9d1bcc23f7ba463384fae13743f42c16?pvs=4">
-            팀 노트 ( Notion )
-        </a>
-    </li>
-    <li>
-        <a href="https://www.figma.com/file/mG05301Mt21mIKJsKfinQo/%EB%A7%88%EB%B2%95%EC%9D%98-%EC%86%8C%EB%9D%BC%EA%B3%A0%EB%91%A5?type=design&node-id=0%3A1&mode=design&t=l5EMlyi9zZUJd3K3-1">
-            디자인 ( Figma )
-        </a>    
-    </li>  
-    <li>
-        <a href="https://www.figma.com/file/0fv1lWfZ5W4zncvXAMTfh9/Component-%EC%84%A4%EA%B3%84?type=whiteboard&node-id=0%3A1&t=2VM3UFiJcQ14ggZO-1">
-            Component 설계 ( Figjam )
-        </a>
-    </li>  
-    <li>
-        <a href="https://github.com/orgs/boostcampwm2023/projects/19">
-           백로그 (GitHub Projects)
-        </a>
-    </li> 
-    <li>
-        <a href="https://github.com/boostcampwm2023/web09-MagicConch/wiki">
-           위키
-        </a>
-    </li> 
-  </div>
+<div style="text-align: center">
+    <h2 style="text-align: center">
+        <div>🔮 매력적인 애니메이션과 함께 즐기는 AI•실시간 화상 타로 상담 🌠</div>
+    </h2>
+    <div><b>한 번쯤은 타로 점을 쳐보고 싶지만, 시간과 돈을 투자하면서 보긴 귀찮아..."</b></div>
+    <br>
+    <div>걱정하지 마세요! AI 타로 상담사와 함께 언제 어디서든 무료로 타로 상담을 즐길 수 있어요 💫 <br> 원하는 타로 상담사와 실시간 화상 타로 상담도 가능하답니다. <br> 고민이나 궁금증, 어떤 주제든 자유롭게 이야기해보세요! 🌌</div>
+    <br>
+    <div>함께 나누는 이야기를 통해, 더 나은 미래를 상상하는 시간이 되길 바라요 🔮 <br> 생동적인 애니메이션과 함께, 당신만의 특별한 타로 체험을 즐겨보세요✨</div>
+    <br><br>
+    <ul style="display: flex; list-style-type: none;">
+        <li>
+            <a href="https://web09-magicconch.pages.dev">서비스</a>
+        </li>
+        <li>
+            <a href="https://season-broccoli-784.notion.site/Team-note-9d1bcc23f7ba463384fae13743f42c16?pvs=4">팀 노트 ( Notion )</a>
+        </li>
+        <li>
+            <a href="https://github.com/boostcampwm2023/web09-MagicConch/wiki">위키</a>
+        </li>
+    </ul>
 </div>
+
+<br>
+
+## 주요기능
+#### AI에게 상담하기
+
+https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/862982e4-8a8f-460a-a966-f81c285afdcf
+
+#### 상담 결과 공유하기
+
+https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/12967650-654e-47e8-aa81-6ef6b34f7a92
+
+<img width="256" alt="3 카카오톡으로 공유가 된다" src="https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/7cc2fde8-6ace-428b-81a4-98d551ac13e3"/>
+
+#### 방 생성 후 올바른 암호 입력해야 입장 가능
+
+https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/9471a299-1256-4a43-8796-077154453642
+
+#### 방에는 최대 2명만 들어갈 수 있음
+
+https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/df87cf58-08a2-4975-be6f-ce9fb13f8cef
+
+#### 닉네임과 프로필 사진의 설정이 가능함
+
+https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/28b8975a-ab5a-4ad6-b1cf-8a78af6e1407
+
+#### 호스트가 게스트에게 카드를 뽑게하고, 결과를 볼 수 있음
+
+https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/f4d3c979-a655-429f-9652-30e908eacce5
+
+#### 채팅기능
+
+https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/c1943d53-efda-4b65-b7e4-919872eacad3
 
 <br>
 
@@ -47,36 +75,6 @@
 </div>
 
 <br>
-
-## 주요기능
-### AI에게 상담하기
-
-https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/862982e4-8a8f-460a-a966-f81c285afdcf
-
-### 상담 결과 공유하기
-
-https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/12967650-654e-47e8-aa81-6ef6b34f7a92
-
-<img width="256" alt="3 카카오톡으로 공유가 된다" src="https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/7cc2fde8-6ace-428b-81a4-98d551ac13e3"/>
-### 방 생성 후 올바른 암호 입력해야 입장 가능
-
-https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/9471a299-1256-4a43-8796-077154453642
-
-### 방에는 최대 2명만 들어갈 수 있음
-
-https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/df87cf58-08a2-4975-be6f-ce9fb13f8cef
-
-### 닉네임과 프로필 사진의 설정이 가능함
-
-https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/28b8975a-ab5a-4ad6-b1cf-8a78af6e1407
-
-### 호스트가 게스트에게 카드를 뽑게하고, 결과를 볼 수 있음
-
-https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/f4d3c979-a655-429f-9652-30e908eacce5
-
-### 채팅기능
-
-https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/c1943d53-efda-4b65-b7e4-919872eacad3
 
 ## 기술 스택
 <table>
