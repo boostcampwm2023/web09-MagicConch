@@ -28,8 +28,8 @@ class SocketManager {
   }
 
   disconnect() {
-    if (!this.socket) {
-      throw new Error('소켓이 존재하지 않습니다.');
+    if (!this.socket?.connected) {
+      return;
     }
     this.socket.disconnect();
     this.#socket = undefined;
