@@ -14,7 +14,7 @@ export default function useWebRTC() {
 
   const { getLocalStream } = useMedia();
 
-  const { initDataChannels } = useDataChannel({ localVideoRef });
+  const { initDataChannels } = useDataChannel();
 
   const startWebRTC = async ({ roomName }: { roomName: string }) => {
     if (webRTC.isConnectedPeerConnection()) {

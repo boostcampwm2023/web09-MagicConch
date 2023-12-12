@@ -5,10 +5,7 @@ import { useProfileInfo } from '@stores/zustandStores/useProfileInfo';
 
 import { array2ArrayBuffer } from '@utils/array';
 
-interface useDataChannelParams {
-  localVideoRef: React.RefObject<HTMLVideoElement | undefined>;
-}
-export function useDataChannel({ localVideoRef }: useDataChannelParams) {
+export function useDataChannel() {
   const { setRemoteMicOn, setRemoteVideoOn } = useMediaInfo(state => ({
     setRemoteMicOn: state.setRemoteMicOn,
     setRemoteVideoOn: state.setRemoteVideoOn,
@@ -38,13 +35,13 @@ export function useDataChannel({ localVideoRef }: useDataChannelParams) {
     });
 
     mediaInfoChannel?.addEventListener('open', function () {
-      const audioTrack = localVideoRef.current?.srcObject as MediaStream;
-      const videoTrack = localVideoRef.current?.srcObject as MediaStream;
+      const audioTrack = webRTC.localStream?.getAudioTracks()[0];
+      const videoTrack = webRTC.localStream?.getVideoTracks()[0];
 
       mediaInfoChannel?.send(
         JSON.stringify([
-          { type: 'audio', onOrOff: audioTrack.getAudioTracks()[0].enabled },
-          { type: 'video', onOrOff: videoTrack.getVideoTracks()[0].enabled },
+          { type: 'audio', onOrOff: audioTrack?.enabled },
+          { type: 'video', onOrOff: videoTrack?.enabled },
         ]),
       );
     });
