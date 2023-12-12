@@ -6,15 +6,12 @@ import CamContainer from '@components/CamContainer';
 
 import { useControllMedia } from '@business/hooks/useWebRTC/useControllMedia';
 import { useStreamVideoRef } from '@business/hooks/useWebRTC/useStreamVideoRef';
-import WebRTC from '@business/services/WebRTC';
 
 import type { OutletContext } from './HumanChatPage';
 import { useChattingPageCreateJoinRoomPasswordPopup } from './useChattingPageCreateJoinRoomPopup';
 
 export default function ChattingPage() {
   const {
-    // localVideoRef,
-    // remoteVideoRef,
     tarotButtonDisabled,
     tarotButtonClick,
     enableSideBar,
