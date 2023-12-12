@@ -191,34 +191,74 @@
 
 ## 🔮🥛 타로 밀크티: 팀원
 
-<table>
-  <th>J027</th>
-  <th>J028</th>
-  <th>J072</th>
-  <th>J165</th>
-  <tr>
-    <td><img src="https://github.com/kimyu0218.png" width="100px" /></td>
-    <td><img src="https://github.com/iQuQi.png" width="100px" /></td>
-    <td><img src="https://github.com/Doosies.png" width="100px" /></td>
-    <td><img src="https://github.com/HeoJiye.png" width="100px" /></td>
-  </tr>
-  <tr>
-    <td align="center"><a href="https://github.com/kimyu0218">김유정</a>
-    </td>
-    <td align="center"><a href="https://github.com/iQuQi">김유진</a>
-    </td>
-    <td align="center"><a href="https://github.com/Doosies">송민형</a>
-    </td>
-    <td align="center"><a href="https://github.com/HeoJiye">허지예</a>
-  </tr>
-  <tr>
-    <td align="center">Backend
-    </td>
-    <td align="center">Frontend
-    </td>
-    <td align="center">Frontend
-    </td>
-    <td align="center">Frontend
-    </td>
-  </tr>
+<table style="table-layout: auto; width: 100%; table-layout: fixed;">
+  <colgroup>
+    <col width="25%" />
+    <col width="25%" />
+    <col width="25%" />
+    <col width="25%" />
+  </colgroup>
+  <thead>
+    <th>J027</th>
+    <th>J028</th>
+    <th>J072</th>
+    <th>J165</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center"><img src="https://github.com/kimyu0218.png" width="100px" /></td>
+      <td align="center"><img src="https://github.com/iQuQi.png" width="100px" /></td>
+      <td align="center"><img src="https://github.com/Doosies.png" width="100px" /></td>
+      <td align="center"><img src="https://github.com/HeoJiye.png" width="100px" /></td>
+    </tr>
+    <tr>
+      <td align="center">김유정</td>
+      <td align="center">김유진</td>
+      <td align="center">송민형</td>
+      <td align="center">허지예</td>
+    </tr>
+    <tr>
+      <td align="center"><a href="https://github.com/kimyu0218">@kimyu0218</a></td>
+      <td align="center"><a href="https://github.com/iQuQi">@iQuQi</a></td>
+      <td align="center"><a href="https://github.com/Doosies">@Doosies</a></td>
+      <td align="center"><a href="https://github.com/HeoJiye">@HeoJiye</a></td>
+    </tr>
+    <tr>
+      <td align="center">Backend</td>
+      <td align="center">Frontend</td>
+      <td align="center">Frontend</td>
+      <td align="center">Frontend</td>
+    </tr>
+    <tr>
+      <td> <!--유정-->
+        <ul>
+          <li>DB 및 API 설계</li>
+          <li>소켓 제외 BE 로직 구현</li>
+          <li>BE 배포</li>
+          <li>인프라</li>
+        </ul>
+      </td>
+      <td> <!--유진-->
+        <ul>
+          <li>AI 채팅 및 타로카드 화면 구현</li>
+          <li>반응형 웹 (모바일 & 테블릿 & PC)</li>
+          <li>인터랙티브 웹 (커스텀 마우스 & 애니메이션 작업)</li>
+        </ul>
+      </td>
+      <td> <!--민형-->
+        <ul>
+          <li>WebRTC 통신 모듈과 훅 구현</li>
+          <li>RTCPeerConnection을 통한 실시간 영상공유 구현</li>
+          <li>WebRTC Data Channel을 통한 이미지/텍스트 전송 구현</li>
+        </ul>
+      </td>
+      <td> <!--지예-->
+        <ul>
+          <li>AI 채팅 소켓 통신 로직 구현 (server & client)</li>
+          <li>WebRTC Data Channel 채팅 구현</li>
+          <li>clova studio api 연동 (with stream)</li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
 </table>
