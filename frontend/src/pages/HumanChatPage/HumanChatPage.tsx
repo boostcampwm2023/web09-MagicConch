@@ -28,7 +28,6 @@ export interface OutletContext extends ReturnType<typeof useWebRTC> {
 
 export default function HumanChatPage() {
   const webRTCData = useWebRTC();
-  useEffect(() => {}, [webRTCData.remoteVideoRef, webRTCData.remoteVideoRef.current]);
 
   useHumanChatPageWrongURL();
   const { chatPageState, setChatPageState } = useHumanChatPageCreateRoomEvent();
