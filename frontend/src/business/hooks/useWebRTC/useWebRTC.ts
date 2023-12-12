@@ -1,5 +1,5 @@
 import WebRTC from '../../services/WebRTC';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 import { initSignalingSocket } from '@business/services/Socket';
 
@@ -8,9 +8,6 @@ import { useMedia } from './useMedia';
 
 export default function useWebRTC() {
   const webRTC = WebRTC.getInstace();
-
-  const localVideoRef = useRef<HTMLVideoElement>(null);
-  const remoteVideoRef = useRef<HTMLVideoElement>(null);
 
   const { getLocalStream } = useMedia();
 
@@ -23,7 +20,6 @@ export default function useWebRTC() {
 
     const stream = await getLocalStream();
     webRTC.setLocalStream(stream);
-    localVideoRef.current!.srcObject = stream;
 
     initSignalingSocket({
       roomName,
@@ -48,16 +44,7 @@ export default function useWebRTC() {
     };
   }, []);
 
-  useEffect(() => {
-    if (!remoteVideoRef.current || !webRTC.remoteStream) {
-      return;
-    }
-    remoteVideoRef.current.srcObject = webRTC.remoteStream as MediaStream;
-  }, [webRTC.remoteStream?.id]);
-
   return {
-    localVideoRef,
-    remoteVideoRef,
     startWebRTC,
   };
 }

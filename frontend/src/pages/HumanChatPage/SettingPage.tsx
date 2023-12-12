@@ -4,6 +4,7 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 import ProfileSetting from '@components/ProfileSetting';
 
 import { useControllMedia } from '@business/hooks/useWebRTC/useControllMedia';
+import { useStreamVideoRef } from '@business/hooks/useWebRTC/useStreamVideoRef';
 import { HumanSocketManager } from '@business/services/SocketManager';
 
 import type { OutletContext } from './HumanChatPage';
@@ -15,7 +16,8 @@ export default function ChattingPage() {
 
   const navigate = useNavigate();
 
-  const { localVideoRef, enableSideBar, disableSideBar }: OutletContext = useOutletContext();
+  const { localVideoRef } = useStreamVideoRef();
+  const { enableSideBar, disableSideBar }: OutletContext = useOutletContext();
   const { changeMyAudioTrack, changeMyVideoTrack, toggleAudio, toggleVideo } = useControllMedia({ localVideoRef });
 
   useEffect(() => {
