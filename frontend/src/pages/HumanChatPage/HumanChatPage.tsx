@@ -10,13 +10,12 @@ import { useBlocker } from '@business/hooks/useBlocker';
 import { useHumanChatMessage } from '@business/hooks/useChatMessage';
 import { useHumanTarotSpread } from '@business/hooks/useTarotSpread';
 import useWebRTC from '@business/hooks/useWebRTC';
-import WebRTC from '@business/services/WebRTC';
 
 import { useHumanChatPageContentAnimation } from './useHumanChatPageContentAnimation';
 import { ChatPageState, useHumanChatPageCreateRoomEvent } from './useHumanChatPageCreateRoomEvent';
 import { useHumanChatPageWrongURL } from './useHumanChatPageWrongURL';
 
-export interface OutletContext extends ReturnType<typeof useWebRTC> {
+export interface OutletContext {
   tarotButtonClick: () => void;
   tarotButtonDisabled: boolean;
   chatPageState: ChatPageState;
@@ -27,7 +26,7 @@ export interface OutletContext extends ReturnType<typeof useWebRTC> {
 }
 
 export default function HumanChatPage() {
-  const webRTCData = useWebRTC();
+  const { endWebRTC } = useWebRTC();
 
   useHumanChatPageWrongURL();
   const { chatPageState, setChatPageState } = useHumanChatPageCreateRoomEvent();
@@ -57,6 +56,12 @@ export default function HumanChatPage() {
     onConfirm: () => navigate('/'),
   });
 
+  useEffect(() => {
+    return () => {
+      endWebRTC();
+    };
+  }, []);
+
   return (
     <Background type="dynamic">
       <Header
@@ -82,7 +87,6 @@ export default function HumanChatPage() {
         <div className={`flex-with-center h-full ${contentAnimation}`}>
           <Outlet
             context={{
-              ...webRTCData,
               tarotButtonClick,
               tarotButtonDisabled,
               chatPageState,

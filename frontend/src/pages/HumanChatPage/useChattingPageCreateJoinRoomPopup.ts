@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 
+import useWebRTC from '@business/hooks/useWebRTC';
 import { useSignalingSocket } from '@business/hooks/useWebRTC/useSignalingSocket';
 import { HumanSocketManager } from '@business/services/SocketManager';
 
@@ -18,11 +19,11 @@ export function useChattingPageCreateJoinRoomPasswordPopup({
 }: useChattingPageCreateJoinRoomParams) {
   const {
     chatPageState: { host, joined },
-    startWebRTC,
   }: OutletContext = useOutletContext();
 
   const humanSocket = HumanSocketManager.getInstance();
   const { createRoom, joinRoom, checkRoomExist } = useSignalingSocket();
+  const { startWebRTC } = useWebRTC();
 
   const { roomName } = useParams();
   const navigate = useNavigate();

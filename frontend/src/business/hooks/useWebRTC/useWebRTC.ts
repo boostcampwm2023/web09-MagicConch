@@ -1,13 +1,14 @@
 import WebRTC from '../../services/WebRTC';
-import { useEffect } from 'react';
 
 import { initSignalingSocket } from '@business/services/Socket';
+import { HumanSocketManager } from '@business/services/SocketManager';
 
 import { useDataChannel } from './useDataChannel';
 import { useMedia } from './useMedia';
 
 export default function useWebRTC() {
   const webRTC = WebRTC.getInstace();
+  const humanSocket = HumanSocketManager.getInstance();
 
   const { getLocalStream } = useMedia();
 
@@ -37,14 +38,14 @@ export default function useWebRTC() {
     webRTC.addTracks();
   };
 
-  useEffect(() => {
-    return () => {
-      webRTC.closeRTCPeerConnection();
-      webRTC.closeDataChannels();
-    };
-  }, []);
+  const endWebRTC = () => {
+    webRTC.closeRTCPeerConnection();
+    webRTC.closeDataChannels();
+    humanSocket.disconnect();
+  };
 
   return {
     startWebRTC,
+    endWebRTC,
   };
 }
