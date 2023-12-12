@@ -33,11 +33,8 @@ export default function HumanChatPage() {
   useHumanChatPageWrongURL();
   const { chatPageState, setChatPageState } = useHumanChatPageCreateRoomEvent();
 
-  const { dataChannels } = WebRTC.getInstace();
-  const chatDataChannel = dataChannels.get('chatChannel');
-
-  const { messages, onSubmitMessage, inputDisabled, addPickCardMessage } = useHumanChatMessage(chatDataChannel);
-  const { tarotButtonClick, tarotButtonDisabled } = useHumanTarotSpread(chatDataChannel, addPickCardMessage);
+  const { messages, onSubmitMessage, inputDisabled, addPickCardMessage } = useHumanChatMessage();
+  const { tarotButtonClick, tarotButtonDisabled } = useHumanTarotSpread(addPickCardMessage);
 
   const { changeContentAnimation, contentAnimation } = useHumanChatPageContentAnimation();
   const [sideBarDisabled, setSideBarDisabled] = useState<boolean>(false);

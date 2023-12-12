@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Popup from '@components/Popup';
 
 import useOverlay from '@business/hooks/useOverlay';
+import WebRTC from '@business/services/WebRTC';
 
 import { HumanChatEvents } from '@constants/events';
 import { POPUP_MESSAGE } from '@constants/messages';
@@ -12,7 +13,10 @@ import { useTarotSpread } from './useTarotSpread';
 
 const { PICK_CARD, TAROT_SPREAD } = HumanChatEvents;
 
-export function useHumanTarotSpread(chatChannel: RTCDataChannel | undefined, onPickCard: (idx: number) => void) {
+export function useHumanTarotSpread(onPickCard: (idx: number) => void) {
+  const { dataChannels } = WebRTC.getInstace();
+  const chatChannel = dataChannels.get('chatChannel');
+
   const [tarotButtonDisabled, setTarotButtonDisabled] = useState(true);
 
   const pickCard = (idx: number) => {
