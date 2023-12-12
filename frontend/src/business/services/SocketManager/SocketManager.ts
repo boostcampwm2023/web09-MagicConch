@@ -21,8 +21,8 @@ class SocketManager {
   }
 
   connect() {
-    if (this.socket) {
-      this.socket.disconnect();
+    if (this.socket?.connected) {
+      return;
     }
     this.#socket = io(this.#url, { path: this.#path });
   }
