@@ -3,41 +3,35 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import ProfileSetting from '@components/ProfileSetting';
 
+import { useControllMedia } from '@business/hooks/useWebRTC/useControllMedia';
+import { useStreamVideoRef } from '@business/hooks/useWebRTC/useStreamVideoRef';
 import { HumanSocketManager } from '@business/services/SocketManager';
 
 import type { OutletContext } from './HumanChatPage';
+import { useSettingPageMediaOptinos } from './useSettingPageMediaOptions';
 import { useSettingPageProfileNicknameSetting } from './useSettingPageProfileNicknameSetting';
 
 export default function ChattingPage() {
-  const socketManager = new HumanSocketManager();
+  const socketManager = HumanSocketManager.getInstance();
 
   const navigate = useNavigate();
 
-  const {
-    localVideoRef,
-    cameraOptions,
-    audioOptions,
-    toggleVideo,
-    toggleAudio,
-    changeMyVideoTrack,
-    changeMyAudioTrack,
-    enableSideBar,
-    disableSideBar,
-  }: OutletContext = useOutletContext();
+  const { localVideoRef } = useStreamVideoRef();
+  const { enableSideBar, disableSideBar }: OutletContext = useOutletContext();
+  const { changeMyAudioTrack, changeMyVideoTrack, toggleAudio, toggleVideo } = useControllMedia({ localVideoRef });
 
   useEffect(() => {
     disableSideBar();
     if (!socketManager.connected) {
       navigate('..');
     }
+
     changeMyVideoTrack();
   }, []);
 
-  const camList = cameraOptions.map(({ deviceId, label }) => ({ label, value: deviceId }));
-  const micList = audioOptions.map(({ deviceId, label }) => ({ label, value: deviceId }));
+  const { setLocalNickname, setLocalProfileImage, sendProfileInfo } = useSettingPageProfileNicknameSetting();
 
-  const { setLocalNickname, setLocalProfileImage, sendProfileInfoWithNavigateBefore } =
-    useSettingPageProfileNicknameSetting();
+  const { mediaOptions } = useSettingPageMediaOptinos();
 
   return (
     <ProfileSetting
@@ -45,12 +39,13 @@ export default function ChattingPage() {
       toggleAudio={toggleAudio}
       changeMyCamera={changeMyVideoTrack}
       changeMyAudio={changeMyAudioTrack}
-      camList={camList}
-      micList={micList}
+      camList={mediaOptions.video}
+      micList={mediaOptions.audio}
       videoRef={localVideoRef}
       onConfirm={() => {
-        sendProfileInfoWithNavigateBefore();
+        sendProfileInfo();
         enableSideBar();
+        navigate('..');
       }}
       onChangeProfileImage={setLocalProfileImage}
       onChangeNickname={setLocalNickname}

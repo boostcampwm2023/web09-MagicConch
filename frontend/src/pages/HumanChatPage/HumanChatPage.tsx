@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
 import Background from '@components/Background';
@@ -13,9 +13,10 @@ import useWebRTC from '@business/hooks/useWebRTC';
 
 import { useHumanChatPageContentAnimation } from './useHumanChatPageContentAnimation';
 import { ChatPageState, useHumanChatPageCreateRoomEvent } from './useHumanChatPageCreateRoomEvent';
+import { useHumanChatPageSideBar } from './useHumanChatPageSIdeBar';
 import { useHumanChatPageWrongURL } from './useHumanChatPageWrongURL';
 
-export interface OutletContext extends ReturnType<typeof useWebRTC> {
+export interface OutletContext {
   tarotButtonClick: () => void;
   tarotButtonDisabled: boolean;
   chatPageState: ChatPageState;
@@ -26,35 +27,33 @@ export interface OutletContext extends ReturnType<typeof useWebRTC> {
 }
 
 export default function HumanChatPage() {
-  const webRTCData = useWebRTC();
-
   useHumanChatPageWrongURL();
-  const { chatPageState, setChatPageState } = useHumanChatPageCreateRoomEvent();
-
-  const { messages, onSubmitMessage, inputDisabled, addPickCardMessage } = useHumanChatMessage(webRTCData.chatChannel);
-  const { tarotButtonClick, tarotButtonDisabled } = useHumanTarotSpread(webRTCData.chatChannel, addPickCardMessage);
-
-  const { changeContentAnimation, contentAnimation } = useHumanChatPageContentAnimation();
-  const [sideBarDisabled, setSideBarDisabled] = useState<boolean>(false);
-
-  const disableSideBar = () => {
-    changeContentAnimation(false);
-    setSideBarDisabled(true);
-  };
-
-  const enableSideBar = () => {
-    setSideBarDisabled(false);
-  };
-
-  useEffect(() => {
-    disableSideBar();
-  }, []);
 
   const navigate = useNavigate();
+  const { endWebRTC } = useWebRTC();
+
+  const { chatPageState, setChatPageState } = useHumanChatPageCreateRoomEvent();
+
+  const { messages, onSubmitMessage, inputDisabled, addPickCardMessage } = useHumanChatMessage();
+  const { tarotButtonClick, tarotButtonDisabled } = useHumanTarotSpread(addPickCardMessage);
+
+  const { changeContentAnimation, contentAnimation } = useHumanChatPageContentAnimation();
+  const { disableSideBar, enableSideBar, sideBarDisabled } = useHumanChatPageSideBar({
+    onDisableSideBar: () => {
+      changeContentAnimation(false);
+    },
+  });
+
   const { unblockGoBack } = useBlocker({
     when: ({ nextLocation }) => nextLocation.pathname === '/' || nextLocation.pathname === '/chat/human',
     onConfirm: () => navigate('/'),
   });
+
+  useEffect(() => {
+    return () => {
+      endWebRTC();
+    };
+  }, []);
 
   return (
     <Background type="dynamic">
@@ -81,7 +80,6 @@ export default function HumanChatPage() {
         <div className={`flex-with-center h-full ${contentAnimation}`}>
           <Outlet
             context={{
-              ...webRTCData,
               tarotButtonClick,
               tarotButtonDisabled,
               chatPageState,

@@ -1,58 +1,9 @@
 import { usePasswordPopup } from '@business/hooks/usePopup';
 import { HumanSocketManager } from '@business/services/SocketManager';
 
-import { ERROR_MESSAGE } from '@constants/messages';
-
-interface useSignalingSocketParams {
-  peerConnectionRef: React.MutableRefObject<RTCPeerConnection | undefined>;
-  negotiationDataChannels: ({ roomName }: { roomName: string }) => void;
-}
-
-export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels }: useSignalingSocketParams) {
-  const socketManager = new HumanSocketManager();
-
+export function useSignalingSocket() {
+  const socketManager = HumanSocketManager.getInstance();
   const { openPasswordPopup } = usePasswordPopup();
-
-  const initSignalingSocket = ({ roomName }: { roomName: string }) => {
-    socketManager.on('welcome', (users: { id: string }[]) => {
-      if (users.length > 0) {
-        createOffer({ roomName });
-      }
-    });
-
-    socketManager.on('offer', (sdp: RTCSessionDescription) => {
-      createAnswer({ roomName, sdp });
-    });
-
-    socketManager.on('answer', async (sdp: RTCSessionDescription) => {
-      await peerConnectionRef.current?.setRemoteDescription(sdp);
-    });
-
-    socketManager.on('candidate', async (candidate: RTCIceCandidate) => {
-      await peerConnectionRef.current?.addIceCandidate(candidate);
-    });
-
-    socketManager.on('roomFull', () => {
-      alert(ERROR_MESSAGE.FULL_ROOM);
-    });
-
-    socketManager.on('userExit', async () => {
-      negotiationDataChannels({ roomName });
-    });
-  };
-
-  const createOffer = async ({ roomName }: { roomName: string }) => {
-    const sdp = await peerConnectionRef.current?.createOffer();
-    await peerConnectionRef.current?.setLocalDescription(sdp);
-    socketManager.emit('offer', sdp, roomName);
-  };
-
-  const createAnswer = async ({ roomName, sdp }: { roomName: string; sdp: RTCSessionDescription }) => {
-    await peerConnectionRef.current?.setRemoteDescription(sdp);
-    const answerSdp = await peerConnectionRef.current?.createAnswer();
-    peerConnectionRef.current?.setLocalDescription(answerSdp);
-    socketManager.emit('answer', answerSdp, roomName);
-  };
 
   const createRoom = ({
     roomName,
@@ -126,7 +77,6 @@ export function useSignalingSocket({ peerConnectionRef, negotiationDataChannels 
   };
 
   return {
-    initSignalingSocket,
     createRoom,
     joinRoom,
     checkRoomExist,

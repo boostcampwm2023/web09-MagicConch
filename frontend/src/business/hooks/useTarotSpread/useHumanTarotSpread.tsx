@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Popup from '@components/Popup';
 
 import useOverlay from '@business/hooks/useOverlay';
+import WebRTC from '@business/services/WebRTC';
 
 import { HumanChatEvents } from '@constants/events';
 import { POPUP_MESSAGE } from '@constants/messages';
@@ -12,15 +13,15 @@ import { useTarotSpread } from './useTarotSpread';
 
 const { PICK_CARD, TAROT_SPREAD } = HumanChatEvents;
 
-export function useHumanTarotSpread(
-  chatChannel: React.MutableRefObject<RTCDataChannel | undefined>,
-  onPickCard: (idx: number) => void,
-) {
+export function useHumanTarotSpread(onPickCard: (idx: number) => void) {
+  const { dataChannels } = WebRTC.getInstace();
+  const chatChannel = dataChannels.get('chatChannel');
+
   const [tarotButtonDisabled, setTarotButtonDisabled] = useState(true);
 
   const pickCard = (idx: number) => {
     const payload = { type: PICK_CARD, content: idx };
-    chatChannel.current?.send(JSON.stringify(payload));
+    chatChannel?.send(JSON.stringify(payload));
     onPickCard(idx);
   };
 
@@ -46,22 +47,20 @@ export function useHumanTarotSpread(
   const requestTarotSpread = () => {
     setTarotButtonDisabled(true);
     const payload = { type: TAROT_SPREAD };
-    chatChannel.current?.send(JSON.stringify(payload));
+    chatChannel?.send(JSON.stringify(payload));
   };
 
   useEffect(() => {
-    if (chatChannel.current) {
-      chatChannel.current.addEventListener('open', () => {
-        console.log('datachannel open');
+    if (chatChannel) {
+      chatChannel.addEventListener('open', () => {
         setTarotButtonDisabled(false);
       });
 
-      chatChannel.current.addEventListener('close', () => {
-        console.log('datachannel close');
+      chatChannel.addEventListener('close', () => {
         setTarotButtonDisabled(true);
       });
 
-      chatChannel.current.addEventListener('message', event => {
+      chatChannel.addEventListener('message', event => {
         const message = JSON.parse(event.data);
 
         if (message.type === TAROT_SPREAD) {
@@ -73,7 +72,7 @@ export function useHumanTarotSpread(
         }
       });
     }
-  }, [chatChannel.current]);
+  }, [chatChannel]);
 
   return { tarotButtonClick, tarotButtonDisabled };
 }

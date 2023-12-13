@@ -5,7 +5,7 @@ import { AISocketManager } from '@business/services/SocketManager';
 import { useTarotSpread } from './useTarotSpread';
 
 export function useAiTarotSpread(onPickCard: (idx: number) => void) {
-  const socketManager = new AISocketManager();
+  const socketManager = AISocketManager.getInstance();
 
   const pickCard = (idx: number) => {
     socketManager.emit('tarotRead', idx);

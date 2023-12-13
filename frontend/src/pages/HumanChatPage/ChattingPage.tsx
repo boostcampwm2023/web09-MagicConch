@@ -1,27 +1,33 @@
+import { useEffect } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import { IconButton } from '@components/Buttons';
 import CamContainer from '@components/CamContainer';
 
+import { useControllMedia } from '@business/hooks/useWebRTC/useControllMedia';
+import { useStreamVideoRef } from '@business/hooks/useWebRTC/useStreamVideoRef';
+
 import type { OutletContext } from './HumanChatPage';
-import { useChattingPageChangeVideoTrackJoined } from './useChattingPageChangeVideoTrackJoined';
 import { useChattingPageCreateJoinRoomPasswordPopup } from './useChattingPageCreateJoinRoomPopup';
 
 export default function ChattingPage() {
   const {
-    localVideoRef,
-    remoteVideoRef,
     tarotButtonDisabled,
-    toggleVideo,
-    toggleAudio,
     tarotButtonClick,
     enableSideBar,
     chatPageState: { joined },
     unblockGoBack,
   }: OutletContext = useOutletContext();
 
-  useChattingPageChangeVideoTrackJoined();
   useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack, enableSideBar });
+  const { localVideoRef, remoteVideoRef } = useStreamVideoRef();
+  const { toggleAudio, toggleVideo, changeMyVideoTrack } = useControllMedia({ localVideoRef });
+
+  useEffect(() => {
+    if (joined) {
+      changeMyVideoTrack();
+    }
+  }, [joined]);
 
   const navigate = useNavigate();
   const goSettingPage = () => navigate('setting');
