@@ -1,4 +1,4 @@
-import WebRTC from '../../services/WebRTC';
+import WebRTC from '@business/services/WebRTC';
 
 import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
 

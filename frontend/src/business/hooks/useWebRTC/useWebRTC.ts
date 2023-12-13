@@ -1,7 +1,6 @@
-import WebRTC from '../../services/WebRTC';
-
 import { initSignalingSocket } from '@business/services/Socket';
 import { HumanSocketManager } from '@business/services/SocketManager';
+import WebRTC from '@business/services/WebRTC';
 
 import { useDataChannel } from './useDataChannel';
 import { useMedia } from './useMedia';

@@ -1,6 +1,7 @@
-import Background from '../Background';
 import { detect } from 'detect-browser';
 import React, { useEffect, useRef, useState } from 'react';
+
+import Background from '@components/Background';
 
 import { getTarotImageQuery } from '@stores/queries/getTarotImageQuery';
 

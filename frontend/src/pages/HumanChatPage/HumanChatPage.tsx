@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
 import Background from '@components/Background';
