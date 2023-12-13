@@ -25,19 +25,19 @@
     <div>
         🔗 <a href="https://web09-magicconch.pages.dev">배포 링크</a>
         &nbsp|&nbsp 
-        🎥<a href="https://github.com/boostcampwm2023/web09-MagicConch/wiki/%F0%9F%8E%A5-%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4">시나리오</a>
+        🎥 <a href="https://github.com/boostcampwm2023/web09-MagicConch/wiki/%F0%9F%8E%A5-%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4">시나리오</a>
     </div>
     <br/>
     <div>
-        💡<a href="https://github.com/boostcampwm2023/web09-MagicConch/wiki/%EA%B8%B0%ED%9A%8D%EC%84%9C">기획서</a>
+        💡 <a href="https://github.com/boostcampwm2023/web09-MagicConch/wiki/%EA%B8%B0%ED%9A%8D%EC%84%9C">기획서</a>
         &nbsp|&nbsp
-        📋<a href="https://www.notion.so/Product-Backlog-88058d924740408a952ee52792adb375">백로그</a>
+        📋 <a href="https://www.notion.so/Product-Backlog-88058d924740408a952ee52792adb375">백로그</a>
         &nbsp|&nbsp
-        📚<a href="https://season-broccoli-784.notion.site/8c30523a4b4d47039baf6fd5e7e90b2c?v=b39be6c6aa4e42089a8bb612404e9ab2">기술블로그</a>
+        📚 <a href="https://season-broccoli-784.notion.site/8c30523a4b4d47039baf6fd5e7e90b2c?v=b39be6c6aa4e42089a8bb612404e9ab2">기술블로그</a>
     </div>
     <br/>
     <div>
-        🗒️<a href="https://season-broccoli-784.notion.site/Team-note-9d1bcc23f7ba463384fae13743f42c16?pvs=4">팀 노션</a>
+        🗒️ <a href="https://season-broccoli-784.notion.site/Team-note-9d1bcc23f7ba463384fae13743f42c16?pvs=4">팀 노션</a>
         &nbsp|&nbsp
         🌐 <a href="https://github.com/boostcampwm2023/web09-MagicConch/wiki">위키</a>
     </div>
