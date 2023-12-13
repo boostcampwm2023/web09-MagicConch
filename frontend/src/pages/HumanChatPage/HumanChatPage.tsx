@@ -13,6 +13,7 @@ import useWebRTC from '@business/hooks/useWebRTC';
 
 import { useHumanChatPageContentAnimation } from './useHumanChatPageContentAnimation';
 import { ChatPageState, useHumanChatPageCreateRoomEvent } from './useHumanChatPageCreateRoomEvent';
+import { useHumanChatPageSideBar } from './useHumanChatPageSIdeBar';
 import { useHumanChatPageWrongURL } from './useHumanChatPageWrongURL';
 
 export interface OutletContext {
@@ -26,31 +27,23 @@ export interface OutletContext {
 }
 
 export default function HumanChatPage() {
+  useHumanChatPageWrongURL();
+
+  const navigate = useNavigate();
   const { endWebRTC } = useWebRTC();
 
-  useHumanChatPageWrongURL();
   const { chatPageState, setChatPageState } = useHumanChatPageCreateRoomEvent();
 
   const { messages, onSubmitMessage, inputDisabled, addPickCardMessage } = useHumanChatMessage();
   const { tarotButtonClick, tarotButtonDisabled } = useHumanTarotSpread(addPickCardMessage);
 
   const { changeContentAnimation, contentAnimation } = useHumanChatPageContentAnimation();
-  const [sideBarDisabled, setSideBarDisabled] = useState<boolean>(false);
+  const { disableSideBar, enableSideBar, sideBarDisabled } = useHumanChatPageSideBar({
+    onDisableSideBar: () => {
+      changeContentAnimation(false);
+    },
+  });
 
-  const disableSideBar = () => {
-    changeContentAnimation(false);
-    setSideBarDisabled(true);
-  };
-
-  const enableSideBar = () => {
-    setSideBarDisabled(false);
-  };
-
-  useEffect(() => {
-    disableSideBar();
-  }, []);
-
-  const navigate = useNavigate();
   const { unblockGoBack } = useBlocker({
     when: ({ nextLocation }) => nextLocation.pathname === '/' || nextLocation.pathname === '/chat/human',
     onConfirm: () => navigate('/'),
