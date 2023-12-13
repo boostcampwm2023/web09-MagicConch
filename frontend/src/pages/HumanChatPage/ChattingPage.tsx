@@ -42,7 +42,7 @@ export default function ChattingPage() {
         tarotButtonClick={tarotButtonClick}
         tarotButtonDisabled={tarotButtonDisabled}
       />
-      <div className="absolute top-[10vh] right-90">
+      <div className="absolute top-[10%] right-90">
         <IconButton
           icon="uil:setting"
           iconColor="textWhite"

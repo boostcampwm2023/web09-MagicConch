@@ -17,8 +17,8 @@ function AIChatPage({}: AIChatPageProps) {
       <Header />
       <ChatContainer
         width="w-[80vw] max-w-700"
-        height="h-[75vh]"
-        position="top-[10vh]"
+        height="h-[75%]"
+        position="top-[10%]"
         messages={messages}
         inputDisabled={inputDisabled}
         onSubmitMessage={onSubmitMessage}
