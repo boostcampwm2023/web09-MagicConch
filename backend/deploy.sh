@@ -53,7 +53,7 @@ blue_green() {
   echo "* Down old version" >> $DEBUG_LOG
   STOP_CONTAINER_ID=$(docker ps --filter "name=$STOP_TARGET" --quiet)
   if [ -n "$STOP_CONTAINER_ID" ]; then
-    docker rm -f $STOP_CONTAINER_ID
+    docker stop $STOP_CONTAINER_ID
   fi
 }
 
