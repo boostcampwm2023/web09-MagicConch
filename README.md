@@ -53,7 +53,7 @@
     AI 챗봇을 활용해서 언제든지 편하게 타로 상담을 받아볼 수 있어요 🤖 <br>
     실시간 화상 채팅으로 거리와 상관없이 타로 상담사와 소통할 수 있어요 🌈<br>
     <br>
-    <a href="https://github.com/boostcampwm2023/web09-MagicConch?tab=readme-ov-file#-%EC%A3%BC%EC%9A%94-%EC%9D%B4%EC%8A%88-%EB%B0%8F-%ED%95%B4%EA%B2%B0-%EA%B3%BC%EC%A0%95">주요 이슈 및 해결 과정 바로 가기</a>
+    <a href="https://github.com/boostcampwm2023/web09-MagicConch?tab=readme-ov-file#%EC%A3%BC%EC%9A%94-%EC%9D%B4%EC%8A%88-%EB%B0%8F-%ED%95%B4%EA%B2%B0-%EA%B3%BC%EC%A0%95-">주요 이슈 및 해결 과정 바로 가기</a>
 </div>
 
 <br>
