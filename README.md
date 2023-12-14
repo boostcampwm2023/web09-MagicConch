@@ -200,7 +200,7 @@
 </table>
 
 ### 주요 이슈 및 해결 과정 🔥
-- [[BE] nginx를 활용한 무중단 배포]()
+- [[BE] nginx를 활용한 무중단 배포](https://github.com/boostcampwm2023/web09-MagicConch/wiki/nginx%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EB%AC%B4%EC%A4%91%EB%8B%A8-%EB%B0%B0%ED%8F%AC)
 
 <br>
 
