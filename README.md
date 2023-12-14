@@ -44,7 +44,7 @@
     <br>
     <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fboostcampwm2023%2Fweb09-MagicConch&count_bg=%238350C6&title_bg=%23555555&icon=github.svg&icon_color=%23E7E7E7&title=hits&edge_flat=false"/></a>
     <br><br>
-    🔗 <a href="https://github.com/boostcampwm2023/web09-MagicConch?tab=readme-ov-file#%EC%9A%B0%EB%8B%B9%ED%83%95%ED%83%95%20%EC%9D%B4%EC%8A%88%20%ED%95%B4%EA%B2%B0%EA%B8%B0-">우당탕탕 이슈 해결기</a> 💦
+    🔗 <a href="https://github.com/boostcampwm2023/web09-MagicConch?tab=readme-ov-file#%EC%9A%B0%EB%8B%B9%ED%83%95%ED%83%95-%EC%9D%B4%EC%8A%88-%ED%95%B4%EA%B2%B0%EA%B8%B0-">우당탕탕 이슈 해결기</a> 💦
 </div>
 
 <br>
@@ -120,7 +120,12 @@
 
 <br>
 
-## 🔮🥛 타로 밀크티: 팀원
+## 🔮🥛 타로 밀크티 소개
+> 타로 밀크티는 **FE 3명 & BE 1명** 으로 구성되어 있어요!!
+> 
+> 인원 불균형을 해결하기 위해 FE 팀원들의 ✨ **풀스택 도전** ✨이 담겨 있어요~ 덕분에 BE 팀원은 처음 해보는 배포와 인프라를 성공적으로 마칠 수 있었습니다 🥰
+> 
+> 자세한 담당 업무는 [여기](https://github.com/boostcampwm2023/web09-MagicConch/wiki/팀-소개)를 확인해주세요 👍  
 
 <table>
   <th>J027</th>
