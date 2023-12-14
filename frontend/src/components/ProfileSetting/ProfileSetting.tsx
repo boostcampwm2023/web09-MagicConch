@@ -39,11 +39,11 @@ export default function ProfileSetting({
     myProfile: state.myProfile,
   }));
 
-  const { myMicOn, myVideoOn } = useMediaInfo(state => ({
+  const { myMicOn, myVideoOn, selectedAudioID, selectedCameraID } = useMediaInfo(state => ({
     myMicOn: state.myMicOn,
     myVideoOn: state.myVideoOn,
-    remoteMicOn: state.remoteMicOn,
-    remoteVideoOn: state.remoteVideoOn,
+    selectedAudioID: state.selectedAudioID,
+    selectedCameraID: state.selectedCameraID,
   }));
 
   return (
@@ -85,6 +85,7 @@ export default function ProfileSetting({
                 name="카메라"
                 deviceList={camList}
                 onChange={changeMyCamera}
+                defaultId={selectedCameraID}
               />
             </div>
             <div className="z-10">
@@ -92,6 +93,7 @@ export default function ProfileSetting({
                 name="마이크"
                 deviceList={micList}
                 onChange={changeMyAudio}
+                defaultId={selectedAudioID}
               />
             </div>
           </div>

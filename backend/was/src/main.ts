@@ -2,6 +2,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
+import { setupSentry } from './common/config/sentry.setting';
 import { setupSwagger } from './common/config/swagger.setting';
 import { LoggerService } from './logger/logger.service';
 
@@ -19,6 +20,9 @@ async function bootstrap() {
 
   const logger: LoggerService = app.get(LoggerService);
   app.useLogger(logger);
+
+  const dsn: string = process.env.SENTRY_DSN || '';
+  setupSentry(app, dsn);
 
   setupSwagger(app);
 

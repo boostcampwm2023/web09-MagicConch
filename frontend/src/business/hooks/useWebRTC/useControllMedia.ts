@@ -1,51 +1,41 @@
-import { useEffect } from 'react';
+import WebRTC from '@business/services/WebRTC';
 
 import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
 
+import { useMedia } from './useMedia';
+
 interface useContorollMediaParams {
-  localStreamRef: React.MutableRefObject<MediaStream | undefined>;
-  peerConnectionRef: React.MutableRefObject<RTCPeerConnection | undefined>;
   localVideoRef: React.RefObject<HTMLVideoElement | undefined>;
-  mediaInfoChannel: React.MutableRefObject<RTCDataChannel | undefined>;
-  getMedia: ({ cameraID, audioID }: { cameraID?: string; audioID?: string }) => Promise<void>;
 }
 
-export function useControllMedia({
-  localVideoRef,
-  localStreamRef,
-  peerConnectionRef,
-  mediaInfoChannel,
-  getMedia,
-}: useContorollMediaParams) {
-  const { selectedAudioID, selectedCameraID, setSelectedAudioID, setSelectedCameraID, toggleMyMic, toggleMyVideo } =
-    useMediaInfo(state => ({
-      toggleMyVideo: state.toggleMyVideo,
-      toggleMyMic: state.toggleMyMic,
-      setSelectedAudioID: state.setSelectedAudioID,
-      setSelectedCameraID: state.setSelectedCameraID,
-      selectedAudioID: state.selectedAudioID,
-      selectedCameraID: state.selectedCameraID,
-    }));
+const toggleTrack = (track: MediaStreamTrack) => {
+  track.enabled = !track.enabled;
+};
 
-  const addTracks = () => {
-    if (localStreamRef.current === undefined) {
+export function useControllMedia({ localVideoRef }: useContorollMediaParams) {
+  const {
+    toggleMyMic: toggleMyMicState,
+    toggleMyVideo: toggleMyVideoState,
+    setSelectedAudioID,
+    setSelectedCameraID,
+  } = useMediaInfo(state => ({
+    toggleMyVideo: state.toggleMyVideo,
+    toggleMyMic: state.toggleMyMic,
+    setSelectedAudioID: state.setSelectedAudioID,
+    setSelectedCameraID: state.setSelectedCameraID,
+    selectedAudioID: state.selectedAudioID,
+    selectedCameraID: state.selectedCameraID,
+  }));
+
+  const { getLocalStream } = useMedia();
+
+  const webRTC = WebRTC.getInstace();
+
+  const setLocalVideoSrcObj = (stream: MediaStream) => {
+    if (!localVideoRef.current) {
       return;
     }
-    localStreamRef.current.getTracks().forEach(track => {
-      peerConnectionRef.current?.addTrack(track, localStreamRef.current!);
-    });
-  };
-
-  const changeVideoTrack = () => {
-    const nowTrack = localStreamRef.current?.getVideoTracks()[0];
-    const sender = peerConnectionRef.current?.getSenders().find(sender => sender.track?.kind === 'video');
-    sender?.replaceTrack(nowTrack!);
-  };
-
-  const changeAudioTrack = () => {
-    const nowTrack = localStreamRef.current?.getAudioTracks()[0];
-    const sender = peerConnectionRef.current?.getSenders().find(sender => sender.track?.kind === 'audio');
-    sender?.replaceTrack(nowTrack!);
+    localVideoRef.current.srcObject = stream;
   };
 
   const toggleVideo = () => {
@@ -54,11 +44,16 @@ export function useControllMedia({
     }
 
     const videoTrack = localVideoRef.current.srcObject as MediaStream;
-    videoTrack.getVideoTracks().forEach(track => (track.enabled = !track.enabled));
-    toggleMyVideo();
-    // 여기서 dataChannel로 비디오 on/off를 보내줘야 함
-    if (!mediaInfoChannel.current || mediaInfoChannel.current.readyState !== 'open') return;
-    mediaInfoChannel.current.send(JSON.stringify([{ type: 'video', onOrOff: videoTrack.getVideoTracks()[0].enabled }]));
+    videoTrack.getVideoTracks().forEach(toggleTrack);
+    toggleMyVideoState();
+
+    const mediaInfoChannel = webRTC.dataChannels.get('mediaInfoChannel');
+    if (!mediaInfoChannel || mediaInfoChannel.readyState !== 'open') {
+      return;
+    }
+
+    const videoTrackenabled = videoTrack.getVideoTracks()[0].enabled;
+    mediaInfoChannel.send(JSON.stringify([{ type: 'video', onOrOff: videoTrackenabled }]));
   };
 
   const toggleAudio = () => {
@@ -67,44 +62,39 @@ export function useControllMedia({
     }
 
     const audioTrack = localVideoRef.current.srcObject as MediaStream;
-    audioTrack.getAudioTracks().forEach(track => (track.enabled = !track.enabled));
-    toggleMyMic();
-    // 여기서 dataChannel로 오디오 on/off를 보내줘야 함
-    if (!mediaInfoChannel.current || mediaInfoChannel.current.readyState !== 'open') return;
-    mediaInfoChannel.current.send(JSON.stringify([{ type: 'audio', onOrOff: audioTrack.getAudioTracks()[0].enabled }]));
+    audioTrack.getAudioTracks().forEach(toggleTrack);
+    toggleMyMicState();
+
+    const mediaInfoChannel = webRTC.dataChannels.get('mediaInfoChannel');
+    if (!mediaInfoChannel || mediaInfoChannel.readyState !== 'open') {
+      return;
+    }
+
+    const audioTrackenabled = audioTrack.getAudioTracks()[0].enabled;
+    mediaInfoChannel.send(JSON.stringify([{ type: 'audio', onOrOff: audioTrackenabled }]));
   };
 
   const changeMyVideoTrack = async (id?: string) => {
-    const cameraID = id || selectedCameraID;
+    const stream = await getLocalStream({ cameraID: id });
 
-    setSelectedCameraID(cameraID);
-    await getMedia({ cameraID });
-    changeVideoTrack();
+    if (id) {
+      setSelectedCameraID(id);
+    }
+    setLocalVideoSrcObj(stream);
+    webRTC.setLocalStream(stream);
+    webRTC.replacePeerconnectionVideoTrack2NowLocalStream();
   };
 
   const changeMyAudioTrack = async (id?: string) => {
-    const audioID = id || selectedAudioID;
+    const stream = await getLocalStream({ audioID: id });
 
-    setSelectedAudioID(audioID);
-    await getMedia({ audioID: audioID });
-    changeAudioTrack();
+    if (id) {
+      setSelectedAudioID(id);
+    }
+    setLocalVideoSrcObj(stream);
+    webRTC.setLocalStream(stream);
+    webRTC.replacePeerconnectionAudioTrack2NowLocalStream();
   };
 
-  useEffect(() => {
-    if (!mediaInfoChannel.current) return;
-
-    mediaInfoChannel.current.addEventListener('open', () => {
-      const audioTrack = localVideoRef.current?.srcObject as MediaStream;
-      const videoTrack = localVideoRef.current?.srcObject as MediaStream;
-
-      mediaInfoChannel.current?.send(
-        JSON.stringify([{ type: 'audio', onOrOff: audioTrack.getAudioTracks()[0].enabled }]),
-      );
-      mediaInfoChannel.current?.send(
-        JSON.stringify([{ type: 'video', onOrOff: videoTrack.getVideoTracks()[0].enabled }]),
-      );
-    });
-  }, [mediaInfoChannel.current]);
-
-  return { addTracks, changeMyVideoTrack, changeMyAudioTrack, toggleVideo, toggleAudio };
+  return { changeMyVideoTrack, changeMyAudioTrack, toggleVideo, toggleAudio };
 }

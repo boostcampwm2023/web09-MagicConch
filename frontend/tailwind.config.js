@@ -119,6 +119,7 @@ export default {
         '.text-default': { color: '#5E6E76' },
         '.text-weak': { color: '#879298' },
         '.text-white-default': { color: '#FFFFFF' },
+        '.text-white-alt': { color: '#d7dde4' },
         '.kakao-icon': { color: '#FEE500' },
         '.display-bold24': themeBase.bold_L,
         '.display-bold16': themeBase.bold_M,

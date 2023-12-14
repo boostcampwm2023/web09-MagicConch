@@ -10,18 +10,20 @@ export interface SelectOptions {
 interface SelectProps {
   width?: string;
   options: SelectOptions[];
+  defaultId?: string;
   autoFocus?: boolean;
   onChange?: ({ value, label }: SelectOptions) => void;
 }
 
-export default function Select({ width, options, autoFocus, onChange }: SelectProps) {
+export default function Select({ width, options, autoFocus, defaultId, onChange }: SelectProps) {
   const [opened, setOpened] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [selected, setSelected] = useState<SelectOptions>({ value: '', label: '' });
 
   useEffect(() => {
     if (options.length && !selected.value && !selected.label) {
-      setSelected(options[0]);
+      const defaultOption = options.find(({ value }) => value === defaultId);
+      setSelected(defaultOption ?? options[0]);
     }
   }, [options]);
 

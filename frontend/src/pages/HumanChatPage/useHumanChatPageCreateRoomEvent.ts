@@ -10,7 +10,7 @@ export interface ChatPageState {
   host: boolean;
 }
 export function useHumanChatPageCreateRoomEvent() {
-  const humanSocket = new HumanSocketManager();
+  const humanSocket = HumanSocketManager.getInstance();
   const navigate = useNavigate();
   const location = useLocation();
 

@@ -18,6 +18,7 @@ services:
       - X_NCP_CLOVASTUDIO_API_KEY=${X_NCP_CLOVASTUDIO_API_KEY}
       - X_NCP_APIGW_API_KEY=${X_NCP_APIGW_API_KEY}
       - PORT=3000
+      - SENTRY_DSN=${SENTRY_DSN}
     expose:
       - "3000"
     volumes:
@@ -35,16 +36,6 @@ services:
     expose:
       - "3001"
 
-  coturn-server:
-    image: "coturn/coturn"
-    container_name: "coturn-server"
-    environment:
-      - TURN_SERVER_NAME=${TURN_SERVER_NAME}
-      - TURN_SERVER_USER=${TURN_SERVER_USER}
-      - TURN_SERVER_PASSWORD=${TURN_SERVER_PASSWORD}
-    expose:
-      - "3478"
-
   nginx:
     container_name: "nginx-reverse-proxy"
     build:
@@ -56,7 +47,6 @@ services:
     depends_on:
       - was-blue
       - signal-blue
-      - coturn-server
       - certbot
     volumes:
       - /var/log/nginx:/var/log/nginx

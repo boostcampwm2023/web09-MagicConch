@@ -5,11 +5,15 @@ import SocketManager from './SocketManager';
 class HumanSocketManager extends SocketManager {
   static instance: HumanSocketManager | null = null;
 
-  constructor() {
-    if (HumanSocketManager.instance) {
-      return HumanSocketManager.instance;
-    }
+  private constructor() {
     super(import.meta.env.VITE_HUMAN_SOCKET_URL, '/signal');
+  }
+
+  static getInstance(): HumanSocketManager {
+    if (!this.instance) {
+      this.instance = new HumanSocketManager();
+    }
+    return this.instance;
   }
 
   on<U>(eventName: HumanServerEvent, eventListener: (args: U) => void) {

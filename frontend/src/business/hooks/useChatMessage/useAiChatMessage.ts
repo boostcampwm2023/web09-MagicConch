@@ -2,18 +2,15 @@ import { useEffect, useState } from 'react';
 
 import { MessageButton } from '@components/ChatContainer';
 
-// import useTOLD from '@business/hooks/useTOLD';
 import { AISocketManager } from '@business/services/SocketManager';
 
 import useChatMessage from './useChatMessage';
 
 export function useAiChatMessage() {
-  const socketManager = new AISocketManager();
+  const socketManager = AISocketManager.getInstance();
 
   const { messages, pushMessage, updateMessage } = useChatMessage();
   const [inputDisabled, setInputDisabled] = useState(true);
-
-  // const { displayTold } = useTOLD('AI');
 
   const addMessage = (
     type: 'left' | 'right',
@@ -40,16 +37,14 @@ export function useAiChatMessage() {
 
     socketManager.on('tarotCard', () => setInputDisabled(true));
 
-    // const requestFeedbackMessage = '이번 상담은 어땠어?\n피드백을 남겨주면 내가 더 발전할 수 있어!';
-    // const button = { content: '피드백하기', onClick: displayTold };
-
     socketManager.on('chatEnd', (id: string) => {
       setInputDisabled(true);
 
       const shareLinkId: string = id;
       updateMessage(message => ({ ...message, shareLinkId }));
-      // setTimeout(() => addMessage('left', { message: requestFeedbackMessage, button }), 5000);
     });
+
+    return () => socketManager.disconnect();
   }, []);
 
   const addPickCardMessage = (tarotId: number) => {
