@@ -115,17 +115,18 @@
 ### 우당탕탕 이슈 해결기 💦
 > 타로 밀크티의 기술적 도전과 이슈 해결 기록
 
-- [[BE] 야 너두 무중단 배포 할 수 있어](https://github.com/boostcampwm2023/web09-MagicConch/wiki/%EC%95%BC-%EB%84%88%EB%91%90-%EB%AC%B4%EC%A4%91%EB%8B%A8-%EB%B0%B0%ED%8F%AC-%ED%95%A0-%EC%88%98-%EC%9E%88%EC%96%B4)
+- [[BE] 야 너두 무중단 배포 할 수 있어 🫵](https://github.com/boostcampwm2023/web09-MagicConch/wiki/%EC%95%BC-%EB%84%88%EB%91%90-%EB%AC%B4%EC%A4%91%EB%8B%A8-%EB%B0%B0%ED%8F%AC-%ED%95%A0-%EC%88%98-%EC%9E%88%EC%96%B4-%F0%9F%AB%B5)
 - [[FE] 인터랙티브 웹: 카드 애니메이션](https://github.com/boostcampwm2023/web09-MagicConch/wiki/%EC%9D%B8%ED%84%B0%EB%9E%99%ED%8B%B0%EB%B8%8C-%EC%9B%B9:-%EC%B9%B4%EB%93%9C-%EC%95%A0%EB%8B%88%EB%A9%94%EC%9D%B4%EC%85%98)
 - [[FE/BE] UX를 위해 AI 채팅 반응 속도를 84.87%까지 개선한 방법 😎](https://github.com/boostcampwm2023/web09-MagicConch/wiki/UX%EB%A5%BC-%EC%9C%84%ED%95%B4-AI-%EC%B1%84%ED%8C%85-%EB%B0%98%EC%9D%91-%EC%86%8D%EB%8F%84%EB%A5%BC-84.87%25%EA%B9%8C%EC%A7%80-%EA%B0%9C%EC%84%A0%ED%95%9C-%EB%B0%A9%EB%B2%95-%F0%9F%98%8E)
 - [[FE] 🐻 Context API, Provider 지옥 그리고 귀여운 곰돌이 🐻](https://github.com/boostcampwm2023/web09-MagicConch/wiki/%F0%9F%90%BB-Context-API%EC%99%80-Provider-%EC%A7%80%EC%98%A5%EA%B3%BC-%EA%B7%80%EC%97%AC%EC%9A%B4-%EA%B3%B0%EB%8F%8C%EC%9D%B4-%F0%9F%90%BB)
 - [[FE] 🚀 복잡함을 단순하게, 더 나은 경험으로 🚀](https://github.com/boostcampwm2023/web09-MagicConch/wiki/%F0%9F%9A%80-useWebRTC%ED%9B%85-%EB%A6%AC%ED%8C%A9%ED%86%A0%EB%A7%81-%EC%97%AC%EC%A0%95:-%EB%B3%B5%EC%9E%A1%ED%95%A8%EC%9D%84-%EB%8B%A8%EC%88%9C%ED%95%98%EA%B2%8C,-%EB%8D%94-%EB%82%98%EC%9D%80-%EA%B2%BD%ED%97%98%EC%9C%BC%EB%A1%9C-%F0%9F%9A%80)
+- [[FE/BE] 😇 소켓 아이고 (Feat. socket.io는 파싱을 해)](https://github.com/boostcampwm2023/web09-MagicConch/wiki/%F0%9F%98%87-%EC%86%8C%EC%BC%93-%EC%95%84%EC%9D%B4%EA%B3%A0-(Feat.-socket.io%EB%8A%94-%ED%8C%8C%EC%8B%B1%EC%9D%84-%ED%95%B4))
 <br>
 
 ## 🔮🥛 타로 밀크티 소개
 > 타로 밀크티는 **FE 3명 & BE 1명** 으로 구성되어 있어요!!
 > 
-> 인원 불균형을 해결하기 위해 FE 팀원들의 ✨ **풀스택 도전** ✨이 담겨 있어요~ 덕분에 BE 팀원은 처음 해보는 배포와 인프라를 성공적으로 마칠 수 있었습니다 🥰
+> 인원 불균형을 해결하기 위해 FE 팀원들의 ✨ **풀스택 도전** ✨이 담겨 있어요~ <br>덕분에 BE 팀원은 처음 해보는 배포와 인프라를 성공적으로 마칠 수 있었습니다 🥰
 > 
 > 자세한 담당 업무는 [여기](https://github.com/boostcampwm2023/web09-MagicConch/wiki/팀-소개)를 확인해주세요 👍  
 
