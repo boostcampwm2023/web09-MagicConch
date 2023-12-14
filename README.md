@@ -199,8 +199,11 @@
   </tr>
 </table>
 
+<br>
+
 ### 주요 이슈 및 해결 과정 🔥
 - [[BE] nginx를 활용한 무중단 배포](https://github.com/boostcampwm2023/web09-MagicConch/wiki/nginx%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EB%AC%B4%EC%A4%91%EB%8B%A8-%EB%B0%B0%ED%8F%AC)
+- [[FE] 인터랙티브 웹: 카드 애니메이션](https://github.com/boostcampwm2023/web09-MagicConch/wiki/%EC%9D%B8%ED%84%B0%EB%9E%99%ED%8B%B0%EB%B8%8C-%EC%9B%B9:-%EC%B9%B4%EB%93%9C-%EC%95%A0%EB%8B%88%EB%A9%94%EC%9D%B4%EC%85%98)
 
 <br>
 
