@@ -25,7 +25,7 @@
     <div>
         🔗 <a href="https://web09-magicconch.pages.dev">배포 링크</a>
         &nbsp|&nbsp 
-        🎥 <a href="https://github.com/boostcampwm2023/web09-MagicConch/wiki/%F0%9F%8E%A5-%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4">시나리오</a>
+        🎥 <a href="https://github.com/boostcampwm2023/web09-MagicConch/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EB%B0%8F-%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4">주요 기능 및 시나리오</a>
     </div>
     <br/>
     <div>
@@ -44,103 +44,14 @@
     <br>
     <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fboostcampwm2023%2Fweb09-MagicConch&count_bg=%238350C6&title_bg=%23555555&icon=github.svg&icon_color=%23E7E7E7&title=hits&edge_flat=false"/></a>
     <br><br>
-    <h3>👭 누가 사용하면 좋을까요?</h3>
-    고민을 털어놓고 싶은 분 🗣️<br>
-    미래에 궁금한 게 있는 분 🔮<br>
-    온라인에서 부업을 꿈꾸는 분 <br>
-    <br>
-    <h3>👍 우리 서비스의 장점</h3>
-    AI 챗봇을 활용해서 언제든지 편하게 타로 상담을 받아볼 수 있어요 🤖 <br>
-    실시간 화상 채팅으로 거리와 상관없이 타로 상담사와 소통할 수 있어요 🌈<br>
-    <br>
-    <a href="https://github.com/boostcampwm2023/web09-MagicConch?tab=readme-ov-file#%EC%A3%BC%EC%9A%94-%EC%9D%B4%EC%8A%88-%EB%B0%8F-%ED%95%B4%EA%B2%B0-%EA%B3%BC%EC%A0%95-">주요 이슈 및 해결 과정 바로 가기</a>
+    🔗 <a href="https://github.com/boostcampwm2023/web09-MagicConch?tab=readme-ov-file#%EC%9A%B0%EB%8B%B9%ED%83%95%ED%83%95%20%EC%9D%B4%EC%8A%88%20%ED%95%B4%EA%B2%B0%EA%B8%B0-">우당탕탕 이슈 해결기</a> 💦
 </div>
-
-<br>
-
-## 주요기능
-
-### 🤖 AI 타로 상담 서비스
-> AI 챗봇에게 고민을 털어놓고 타로 상담을 받을 수 있어요.
-
-<table>
-    <thead>
-        <th>AI 채팅 화면</th>
-        <th>카드 뽑기 화면</th>
-        <th>결과 공유 화면</th>
-    </thead>
-    <tbody>
-        <tr>
-            <td>
-                <img src="https://github.com/boostcampwm2023/web09-MagicConch/assets/70785620/7ff3d5a0-d5ee-4562-8978-af099b0fda6e" />
-            </td>
-            <td>
-                <img src ="https://github.com/boostcampwm2023/web09-MagicConch/assets/70785620/e09bada9-bff9-4afc-8197-6dedde43d600" />
-            </td>
-            <td>
-                <img src="https://github.com/boostcampwm2023/web09-MagicConch/assets/70785620/fa7af072-6b1f-4ad4-99ce-ae3b974614bc">
-            </td>
-        </tr>
-    </tbody>
-</table>
-
-<br> 
-
-
-### 🗣️ 실시간 화상 타로 상담 서비스
-> 화상 상담 서비스를 이용하여 실제 타로 상담사에게 타로 상담을 받을 수 있어요. <br>
-> 우측 상단의 채팅 버튼으로 타로 카드와 해설 내용을 주고 받을 수도 있어요. 
-
-<table>
-    <thead>
-        <th>호스트 화면 (상담사)</th>
-        <th>게스트 화면 (상담자)</th>
-    </thead>
-    <tbody>
-        <tr>
-            <td>
-                <img src="https://github.com/boostcampwm2023/web09-MagicConch/assets/70785620/783c4533-7bbb-43dd-bb15-6ab9dd1a1532" />
-            </td>
-            <td>
-                <img src="https://github.com/boostcampwm2023/web09-MagicConch/assets/70785620/11da9fdd-d45e-4670-90dc-b6a43078b3a8" />
-            </td>
-        </tr>
-        <tr>
-            <td>호스트가 타로 상담을 진행하기 위해 위해 채팅방을 개설해요</td>
-            <td>게스트가 타로 상담을 받기 위해 채팅방에 들어가요</td>
-        </tr>
-        <tr>
-            <td>
-                <img src="https://github.com/boostcampwm2023/web09-MagicConch/assets/70785620/048996b2-4ff7-4db9-acd0-fed0ce75373c" />
-            </td>
-            <td>
-                <img src="https://github.com/boostcampwm2023/web09-MagicConch/assets/70785620/eada2848-197a-46e8-98bd-bd28ae369fb7" />
-            </td>
-        </tr>
-        <tr>
-            <td>호스트는 방에 입장할 때 닉네임 및 프로필을 설정할 수 있어요</td>
-            <td>게스트는 방에 입장할 때 닉네임 및 프로필을 설정할 수 있어요</td>
-        </tr>
-        <tr>
-            <td>
-                <img src="https://github.com/boostcampwm2023/web09-MagicConch/assets/70785620/a600aa6f-d05d-44b7-8c62-67efe1b8a8f4" />
-            </td>
-            <td>
-                <img src="https://github.com/boostcampwm2023/web09-MagicConch/assets/70785620/406b9360-aa7b-4b96-8730-67f75c34fc5e" />
-            </td>
-        </tr>
-        <tr>
-            <td>호스트는 타로 카드 펼치기 버튼으로 게스트에게 카드를 펼쳐요</td>
-            <td>게스트는 펼쳐진 카드 더미에서 타로 카드를 뽑을 수 있어요</td>
-        </tr>
-    </tbody>
-</table>
 
 <br>
 
 ## 시스템 아키텍처
 <div align="center">
-    <img src="https://github.com/boostcampwm2023/web09-MagicConch/assets/70785620/7d827718-a11d-447b-bd61-d1819528cd60" width="80%"/>
+    <img src="https://github.com/boostcampwm2023/web09-MagicConch/assets/70785620/f3ad78e5-5fea-4bd8-a50e-022cf5122485" width="80%"/>
 </div>
 
 <br>
@@ -201,8 +112,10 @@
 
 <br>
 
-### 주요 이슈 및 해결 과정 🔥
-- [[BE] nginx를 활용한 무중단 배포](https://github.com/boostcampwm2023/web09-MagicConch/wiki/nginx%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EB%AC%B4%EC%A4%91%EB%8B%A8-%EB%B0%B0%ED%8F%AC)
+### 우당탕탕 이슈 해결기 💦
+> 타로 밀크티의 기술적 도전과 이슈 해결 기록
+
+- [[BE] 야 너두 무중단 배포 할 수 있어](https://github.com/boostcampwm2023/web09-MagicConch/wiki/%EC%95%BC-%EB%84%88%EB%91%90-%EB%AC%B4%EC%A4%91%EB%8B%A8-%EB%B0%B0%ED%8F%AC-%ED%95%A0-%EC%88%98-%EC%9E%88%EC%96%B4)
 - [[FE] 인터랙티브 웹: 카드 애니메이션](https://github.com/boostcampwm2023/web09-MagicConch/wiki/%EC%9D%B8%ED%84%B0%EB%9E%99%ED%8B%B0%EB%B8%8C-%EC%9B%B9:-%EC%B9%B4%EB%93%9C-%EC%95%A0%EB%8B%88%EB%A9%94%EC%9D%B4%EC%85%98)
 
 <br>
