@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
 import { ChatModule } from './chat/chat.module';
 import { DatabaseModule } from './common/config/database/database.module';
 import { ErrorsInterceptor } from './common/interceptors/errors.interceptor';
@@ -24,7 +23,6 @@ import { TarotModule } from './tarot/tarot.module';
     EventsModule,
     LoggerModule,
   ],
-  controllers: [AppController],
   providers: [
     {
       provide: APP_INTERCEPTOR,

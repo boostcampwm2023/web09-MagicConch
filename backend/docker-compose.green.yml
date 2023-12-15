@@ -19,11 +19,12 @@ services:
       - X_NCP_APIGW_API_KEY=${X_NCP_APIGW_API_KEY}
       - PORT=3002
       - SENTRY_DSN=${SENTRY_DSN}
+      - SLACK_WEBHOOK_FOR_BE=${SLACK_WEBHOOK_FOR_BE}
     expose:
       - "3002"
     volumes:
       - /var/log/was:/app/was/logs
-      - /var/log/typeorm:/app/was/typeorm.log
+      - /var/log/typeorm:/app/was/ormlogs.log
 
   signal-green:
     image: "${DOCKER_USERNAME}/magicconch:signal-green-${GITHUB_SHA}"

@@ -23,9 +23,8 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
             connectTimeout: 30000,
             acquireTimeout: 30000,
           },
-          logging: ['query', 'error'],
+          logging: ['error'],
           logger: 'file',
-          logFileName: 'typeorm.log',
         };
       },
     }),
