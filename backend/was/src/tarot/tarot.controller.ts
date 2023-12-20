@@ -6,12 +6,12 @@ import {
   ParseUUIDPipe,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { TarotCardResponseDto } from './dto/tarot-card-response.dto';
+import { TarotResultResponseDto } from './dto/tarot-result-response.dto';
 import {
   FindTarotCardDecorator,
   FindTarotResultDecorator,
-} from 'src/common/decorators/swagger/tarot.decorator';
-import { TarotCardResponseDto } from './dto/tarot-card-response.dto';
-import { TarotResultResponseDto } from './dto/tarot-result-response.dto';
+} from './tarot.decorators';
 import { TarotService } from './tarot.service';
 
 @Controller('tarot')

@@ -17,7 +17,7 @@ import {
   FindMessagesDecorator,
   FindRoomsDecorator,
   UpdateRoomDecorator,
-} from 'src/common/decorators/swagger/chat.decorator';
+} from './chat.decorators';
 import { ChatService } from './chat.service';
 import { ChattingMessageResponseDto } from './dto/chatting-message-response.dto';
 import { ChattingRoomResponseDto } from './dto/chatting-room-response.dto';
@@ -49,7 +49,7 @@ export class ChatController {
   @UpdateRoomDecorator(
     '채팅방 제목',
     { type: 'uuid', name: 'id' },
-    UpdateChattingRoomDto,
+    { type: UpdateChattingRoomDto },
   )
   async updateRoom(
     @Param('id', ParseUUIDPipe) id: string,
