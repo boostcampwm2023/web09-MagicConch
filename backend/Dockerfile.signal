@@ -2,13 +2,12 @@ FROM node:20
 
 RUN apt-get update && apt-get install -y tini
 
-WORKDIR /app
-
-COPY signal ./signal
-
 WORKDIR /app/signal
 
+COPY signal/package*.json ./
 RUN npm install
+
+COPY signal .
 RUN npm run build
 
 CMD ["tini", "--", "npm", "run", "start:prod"]
