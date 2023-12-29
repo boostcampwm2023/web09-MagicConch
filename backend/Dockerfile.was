@@ -4,7 +4,7 @@ RUN apt-get update && apt-get install -y tini
 
 WORKDIR /app/was
 
-COPY ./was/package.json ./package.json
+COPY was/package*.json ./
 RUN npm install
 
 COPY was .
