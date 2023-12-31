@@ -1,0 +1,41 @@
+version: "3.3"
+
+services:
+  was-blue:
+    image: "${DOCKER_USERNAME}/magicconch:was-blue-${GITHUB_SHA}"
+    container_name: "was-blue"
+    env_file: .env
+    environment:
+      - PORT=3000
+    expose:
+      - "3000"
+    volumes:
+      - /var/log/was:/app/was/logs
+      - /var/log/typeorm:/app/was/typeorm
+
+  signal-blue:
+    image: "${DOCKER_USERNAME}/magicconch:signal-blue-${GITHUB_SHA}"
+    container_name: "signal-blue"
+    environment:
+      - PORT=3001
+    expose:
+      - "3001"
+
+  nginx:
+    container_name: "nginx-reverse-proxy"
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - was-blue
+      - signal-blue
+      - certbot
+    volumes:
+      - /var/log/nginx:/var/log/nginx
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - /etc/letsencrypt
+      - /var/www/html:/var/www/html
+    command: certonly --webroot --webroot-path=/var/www/html -d was.tarotmilktea.com

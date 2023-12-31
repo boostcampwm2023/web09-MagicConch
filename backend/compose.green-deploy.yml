@@ -1,0 +1,44 @@
+version: "3.3"
+
+services:
+  was-green:
+    image: "${DOCKER_USERNAME}/magicconch:was-green-${GITHUB_SHA}"
+    container_name: "was-green"
+    env_file: .env
+    environment:
+      - PORT=3002
+    expose:
+      - "3002"
+    volumes:
+      - /var/log/was:/app/was/logs
+      - /var/log/typeorm:/app/was/typeorm
+
+  signal-green:
+    image: "${DOCKER_USERNAME}/magicconch:signal-green-${GITHUB_SHA}"
+    container_name: "signal-green"
+    environment:
+      - PORT=3003
+    expose:
+      - "3003"
+
+  nginx:
+    container_name: "nginx-reverse-proxy"
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - was-green
+      - signal-green
+      - certbot
+    volumes:
+      - /var/log/nginx:/var/log/nginx
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - /etc/letsencrypt
+      - /var/www/html:/var/www/html
+    command: certonly --webroot --webroot-path=/var/www/html -d was.tarotmilktea.com
