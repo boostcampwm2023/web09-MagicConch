@@ -55,19 +55,19 @@ jobs:
       - name: Build & Push Docker Images (Blue & Green)
         run: |
           cd backend
-          docker-compose -f docker-compose.blue.yml build --no-cache
-          docker-compose -f docker-compose.green.yml build --no-cache
-          docker-compose -f docker-compose.blue.yml push
-          docker-compose -f docker-compose.green.yml push
+          docker-compose -f compose.blue-build.yml build
+          docker-compose -f compose.green-build.yml build
+          docker-compose -f compose.blue-build.yml push
+          docker-compose -f compose.green-build.yml push
 
-      - name: Copy Dockerfiles to Remote Server
+      - name: Copy YAML files to Remote Server
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
-          source: "backend/docker-compose.blue.yml,backend/docker-compose.green.yml,backend/Dockerfile.nginx,backend/Dockerfile.was,backend/Dockerfile.signal"
+          source: "backend/compose.blue-deploy.yml,backend/compose.green-deploy.yml,backend/Dockerfile.nginx"
           target: "~/app/"
           overwrite: true
 
