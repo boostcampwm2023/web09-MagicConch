@@ -1,13 +1,12 @@
 #!/bin/bash
 
-MAIN_SCRIPT="src/main.ts"
 DEBUG_LOG="debug.log"
 NPM_PROD="npm run start:prod"
 
 run_docker() {
   local RUN_TARGET="$1"
 
-  DOCKER_COMPOSE_FILE="docker-compose.$RUN_TARGET.yml"
+  DOCKER_COMPOSE_FILE="compose.$RUN_TARGET-deploy.yml"
 
   echo "<<< Run docker compose : $DOCKER_COMPOSE_FILE" > $DEBUG_LOG
 
