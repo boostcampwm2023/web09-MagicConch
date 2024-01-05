@@ -12,6 +12,8 @@ services:
     volumes:
       - /var/log/was:/app/was/logs
       - /var/log/typeorm:/app/was/typeorm
+    networks:
+      - backend
 
   signal-green:
     image: "${DOCKER_USERNAME}/magicconch:signal-green-${GITHUB_SHA}"
@@ -20,9 +22,11 @@ services:
       - PORT=3003
     expose:
       - "3003"
+    networks:
+      - backend
 
   nginx:
-    container_name: "nginx-reverse-proxy"
+    container_name: "nginx"
     build:
       context: .
       dockerfile: Dockerfile.nginx
@@ -35,10 +39,14 @@ services:
       - certbot
     volumes:
       - /var/log/nginx:/var/log/nginx
+    networks:
+      - backend
 
   certbot:
     image: certbot/certbot
     volumes:
       - /etc/letsencrypt
       - /var/www/html:/var/www/html
+    networks:
+      - backend
     command: certonly --webroot --webroot-path=/var/www/html -d was.tarotmilktea.com

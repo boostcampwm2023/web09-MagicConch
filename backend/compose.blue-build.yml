@@ -14,6 +14,8 @@ services:
     volumes:
       - /var/log/was:/app/was/logs
       - /var/log/typeorm:/app/was/typeorm
+    networks:
+      - backend
     image: "${DOCKER_USERNAME}/magicconch:was-blue-${GITHUB_SHA}"
 
   signal-blue:
@@ -25,4 +27,6 @@ services:
       - PORT=3001
     expose:
       - "3001"
+    networks:
+      - backend
     image: "${DOCKER_USERNAME}/magicconch:signal-blue-${GITHUB_SHA}"
