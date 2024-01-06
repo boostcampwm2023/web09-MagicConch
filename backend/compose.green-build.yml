@@ -30,3 +30,6 @@ services:
     networks:
       - backend
     image: "${DOCKER_USERNAME}/magicconch:signal-green-${GITHUB_SHA}"
+
+networks:
+  backend:

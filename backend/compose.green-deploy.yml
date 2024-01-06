@@ -50,3 +50,6 @@ services:
     networks:
       - backend
     command: certonly --webroot --webroot-path=/var/www/html -d was.tarotmilktea.com
+
+networks:
+  backend:
