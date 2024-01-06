@@ -11,7 +11,7 @@ services:
       - "3000"
     volumes:
       - /var/log/was:/app/was/logs
-      - /var/log/typeorm:/app/was/typeorm
+      - /var/log/ormlogs.log:/app/was/ormlogs.log
     networks:
       - backend
 
