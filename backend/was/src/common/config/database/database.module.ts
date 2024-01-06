@@ -15,17 +15,11 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
           username: configService.get('DB_USERNAME'),
           password: configService.get('DB_PASSWORD'),
           database: configService.get('DB_DATABASE'),
-          // entities: ['src/**/entites/*.entity{.ts,.js}'],
+          synchronize: true,
           autoLoadEntities: true,
           namingStrategy: new SnakeNamingStrategy(),
-          extra: {
-            connectionLimit: 20,
-            connectTimeout: 30000,
-            acquireTimeout: 30000,
-          },
           logging: ['query', 'error'],
           logger: 'file',
-          logFileName: 'typeorm.log',
         };
       },
     }),
