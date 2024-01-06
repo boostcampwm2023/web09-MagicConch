@@ -54,6 +54,7 @@ blue_green() {
   if [ -n "$STOP_CONTAINER_ID" ]; then
     sudo docker stop $STOP_CONTAINER_ID
     sudo docker rm $STOP_CONTAINER_ID
+    sudo docker image prune
   fi
 }
 
