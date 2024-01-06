@@ -2,7 +2,8 @@ name: Blue/Green CD
 
 on:
   push:
-    branches: ["dev", "BE/refactor/#454-AWS-마이그레이션"]
+    paths: ["backend/**"]
+    branches: ["dev"]
 
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
