@@ -10,8 +10,8 @@ run_docker() {
 
   echo "<<< Run docker compose : $DOCKER_COMPOSE_FILE" > $DEBUG_LOG
 
-  docker-compose -f "$DOCKER_COMPOSE_FILE" pull
-  docker-compose -f "$DOCKER_COMPOSE_FILE" up -d
+  sudo docker-compose -f "$DOCKER_COMPOSE_FILE" pull
+  sudo docker-compose -f "$DOCKER_COMPOSE_FILE" up -d
 
   echo ">>> Run complete" >> $DEBUG_LOG
 }
@@ -24,12 +24,12 @@ reload_nginx() {
 
   echo "<<< Reload nginx" >> $DEBUG_LOG
 
-  NGINX_ID=$(docker ps --filter "name=nginx" -q)
+  NGINX_ID=$(sudo docker ps --filter "name=nginx" -q)
   NGINX_CONFIG="/etc/nginx/conf.d/default.conf"
 
-  docker exec $NGINX_ID /bin/bash -c "sed -i 's/was-$STOP_TARGET:$WAS_STOP_PORT/was-$RUN_TARGET:$WAS_RUN_PORT/' $NGINX_CONFIG"
-  docker exec $NGINX_ID /bin/bash -c "sed -i 's/signal-$STOP_TARGET:$((WAS_STOP_PORT + 1))/signal-$RUN_TARGET:$((WAS_RUN_PORT + 1))/' $NGINX_CONFIG"
-  docker exec $NGINX_ID /bin/bash -c "nginx -s reload"
+  sudo docker exec $NGINX_ID /bin/bash -c "sed -i 's/was-$STOP_TARGET:$WAS_STOP_PORT/was-$RUN_TARGET:$WAS_RUN_PORT/' $NGINX_CONFIG"
+  sudo docker exec $NGINX_ID /bin/bash -c "sed -i 's/signal-$STOP_TARGET:$((WAS_STOP_PORT + 1))/signal-$RUN_TARGET:$((WAS_RUN_PORT + 1))/' $NGINX_CONFIG"
+  sudo docker exec $NGINX_ID /bin/bash -c "nginx -s reload"
 
   echo ">>> Reload complete" >> $DEBUG_LOG
 }
@@ -50,14 +50,14 @@ blue_green() {
   rm .env
 
   echo "* Down old version" >> $DEBUG_LOG
-  STOP_CONTAINER_ID=$(docker ps --filter "name=$STOP_TARGET" --quiet)
+  STOP_CONTAINER_ID=$(sudo docker ps --filter "name=$STOP_TARGET" --quiet)
   if [ -n "$STOP_CONTAINER_ID" ]; then
-    docker stop $STOP_CONTAINER_ID
-    docker rm $STOP_CONTAINER_ID
+    sudo docker stop $STOP_CONTAINER_ID
+    sudo docker rm $STOP_CONTAINER_ID
   fi
 }
 
-if docker ps --filter "name=blue" --format '{{.ID}}' | grep -E .; then
+if sudo docker ps --filter "name=blue" --format '{{.ID}}' | grep -E .; then
   RUN_TARGET="green"
   STOP_TARGET="blue"
   WAS_RUN_PORT=3002
