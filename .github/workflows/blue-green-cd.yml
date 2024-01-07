@@ -34,18 +34,18 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PUBLIC_KEY }}" >> ~/.ssh/known_hosts
 
-      - name: Copy .env, deploy script, SSL files to Remote Server
+      - name: Copy some files needed for Deployment to Remote Server
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          source: "backend/.env,backend/deploy.sh,backend/config"
+          source: "backend/.env,backend/deploy.sh,backend/config,backend/compose.blue-deploy.yml,backend/compose.green-deploy.yml,backend/Dockerfile.nginx"
           target: "~/app/"
           overwrite: true
 
-      - name: Docker login
+      - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -59,17 +59,6 @@ jobs:
           docker-compose -f compose.blue-build.yml push
           docker-compose -f compose.green-build.yml push
 
-      - name: Copy files to Remote Server
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          source: "backend/compose.blue-deploy.yml,backend/compose.green-deploy.yml,backend/Dockerfile.nginx"
-          target: "~/app/"
-          overwrite: true
-
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -81,7 +70,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
-      - name: Run Docker on Remote Server
+      - name: Run a New Version of the application on Remote Server
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
