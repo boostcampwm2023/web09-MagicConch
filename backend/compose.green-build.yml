@@ -1,0 +1,37 @@
+version: "3.3"
+
+services:
+  was-green:
+    container_name: "was-green"
+    build:
+      context: .
+      dockerfile: Dockerfile.was
+    env_file: .env
+    environment:
+      - PORT=3002
+    expose:
+      - "3002"
+    volumes:
+      - /var/log/was:/app/was/logs
+      - /var/log/ormlogs.log:/app/was/ormlogs.log
+    networks:
+      - backend
+    image: "${DOCKER_USERNAME}/magicconch:was-green-${GITHUB_SHA}"
+
+  signal-green:
+    container_name: "signal-green"
+    build:
+      context: .
+      dockerfile: Dockerfile.signal
+    environment:
+      - PORT=3003
+    expose:
+      - "3003"
+    networks:
+      - backend
+    image: "${DOCKER_USERNAME}/magicconch:signal-green-${GITHUB_SHA}"
+
+networks:
+  backend:
+    external: true
+    name: backend

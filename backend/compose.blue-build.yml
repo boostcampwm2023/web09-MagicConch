@@ -1,0 +1,37 @@
+version: "3.3"
+
+services:
+  was-blue:
+    container_name: "was-blue"
+    build:
+      context: .
+      dockerfile: Dockerfile.was
+    env_file: .env
+    environment:
+      - PORT=3000
+    expose:
+      - "3000"
+    volumes:
+      - /var/log/was:/app/was/logs
+      - /var/log/ormlogs.log:/app/was/ormlogs.log
+    networks:
+      - backend
+    image: "${DOCKER_USERNAME}/magicconch:was-blue-${GITHUB_SHA}"
+
+  signal-blue:
+    container_name: "signal-blue"
+    build:
+      context: .
+      dockerfile: Dockerfile.signal
+    environment:
+      - PORT=3001
+    expose:
+      - "3001"
+    networks:
+      - backend
+    image: "${DOCKER_USERNAME}/magicconch:signal-blue-${GITHUB_SHA}"
+
+networks:
+  backend:
+    external: true
+    name: backend

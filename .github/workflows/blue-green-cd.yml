@@ -2,14 +2,12 @@ name: Blue/Green CD
 
 on:
   push:
+    paths: ["backend/**"]
     branches: ["dev"]
 
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   GITHUB_SHA: ${{ github.sha }}
-  TURN_SERVER_NAME: ${{ secrets.TURN_SERVER_NAME }}
-  TURN_SERVER_USER: ${{ secrets.TURN_SERVER_USER }}
-  TURN_SERVER_PASSWORD: ${{ secrets.TURN_SERVER_PASSWORD }}
 
 jobs:
   build:
@@ -25,28 +23,29 @@ jobs:
           echo "${{ secrets.ENV_FILE }}" > .env
           echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
           echo "GITHUB_SHA=${{ github.sha }}" >> .env
-          echo "TURN_SERVER_NAME=${{ secrets.TURN_SERVER_NAME }}" >> .env
-          echo "TURN_SERVER_USER=${{ secrets.TURN_SERVER_USER }}" >> .env
-          echo "TURN_SERVER_PASSWORD=${{ secrets.TURN_SERVER_PASSWORD }}" >> .env
-          echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env
           mkdir -p config/nginx/ssl/
           echo "${{ secrets.SSL_OPTIONS }}" > config/nginx/ssl/options-ssl-nginx.conf
           echo "${{ secrets.SSL_FULLCHAIN }}" > config/nginx/ssl/fullchain.pem
           echo "${{ secrets.SSL_PRIVKEY }}" > config/nginx/ssl/privkey.pem
           echo "${{ secrets.SSL_DHPARAMS }}" > config/nginx/ssl/ssl-dhparams.pem
 
-      - name: Copy .env, deploy script, SSL files to Remote Server
+      - name: Add Remote Host Key to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PUBLIC_KEY }}" >> ~/.ssh/known_hosts
+
+      - name: Copy some files needed for Deployment to Remote Server
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
-          password: ${{ secrets.SSH_PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          source: "backend/.env,backend/deploy.sh,backend/config"
+          source: "backend/.env,backend/deploy.sh,backend/config,backend/compose.blue-deploy.yml,backend/compose.green-deploy.yml,backend/Dockerfile.nginx"
           target: "~/app/"
           overwrite: true
 
-      - name: Docker login
+      - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -55,21 +54,10 @@ jobs:
       - name: Build & Push Docker Images (Blue & Green)
         run: |
           cd backend
-          docker-compose -f docker-compose.blue.yml build --no-cache
-          docker-compose -f docker-compose.green.yml build --no-cache
-          docker-compose -f docker-compose.blue.yml push
-          docker-compose -f docker-compose.green.yml push
-
-      - name: Copy Dockerfiles to Remote Server
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          password: ${{ secrets.SSH_PASSWORD }}
-          port: ${{ secrets.SSH_PORT }}
-          source: "backend/docker-compose.blue.yml,backend/docker-compose.green.yml,backend/Dockerfile.nginx,backend/Dockerfile.was,backend/Dockerfile.signal"
-          target: "~/app/"
-          overwrite: true
+          docker-compose -f compose.blue-build.yml build
+          docker-compose -f compose.green-build.yml build
+          docker-compose -f compose.blue-build.yml push
+          docker-compose -f compose.green-build.yml push
 
   deploy:
     needs: build
@@ -82,12 +70,12 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
-      - name: Run Docker on Remote Server
+      - name: Run a New Version of the application on Remote Server
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
-          password: ${{ secrets.SSH_PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd ~/app/backend

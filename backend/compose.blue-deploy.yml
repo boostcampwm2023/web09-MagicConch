@@ -4,40 +4,29 @@ services:
   was-blue:
     image: "${DOCKER_USERNAME}/magicconch:was-blue-${GITHUB_SHA}"
     container_name: "was-blue"
-    build:
-      context: .
-      dockerfile: Dockerfile.was
+    env_file: .env
     environment:
-      - DB_PORT=${DB_PORT}
-      - DB_HOST=${DB_HOST}
-      - DB_USERNAME=${DB_USERNAME}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_DATABASE=${DB_DATABASE}
-      - ACCESS_KEY_ID=${ACCESS_KEY_ID}
-      - SECRET_KEY=${SECRET_KEY}
-      - X_NCP_CLOVASTUDIO_API_KEY=${X_NCP_CLOVASTUDIO_API_KEY}
-      - X_NCP_APIGW_API_KEY=${X_NCP_APIGW_API_KEY}
       - PORT=3000
-      - SENTRY_DSN=${SENTRY_DSN}
     expose:
       - "3000"
     volumes:
       - /var/log/was:/app/was/logs
-      - /var/log/typeorm:/app/was/typeorm.log
+      - /var/log/ormlogs.log:/app/was/ormlogs.log
+    networks:
+      - backend
 
   signal-blue:
     image: "${DOCKER_USERNAME}/magicconch:signal-blue-${GITHUB_SHA}"
     container_name: "signal-blue"
-    build:
-      context: .
-      dockerfile: Dockerfile.signal
     environment:
       - PORT=3001
     expose:
       - "3001"
+    networks:
+      - backend
 
   nginx:
-    container_name: "nginx-reverse-proxy"
+    container_name: "nginx"
     build:
       context: .
       dockerfile: Dockerfile.nginx
@@ -50,10 +39,19 @@ services:
       - certbot
     volumes:
       - /var/log/nginx:/var/log/nginx
+    networks:
+      - backend
 
   certbot:
     image: certbot/certbot
     volumes:
       - /etc/letsencrypt
       - /var/www/html:/var/www/html
+    networks:
+      - backend
     command: certonly --webroot --webroot-path=/var/www/html -d was.tarotmilktea.com
+
+networks:
+  backend:
+    external: true
+    name: backend
