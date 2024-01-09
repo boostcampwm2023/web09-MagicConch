@@ -1,16 +1,18 @@
-/**
- * for Swagger
- */
-export const CRUD = {
-  SELECT: '조회',
-  CREATE: '생성',
-  UPDATE: '수정',
-  DELETE: '삭제',
+export const METHODS = {
+  GET: 'GET',
+  POST: 'POST',
 };
 
-export const API_MSG = {
-  UNAUTH: '인증 받지 않는 사용자',
-  FORBIDDEN: '인가 받지 않은 사용자',
+export const CONTENT_TYPE = {
+  KAKAO: 'application/x-www-form-urlencoded;charset=utf-8',
 };
 
-export type CrudOperation = (typeof CRUD)[keyof typeof CRUD];
+export const OAUTH_URL = {
+  /**
+   * kakao
+   */
+  KAKAO_USER: 'https://kapi.kakao.com/v2/user/me',
+  KAKAO_TOKEN: 'https://kauth.kakao.com/oauth/token',
+  KAKAO_LOGOUT: 'https://kapi.kakao.com/v1/user/logout',
+  KAKAO_LOGOUT_ALL: 'https://kauth.kakao.com/oauth/logout',
+};
