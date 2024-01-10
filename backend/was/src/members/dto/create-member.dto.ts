@@ -1,9 +1,21 @@
-import { IsEmail, IsOptional, IsString, IsUrl } from 'class-validator';
-import { KakaoAccountDto } from 'src/auth/dto/kakao/kakao-account.dto';
+import {
+  IsEmail,
+  IsIn,
+  IsInt,
+  IsOptional,
+  IsString,
+  IsUrl,
+} from 'class-validator';
+import { ProfileDto } from 'src/auth/dto/profile.dto';
+import { PROVIDER_ID } from 'src/common/constants/etc';
 
 export class CreateMemberDto {
   @IsEmail()
   readonly email: string;
+
+  @IsInt()
+  @IsIn(Object.values(PROVIDER_ID))
+  readonly providerId: number;
 
   @IsString()
   readonly nickname: string;
@@ -15,14 +27,16 @@ export class CreateMemberDto {
   @IsString()
   readonly refreshToken: string;
 
-  static fromKakao(
+  static fromProfile(
+    providerId: number,
     refreshToken: string,
-    kakao: KakaoAccountDto,
+    profile: ProfileDto,
   ): CreateMemberDto {
     return {
-      email: kakao.email,
-      nickname: kakao.nickname,
-      profileUrl: kakao.profileUrl,
+      email: profile.email,
+      providerId: providerId,
+      nickname: profile.nickname,
+      profileUrl: profile.profileUrl,
       refreshToken: refreshToken,
     };
   }
