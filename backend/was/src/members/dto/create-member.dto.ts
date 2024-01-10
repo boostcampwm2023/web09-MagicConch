@@ -1,5 +1,5 @@
 import { IsEmail, IsOptional, IsString, IsUrl } from 'class-validator';
-import { KakaoAccount } from 'src/auth/dto/kakao/kakao-account.dto';
+import { KakaoAccountDto } from 'src/auth/dto/kakao/kakao-account.dto';
 
 export class CreateMemberDto {
   @IsEmail()
@@ -15,7 +15,10 @@ export class CreateMemberDto {
   @IsString()
   readonly refreshToken: string;
 
-  static fromKakao(refreshToken: string, kakao: KakaoAccount): CreateMemberDto {
+  static fromKakao(
+    refreshToken: string,
+    kakao: KakaoAccountDto,
+  ): CreateMemberDto {
     return {
       email: kakao.email,
       nickname: kakao.nickname,

@@ -1,13 +1,13 @@
 /**
- * https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#kakaoaccount
+ * https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#KakaoAccountDto
  * https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#profile
  */
-export class KakaoAccount {
+export class KakaoAccountDto {
   readonly email: string;
   readonly nickname: string;
   readonly profileUrl: string;
 
-  static fromAccount(account: any): KakaoAccount {
+  static fromAccount(account: any): KakaoAccountDto {
     return {
       email: account.email,
       nickname: account.profile.nickname,
@@ -15,7 +15,7 @@ export class KakaoAccount {
     };
   }
 
-  static fromOIDCuserInfo(userInfo: any): KakaoAccount {
+  static fromOIDCuserInfo(userInfo: any): KakaoAccountDto {
     return {
       email: userInfo.email,
       nickname: userInfo.nickname,
