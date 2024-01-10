@@ -12,11 +12,15 @@ export class CreateMemberDto {
   @IsOptional()
   readonly profileUrl: string;
 
-  static fromKakao(kakao: KakaoAccount): CreateMemberDto {
+  @IsString()
+  readonly refreshToken: string;
+
+  static fromKakao(refreshToken: string, kakao: KakaoAccount): CreateMemberDto {
     return {
       email: kakao.email,
       nickname: kakao.nickname,
       profileUrl: kakao.profileUrl,
+      refreshToken: refreshToken,
     };
   }
 }
