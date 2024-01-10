@@ -1,5 +1,5 @@
 import { IsEmail, IsOptional, IsString, IsUrl } from 'class-validator';
-import { KakaoAccount } from './kakao/kakao-account.dto';
+import { KakaoAccount } from 'src/auth/dto/kakao/kakao-account.dto';
 
 export class CreateMemberDto {
   @IsEmail()
