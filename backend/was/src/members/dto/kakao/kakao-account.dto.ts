@@ -14,4 +14,12 @@ export class KakaoAccount {
       profileUrl: account.profile.profile_image_url ?? null,
     };
   }
+
+  static fromOIDCuserInfo(userInfo: any): KakaoAccount {
+    return {
+      email: userInfo.email,
+      nickname: userInfo.nickname,
+      profileUrl: userInfo.picture ?? null,
+    };
+  }
 }
