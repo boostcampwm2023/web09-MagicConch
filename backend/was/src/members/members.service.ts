@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateMemberDto } from './dto/create-member.dto';
+import { UpdateMemberDto } from './dto/update-member.dto';
 import { Member } from './entities/member.entity';
 
 @Injectable()
@@ -20,15 +21,16 @@ export class MembersService {
     }
   }
 
-  async findByEmail(email: string): Promise<Member | null> {
+  async findByEmail(email: string, providerId: number): Promise<Member | null> {
     return await this.membersRepository.findOneBy({
       email: email,
+      providerId: providerId,
     });
   }
 
-  async updateRefreshToken(id: string, refreshToken: string): Promise<boolean> {
+  async update(id: string, updateMemberDto: UpdateMemberDto): Promise<boolean> {
     try {
-      await this.membersRepository.update({ id }, { refreshToken });
+      await this.membersRepository.update({ id }, updateMemberDto);
       return true;
     } catch (err: unknown) {
       throw err;
