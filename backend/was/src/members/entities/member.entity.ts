@@ -6,19 +6,28 @@ import {
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
+import { CreateMemberDto } from '../dto/create-member.dto';
 
 @Entity()
+@Unique(['email'])
 export class Member {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ length: 20, nullable: true })
+  @Column({ length: 320 })
+  email: string;
+
+  @Column({ length: 30 })
   nickname: string;
 
-  @Column({ length: 255, nullable: true })
+  @Column({ length: 2083, nullable: true })
   profileUrl: string;
+
+  @Column({ type: 'text' })
+  refreshToken: string;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -34,4 +43,12 @@ export class Member {
 
   @OneToMany(() => TarotCardPack, (tarotCardPack) => tarotCardPack.owner)
   tarotCardPacks: TarotCardPack[];
+
+  static fromDto(createMemberDto: CreateMemberDto): Member {
+    const member: Member = new Member();
+    member.email = createMemberDto.email;
+    member.nickname = createMemberDto.nickname;
+    member.profileUrl = createMemberDto.profileUrl;
+    return member;
+  }
 }
