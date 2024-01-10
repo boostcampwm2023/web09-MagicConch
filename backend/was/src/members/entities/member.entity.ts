@@ -6,19 +6,20 @@ import {
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
-  Unique,
   UpdateDateColumn,
 } from 'typeorm';
 import { CreateMemberDto } from '../dto/create-member.dto';
 
 @Entity()
-@Unique(['email'])
 export class Member {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ length: 320 })
   email: string;
+
+  @Column()
+  providerId: number;
 
   @Column({ length: 30 })
   nickname: string;
@@ -47,6 +48,7 @@ export class Member {
   static fromDto(createMemberDto: CreateMemberDto): Member {
     const member: Member = new Member();
     member.email = createMemberDto.email;
+    member.providerId = createMemberDto.providerId;
     member.nickname = createMemberDto.nickname;
     member.profileUrl = createMemberDto.profileUrl;
     return member;
