@@ -21,6 +21,10 @@ export const ERR_MSG = {
   OAUTH_KAKAO_OIDC_USER_INFO_FAILED:
     '카카오 OIDC 사용자 정보 조회에 실패했습니다',
   OAUTH_KAKAO_USER_INFO_FAILED: '카카오 사용자 정보 조회에 실패했습니다.',
+  OAUTH_KAKAO_ACCESS_TOKEN_INFO_KAKAO_ERROR:
+    '카카오 플랫폼에서 일시적인 장애가 발생했습니다.',
+  OAUTH_KAKAO_ACCESS_TOKEN_INFO_BAD_REQUEST:
+    '카카오 액세스 토큰 정보 조회에 실패했습니다.',
 
   /**
    * database
