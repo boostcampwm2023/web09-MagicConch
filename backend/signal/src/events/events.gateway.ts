@@ -102,11 +102,11 @@ export class EventsGateway
 
     const existRoom: any = this.socketRooms[roomId];
     const wrongPassword: boolean =
-      this.socketRooms[roomId].password !== password;
+      this.socketRooms[roomId]?.password !== password;
 
     if (!existRoom || wrongPassword) {
       this.eventEmit(socket, 'joinRoomFailed');
-      const logMessage: string = existRoom
+      const logMessage: string = !existRoom
         ? `🚀 Invalid Room : ${roomId}`
         : `🚀 Wrong Password for ${roomId}`;
       this.logger.debug(logMessage);
@@ -172,10 +172,10 @@ export class EventsGateway
     }
   }
 
-  private eventEmit(socket: Socket, event: HumanServerEvent, ...args: any[]) {
+  public eventEmit(socket: Socket, event: HumanServerEvent, ...args: any[]) {
     socket.emit(event, ...args);
   }
-  private eventEmitToRoom(
+  public eventEmitToRoom(
     socket: Socket,
     roomName: string,
     event: HumanServerEvent,
@@ -184,7 +184,3 @@ export class EventsGateway
     socket.to(roomName).emit(event, ...args);
   }
 }
-
-// socketManager.emit('checkRoomExist', roomName);
-// socketManager.on('roomExist', () => {});
-// socketManaget.on('roomNotExist', () => {});
