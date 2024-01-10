@@ -8,6 +8,7 @@ import { EventsModule } from './events/events.module';
 import { LoggerModule } from './logger/logger.module';
 import { MembersModule } from './members/members.module';
 import { TarotModule } from './tarot/tarot.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { TarotModule } from './tarot/tarot.module';
     TarotModule,
     EventsModule,
     LoggerModule,
+    AuthModule,
   ],
   providers: [
     {
