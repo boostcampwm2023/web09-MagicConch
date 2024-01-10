@@ -13,6 +13,16 @@ export const ERR_MSG = {
   TAROT_RESULT_NOT_FOUND: '타로 결과를 찾을 수 없습니다.',
 
   /**
+   * oauth
+   */
+  OAUTH_KAKAO_AUTH_CODE_FAILED: '카카오 인가코드 발급에 실패했습니다',
+  OAUTH_KAKAO_LOGOUT_FAILED: '카카오 로그아웃에 실패했습니다.',
+  OAUTH_KAKAO_TOKEN_FAILED: '카카오 토큰 발급에 실패했습니다.',
+  OAUTH_KAKAO_OIDC_USER_INFO_FAILED:
+    '카카오 OIDC 사용자 정보 조회에 실패했습니다',
+  OAUTH_KAKAO_USER_INFO_FAILED: '카카오 사용자 정보 조회에 실패했습니다.',
+
+  /**
    * database
    */
   NOT_UNIQUE: '이미 존재하는 데이터 입니다.',
