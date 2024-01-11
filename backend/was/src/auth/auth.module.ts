@@ -5,7 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Member } from 'src/members/entities/member.entity';
 import { MembersService } from 'src/members/members.service';
 import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
+import { AuthGuard } from './guard/auth.guard';
+import { AuthService } from './service/auth.service';
+import { KakaoAuthService } from './service/kakao.auth.service';
 
 @Module({
   imports: [
@@ -21,6 +23,7 @@ import { AuthService } from './auth.service';
     TypeOrmModule.forFeature([Member]),
   ],
   controllers: [AuthController],
-  providers: [AuthService, MembersService],
+  providers: [AuthService, AuthGuard, KakaoAuthService, MembersService],
+  exports: [JwtModule],
 })
 export class AuthModule {}
