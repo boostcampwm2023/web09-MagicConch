@@ -11,6 +11,7 @@ import { ERR_MSG } from 'src/common/constants/errors';
 import { PROVIDER_ID, PROVIDER_NAME } from 'src/common/constants/etc';
 import { Member } from 'src/members/entities/member.entity';
 import { MembersService } from 'src/members/members.service';
+import { JwtPayloadDto } from '../dto/jwt-payload.dto';
 import { KakaoAccessTokenInfoDto } from '../dto/kakao/kakao-access-token-info.dto';
 import { KakaoTokenDto } from '../dto/kakao/kakao-token.dto';
 import { RefreshKakaoTokenDto } from '../dto/kakao/refresh-kakao-token.dto';
@@ -27,7 +28,8 @@ export class KakaoAuthService extends AuthService {
     readonly jwtService: JwtService,
     readonly configService: ConfigService,
   ) {
-    super(membersService, jwtService, configService, PROVIDER_NAME.KAKAO);
+    super(membersService, jwtService, configService);
+    this.init(PROVIDER_NAME.KAKAO);
   }
 
   async loginOAuth(code: string): Promise<string> {
@@ -54,19 +56,19 @@ export class KakaoAuthService extends AuthService {
     );
   }
 
-  /**
-   * TODO : 가드 변경 후 수정 필요
-   */
-  private async logoutOAuth(
-    accessToken: string,
-    refreshToken: string,
-  ): Promise<boolean> {
+  async logoutOAuth(user: JwtPayloadDto): Promise<boolean> {
     const tokenInfo: KakaoAccessTokenInfoDto | null =
-      await this.getAccessTokenInfo(accessToken);
+      await this.getAccessTokenInfo(user.accessToken);
     if (tokenInfo) {
-      return this.requestLogout(accessToken);
+      return this.requestLogout(user.accessToken);
     }
-    const newToken: KakaoTokenDto = await this.refreshToken(refreshToken);
+    const member: Member | null = await this.membersService.findByEmail(
+      user.email,
+      user.providerId,
+    );
+    const newToken: KakaoTokenDto = await this.refreshToken(
+      member?.refreshToken ?? '',
+    );
     return this.requestLogout(newToken.access_token);
   }
 

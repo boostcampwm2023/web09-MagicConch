@@ -21,8 +21,9 @@ export class AuthService {
     readonly membersService: MembersService,
     readonly jwtService: JwtService,
     readonly configService: ConfigService,
-    provider: string,
-  ) {
+  ) {}
+
+  init(provider: string) {
     this.clientId = this.configService.get(`${provider}_CLIENT_ID`) ?? '';
     this.redirectUri = this.configService.get(`${provider}_REDIRECT_URI`) ?? '';
     this.clientSecret =
