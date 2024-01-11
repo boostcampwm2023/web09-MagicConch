@@ -16,7 +16,7 @@ export class CacheConfigModule {
             return {
               store: redisStore,
               host: configService.get('CACHE_HOST'),
-              port: configService.get('CACHE_PORT'),
+              port: configService.get<number>('CACHE_PORT'),
             } as RedisClientOptions;
           },
         }),
