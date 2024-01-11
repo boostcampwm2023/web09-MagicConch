@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
-import { AuthGuard } from 'src/common/auth/auth.guard';
+import { AuthGuard } from 'src/auth/guard/auth.guard';
 import {
   DeleteRoomDecorator,
   FindMessagesDecorator,
