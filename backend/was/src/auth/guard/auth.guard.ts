@@ -12,7 +12,7 @@ import { JwtPayloadDto } from '../dto/jwt-payload.dto';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private jwtService: JwtService) {}
+  constructor(private readonly jwtService: JwtService) {}
 
   canActivate(
     context: ExecutionContext,
