@@ -1,5 +1,11 @@
 export const ERR_MSG = {
   /**
+   * auth
+   */
+  JWT_NOT_FOUND: '로그인이 필요한 서비스입니다.',
+  JWT_VERIFICATION_FAILED: '올바르지 않은 접근입니다.',
+
+  /**
    * chat
    */
   CHATTING_ROOM_NOT_FOUND: '채팅방을 찾을 수 없습니다.',
@@ -27,15 +33,6 @@ export const ERR_MSG = {
     '카카오 액세스 토큰 정보 조회에 실패했습니다.',
 
   /**
-   * database
-   */
-  NOT_UNIQUE: '이미 존재하는 데이터 입니다.',
-  INVALID_FOREIGN_KEY: '유효하지 않은 외래키 입니다.',
-  UNKNOWN_DATABASE: '알 수 없는 데이터베이스 오류가 발생했습니다.',
-  OPTIMISTIC_LOCK: '다른 사용자에 의해 데이터가 변경되었습니다.',
-  ETIMEOUT: '커넥션 타임아웃이 발생했습니다.',
-
-  /**
    * socket
    */
   SAVE_CHATTING_LOG: '채팅 로그를 저장하는 데 실패했습니다.',
@@ -45,4 +42,10 @@ export const ERR_MSG = {
    * common
    */
   UNKNOWN: '알 수 없는 오류가 발생했습니다.',
+};
+
+export const JWT_ERR = {
+  TOKEN_EXPIRED: { code: 4000, message: 'TokenExpiredError' },
+  JSON_WEB_TOKEN: { code: 4000, message: 'JsonWebTokenError' },
+  NOT_BEFORE_ERROR: { code: 4000, message: 'NotBeforeError' },
 };
