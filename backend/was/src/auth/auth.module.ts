@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CacheConfigModule } from 'src/common/config/cache/cache.module';
 import { Member } from 'src/members/entities/member.entity';
 import { MembersService } from 'src/members/members.service';
 import { AuthController } from './auth.controller';
@@ -20,6 +21,7 @@ import { KakaoAuthService } from './service/kakao.auth.service';
         };
       },
     }),
+    CacheConfigModule.register(),
     TypeOrmModule.forFeature([Member]),
   ],
   controllers: [AuthController],
