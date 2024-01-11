@@ -24,20 +24,12 @@ export class CreateMemberDto {
   @IsOptional()
   readonly profileUrl: string;
 
-  @IsString()
-  readonly refreshToken: string;
-
-  static fromProfile(
-    providerId: number,
-    refreshToken: string,
-    profile: ProfileDto,
-  ): CreateMemberDto {
+  static fromProfile(providerId: number, profile: ProfileDto): CreateMemberDto {
     return {
       email: profile.email,
       providerId: providerId,
       nickname: profile.nickname,
       profileUrl: profile.profileUrl,
-      refreshToken: refreshToken,
     };
   }
 }

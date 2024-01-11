@@ -27,9 +27,6 @@ export class Member {
   @Column({ length: 2083, nullable: true })
   profileUrl: string;
 
-  @Column({ type: 'text' })
-  refreshToken: string;
-
   @CreateDateColumn()
   createdAt: Date;
 
