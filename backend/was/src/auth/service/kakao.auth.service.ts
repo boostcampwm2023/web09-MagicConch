@@ -1,4 +1,6 @@
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import {
+  Inject,
   Injectable,
   InternalServerErrorException,
   UnauthorizedException,
@@ -6,6 +8,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Cache } from 'cache-manager';
 import { CONTENT_TYPE, METHODS, OAUTH_URL } from 'src/common/constants/apis';
 import { ERR_MSG } from 'src/common/constants/errors';
 import { PROVIDER_ID, PROVIDER_NAME } from 'src/common/constants/etc';
@@ -18,6 +21,7 @@ import { RefreshKakaoTokenDto } from '../dto/kakao/refresh-kakao-token.dto';
 import { RequestKakaoTokenDto } from '../dto/kakao/request-kakao-token.dto';
 import { OAuthTokenDto } from '../dto/oauth-token.dto';
 import { ProfileDto } from '../dto/profile.dto';
+import { CacheKey } from '../interface/cache-key';
 import { AuthService } from './auth.service';
 
 @Injectable()
@@ -27,8 +31,10 @@ export class KakaoAuthService extends AuthService {
     readonly membersService: MembersService,
     readonly jwtService: JwtService,
     readonly configService: ConfigService,
+    @Inject(CACHE_MANAGER)
+    readonly cacheManager: Cache,
   ) {
-    super(membersService, jwtService, configService);
+    super(membersService, jwtService, configService, cacheManager);
     this.init(PROVIDER_NAME.KAKAO);
   }
 
@@ -62,13 +68,11 @@ export class KakaoAuthService extends AuthService {
     if (tokenInfo) {
       return this.requestLogout(user.accessToken);
     }
-    const member: Member | null = await this.membersService.findByEmail(
-      user.email,
-      user.providerId,
-    );
-    const newToken: KakaoTokenDto = await this.refreshToken(
-      member?.refreshToken ?? '',
-    );
+    const key: CacheKey = { email: user.email, providerId: user.providerId };
+    const keyString: string = JSON.stringify(key);
+    const refreshToken: string | undefined =
+      await this.cacheManager.get<string>(keyString);
+    const newToken: KakaoTokenDto = await this.refreshToken(refreshToken ?? '');
     return this.requestLogout(newToken.access_token);
   }
 
