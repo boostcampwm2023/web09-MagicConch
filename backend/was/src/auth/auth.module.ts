@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CacheConfigModule } from 'src/common/config/cache/cache.module';
@@ -12,20 +11,11 @@ import { KakaoAuthService } from './service/kakao.auth.service';
 
 @Module({
   imports: [
-    JwtModule.registerAsync({
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        return {
-          secret: configService.get('JWT_SECRET_KEY'),
-          signOptions: { expiresIn: 'JWT_EXPIRES_IN' },
-        };
-      },
-    }),
     CacheConfigModule.register(),
     TypeOrmModule.forFeature([Member]),
+    JwtModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, AuthGuard, KakaoAuthService, MembersService],
-  exports: [JwtModule],
 })
 export class AuthModule {}
