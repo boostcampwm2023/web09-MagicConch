@@ -7,7 +7,6 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Cache } from 'cache-manager';
 import { CONTENT_TYPE, METHODS, OAUTH_URL } from 'src/common/constants/apis';
 import { ERR_MSG } from 'src/common/constants/errors';
@@ -17,17 +16,15 @@ import { MembersService } from 'src/members/members.service';
 import { JwtPayloadDto } from '../dto/jwt-payload.dto';
 import { KakaoAccessTokenInfoDto } from '../dto/kakao/kakao-access-token-info.dto';
 import { KakaoTokenDto } from '../dto/kakao/kakao-token.dto';
-import { RefreshKakaoTokenDto } from '../dto/kakao/refresh-kakao-token.dto';
-import { RequestKakaoTokenDto } from '../dto/kakao/request-kakao-token.dto';
 import { OAuthTokenDto } from '../dto/oauth-token.dto';
 import { ProfileDto } from '../dto/profile.dto';
 import { CacheKey } from '../interface/cache-key';
+import { makeRefreshTokenForm, makeRequestTokenForm } from '../util/kakao';
 import { AuthService } from './auth.service';
 
 @Injectable()
 export class KakaoAuthService extends AuthService {
   constructor(
-    @InjectRepository(Member)
     readonly membersService: MembersService,
     readonly jwtService: JwtService,
     readonly configService: ConfigService,
@@ -40,9 +37,7 @@ export class KakaoAuthService extends AuthService {
 
   async loginOAuth(code: string): Promise<string> {
     const token: KakaoTokenDto = await this.requestToken(code);
-    const profile: ProfileDto = await this.getOIDCuserInfo(
-      token.id_token ?? '',
-    );
+    const profile: ProfileDto = await this.getUser(token.access_token ?? '');
     const member: Member | null = await this.membersService.findByEmail(
       profile.email,
       PROVIDER_ID.KAKAO,
@@ -80,7 +75,7 @@ export class KakaoAuthService extends AuthService {
    * https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#request-token
    */
   private async requestToken(code: string): Promise<KakaoTokenDto> {
-    const reqBody: RequestKakaoTokenDto = RequestKakaoTokenDto.fromInfo(
+    const reqBody: URLSearchParams = makeRequestTokenForm(
       this.clientId,
       this.redirectUri,
       code,
@@ -90,7 +85,7 @@ export class KakaoAuthService extends AuthService {
       const res: any = await fetch(OAUTH_URL.KAKAO_TOKEN, {
         method: METHODS.POST,
         headers: { 'Content-type': CONTENT_TYPE.KAKAO },
-        body: JSON.stringify(reqBody),
+        body: reqBody,
       });
       return (await res.json()) as KakaoTokenDto;
     } catch (err: unknown) {
@@ -102,7 +97,7 @@ export class KakaoAuthService extends AuthService {
    * https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#refresh-token
    */
   private async refreshToken(refreshToken: string): Promise<KakaoTokenDto> {
-    const reqBody: RefreshKakaoTokenDto = RefreshKakaoTokenDto.fromInfo(
+    const reqBody: URLSearchParams = makeRefreshTokenForm(
       this.clientId,
       refreshToken,
       this.clientSecret,
@@ -111,7 +106,7 @@ export class KakaoAuthService extends AuthService {
       const res: any = await fetch(OAUTH_URL.KAKAO_TOKEN, {
         method: METHODS.POST,
         headers: { 'Content-type': CONTENT_TYPE.KAKAO },
-        body: JSON.stringify(reqBody),
+        body: reqBody,
       });
       return (await res.json()) as KakaoTokenDto;
     } catch (err: unknown) {
@@ -120,15 +115,18 @@ export class KakaoAuthService extends AuthService {
   }
 
   /**
-   * https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#oidc-user-info
+   * TODO : 에러 처리
+   * https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#req-user-info
    */
-  private async getOIDCuserInfo(idToken: string): Promise<ProfileDto> {
-    const res: any = await fetch(OAUTH_URL.KAKAO_OIDC_USERINFO, {
-      headers: { 'Content-type': CONTENT_TYPE.KAKAO },
-      body: JSON.stringify({ id_token: idToken }),
+  private async getUser(accessToken: string): Promise<ProfileDto> {
+    const res: any = await fetch(OAUTH_URL.KAKAO_USER, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-type': CONTENT_TYPE.KAKAO,
+      },
     });
     const resBody: any = await res.json();
-    return ProfileDto.fromKakao(resBody);
+    return ProfileDto.fromKakao(resBody.kakao_account);
   }
 
   /**
@@ -138,7 +136,7 @@ export class KakaoAuthService extends AuthService {
     accessToken: string,
   ): Promise<KakaoAccessTokenInfoDto | null> {
     const res: any = await fetch(OAUTH_URL.KAKAO_ACCESS_TOKEN, {
-      headers: { Authorization: `Authorization: Bearer ${accessToken}` },
+      headers: { Authorization: `Bearer ${accessToken}` },
     });
     const detail: any = { status: res.code, body: await res.json() };
     if (detail.status === 200) {
@@ -154,7 +152,7 @@ export class KakaoAuthService extends AuthService {
     await fetch(OAUTH_URL.KAKAO_LOGOUT, {
       method: METHODS.POST,
       headers: {
-        Authorization: `Authorization: Bearer ${accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
         'Content-type': CONTENT_TYPE.KAKAO,
       },
     });
