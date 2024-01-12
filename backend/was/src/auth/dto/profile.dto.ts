@@ -1,4 +1,5 @@
 /**
+ * https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#req-user-info-response
  * https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#kakaoaccount
  * https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#profile
  */
@@ -7,11 +8,11 @@ export class ProfileDto {
   readonly nickname: string;
   readonly profileUrl: string;
 
-  static fromKakao(userInfo: any): ProfileDto {
+  static fromKakao(account: any): ProfileDto {
     return {
-      email: userInfo.email,
-      nickname: userInfo.nickname,
-      profileUrl: userInfo.picture ?? null,
+      email: account.email,
+      nickname: account.profile.nickname,
+      profileUrl: account.profile.picture ?? null,
     };
   }
 }
