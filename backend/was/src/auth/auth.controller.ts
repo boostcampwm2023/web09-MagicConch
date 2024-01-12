@@ -33,7 +33,7 @@ export class AuthController {
     res.cookie('magicconch', jwt, {
       httpOnly: true,
       secure: this.isProd,
-      sameSite: 'strict',
+      sameSite: 'lax',
     });
     res.sendStatus(200);
   }
@@ -54,7 +54,7 @@ export class AuthController {
     res.clearCookie('magicconch', {
       httpOnly: true,
       secure: this.isProd,
-      sameSite: 'strict',
+      sameSite: 'lax',
     });
     res.sendStatus(200);
   }
