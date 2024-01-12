@@ -1,9 +1,10 @@
 import { CacheModule } from '@nestjs/cache-manager';
-import { DynamicModule, Module } from '@nestjs/common';
+import { DynamicModule, Global, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { redisStore } from 'cache-manager-redis-store';
 import { RedisClientOptions } from 'redis';
 
+@Global()
 @Module({})
 export class CacheConfigModule {
   static register(): DynamicModule {
