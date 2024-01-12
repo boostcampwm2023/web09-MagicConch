@@ -2,11 +2,9 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Cache } from 'cache-manager';
 import { CreateMemberDto } from 'src/members/dto/create-member.dto';
 import { UpdateMemberDto } from 'src/members/dto/update-member.dto';
-import { Member } from 'src/members/entities/member.entity';
 import { MembersService } from 'src/members/members.service';
 import { JwtPayloadDto } from '../dto/jwt-payload.dto';
 import { OAuthTokenDto } from '../dto/oauth-token.dto';
@@ -21,7 +19,6 @@ export class AuthService {
   ttl: number;
 
   constructor(
-    @InjectRepository(Member)
     readonly membersService: MembersService,
     readonly jwtService: JwtService,
     readonly configService: ConfigService,
