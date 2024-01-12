@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CacheConfigModule } from 'src/common/config/cache/cache.module';
 import { Member } from 'src/members/entities/member.entity';
+import { MembersModule } from 'src/members/members.module';
 import { MembersService } from 'src/members/members.service';
 import { AuthController } from './auth.controller';
 import { AuthGuard } from './guard/auth.guard';
@@ -13,7 +13,7 @@ import { KakaoAuthService } from './service/kakao.auth.service';
   imports: [
     CacheConfigModule.register(),
     TypeOrmModule.forFeature([Member]),
-    JwtModule,
+    MembersModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, AuthGuard, KakaoAuthService, MembersService],
