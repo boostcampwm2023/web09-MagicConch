@@ -19,9 +19,11 @@ import {
   UpdateRoomDecorator,
 } from './chat.decorators';
 import { ChatService } from './chat.service';
-import { ChattingMessageResponseDto } from './dto/chatting-message-response.dto';
-import { ChattingRoomResponseDto } from './dto/chatting-room-response.dto';
-import { UpdateChattingRoomDto } from './dto/update-chatting-room.dto';
+import {
+  ChattingMessageResponseDto,
+  ChattingRoomResponseDto,
+  UpdateChattingRoomDto,
+} from './dto';
 
 @UseGuards(AuthGuard)
 @Controller('chat')

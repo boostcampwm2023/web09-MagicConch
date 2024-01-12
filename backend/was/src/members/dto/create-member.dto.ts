@@ -6,7 +6,7 @@ import {
   IsString,
   IsUrl,
 } from 'class-validator';
-import { ProfileDto } from 'src/auth/dto/profile.dto';
+import { ProfileDto } from 'src/auth/dto';
 import { PROVIDER_ID } from 'src/common/constants/etc';
 
 export class CreateMemberDto {

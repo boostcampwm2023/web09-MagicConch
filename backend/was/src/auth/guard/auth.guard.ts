@@ -8,7 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Observable } from 'rxjs';
 import { ERR_MSG, JWT_ERR } from 'src/common/constants/errors';
 import { JwtError } from 'src/common/errors/jwt.error';
-import { JwtPayloadDto } from '../dto/jwt-payload.dto';
+import { JwtPayloadDto } from '../dto';
 
 @Injectable()
 export class AuthGuard implements CanActivate {

@@ -10,7 +10,7 @@ import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
 import { ERR_MSG } from 'src/common/constants/errors';
 import { PROVIDER_ID } from 'src/common/constants/etc';
-import { JwtPayloadDto } from './dto/jwt-payload.dto';
+import { JwtPayloadDto } from './dto';
 import { AuthGuard } from './guard/auth.guard';
 import { KakaoAuthService } from './service/kakao.auth.service';
 
