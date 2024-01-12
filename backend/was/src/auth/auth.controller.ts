@@ -26,10 +26,12 @@ export class AuthController {
 
   @Get('login/kakao')
   async kakaoLogin(@Req() req: Request, @Res() res: Response): Promise<void> {
-    if (req.params.error) {
+    if (req.query.error) {
       throw new UnauthorizedException(ERR_MSG.OAUTH_KAKAO_AUTH_CODE_FAILED);
     }
-    const jwt: string = await this.kakaoAuthService.loginOAuth(req.params.code);
+    const jwt: string = await this.kakaoAuthService.loginOAuth(
+      req.query.code as string,
+    );
     res.cookie('magicconch', jwt, {
       httpOnly: true,
       secure: this.isProd,
