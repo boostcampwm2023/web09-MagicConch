@@ -24,9 +24,4 @@ export class LoggerService {
   error(message: string, trace?: string) {
     this.logger.error(`${message}${trace ? `\n${trace}` : ''}`);
   }
-
-  fatal(message: string, trace?: string) {
-    this.error(message, trace);
-    this.logger.log('error', message, { trace });
-  }
 }
