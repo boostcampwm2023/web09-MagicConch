@@ -1,5 +1,11 @@
 export const ERR_MSG = {
   /**
+   * auth
+   */
+  JWT_NOT_FOUND: '로그인이 필요한 서비스입니다.',
+  JWT_VERIFICATION_FAILED: '올바르지 않은 접근입니다.',
+
+  /**
    * chat
    */
   CHATTING_ROOM_NOT_FOUND: '채팅방을 찾을 수 없습니다.',
@@ -13,13 +19,18 @@ export const ERR_MSG = {
   TAROT_RESULT_NOT_FOUND: '타로 결과를 찾을 수 없습니다.',
 
   /**
-   * database
+   * oauth
    */
-  NOT_UNIQUE: '이미 존재하는 데이터 입니다.',
-  INVALID_FOREIGN_KEY: '유효하지 않은 외래키 입니다.',
-  UNKNOWN_DATABASE: '알 수 없는 데이터베이스 오류가 발생했습니다.',
-  OPTIMISTIC_LOCK: '다른 사용자에 의해 데이터가 변경되었습니다.',
-  ETIMEOUT: '커넥션 타임아웃이 발생했습니다.',
+  OAUTH_KAKAO_AUTH_CODE_FAILED: '카카오 인가코드 발급에 실패했습니다',
+  OAUTH_KAKAO_LOGOUT_FAILED: '카카오 로그아웃에 실패했습니다.',
+  OAUTH_KAKAO_TOKEN_FAILED: '카카오 토큰 발급에 실패했습니다.',
+  OAUTH_KAKAO_OIDC_USER_INFO_FAILED:
+    '카카오 OIDC 사용자 정보 조회에 실패했습니다',
+  OAUTH_KAKAO_USER_INFO_FAILED: '카카오 사용자 정보 조회에 실패했습니다.',
+  OAUTH_KAKAO_ACCESS_TOKEN_INFO_KAKAO_ERROR:
+    '카카오 플랫폼에서 일시적인 장애가 발생했습니다.',
+  OAUTH_KAKAO_ACCESS_TOKEN_INFO_BAD_REQUEST:
+    '카카오 액세스 토큰 정보 조회에 실패했습니다.',
 
   /**
    * socket
@@ -31,4 +42,10 @@ export const ERR_MSG = {
    * common
    */
   UNKNOWN: '알 수 없는 오류가 발생했습니다.',
+};
+
+export const JWT_ERR = {
+  TOKEN_EXPIRED: { code: 4000, message: 'TokenExpiredError' },
+  JSON_WEB_TOKEN: { code: 4000, message: 'JsonWebTokenError' },
+  NOT_BEFORE_ERROR: { code: 4000, message: 'NotBeforeError' },
 };

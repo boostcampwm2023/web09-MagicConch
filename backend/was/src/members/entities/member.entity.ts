@@ -8,16 +8,23 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { CreateMemberDto } from '../dto/create-member.dto';
 
 @Entity()
 export class Member {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ length: 20, nullable: true })
+  @Column({ length: 320 })
+  email: string;
+
+  @Column()
+  providerId: number;
+
+  @Column({ length: 30 })
   nickname: string;
 
-  @Column({ length: 255, nullable: true })
+  @Column({ length: 2083, nullable: true })
   profileUrl: string;
 
   @CreateDateColumn()
@@ -34,4 +41,13 @@ export class Member {
 
   @OneToMany(() => TarotCardPack, (tarotCardPack) => tarotCardPack.owner)
   tarotCardPacks: TarotCardPack[];
+
+  static fromDto(createMemberDto: CreateMemberDto): Member {
+    const member: Member = new Member();
+    member.email = createMemberDto.email;
+    member.providerId = createMemberDto.providerId;
+    member.nickname = createMemberDto.nickname;
+    member.profileUrl = createMemberDto.profileUrl;
+    return member;
+  }
 }
