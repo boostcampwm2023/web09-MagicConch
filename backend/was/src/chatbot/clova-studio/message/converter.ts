@@ -1,7 +1,4 @@
-import {
-  TALK_SYSTEM_MESSAGE,
-  TAROTCARD_NAMES,
-} from 'src/common/constants/clova-studio';
+import { TALK_SYSTEM_MESSAGE } from 'src/common/constants/clova-studio';
 import { ChatLog } from 'src/common/types/chatbot';
 import { ClovaStudioMessage } from 'src/common/types/clova-studio';
 
@@ -36,12 +33,4 @@ export function clovaStudioMessages2chatLog(
       });
       return acc;
     }, [] as ChatLog);
-}
-
-export function createUserMessage(userMessage: string): ClovaStudioMessage {
-  return { role: 'user', content: userMessage };
-}
-
-export function createTarotCardMessage(tarotIdx: number): ClovaStudioMessage {
-  return { role: 'user', content: TAROTCARD_NAMES[tarotIdx] };
 }

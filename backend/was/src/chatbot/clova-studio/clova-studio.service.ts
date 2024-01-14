@@ -14,7 +14,7 @@ import {
   createTarotCardMessage,
   createUserMessage,
 } from './message';
-import { convertAPIResponseStream2TokenStream } from './stream';
+import { apiResponseStream2TokenStream } from './stream';
 
 @Injectable()
 export class ClovaStudioService implements ChatbotServiceInterface {
@@ -53,7 +53,7 @@ export class ClovaStudioService implements ChatbotServiceInterface {
   }
 
   private api(...params: Parameters<typeof clovaStudioApi>) {
-    return clovaStudioApi(...params).then(convertAPIResponseStream2TokenStream);
+    return clovaStudioApi(...params).then(apiResponseStream2TokenStream);
   }
 }
 
