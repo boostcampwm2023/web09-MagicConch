@@ -9,7 +9,7 @@ import {
 } from './converter';
 
 describe('[chatbot/clova-studio/stream]', () => {
-  describe('function convertAPIResponseStream2TokenStream()', () => {
+  describe('function apiResponseStream2TokenStream()', () => {
     it('test', () => expect(false).toBe(true));
   });
 
