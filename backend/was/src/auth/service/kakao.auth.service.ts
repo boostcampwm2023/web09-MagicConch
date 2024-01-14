@@ -1,5 +1,6 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import {
+  BadRequestException,
   Inject,
   Injectable,
   InternalServerErrorException,
@@ -112,7 +113,6 @@ export class KakaoAuthService extends AuthService {
   }
 
   /**
-   * TODO : 에러 처리
    * https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#req-user-info
    */
   private async getUser(accessToken: string): Promise<ProfileDto> {
@@ -122,8 +122,11 @@ export class KakaoAuthService extends AuthService {
         'Content-type': CONTENT_TYPE.KAKAO,
       },
     });
-    const resBody: any = await res.json();
-    return ProfileDto.fromKakao(resBody.kakao_account);
+    const detail: any = { status: res.code, body: await res.json() };
+    if (detail.code === 200) {
+      return ProfileDto.fromKakao(detail.body.kakao_account);
+    }
+    throw new BadRequestException(ERR_MSG.OAUTH_KAKAO_USER_FAILED);
   }
 
   /**
