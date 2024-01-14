@@ -1,6 +1,6 @@
 import type { ClovaStudioEvent } from 'src/common/types/clova-studio';
 
-export function convertAPIResponseStream2TokenStream(
+export function apiResponseStream2TokenStream(
   responseStream: ReadableStream<Uint8Array>,
 ): ReadableStream<Uint8Array> {
   const transformStream = createTransformStream();
