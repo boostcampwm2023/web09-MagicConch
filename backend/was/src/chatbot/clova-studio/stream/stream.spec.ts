@@ -1,12 +1,15 @@
 import {
+  string2Uint8Array,
+  string2Uint8ArrayStream,
+  uint8Array2String,
+} from 'src/common/utils/stream';
+import {
   apiResponseStream2TokenStream,
   extractKeyValue,
   getTokenExtractor,
   isStreamEvent,
   splitChunk,
   streamEventParse,
-  string2Uint8Array,
-  uint8Array2String,
 } from './converter';
 
 describe('[chatbot/clova-studio/stream]', () => {
@@ -225,19 +228,3 @@ data: {"message": {"role": "assistant", "content": "안녕하세요" }}`;
     });
   });
 });
-
-async function string2Uint8ArrayStream(
-  input: string,
-): Promise<ReadableStream<Uint8Array>> {
-  const encoder = new TextEncoder();
-  const uint8Array = encoder.encode(input);
-
-  const readableStream = new ReadableStream({
-    async start(controller) {
-      controller.enqueue(uint8Array);
-      controller.close();
-    },
-  });
-
-  return readableStream;
-}
