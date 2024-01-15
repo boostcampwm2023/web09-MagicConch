@@ -16,17 +16,3 @@ export function chatLog2clovaStudioMessages(
 
   return [...convertedMessages];
 }
-
-export function clovaStudioMessages2chatLog(
-  messages: ClovaStudioMessage[],
-): ChatLog {
-  return messages
-    .filter(({ role }) => role != 'system')
-    .reduce((acc, { role, content }) => {
-      acc.push({
-        isHost: role === 'assistant',
-        message: content,
-      });
-      return acc;
-    }, [] as ChatLog);
-}
