@@ -4,7 +4,7 @@ import {
   TAROTREADING_SYSTEM_MESSAGE,
 } from 'src/common/constants/clova-studio';
 import { ERR_MSG } from 'src/common/constants/errors';
-import { ClovaStudioMessage } from 'src/common/types/clova-studio';
+import type { ClovaStudioMessage } from 'src/common/types/clova-studio';
 
 export function createTalkSystemMessage(): ClovaStudioMessage {
   return { role: 'system', content: TALK_SYSTEM_MESSAGE };

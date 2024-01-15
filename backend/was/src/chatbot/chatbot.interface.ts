@@ -1,4 +1,4 @@
-import { ChatLog } from 'src/common/types/chatbot';
+import type { ChatLog } from 'src/common/types/chatbot';
 
 export default interface ChatbotServiceInterface {
   generateTalk(

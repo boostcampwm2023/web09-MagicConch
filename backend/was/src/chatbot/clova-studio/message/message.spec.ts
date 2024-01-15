@@ -3,8 +3,8 @@ import {
   TAROTCARD_NAMES,
   TAROTREADING_SYSTEM_MESSAGE,
 } from 'src/common/constants/clova-studio';
-import { ChatLog } from 'src/common/types/chatbot';
-import { ClovaStudioMessage } from 'src/common/types/clova-studio';
+import type { ChatLog } from 'src/common/types/chatbot';
+import type { ClovaStudioMessage } from 'src/common/types/clova-studio';
 import { buildTalkMessages, buildTarotReadingMessages } from './builder';
 import { chatLog2clovaStudioMessages } from './converter';
 import { createTarotCardMessage, createUserMessage } from './creator';

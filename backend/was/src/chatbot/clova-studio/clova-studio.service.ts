@@ -6,8 +6,8 @@ import {
   TAROT_MAX_TOKENS,
 } from 'src/common/constants/clova-studio';
 import { ERR_MSG } from 'src/common/constants/errors';
-import { ChatLog } from 'src/common/types/chatbot';
-import {
+import type { ChatLog } from 'src/common/types/chatbot';
+import type {
   ClovaStudioApiKeys,
   ClovaStudioMessage,
 } from 'src/common/types/clova-studio';

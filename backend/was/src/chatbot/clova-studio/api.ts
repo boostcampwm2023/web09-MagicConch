@@ -4,7 +4,7 @@ import {
   CLOVA_URL,
 } from 'src/common/constants/clova-studio';
 import { ERR_MSG } from 'src/common/constants/errors';
-import {
+import type {
   ClovaStudioApiKeys,
   ClovaStudioMessage,
 } from 'src/common/types/clova-studio';
