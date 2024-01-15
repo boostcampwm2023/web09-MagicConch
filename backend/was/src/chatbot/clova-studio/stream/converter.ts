@@ -1,4 +1,5 @@
 import type { ClovaStudioEvent } from 'src/common/types/clova-studio';
+import { string2Uint8Array, uint8Array2String } from 'src/common/utils/stream';
 
 export function apiResponseStream2TokenStream(
   responseStream: ReadableStream<Uint8Array>,
@@ -112,12 +113,4 @@ export function isStreamEvent(object: any): object is ClovaStudioEvent {
     'role' in object.data.message &&
     'content' in object.data.message
   );
-}
-
-export function string2Uint8Array(str: string): Uint8Array {
-  return new TextEncoder().encode(str);
-}
-
-export function uint8Array2String(uint8Array: Uint8Array): string {
-  return new TextDecoder().decode(uint8Array).trim();
 }
