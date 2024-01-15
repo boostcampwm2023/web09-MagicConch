@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ChatService, ChattingInfo } from 'src/chat/chat.service';
+import { WsException } from '@nestjs/websockets';
+import { ChatService } from 'src/chat/chat.service';
 import { CreateChattingMessageDto } from 'src/chat/dto/create-chatting-message.dto';
 import ChatbotService from 'src/chatbot/chatbot.interface';
 import { ERR_MSG } from 'src/common/constants/errors';
@@ -96,7 +97,7 @@ export class SocketService {
           err.stack,
         );
       }
-      throw new Error(ERR_MSG.CREATE_ROOM);
+      throw new WsException(ERR_MSG.CREATE_ROOM);
     }
   }
 
@@ -113,7 +114,7 @@ export class SocketService {
           err.stack,
         );
       }
-      throw new Error(ERR_MSG.SAVE_CHATTING_LOG);
+      throw new WsException(ERR_MSG.SAVE_CHATTING_LOG);
     }
   }
 
@@ -131,7 +132,7 @@ export class SocketService {
           err.stack,
         );
       }
-      throw new Error(ERR_MSG.SAVE_TAROT_RESULT);
+      throw new WsException(ERR_MSG.SAVE_TAROT_RESULT);
     }
   }
 }
