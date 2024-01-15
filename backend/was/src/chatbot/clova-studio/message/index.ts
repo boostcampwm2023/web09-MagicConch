@@ -1,6 +1,3 @@
-export {
-  chatLog2clovaStudioMessages,
-  clovaStudioMessages2chatLog,
-} from './converter';
+export { chatLog2clovaStudioMessages } from './converter';
 
 export { buildTalkMessages, buildTarotReadingMessages } from './builder';
