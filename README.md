@@ -31,7 +31,7 @@
     <div>
         💡 <a href="https://github.com/boostcampwm2023/web09-MagicConch/wiki/%EA%B8%B0%ED%9A%8D%EC%84%9C">기획서</a>
         &nbsp|&nbsp
-        📋 <a href="https://www.notion.so/Product-Backlog-88058d924740408a952ee52792adb375">백로그</a>
+        📋 <a href="https://github.com/orgs/boostcampwm2023/projects/19">백로그</a>
         &nbsp|&nbsp
         📚 <a href="https://season-broccoli-784.notion.site/8c30523a4b4d47039baf6fd5e7e90b2c?v=b39be6c6aa4e42089a8bb612404e9ab2">기술블로그</a>
     </div>
@@ -60,9 +60,7 @@
 <br>
 
 ## 시스템 아키텍처
-<div align="center">
-    <img src="https://github.com/boostcampwm2023/web09-MagicConch/assets/70785620/f3ad78e5-5fea-4bd8-a50e-022cf5122485" width="80%"/>
-</div>
+![magic_conch-system architecture drawio](https://github.com/boostcampwm2023/web09-MagicConch/assets/70785620/c1f6ca2e-08db-486a-af2c-d6b115ecba3c)
 
 <br>
 
