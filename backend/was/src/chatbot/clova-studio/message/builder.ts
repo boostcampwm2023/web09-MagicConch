@@ -1,4 +1,4 @@
-import { ClovaStudioMessage } from 'src/common/types/clova-studio';
+import type { ClovaStudioMessage } from 'src/common/types/clova-studio';
 import {
   createTalkSystemMessage,
   createTarotCardMessage,
