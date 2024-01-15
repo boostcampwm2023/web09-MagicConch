@@ -24,36 +24,36 @@ export class ClovaStudioService implements ChatbotServiceInterface {
     this.apiKeys = getAPIKeys(this.configService);
   }
 
-  createTalk(
+  generateTalk(
     chatLog: ChatLog,
     userMessage: string,
   ): Promise<ReadableStream<Uint8Array>> {
-    return this.api({
+    const options = {
       apiKeys: this.apiKeys,
       messages: [
         ...chatLog2clovaStudioMessages(chatLog),
         createUserMessage(userMessage),
       ],
       maxTokens: CHAT_MAX_TOKENS,
-    });
+    };
+
+    return clovaStudioApi(options).then(apiResponseStream2TokenStream);
   }
 
-  createTarotReading(
+  generateTarotReading(
     chatLog: ChatLog,
     cardIdx: number,
   ): Promise<ReadableStream<Uint8Array>> {
-    return this.api({
+    const options = {
       apiKeys: this.apiKeys,
       messages: [
         ...chatLog2clovaStudioMessages(chatLog),
         createTarotCardMessage(cardIdx),
       ],
       maxTokens: TAROT_MAX_TOKENS,
-    });
-  }
+    };
 
-  private api(...params: Parameters<typeof clovaStudioApi>) {
-    return clovaStudioApi(...params).then(apiResponseStream2TokenStream);
+    return clovaStudioApi(options).then(apiResponseStream2TokenStream);
   }
 }
 
