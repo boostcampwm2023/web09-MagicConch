@@ -3,6 +3,7 @@ import {
   TAROTCARD_NAMES,
   TAROTREADING_SYSTEM_MESSAGE,
 } from 'src/common/constants/clova-studio';
+import { ERR_MSG } from 'src/common/constants/errors';
 import { ClovaStudioMessage } from 'src/common/types/clova-studio';
 
 export function createTalkSystemMessage(): ClovaStudioMessage {
@@ -14,9 +15,15 @@ export function createTarotCardSystemMessage(): ClovaStudioMessage {
 }
 
 export function createUserMessage(userMessage: string): ClovaStudioMessage {
+  if (!userMessage) {
+    throw new Error(ERR_MSG.USER_INPUT_EMPTY);
+  }
   return { role: 'user', content: userMessage };
 }
 
-export function createTarotCardMessage(tarotIdx: number): ClovaStudioMessage {
-  return { role: 'user', content: TAROTCARD_NAMES[tarotIdx] };
+export function createTarotCardMessage(cardIdx: number): ClovaStudioMessage {
+  if (cardIdx < 0 || cardIdx >= TAROTCARD_NAMES.length) {
+    throw new Error(ERR_MSG.TAROT_CARD_IDX_OUT_OF_RANGE);
+  }
+  return { role: 'user', content: TAROTCARD_NAMES[cardIdx] };
 }

@@ -3,6 +3,7 @@ import {
   CLOVA_API_DEFAULT_HEADER_OPTIONS,
   CLOVA_URL,
 } from 'src/common/constants/clova-studio';
+import { ERR_MSG } from 'src/common/constants/errors';
 import {
   ClovaStudioApiKeys,
   ClovaStudioMessage,
@@ -32,8 +33,12 @@ export default async function ({
     }),
   });
 
-  if (!response.ok || !response.body) {
-    throw new Error('서버에서 Clova API를 호출하는데 실패했습니다.');
+  if (!response.ok) {
+    const errorMessage = `${ERR_MSG.AI_API_FAILED}: 상태코드 ${response.statusText}`;
+    throw new Error(errorMessage);
+  }
+  if (!response.body) {
+    throw new Error(ERR_MSG.AI_API_RESPONSE_EMPTY);
   }
   return response.body;
 }
