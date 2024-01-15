@@ -12,7 +12,7 @@ import { createTarotCardMessage, createUserMessage } from './creator';
 describe('[chatbot/clova-studio/message]', () => {
   describe('function chatLog2clovaStudioMessages()', () => {
     it('test (1): 기본 실행 테스트', () => {
-      const input: ChatLog = [
+      const input: ChatLog[] = [
         { isHost: true, message: 'host message' },
         { isHost: false, message: 'user message' },
       ];
@@ -25,7 +25,7 @@ describe('[chatbot/clova-studio/message]', () => {
     });
 
     it('test (2): 입력이 빈 배열일 때', () => {
-      const input: ChatLog = [];
+      const input: ChatLog[] = [];
       const output: ClovaStudioMessage[] = [];
 
       expect(chatLog2clovaStudioMessages(input)).toEqual(output);

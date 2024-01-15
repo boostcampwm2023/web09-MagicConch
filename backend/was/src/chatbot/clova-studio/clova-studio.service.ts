@@ -11,7 +11,7 @@ import type {
   ClovaStudioApiKeys,
   ClovaStudioMessage,
 } from 'src/common/types/clova-studio';
-import ChatbotServiceInterface from '../chatbot.interface';
+import ChatbotService from '../chatbot.interface';
 import { clovaStudioApi } from './api';
 import {
   buildTalkMessages,
@@ -21,7 +21,7 @@ import {
 import { apiResponseStream2TokenStream } from './stream';
 
 @Injectable()
-export class ClovaStudioService implements ChatbotServiceInterface {
+export class ClovaStudioService implements ChatbotService {
   private readonly apiKeys: ClovaStudioApiKeys;
 
   constructor(private readonly configService: ConfigService) {
@@ -29,20 +29,20 @@ export class ClovaStudioService implements ChatbotServiceInterface {
   }
 
   generateTalk(
-    chatLog: ChatLog,
+    chatLogs: ChatLog[],
     userMessage: string,
   ): Promise<ReadableStream<Uint8Array>> {
-    const convertedMessages = chatLog2clovaStudioMessages(chatLog);
+    const convertedMessages = chatLog2clovaStudioMessages(chatLogs);
     const messages = buildTalkMessages(convertedMessages, userMessage);
 
     return this.api(messages, CHAT_MAX_TOKENS);
   }
 
   generateTarotReading(
-    chatLog: ChatLog,
+    chatLogs: ChatLog[],
     cardIdx: number,
   ): Promise<ReadableStream<Uint8Array>> {
-    const convertedMessages = chatLog2clovaStudioMessages(chatLog);
+    const convertedMessages = chatLog2clovaStudioMessages(chatLogs);
     const messages = buildTarotReadingMessages(convertedMessages, cardIdx);
 
     return this.api(messages, TAROT_MAX_TOKENS);
