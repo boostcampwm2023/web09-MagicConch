@@ -3,4 +3,4 @@ export {
   clovaStudioMessages2chatLog,
 } from './converter';
 
-export { createUserMessage, createTarotCardMessage } from './creator';
+export { buildTalkMessages, buildTarotReadingMessages } from './builder';
