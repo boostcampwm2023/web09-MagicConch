@@ -21,3 +21,28 @@ export async function string2Uint8ArrayStream(
 
   return readableStream;
 }
+
+export function readStream(
+  stream: ReadableStream<Uint8Array>,
+  onStreaming: (token: string) => void,
+): Promise<string> {
+  let message = '';
+  const reader = stream.getReader();
+
+  return new Promise((resolve) => {
+    const readStream = () => {
+      reader.read().then(({ done, value }) => {
+        if (done) {
+          resolve(message);
+          return;
+        }
+        const token = new TextDecoder().decode(value);
+        message += token;
+        onStreaming(message);
+
+        return readStream();
+      });
+    };
+    readStream();
+  });
+}
