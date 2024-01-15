@@ -1,7 +1,5 @@
-import { TALK_SYSTEM_MESSAGE } from 'src/common/constants/clova-studio';
 import { ChatLog } from 'src/common/types/chatbot';
 import { ClovaStudioMessage } from 'src/common/types/clova-studio';
-import { createTalkSystemMessage } from './creator';
 
 export function chatLog2clovaStudioMessages(
   chatLog: ChatLog,
