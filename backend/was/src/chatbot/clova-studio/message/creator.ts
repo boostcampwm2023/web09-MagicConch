@@ -15,7 +15,7 @@ export function createTarotCardSystemMessage(): ClovaStudioMessage {
 }
 
 export function createUserMessage(userMessage: string): ClovaStudioMessage {
-  if (!userMessage) {
+  if (!userMessage.trim()) {
     throw new Error(ERR_MSG.USER_INPUT_EMPTY);
   }
   return { role: 'user', content: userMessage };

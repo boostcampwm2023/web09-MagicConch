@@ -1,4 +1,7 @@
-import { TALK_SYSTEM_MESSAGE } from 'src/common/constants/clova-studio';
+import {
+  TALK_SYSTEM_MESSAGE,
+  TAROTCARD_NAMES,
+} from 'src/common/constants/clova-studio';
 import { ChatLog } from 'src/common/types/chatbot';
 import { ClovaStudioMessage } from 'src/common/types/clova-studio';
 import { chatLog2clovaStudioMessages } from './converter';
@@ -27,12 +30,33 @@ describe('[chatbot/clova-studio/message]', () => {
     });
   });
 
-  describe('function createTarotCardMessage()', () => {
-    it('test', () => expect(false).toBe(true));
+  describe('function createUserMessage()', () => {
+    it('test (1)', () => {
+      const output: ClovaStudioMessage = {
+        role: 'user',
+        content: 'user message',
+      };
+      expect(createUserMessage('user message')).toEqual(output);
+    });
+    it('test (2)', () => {
+      expect(() => createUserMessage('')).toThrow();
+      expect(() => createUserMessage(' ')).toThrow();
+    });
   });
 
-  describe('function createUserMessage()', () => {
-    it('test', () => expect(false).toBe(true));
+  describe('function createTarotCardMessage()', () => {
+    it('test (1)', () => {
+      const output: ClovaStudioMessage = {
+        role: 'user',
+        content: TAROTCARD_NAMES[21],
+      };
+
+      expect(createTarotCardMessage(21)).toEqual(output);
+    });
+    it('test (2)', () => {
+      expect(() => createTarotCardMessage(-1)).toThrow();
+      expect(() => createTarotCardMessage(79)).toThrow();
+    });
   });
 
   describe('function buildTalkMessages()', () => {
