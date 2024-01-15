@@ -15,7 +15,7 @@ type APIOptions = {
   maxTokens: number;
 };
 
-export default async function ({
+export async function clovaStudioApi({
   apiKeys,
   messages,
   maxTokens,

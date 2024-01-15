@@ -12,7 +12,7 @@ import {
   ClovaStudioMessage,
 } from 'src/common/types/clova-studio';
 import ChatbotServiceInterface from '../chatbot.interface';
-import clovaStudioApi from './api';
+import { clovaStudioApi } from './api';
 import {
   buildTalkMessages,
   buildTarotReadingMessages,
@@ -63,7 +63,7 @@ function getAPIKeys(configService: ConfigService) {
   return CLOVA_API_KEY_NAMES.reduce((acc, key) => {
     const value = configService.get(key);
 
-    if (!value) throw new Error(ERR_MSG.API_KEY_NOT_FOUND);
+    if (!value) throw new Error(ERR_MSG.AI_API_KEY_NOT_FOUND);
 
     acc[key] = value;
     return acc;
