@@ -1,12 +1,12 @@
 import type { ChatLog } from 'src/common/types/chatbot';
 
-export default interface ChatbotServiceInterface {
+export default interface ChatbotService {
   generateTalk(
-    chatLog: ChatLog,
+    chatLogs: ChatLog[],
     message: string,
   ): Promise<ReadableStream<Uint8Array>>;
   generateTarotReading(
-    chatLog: ChatLog,
+    chatLogs: ChatLog[],
     cardIdx: number,
   ): Promise<ReadableStream<Uint8Array>>;
 }
