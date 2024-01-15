@@ -1,6 +1,7 @@
-import { Module } from '@nestjs/common';
+import { Module, OnApplicationShutdown } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 @Module({
@@ -25,4 +26,12 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
     }),
   ],
 })
-export class DatabaseModule {}
+export class MysqlModule implements OnApplicationShutdown {
+  constructor(private readonly dataSource: DataSource) {}
+
+  async onApplicationShutdown(signal?: string): Promise<void> {
+    if (this.dataSource.isInitialized) {
+      await this.dataSource.destroy();
+    }
+  }
+}
