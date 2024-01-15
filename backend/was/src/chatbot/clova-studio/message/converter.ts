@@ -1,6 +1,7 @@
 import { TALK_SYSTEM_MESSAGE } from 'src/common/constants/clova-studio';
 import { ChatLog } from 'src/common/types/chatbot';
 import { ClovaStudioMessage } from 'src/common/types/clova-studio';
+import { createTalkSystemMessage } from './creator';
 
 export function chatLog2clovaStudioMessages(
   chatLog: ChatLog,
@@ -13,12 +14,7 @@ export function chatLog2clovaStudioMessages(
     return acc;
   }, [] as ClovaStudioMessage[]);
 
-  const systemMessage: ClovaStudioMessage = {
-    role: 'system',
-    content: TALK_SYSTEM_MESSAGE,
-  };
-
-  return [systemMessage, ...convertedMessages];
+  return [...convertedMessages];
 }
 
 export function clovaStudioMessages2chatLog(

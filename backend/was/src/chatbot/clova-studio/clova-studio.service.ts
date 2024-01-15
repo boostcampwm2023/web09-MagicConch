@@ -6,13 +6,16 @@ import {
   TAROT_MAX_TOKENS,
 } from 'src/common/constants/clova-studio';
 import { ChatLog } from 'src/common/types/chatbot';
-import { ClovaStudioApiKeys } from 'src/common/types/clova-studio';
+import {
+  ClovaStudioApiKeys,
+  ClovaStudioMessage,
+} from 'src/common/types/clova-studio';
 import ChatbotServiceInterface from '../chatbot.interface';
 import clovaStudioApi from './api';
 import {
+  buildTalkMessages,
+  buildTarotReadingMessages,
   chatLog2clovaStudioMessages,
-  createTarotCardMessage,
-  createUserMessage,
 } from './message';
 import { apiResponseStream2TokenStream } from './stream';
 
@@ -28,32 +31,30 @@ export class ClovaStudioService implements ChatbotServiceInterface {
     chatLog: ChatLog,
     userMessage: string,
   ): Promise<ReadableStream<Uint8Array>> {
-    const options = {
-      apiKeys: this.apiKeys,
-      messages: [
-        ...chatLog2clovaStudioMessages(chatLog),
-        createUserMessage(userMessage),
-      ],
-      maxTokens: CHAT_MAX_TOKENS,
-    };
+    const convertedMessages = chatLog2clovaStudioMessages(chatLog);
+    const messages = buildTalkMessages(convertedMessages, userMessage);
 
-    return clovaStudioApi(options).then(apiResponseStream2TokenStream);
+    return this.api(messages, CHAT_MAX_TOKENS);
   }
 
   generateTarotReading(
     chatLog: ChatLog,
     cardIdx: number,
   ): Promise<ReadableStream<Uint8Array>> {
-    const options = {
-      apiKeys: this.apiKeys,
-      messages: [
-        ...chatLog2clovaStudioMessages(chatLog),
-        createTarotCardMessage(cardIdx),
-      ],
-      maxTokens: TAROT_MAX_TOKENS,
-    };
+    const convertedMessages = chatLog2clovaStudioMessages(chatLog);
+    const messages = buildTarotReadingMessages(convertedMessages, cardIdx);
 
-    return clovaStudioApi(options).then(apiResponseStream2TokenStream);
+    return this.api(messages, TAROT_MAX_TOKENS);
+  }
+
+  private async api(
+    messages: ClovaStudioMessage[],
+    maxTokens: number,
+  ): Promise<ReadableStream<Uint8Array>> {
+    const options = { apiKeys: this.apiKeys, messages, maxTokens };
+    const responseStream = await clovaStudioApi(options);
+
+    return await apiResponseStream2TokenStream(responseStream);
   }
 }
 
