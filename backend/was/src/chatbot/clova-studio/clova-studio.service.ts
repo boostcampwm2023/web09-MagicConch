@@ -5,6 +5,7 @@ import {
   CLOVA_API_KEY_NAMES,
   TAROT_MAX_TOKENS,
 } from 'src/common/constants/clova-studio';
+import { ERR_MSG } from 'src/common/constants/errors';
 import { ChatLog } from 'src/common/types/chatbot';
 import {
   ClovaStudioApiKeys,
@@ -62,7 +63,7 @@ function getAPIKeys(configService: ConfigService) {
   return CLOVA_API_KEY_NAMES.reduce((acc, key) => {
     const value = configService.get(key);
 
-    if (!value) throw new Error(`${key}의 값을 찾을 수 없습니다.`);
+    if (!value) throw new Error(ERR_MSG.API_KEY_NOT_FOUND);
 
     acc[key] = value;
     return acc;
