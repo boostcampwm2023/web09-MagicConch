@@ -1,5 +1,3 @@
-import { ASK_TAROTCARD_MESSAGE } from './socket';
-
 export const CLOVA_URL =
   'https://clovastudio.stream.ntruss.com/testapp/v1/chat-completions/HCX-002';
 
@@ -24,6 +22,8 @@ export const CLOVA_API_DEFAULT_BODY_OPTIONS = {
 
 export const CHAT_MAX_TOKENS = 100;
 export const TAROT_MAX_TOKENS = 800;
+
+export const ASK_TAROTCARD_MESSAGE = '타로 카드를 뽑아볼까?';
 
 export const TALK_SYSTEM_MESSAGE = `
 사용자와 친근한 반말로 상황에 맞게 대화를 이어가며,
