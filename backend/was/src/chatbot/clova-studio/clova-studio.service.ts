@@ -65,7 +65,7 @@ function getAPIKeys(configService: ConfigService) {
 
     if (!value) throw new Error(ERR_MSG.AI_API_KEY_NOT_FOUND);
 
-    acc[key] = value;
+    acc[key.replaceAll('_', '-')] = value;
     return acc;
   }, {} as ClovaStudioApiKeys);
 }
