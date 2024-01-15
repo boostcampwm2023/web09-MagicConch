@@ -9,12 +9,7 @@ export function apiResponseStream2TokenStream(
   return tokenStream;
 }
 
-/* 아래는 위 함수를 위한 내부 함수들, 유닛 테스트를 위해 export 해 놓은 것. */
-
-export function createTransformStream(): TransformStream<
-  Uint8Array,
-  Uint8Array
-> {
+function createTransformStream(): TransformStream<Uint8Array, Uint8Array> {
   const transformer: Transformer<Uint8Array, Uint8Array> = createTransformer();
   const transformStream = new TransformStream<Uint8Array, Uint8Array>(
     transformer,
@@ -23,11 +18,12 @@ export function createTransformStream(): TransformStream<
   return transformStream;
 }
 
-export function createTransformer(): Transformer<Uint8Array, Uint8Array> {
-  const encoder = new TextEncoder();
+// 각 chunk에서 token을 추출하는 transformer 생성
+function createTransformer(): Transformer<Uint8Array, Uint8Array> {
   let incompleteEvent = '';
 
   return {
+    // 각 chunk에서 token을 추출해서 controller에 enqueue
     async transform(chunk, controller) {
       const events = splitChunk(chunk);
 
@@ -41,16 +37,15 @@ export function createTransformer(): Transformer<Uint8Array, Uint8Array> {
       });
 
       const newChunks = events.map(extractToken).filter(isToken);
-
       newChunks
-        .map((token) => encoder.encode(token))
-        .forEach((encodeedToken) => controller.enqueue(encodeedToken));
+        .map(string2Uint8Array)
+        .forEach((token) => controller.enqueue(token));
     },
   };
 }
 
-function splitChunk(chunk: Uint8Array): string[] {
-  return new TextDecoder().decode(chunk).split('\n\n');
+export function splitChunk(chunk: Uint8Array): string[] {
+  return uint8Array2String(chunk).split('\n\n');
 }
 
 type GetTokenExtractorOptions = { onFail: (incompleteEvent: string) => void };
@@ -61,8 +56,12 @@ export function getTokenExtractor({
   return (chunk) => {
     const streamEvent = streamEventParse(chunk);
 
-    if (streamEvent === undefined) onFail(chunk);
-    if (!streamEvent || streamEvent.event !== 'token') return;
+    if (streamEvent === undefined) {
+      onFail(chunk);
+    }
+    if (!streamEvent || streamEvent.event !== 'token') {
+      return undefined;
+    }
 
     return streamEvent.data.message.content;
   };
@@ -78,17 +77,11 @@ export function streamEventParse(str: string): ClovaStudioEvent | undefined {
   const event: any = lines.reduce((event, line) => {
     const [key, value] = extractKeyValue(line);
 
-    if (key === 'id' || key === 'event') {
+    try {
+      return { ...event, [key]: JSON.parse(value) };
+    } catch (err) {
       return { ...event, [key]: value };
     }
-    if (key === 'data') {
-      try {
-        return { ...event, [key]: JSON.parse(value) };
-      } catch (err) {
-        return event;
-      }
-    }
-    return event;
   }, {} as any);
 
   return isStreamEvent(event) ? (event as ClovaStudioEvent) : undefined;
@@ -102,7 +95,7 @@ export function extractKeyValue(line: string): [string, string] {
   const splitIdx = line.indexOf(':');
 
   if (splitIdx > 0) {
-    return [line.slice(0, splitIdx), line.slice(splitIdx + 1)];
+    return [line.slice(0, splitIdx).trim(), line.slice(splitIdx + 1).trim()];
   }
   return ['', ''];
 }
@@ -114,8 +107,17 @@ export function isStreamEvent(object: any): object is ClovaStudioEvent {
     'id' in object &&
     'event' in object &&
     'data' in object &&
+    typeof object.data === 'object' &&
     'message' in object.data &&
     'role' in object.data.message &&
     'content' in object.data.message
   );
+}
+
+export function string2Uint8Array(str: string): Uint8Array {
+  return new TextEncoder().encode(str);
+}
+
+export function uint8Array2String(uint8Array: Uint8Array): string {
+  return new TextDecoder().decode(uint8Array).trim();
 }
