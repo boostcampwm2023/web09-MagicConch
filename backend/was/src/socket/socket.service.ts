@@ -43,7 +43,11 @@ export class SocketService {
     client.chatLog.push({ isHost: false, message: message });
     client.chatLog.push({ isHost: true, message: sentMessage });
 
-    if (ASK_TAROTCARD_MESSAGE_CANDIDATES.some(sentMessage.includes)) {
+    if (
+      ASK_TAROTCARD_MESSAGE_CANDIDATES.some((string) =>
+        sentMessage.includes(string),
+      )
+    ) {
       client.emit('tarotCard');
     }
 
