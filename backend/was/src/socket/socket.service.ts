@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ChatService, ChattingInfo } from 'src/chat/chat.service';
 import { CreateChattingMessageDto } from 'src/chat/dto/create-chatting-message.dto';
 import ChatbotService from 'src/chatbot/chatbot.interface';
+import { ERR_MSG } from 'src/common/constants/errors';
 import {
   ASK_TAROTCARD_MESSAGE_CANDIDATES,
   WELCOME_MESSAGE,
@@ -9,6 +10,7 @@ import {
 import { ChatLog } from 'src/common/types/chatbot';
 import type { Socket } from 'src/common/types/socket';
 import { readStream, string2Uint8ArrayStream } from 'src/common/utils/stream';
+import { LoggerService } from 'src/logger/logger.service';
 import { CreateTarotResultDto } from 'src/tarot/dto/create-tarot-result.dto';
 import { TarotService } from 'src/tarot/tarot.service';
 
@@ -18,6 +20,7 @@ export class SocketService {
     @Inject('ChatbotService') private readonly chatbotService: ChatbotService,
     private readonly chatService: ChatService,
     private readonly tarotService: TarotService,
+    private readonly logger: LoggerService,
   ) {}
 
   initClient(client: Socket) {
@@ -86,8 +89,14 @@ export class SocketService {
     try {
       const chattingInfo = await this.chatService.createRoom(client.id);
       return chattingInfo;
-    } catch (error) {
-      throw new Error(error);
+    } catch (err) {
+      if (err instanceof Error) {
+        this.logger.error(
+          `🚀 Failed to create room : ${err.message}`,
+          err.stack,
+        );
+      }
+      throw new Error(ERR_MSG.CREATE_ROOM);
     }
   }
 
@@ -97,8 +106,14 @@ export class SocketService {
         CreateChattingMessageDto.fromChatLog(roomId, chatLog),
       );
       return await this.chatService.createMessage(roomId, chattingMessages);
-    } catch (error) {
-      throw new Error(error);
+    } catch (err) {
+      if (err instanceof Error) {
+        this.logger.error(
+          `🚀 Failed to save chat log : ${err.message}`,
+          err.stack,
+        );
+      }
+      throw new Error(ERR_MSG.SAVE_CHATTING_LOG);
     }
   }
 
@@ -109,8 +124,14 @@ export class SocketService {
     try {
       const tarotResult = CreateTarotResultDto.fromResult(cardIdx, result);
       return await this.tarotService.createTarotResult(tarotResult);
-    } catch (error) {
-      throw new Error(error);
+    } catch (err) {
+      if (err instanceof Error) {
+        this.logger.error(
+          `🚀 Failed to create share link ID : ${err.message}`,
+          err.stack,
+        );
+      }
+      throw new Error(ERR_MSG.SAVE_TAROT_RESULT);
     }
   }
 }
