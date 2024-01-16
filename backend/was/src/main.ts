@@ -1,4 +1,4 @@
-import { ValidationPipe } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
@@ -7,23 +7,23 @@ import { setupSwagger } from './common/config/swagger.setting';
 import { LoggerService } from './logger/logger.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app: INestApplication = await NestFactory.create(AppModule);
 
   app.enableCors({
     origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
+  app.enableShutdownHooks();
 
-  app.useGlobalPipes(new ValidationPipe());
   app.use(cookieParser());
+  app.useGlobalPipes(new ValidationPipe());
 
   const logger: LoggerService = app.get(LoggerService);
   app.useLogger(logger);
 
   const dsn: string = process.env.SENTRY_DSN || '';
   setupSentry(app, dsn);
-
   setupSwagger(app);
 
   const port: number = parseInt(process.env.PORT || '3000');
@@ -32,7 +32,7 @@ async function bootstrap() {
   process.on('SIGTERM', async () => {
     logger.log('🖐️ Received SIGTERM signal. Start Graceful Shutdown...');
 
-    server.close();
+    await server.close();
     await app.close();
 
     logger.log('🖐️ Nest Application closed gracefully...');
