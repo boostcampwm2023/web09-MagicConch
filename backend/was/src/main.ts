@@ -35,7 +35,6 @@ async function bootstrap() {
     await server.close();
     await app.close();
 
-    logger.log('🖐️ Nest Application closed gracefully...');
     process.exit(0);
   });
 }
