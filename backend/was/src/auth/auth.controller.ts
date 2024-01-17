@@ -14,7 +14,7 @@ import { ERR_MSG } from 'src/common/constants/errors';
 import { PROVIDER_ID } from 'src/common/constants/etc';
 import { KakaoLoginDecorator, LogoutDecorator } from './auth.decorators';
 import { JwtPayloadDto } from './dto';
-import { AuthGuard } from './guard/auth.guard';
+import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { KakaoAuthService } from './service/kakao.auth.service';
 
 @ApiTags('✅ Auth API')
@@ -48,7 +48,7 @@ export class AuthController {
     res.sendStatus(200);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('logout')
   @LogoutDecorator()
   async kakaoLogout(@Req() req: any, @Res() res: Response): Promise<void> {
@@ -62,7 +62,7 @@ export class AuthController {
       case PROVIDER_ID.GOOGLE:
         break;
     }
-    res.clearCookie('magicconch', this.cookieOptions);
+    res.clearCookie('magicconch');
     res.sendStatus(200);
   }
 }
