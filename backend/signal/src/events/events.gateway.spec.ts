@@ -1,20 +1,20 @@
 import { Test } from '@nestjs/testing';
-import { loggerServiceMock } from 'mocks/events/logger.mock';
+import { LoggerService } from 'src/logger/logger.service';
+import { loggerServiceMock } from 'src/mocks/events/logger.mock';
 import {
   onlyHostInsideRoomMock,
   roomMock,
   twoPeopleInsideRoomMock,
-} from 'mocks/events/room.mock';
+} from 'src/mocks/events/room.mock';
 import {
   SocketMock,
   guestSocketMock,
   hostSocketMock,
-} from 'mocks/events/socket.mock';
+} from 'src/mocks/events/socket.mock';
 import {
   onlyHostInsideUsersMock,
   twoPeopleInsideUsersMock,
-} from 'mocks/events/user.mock';
-import { LoggerService } from 'src/logger/logger.service';
+} from 'src/mocks/events/user.mock';
 import { EventsGateway } from './events.gateway';
 
 const expectEmitToRoom = (

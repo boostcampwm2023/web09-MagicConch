@@ -61,6 +61,10 @@
     "socket.io-client": "^4.7.3"
   },
   "jest": {
+    "moduleDirectories": [
+      "node_modules",
+      "src"
+    ],
     "moduleFileExtensions": [
       "js",
       "json",
@@ -77,10 +81,7 @@
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
     "moduleNameMapper": {
-      "^src/(.*)$": "<rootDir>/$1"
-    },
-    "modulePaths": [
-      "<rootDir>/.."
-    ]
+      "src/(.*)": "<rootDir>/$1"
+    }
   }
 }
