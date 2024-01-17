@@ -1,8 +1,11 @@
 import {
-  string2Uint8Array,
-  string2Uint8ArrayStream,
-  uint8Array2String,
-} from 'src/common/utils/stream';
+  mock_compareTokenStream,
+  mock_createResponseChunks,
+  mock_createResponseStream,
+  mock_generateId,
+  mock_isStreamEventString,
+} from 'src/common/mocks/clova-studio';
+import { string2Uint8Array, uint8Array2String } from 'src/common/utils/stream';
 import {
   apiResponseStream2TokenStream,
   extractKeyValue,
@@ -14,48 +17,50 @@ import {
 
 describe('[chatbot/clova-studio/stream]', () => {
   describe('function splitChunk()', () => {
-    const orignalChunk = string2Uint8Array(`id: aabdfe-dfgwr-edf-hpqwd-f2asd-g
-event: token
-data: {"message": {"role": "assistant", "content": "안"}}
+    const tokens = ['안', '녕', '하', '세', '요'];
 
-id: aabdfe-dfgwr-edf-hpqwd-f1asd-g
-event: token
-data: {"message": {"role": "assistant", "content": "녕" }}`);
+    const orignalChunk = string2Uint8Array(mock_createResponseChunks(tokens));
 
-    const splitChunks = [
-      `id: aabdfe-dfgwr-edf-hpqwd-f2asd-g
-event: token
-data: {"message": {"role": "assistant", "content": "안"}}`,
-      `id: aabdfe-dfgwr-edf-hpqwd-f1asd-g
-event: token
-data: {"message": {"role": "assistant", "content": "녕" }}`,
-    ];
+    const vaildateChunk = (chunks: string[]) => {
+      expect(chunks.length).toBe(tokens.length + 1);
+
+      chunks.forEach((chunk, index) => {
+        if (index === tokens.length) {
+          expect(mock_isStreamEventString(chunk, tokens.join(''))).toBe(true);
+        } else {
+          expect(mock_isStreamEventString(chunk, tokens[index])).toBe(true);
+        }
+      });
+    };
 
     it('test (1): 기본 실행 테스트', () => {
-      expect(splitChunk(orignalChunk)).toEqual(splitChunks);
+      const splitedChunks = splitChunk(orignalChunk);
+      vaildateChunk(splitedChunks);
     });
 
     it('test (2): 시작이나 끝에 줄바꿈이 붙은 경우 테스트', () => {
-      const originalChunkString = uint8Array2String(orignalChunk);
+      const orignalChunkString = uint8Array2String(orignalChunk);
       const inputs = [
-        `\n${originalChunkString}`,
-        `\n\n${originalChunkString}`,
-        `${originalChunkString}\n`,
-        `${originalChunkString}\n\n`,
+        `\n${orignalChunkString}`,
+        `\n\n${orignalChunkString}`,
+        `${orignalChunkString}\n`,
+        `${orignalChunkString}\n\n`,
       ].map(string2Uint8Array);
 
-      inputs.forEach((chunk) => {
-        expect(splitChunk(chunk)).toEqual(splitChunks);
+      inputs.forEach((input) => {
+        const splitedChunks = splitChunk(input);
+        vaildateChunk(splitedChunks);
       });
     });
   });
 
   describe('function extractKeyValue()', () => {
     it('test (1): 기본 실행 테스트', () => {
+      const mock_id = mock_generateId();
       const testcases = [
         {
-          input: `id: aabdfe-dfgwr-edf-hpqwd-f2asd-g`,
-          output: ['id', 'aabdfe-dfgwr-edf-hpqwd-f2asd-g'],
+          input: `id: ${mock_id}`,
+          output: ['id', mock_id],
         },
         {
           input: `event: token`,
@@ -79,7 +84,7 @@ data: {"message": {"role": "assistant", "content": "녕" }}`,
   describe('function isStreamEvent()', () => {
     it('test (1): 기본 실행 테스트', () => {
       const input = {
-        id: 'aabdfe-dfgwr-edf-hpqwd-f2asd-g',
+        id: mock_generateId(),
         event: 'token',
         data: { message: { role: 'assistant', content: '안' } },
       };
@@ -88,7 +93,7 @@ data: {"message": {"role": "assistant", "content": "녕" }}`,
 
     it('test (2): data가 없는 경우', () => {
       const input = {
-        id: 'aabdfe-dfgwr-edf-hpqwd-f2asd-g',
+        id: mock_generateId(),
         event: 'token',
       };
       expect(isStreamEvent(input)).toBe(false);
@@ -97,12 +102,12 @@ data: {"message": {"role": "assistant", "content": "녕" }}`,
     it('test (3): data가 불완전한 경우', () => {
       const inputs = [
         {
-          id: 'aabdfe-dfgwr-edf-hpqwd-f2asd-g',
+          id: mock_generateId(),
           event: 'token',
           data: '{"message": {"role": "assistant", "conte',
         },
         {
-          id: 'aabdfe-dfgwr-edf-hpqwd-f2asd-g',
+          id: mock_generateId(),
           event: 'token',
           data: '',
         },
@@ -119,12 +124,14 @@ data: {"message": {"role": "assistant", "content": "녕" }}`,
   });
 
   describe('function streamEventParse()', () => {
+    const mock_id = mock_generateId();
+
     it('test (1): 기본 실행 테스트', () => {
-      const input = `id: aabdfe-dfgwr-edf-hpqwd-f2asd-g
+      const input = `id: ${mock_id}
 event: token
 data: {"message": {"role": "assistant", "content": "안"}}`;
       const output = {
-        id: 'aabdfe-dfgwr-edf-hpqwd-f2asd-g',
+        id: mock_id,
         event: 'token',
         data: { message: { role: 'assistant', content: '안' } },
       };
@@ -133,20 +140,20 @@ data: {"message": {"role": "assistant", "content": "안"}}`;
     });
 
     it('test (2): data가 없는 경우', () => {
-      const input = `id: aabdfe-dfgwr-edf-hpqwd-f2asd-g
+      const input = `id: ${mock_id}
 event: token`;
       expect(streamEventParse(input)).toBe(undefined);
     });
 
     it('test (3): data가 불완전한 경우', () => {
       const inputs = [
-        `id: aabdfe-dfgwr-edf-hpqwd-f2asd-g
+        `id: ${mock_id}
 event: token
 data: {"message": {"role": "assistant", "conte`,
-        `id: aabdfe-dfgwr-edf-hpqwd-f2asd-g
+        `id: ${mock_id}
 event: token
 data: `,
-        `id: aabdfe-dfgwr-edf-hpqwd-f2asd-g
+        `id: ${mock_id}
 event: token
 da`,
       ];
@@ -188,43 +195,12 @@ data: {"message": {"role": "assistant", "conte`;
 
   describe('function apiResponseStream2TokenStream()', () => {
     it('test (1): 기본 실행 테스트', async () => {
-      const chunks = `id: aabdfe-dfgwr-edf-hpqwd-f2asd-g
-event: token
-data: {"message": {"role": "assistant", "content": "안"}}
-
-id: aabdfe-dfgwr-edf-hpqwd-f1asd-g
-event: token
-data: {"message": {"role": "assistant", "content": "녕" }}
-
-id: 7a8c1911-e5c1-40c5-a2f1-06c0f4c1029d
-event: token
-data: {"message": {"role": "assistant", "content": "하" }}
-
-id: e4081bd0-8a62-4c63-891a-5b65c674ff63
-event: token
-data: {"message": {"role": "assistant", "content": "세" }}
-
-id: 7e65a894-9e9c-4c0a-83a0-6aae04a557f3
-event: token
-data: {"message": {"role": "assistant", "content": "요" }}
-
-id: e37be2fb-65f0-43d3-a48e-1d09400eab3b
-event: result
-data: {"message": {"role": "assistant", "content": "안녕하세요" }}`;
-
       const tokens = ['안', '녕', '하', '세', '요'];
 
-      const responseStream = await string2Uint8ArrayStream(chunks);
+      const responseStream = await mock_createResponseStream(tokens);
       const tokenStream = apiResponseStream2TokenStream(responseStream);
 
-      const reader = tokenStream.getReader();
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        expect(uint8Array2String(value)).toEqual(tokens.shift());
-      }
-      expect(tokens.length).toBe(0);
+      expect(mock_compareTokenStream(tokenStream, tokens)).toBe(true);
     });
   });
 });
