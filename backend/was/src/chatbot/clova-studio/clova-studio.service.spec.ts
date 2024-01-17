@@ -2,26 +2,15 @@ import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CLOVA_API_KEY_NAMES } from 'src/common/constants/clova-studio';
 import {
+  clovaStudioApiMock,
+  configServieMock,
   mock_compareTokenStream,
   mock_createResponseChunks,
 } from 'src/common/mocks/clova-studio';
 import { string2Uint8ArrayStream } from 'src/common/utils/stream';
-import { clovaStudioApi } from './api';
 import { ClovaStudioService, getAPIKeys } from './clova-studio.service';
 
 jest.mock('./api');
-const mockClovaStudioApi = clovaStudioApi as jest.MockedFunction<
-  typeof clovaStudioApi
->;
-
-class MockConfigService {
-  get(key: string) {
-    if (CLOVA_API_KEY_NAMES.includes(key)) {
-      return key;
-    }
-    return undefined;
-  }
-}
 
 describe('ClovaStudioService', () => {
   let service: ClovaStudioService;
@@ -33,10 +22,7 @@ describe('ClovaStudioService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ClovaStudioService,
-        {
-          provide: ConfigService,
-          useClass: MockConfigService,
-        },
+        { provide: ConfigService, useValue: configServieMock },
       ],
     }).compile();
 
@@ -48,8 +34,7 @@ describe('ClovaStudioService', () => {
   });
 
   it('clova api key 불러 옴', () => {
-    const mockConfigService = new MockConfigService() as ConfigService;
-    const apiKeys = getAPIKeys(mockConfigService);
+    const apiKeys = getAPIKeys(configServieMock);
 
     CLOVA_API_KEY_NAMES.forEach((key) => {
       expect(apiKeys[key.replaceAll('_', '-')]).toBe(key);
@@ -77,5 +62,5 @@ describe('ClovaStudioService', () => {
 
 function mockAPI(tokens: string[]) {
   const chunks = mock_createResponseChunks(tokens);
-  mockClovaStudioApi.mockReturnValueOnce(string2Uint8ArrayStream(chunks));
+  clovaStudioApiMock.mockReturnValueOnce(string2Uint8ArrayStream(chunks));
 }

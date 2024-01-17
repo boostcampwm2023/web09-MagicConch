@@ -1,6 +1,22 @@
+import { ConfigService } from '@nestjs/config';
+import { clovaStudioApi } from 'src/chatbot/clova-studio/api';
+import { CLOVA_API_KEY_NAMES } from '../constants/clova-studio';
 import { string2Uint8ArrayStream, uint8Array2String } from '../utils/stream';
 
 export const mock_id = '123456-12345-123-12345-12345-1';
+
+export const configServieMock = {
+  get(key: string) {
+    if (CLOVA_API_KEY_NAMES.includes(key)) {
+      return key;
+    }
+    return undefined;
+  },
+} as ConfigService;
+
+export const clovaStudioApiMock = clovaStudioApi as jest.MockedFunction<
+  typeof clovaStudioApi
+>;
 
 export function mock_createResponseStream(
   tokens: string[],
