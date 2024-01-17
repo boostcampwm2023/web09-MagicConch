@@ -29,10 +29,12 @@
       "@constants/*": ["constants/*"],
       "@utils/*": ["utils/*"],
       "@mocks/*": ["mocks/*"]
-    }
-  },
-  "include": ["src", "vite-env.d.ts", "@types"],
-  "references": [{ "path": "./tsconfig.node.json" }],
+    },
 
-  "typeRoots": ["./node_modules/@types", "./src/@types"]
+    "types": ["vitest/globals"],
+    
+  },
+  "typeRoots": ["./node_modules/@types", "./src/@types"],
+  "include": ["src", "vite-env.d.ts", "@types", ".src/test/setup.ts"],
+  "references": [{ "path": "./tsconfig.node.json" }],
 }
