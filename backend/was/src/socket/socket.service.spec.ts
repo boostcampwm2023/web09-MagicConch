@@ -40,7 +40,11 @@ describe('SocketService', () => {
     expect(socketService).toBeDefined();
   });
 
-  it('client 소켓 초기화', () => {});
+  it('client 소켓 초기화', () => {
+    socketService.initClient(clientMock);
+    expect(clientMock.chatLog).toEqual([]);
+    expect(clientMock.chatEnd).toBeFalsy();
+  });
 
   describe('sendWelcomeMessage()', () => {
     it('token 단위로 메세지 전달', () => {});
