@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { WsException } from '@nestjs/websockets';
 import { ChatService } from 'src/chat/chat.service';
 import { WELCOME_MESSAGE } from 'src/common/constants/socket';
 import {
@@ -13,9 +14,11 @@ import {
 import { LoggerService } from 'src/logger/logger.service';
 import { TarotService } from 'src/tarot/tarot.service';
 import { SocketService } from './socket.service';
+import { WsExceptionFilter } from './ws-exception.filter';
 
 describe('SocketService', () => {
   let socketService: SocketService;
+  let wsExceptionFilter: WsExceptionFilter;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -29,6 +32,7 @@ describe('SocketService', () => {
     }).compile();
 
     socketService = module.get<SocketService>(SocketService);
+    wsExceptionFilter = new WsExceptionFilter(socketService);
   });
 
   afterEach(() => {
@@ -47,8 +51,34 @@ describe('SocketService', () => {
   });
 
   describe('sendWelcomeMessage()', () => {
-    it('token 단위로 메세지 전달', () => {});
-    it('오류 발생 시 client에게 알림', () => {});
+    it('token 단위로 메세지 전달', async () => {
+      const sentMessage = await socketService.sendWelcomeMessage(clientMock);
+
+      const emitNum = (clientMock.emit as jest.Mock).mock.calls.length;
+      expect(emitNum).toBeGreaterThanOrEqual(3);
+
+      expect(clientMock.emit).toHaveBeenCalledWith('streamStart');
+      expect(clientMock.emit).toHaveBeenCalledWith(
+        'streaming',
+        expect.anything(),
+      );
+      expect(clientMock.emit).toHaveBeenCalledWith('streamEnd');
+
+      expect(sentMessage).toEqual(WELCOME_MESSAGE);
+    });
+
+    it('오류 발생 시 client에게 알림', () => {
+      const error = new Error('test');
+      jest.spyOn(socketService, 'streamMessage').mockImplementation(() => {
+        throw error;
+      });
+
+      expect(() => socketService.sendWelcomeMessage(clientMock)).toThrow(
+        WsException,
+      );
+      // TODO: error 발생 시 client에게 알려주는 부분 테스트 필요 (ws-exception.filter 적용 테스트)
+      expect(clientMock.emit).toHaveBeenCalledWith('error', expect.anything());
+    });
   });
 
   describe('handleMessageEvent()', () => {
@@ -75,6 +105,4 @@ describe('SocketService', () => {
     it('완성된 메세지 반환', () => {});
     it('오류 발생 시 client에게 알림', () => {});
   });
-
-  it('test (3): 타로 상담 결과 생성', async () => {});
 });
