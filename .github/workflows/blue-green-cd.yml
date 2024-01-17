@@ -10,7 +10,7 @@ env:
   GITHUB_SHA: ${{ github.sha }}
 
 jobs:
-  build:
+  backend-build:
     runs-on: ubuntu-latest
 
     steps:
@@ -59,8 +59,8 @@ jobs:
           docker-compose -f compose.blue-build.yml push
           docker-compose -f compose.green-build.yml push
 
-  deploy:
-    needs: build
+  backend-deploy:
+    needs: backend-build
     runs-on: ubuntu-latest
 
     steps:
