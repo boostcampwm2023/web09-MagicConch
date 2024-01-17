@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { WsException } from '@nestjs/websockets';
+// import { WsException } from '@nestjs/websockets';
 import { ChatService } from 'src/chat/chat.service';
 import {
   ASK_TAROTCARD_MESSAGE_CANDIDATES,
