@@ -22,7 +22,7 @@ import { WsExceptionFilter } from './ws-exception.filter';
 
 describe('SocketService', () => {
   let socketService: SocketService;
-  let wsExceptionFilter: WsExceptionFilter;
+  // let wsExceptionFilter: WsExceptionFilter;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -36,7 +36,7 @@ describe('SocketService', () => {
     }).compile();
 
     socketService = module.get<SocketService>(SocketService);
-    wsExceptionFilter = new WsExceptionFilter(socketService);
+    // wsExceptionFilter = new WsExceptionFilter(socketService);
   });
 
   afterEach(() => {
