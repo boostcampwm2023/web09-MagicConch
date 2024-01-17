@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 import { ChatService } from 'src/chat/chat.service';
 import { CreateChattingMessageDto } from 'src/chat/dto/create-chatting-message.dto';
-import ChatbotService from 'src/chatbot/chatbot.interface';
+import { ChatbotService } from 'src/chatbot/chatbot.interface';
 import { ERR_MSG } from 'src/common/constants/errors';
 import {
   ASK_TAROTCARD_MESSAGE_CANDIDATES,
@@ -30,9 +30,19 @@ export class SocketService {
   }
 
   sendWelcomeMessage(client: Socket) {
-    return this.streamMessage(client, () =>
-      string2Uint8ArrayStream(WELCOME_MESSAGE),
-    );
+    try {
+      return this.streamMessage(client, () =>
+        string2Uint8ArrayStream(WELCOME_MESSAGE),
+      );
+    } catch (err) {
+      if (err instanceof Error) {
+        this.logger.error(
+          `🚀 Failed to send welcome message : ${err.message}`,
+          err.stack,
+        );
+      }
+      throw new WsException(ERR_MSG.HANDLE_MESSAGE);
+    }
   }
 
   async handleMessageEvent(client: Socket, message: string) {
@@ -92,7 +102,7 @@ export class SocketService {
     }
   }
 
-  private async streamMessage(
+  async streamMessage(
     client: Socket,
     generateStream: () => Promise<ReadableStream<Uint8Array>>,
   ) {

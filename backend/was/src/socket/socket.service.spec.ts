@@ -1,5 +1,44 @@
+import { Test, TestingModule } from '@nestjs/testing';
+import { ChatService } from 'src/chat/chat.service';
+import { WELCOME_MESSAGE } from 'src/common/constants/socket';
+import {
+  aiMessageMock,
+  chatServiceMock,
+  chatbotServiceMock,
+  clientMock,
+  humanMessageMock,
+  loggerServiceMock,
+  tarotServiceMock,
+} from 'src/common/mocks/socket';
+import { LoggerService } from 'src/logger/logger.service';
+import { TarotService } from 'src/tarot/tarot.service';
+import { SocketService } from './socket.service';
+
 describe('SocketService', () => {
-  it('SocketService 생성', () => {});
+  let socketService: SocketService;
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        SocketService,
+        { provide: ChatService, useValue: chatServiceMock },
+        { provide: TarotService, useValue: tarotServiceMock },
+        { provide: LoggerService, useValue: loggerServiceMock },
+        { provide: 'ChatbotService', useValue: chatbotServiceMock },
+      ],
+    }).compile();
+
+    socketService = module.get<SocketService>(SocketService);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+    socketService.initClient(clientMock);
+  });
+
+  it('SocketService 생성', () => {
+    expect(socketService).toBeDefined();
+  });
 
   it('client 소켓 초기화', () => {});
 
