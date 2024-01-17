@@ -1,7 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { WsException } from '@nestjs/websockets';
 import { ChatService } from 'src/chat/chat.service';
-import { WELCOME_MESSAGE } from 'src/common/constants/socket';
+import {
+  ASK_TAROTCARD_MESSAGE_CANDIDATES,
+  WELCOME_MESSAGE,
+} from 'src/common/constants/socket';
 import {
   aiMessageMock,
   chatServiceMock,
@@ -88,9 +91,43 @@ describe('SocketService', () => {
   });
 
   describe('handleMessageEvent()', () => {
-    it('token 단위로 ai 답장 전달', () => {});
-    it('chatLog 업데이트', () => {});
-    it('ai가 타로 카드 뽑기 제안 시 tarotCard 이벤트 발생', () => {});
+    it('token 단위로 ai 답장 전달', async () => {
+      const sentMessage = await socketService.handleMessageEvent(
+        clientMock,
+        humanMessageMock,
+      );
+
+      const emitNum = (clientMock.emit as jest.Mock).mock.calls.length;
+      expect(emitNum).toBeGreaterThanOrEqual(3);
+
+      expect(clientMock.emit).toHaveBeenCalledWith('streamStart');
+      expect(clientMock.emit).toHaveBeenCalledWith(
+        'streaming',
+        expect.anything(),
+      );
+      expect(clientMock.emit).toHaveBeenCalledWith('streamEnd');
+
+      expect(sentMessage).toEqual(aiMessageMock);
+    });
+
+    it('chatLog 업데이트', async () => {
+      expect(clientMock.chatLog).toEqual([]);
+      await socketService.handleMessageEvent(clientMock, humanMessageMock);
+
+      expect(clientMock.chatLog).toEqual([
+        { isHost: false, message: humanMessageMock },
+        { isHost: true, message: aiMessageMock },
+      ]);
+    });
+
+    it('ai가 타로 카드 뽑기 제안 시 tarotCard 이벤트 발생', async () => {
+      jest.spyOn(socketService, 'streamMessage').mockImplementation(() => {
+        return Promise.resolve(ASK_TAROTCARD_MESSAGE_CANDIDATES[0]);
+      });
+      await socketService.handleMessageEvent(clientMock, humanMessageMock);
+
+      expect(clientMock.emit).toHaveBeenCalledWith('tarotCard');
+    });
     it('오류 발생 시 client에게 알림', () => {});
   });
 
