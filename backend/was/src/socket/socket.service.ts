@@ -104,7 +104,7 @@ export class SocketService {
     }
   }
 
-  private async streamMessage(
+  async streamMessage(
     client: Socket,
     generateStream: () => Promise<ReadableStream<Uint8Array>>,
   ) {
