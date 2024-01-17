@@ -1,54 +1,25 @@
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Message } from 'src/events/type';
-import { Member } from 'src/members/entities/member.entity';
+import { Member } from 'src/members/entities';
+import {
+  message,
+  messageMock,
+  roomId,
+  roomMock,
+  wrongRoomId,
+} from 'src/mocks/chat';
+import { diffMemberId, memberId, memberMock } from 'src/mocks/members';
 import { Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import { ChatService } from './chat.service';
-import { CreateChattingMessageDto } from './dto/create-chatting-message.dto';
-import { UpdateChattingRoomDto } from './dto/update-chatting-room.dto';
-import { ChattingMessage } from './entities/chatting-message.entity';
-import { ChattingRoom } from './entities/chatting-room.entity';
+import { CreateChattingMessageDto, UpdateChattingRoomDto } from './dto';
+import { ChattingMessage, ChattingRoom } from './entities';
 
 describe('ChatService', () => {
   let service: ChatService;
   let chattingRoomRepository: Repository<ChattingRoom>;
   let chattingMessageRepository: Repository<ChattingMessage>;
   let membersRepository: Repository<Member>;
-
-  /**
-   * mock data
-   */
-  const memberId: string = uuidv4();
-  const roomId: string = uuidv4();
-  const messageId: string = uuidv4();
-
-  const nonMemberId: string = uuidv4();
-  const diffMemberId: string = uuidv4();
-  const nonRoomId: string = uuidv4();
-
-  const memberMock: Member = new Member();
-  memberMock.id = memberId;
-
-  const roomMock: ChattingRoom = new ChattingRoom();
-  roomMock.id = roomId;
-  roomMock.title = 'chatting room title';
-  roomMock.participant = memberMock;
-
-  const message: Message = {
-    roomId: messageId,
-    chat: {
-      role: 'user',
-      content: 'chatting message content',
-    },
-  };
-
-  const messageMock: ChattingMessage = new ChattingMessage();
-  messageMock.id = messageId;
-  messageMock.isHost = message.chat.role === 'assistant';
-  messageMock.message = message.chat.content;
-  messageMock.room = roomMock;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -110,11 +81,11 @@ describe('ChatService', () => {
     //     .spyOn(membersRepository, 'findOneBy')
     //     .mockResolvedValueOnce(null);
 
-    //   await expect(service.createRoom(nonMemberId)).rejects.toThrow(
+    //   await expect(service.createRoom(wrongMemberId)).rejects.toThrow(
     //     NotFoundException,
     //   );
 
-    //   expect(findOneByMock).toHaveBeenCalledWith({ id: nonMemberId });
+    //   expect(findOneByMock).toHaveBeenCalledWith({ id: wrongMemberId });
     // });
   });
 
@@ -146,11 +117,11 @@ describe('ChatService', () => {
         .spyOn(chattingRoomRepository, 'findOneBy')
         .mockResolvedValueOnce(null);
 
-      await expect(service.createMessage(nonRoomId, [])).rejects.toThrow(
+      await expect(service.createMessage(wrongRoomId, [])).rejects.toThrow(
         NotFoundException,
       );
 
-      expect(findOneByMock).toHaveBeenCalledWith({ id: nonRoomId });
+      expect(findOneByMock).toHaveBeenCalledWith({ id: wrongRoomId });
     });
   });
 
