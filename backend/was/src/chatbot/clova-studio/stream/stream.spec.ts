@@ -82,7 +82,7 @@ describe('[chatbot/clova-studio/stream]', () => {
         event: 'token',
         data: { message: { role: 'assistant', content: '안' } },
       };
-      expect(isStreamEvent(input)).toBe(true);
+      expect(isStreamEvent(input)).toBeTruthy();
     });
 
     it('test (2): data가 없는 경우', () => {
@@ -90,7 +90,7 @@ describe('[chatbot/clova-studio/stream]', () => {
         id: mock_id,
         event: 'token',
       };
-      expect(isStreamEvent(input)).toBe(false);
+      expect(isStreamEvent(input)).toBeFalsy();
     });
 
     it('test (3): data가 불완전한 경우', () => {
@@ -107,13 +107,13 @@ describe('[chatbot/clova-studio/stream]', () => {
         },
       ];
       inputs.forEach((input) => {
-        expect(isStreamEvent(input)).toBe(false);
+        expect(isStreamEvent(input)).toBeFalsy();
       });
     });
 
     it('test (4): input이 특별한 값일 경우', () => {
       const input = [null, undefined, '', [], {}, () => {}];
-      expect(isStreamEvent(input)).toBe(false);
+      expect(isStreamEvent(input)).toBeFalsy();
     });
   });
 
@@ -134,7 +134,7 @@ data: {"message": {"role": "assistant", "content": "안"}}`;
     it('test (2): data가 없는 경우', () => {
       const input = `id: ${mock_id}
 event: token`;
-      expect(streamEventParse(input)).toBe(undefined);
+      expect(streamEventParse(input)).toBeUndefined();
     });
 
     it('test (3): data가 불완전한 경우', () => {
@@ -150,12 +150,12 @@ event: token
 da`,
       ];
       inputs.forEach((input) => {
-        expect(streamEventParse(input)).toBe(undefined);
+        expect(streamEventParse(input)).toBeUndefined();
       });
     });
 
     it('test (4): input이 빈 값일 경우', () => {
-      expect(streamEventParse('')).toBe(undefined);
+      expect(streamEventParse('')).toBeUndefined();
     });
   });
 
@@ -179,7 +179,7 @@ data: {"message": {"role": "assistant", "content": "안"}}`;
 event: token
 data: {"message": {"role": "assistant", "conte`;
 
-      expect(extractor(event)).toBe(undefined);
+      expect(extractor(event)).toBeUndefined();
       expect(onFail).toHaveBeenCalledTimes(1);
       expect(onFail).toHaveBeenCalledWith(event);
     });
@@ -192,7 +192,7 @@ data: {"message": {"role": "assistant", "conte`;
       const responseStream = await mock_createResponseStream(tokens);
       const tokenStream = apiResponseStream2TokenStream(responseStream);
 
-      expect(await mock_compareTokenStream(tokenStream, tokens)).toBe(true);
+      expect(await mock_compareTokenStream(tokenStream, tokens)).toBeTruthy();
     });
   });
 });

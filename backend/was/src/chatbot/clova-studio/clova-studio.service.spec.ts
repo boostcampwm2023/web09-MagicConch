@@ -52,7 +52,8 @@ describe('ClovaStudioService', () => {
 
     const tokenStream = await service.generateTalk([], '안녕!');
 
-    mock_compareTokenStream(tokenStream, tokens);
+    const result = await mock_compareTokenStream(tokenStream, tokens);
+    expect(result).toBeTruthy();
   });
 
   it('test (3): 타로 상담 결과 생성', async () => {
@@ -60,7 +61,8 @@ describe('ClovaStudioService', () => {
 
     const tokenStream = await service.generateTarotReading([], 21);
 
-    mock_compareTokenStream(tokenStream, tokens);
+    const result = await mock_compareTokenStream(tokenStream, tokens);
+    expect(result).toBeTruthy();
   });
 });
 
