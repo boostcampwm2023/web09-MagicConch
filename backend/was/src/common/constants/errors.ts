@@ -2,8 +2,7 @@ export const ERR_MSG = {
   /**
    * auth
    */
-  JWT_NOT_FOUND: '로그인이 필요한 서비스입니다.',
-  JWT_VERIFICATION_FAILED: '올바르지 않은 접근입니다.',
+  UNAUTHORIZED_USER: '로그인이 필요한 서비스입니다.',
 
   /**
    * chat
