@@ -29,11 +29,13 @@ export class SocketService {
     client.chatEnd = false;
   }
 
-  sendWelcomeMessage(client: Socket) {
+  async sendWelcomeMessage(client: Socket) {
     try {
-      return this.streamMessage(client, () =>
+      const sentMessage = await this.streamMessage(client, () =>
         string2Uint8ArrayStream(WELCOME_MESSAGE),
       );
+      client.chatLog.push({ isHost: true, message: sentMessage });
+      return sentMessage;
     } catch (err) {
       if (err instanceof Error) {
         this.logger.error(
@@ -114,8 +116,6 @@ export class SocketService {
     const sentMessage = await readStream(stream, onStreaming);
 
     client.emit('streamEnd');
-
-    client.chatLog.push({ isHost: true, message: sentMessage });
 
     return sentMessage;
   }
