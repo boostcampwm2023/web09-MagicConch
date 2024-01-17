@@ -11,7 +11,7 @@ import type {
   ClovaStudioApiKeys,
   ClovaStudioMessage,
 } from 'src/common/types/clova-studio';
-import ChatbotService from '../chatbot.interface';
+import { ChatbotService } from '../chatbot.interface';
 import { clovaStudioApi } from './api';
 import {
   buildTalkMessages,

@@ -1,6 +1,6 @@
 import type { ChatLog } from 'src/common/types/chatbot';
 
-export default interface ChatbotService {
+export interface ChatbotService {
   generateTalk(
     chatLogs: ChatLog[],
     message: string,
