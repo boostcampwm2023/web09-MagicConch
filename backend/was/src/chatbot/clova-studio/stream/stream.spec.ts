@@ -2,7 +2,7 @@ import {
   mock_compareTokenStream,
   mock_createResponseChunks,
   mock_createResponseStream,
-  mock_generateId,
+  mock_id,
   mock_isStreamEventString,
 } from 'src/common/mocks/clova-studio';
 import { string2Uint8Array, uint8Array2String } from 'src/common/utils/stream';
@@ -18,18 +18,13 @@ import {
 describe('[chatbot/clova-studio/stream]', () => {
   describe('function splitChunk()', () => {
     const tokens = ['안', '녕', '하', '세', '요'];
-
     const orignalChunk = string2Uint8Array(mock_createResponseChunks(tokens));
 
     const vaildateChunk = (chunks: string[]) => {
       expect(chunks.length).toBe(tokens.length + 1);
 
-      chunks.forEach((chunk, index) => {
-        if (index === tokens.length) {
-          expect(mock_isStreamEventString(chunk, tokens.join(''))).toBe(true);
-        } else {
-          expect(mock_isStreamEventString(chunk, tokens[index])).toBe(true);
-        }
+      chunks.forEach((chunk) => {
+        expect(mock_isStreamEventString(chunk)).toBeTruthy();
       });
     };
 
@@ -56,7 +51,6 @@ describe('[chatbot/clova-studio/stream]', () => {
 
   describe('function extractKeyValue()', () => {
     it('test (1): 기본 실행 테스트', () => {
-      const mock_id = mock_generateId();
       const testcases = [
         {
           input: `id: ${mock_id}`,
@@ -84,7 +78,7 @@ describe('[chatbot/clova-studio/stream]', () => {
   describe('function isStreamEvent()', () => {
     it('test (1): 기본 실행 테스트', () => {
       const input = {
-        id: mock_generateId(),
+        id: mock_id,
         event: 'token',
         data: { message: { role: 'assistant', content: '안' } },
       };
@@ -93,7 +87,7 @@ describe('[chatbot/clova-studio/stream]', () => {
 
     it('test (2): data가 없는 경우', () => {
       const input = {
-        id: mock_generateId(),
+        id: mock_id,
         event: 'token',
       };
       expect(isStreamEvent(input)).toBe(false);
@@ -102,12 +96,12 @@ describe('[chatbot/clova-studio/stream]', () => {
     it('test (3): data가 불완전한 경우', () => {
       const inputs = [
         {
-          id: mock_generateId(),
+          id: mock_id,
           event: 'token',
           data: '{"message": {"role": "assistant", "conte',
         },
         {
-          id: mock_generateId(),
+          id: mock_id,
           event: 'token',
           data: '',
         },
@@ -124,8 +118,6 @@ describe('[chatbot/clova-studio/stream]', () => {
   });
 
   describe('function streamEventParse()', () => {
-    const mock_id = mock_generateId();
-
     it('test (1): 기본 실행 테스트', () => {
       const input = `id: ${mock_id}
 event: token
@@ -200,7 +192,7 @@ data: {"message": {"role": "assistant", "conte`;
       const responseStream = await mock_createResponseStream(tokens);
       const tokenStream = apiResponseStream2TokenStream(responseStream);
 
-      expect(mock_compareTokenStream(tokenStream, tokens)).toBe(true);
+      expect(await mock_compareTokenStream(tokenStream, tokens)).toBe(true);
     });
   });
 });

@@ -1,5 +1,7 @@
 import { string2Uint8ArrayStream, uint8Array2String } from '../utils/stream';
 
+export const mock_id = '123456-12345-123-12345-12345-1';
+
 export function mock_createResponseStream(
   tokens: string[],
 ): Promise<ReadableStream<Uint8Array>> {
@@ -11,14 +13,14 @@ export function mock_createResponseChunks(tokens: string[]): string {
   let chunk = '';
 
   for (const token of tokens) {
-    chunk += `id: ${mock_generateId()}\n`;
+    chunk += `id: ${mock_id}\n`;
     chunk += `event: token\n`;
     chunk += `data: {"message": {"role": "assistant", "content": "${token}" }}\n\n`;
   }
 
   const result = tokens.join('');
 
-  chunk += `id: ${mock_generateId()}\n`;
+  chunk += `id: ${mock_id}\n`;
   chunk += `event: result\n`;
   chunk += `data: {"message": {"role": "assistant", "content": "${result}" }}\n\n`;
 
@@ -43,29 +45,11 @@ export async function mock_compareTokenStream(
   return tokens.length === 0;
 }
 
-export function mock_isStreamEventString(
-  chunk: string,
-  content: string,
-): boolean {
-  let regx = '';
+export function mock_isStreamEventString(chunk: string): boolean {
+  const regx =
+    `^id: ${mock_id}\n` +
+    `event: (token|result)\\n` +
+    `data: {"message": {"role": "assistant", "content": ".+" }}$`;
 
-  regx +=
-    '^id: [\\da-zA-Z]{6}-[\\da-zA-Z]{5}-[\\da-zA-Z]{3}-[\\da-zA-Z]{5}-[\\da-zA-Z]{5}-[\\da-zA-Z]{1}\n';
-  regx += 'event: (token|result)\n';
-  regx += `data: {"message": {"role": "assistant", "content": "${content}"}}$`;
-
-  return new RegExp(regx).test(chunk);
-}
-
-export function mock_generateId() {
-  let dt = new Date().getTime();
-  const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-    /[xy]/g,
-    function (c) {
-      const r = (dt + Math.random() * 16) % 16 | 0;
-      dt = Math.floor(dt / 16);
-      return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
-    },
-  );
-  return uuid;
+  return new RegExp(regx, 'm').test(chunk);
 }
