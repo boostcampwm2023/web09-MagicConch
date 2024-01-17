@@ -17,7 +17,7 @@ DOCKER_COMPOSE_FILE="compose.$RUN_TARGET-deploy.yml"
 sudo docker-compose -f "$DOCKER_COMPOSE_FILE" pull
 sudo docker-compose -f "$DOCKER_COMPOSE_FILE" up -d
 
-sleep 30
+sleep 10
 
 NGINX_ID=$(sudo docker ps --filter "name=nginx" --quiet)
 NGINX_CONFIG="/etc/nginx/conf.d/default.conf"
