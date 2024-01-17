@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y tini
 WORKDIR /app/signal
 
 COPY signal/package*.json ./
-RUN npm install
+RUN npm ci
 
 COPY signal .
 RUN npm run build

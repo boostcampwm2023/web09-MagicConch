@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y tini
 WORKDIR /app/was
 
 COPY was/package*.json ./
-RUN npm install
+RUN npm ci
 
 COPY was .
 RUN npm run build
