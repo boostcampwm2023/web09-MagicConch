@@ -186,13 +186,4 @@ describe('SocketService', () => {
 
     it('오류 발생 시 client에게 알림', () => {});
   });
-
-  describe('streamMessage()', () => {
-    it('stream 시작을 알림', () => {});
-    it('token 단위로 client에게 메세지 전달', () => {});
-    it('stream 종료을 알림', () => {});
-    it('chatLog 업데이트', () => {});
-    it('완성된 메세지 반환', () => {});
-    it('오류 발생 시 client에게 알림', () => {});
-  });
 });
