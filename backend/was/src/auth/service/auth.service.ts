@@ -3,12 +3,9 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Cache } from 'cache-manager';
-import { CreateMemberDto } from 'src/members/dto/create-member.dto';
-import { UpdateMemberDto } from 'src/members/dto/update-member.dto';
+import { CreateMemberDto, UpdateMemberDto } from 'src/members/dto';
 import { MembersService } from 'src/members/members.service';
-import { JwtPayloadDto } from '../dto/jwt-payload.dto';
-import { OAuthTokenDto } from '../dto/oauth-token.dto';
-import { ProfileDto } from '../dto/profile.dto';
+import { JwtPayloadDto, OAuthTokenDto, ProfileDto } from '../dto';
 import { CacheKey } from '../interface/cache-key';
 
 @Injectable()

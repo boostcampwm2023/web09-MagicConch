@@ -1,5 +1,5 @@
-import { ChattingRoom } from 'src/chat/entities/chatting-room.entity';
-import { TarotCardPack } from 'src/tarot/entities/tarot-card-pack.entity';
+import { ChattingRoom } from 'src/chat/entities';
+import { TarotCardPack } from 'src/tarot/entities';
 import {
   Column,
   CreateDateColumn,
@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { CreateMemberDto } from '../dto/create-member.dto';
+import { CreateMemberDto } from '../dto';
 
 @Entity()
 export class Member {

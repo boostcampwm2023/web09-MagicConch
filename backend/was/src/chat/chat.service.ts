@@ -5,14 +5,15 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ERR_MSG } from 'src/common/constants/errors';
-import { Member } from 'src/members/entities/member.entity';
+import { Member } from 'src/members/entities';
 import { Repository } from 'typeorm';
-import { ChattingMessageResponseDto } from './dto/chatting-message-response.dto';
-import { ChattingRoomResponseDto } from './dto/chatting-room-response.dto';
-import { CreateChattingMessageDto } from './dto/create-chatting-message.dto';
-import { UpdateChattingRoomDto } from './dto/update-chatting-room.dto';
-import { ChattingMessage } from './entities/chatting-message.entity';
-import { ChattingRoom } from './entities/chatting-room.entity';
+import {
+  ChattingMessageResponseDto,
+  ChattingRoomResponseDto,
+  CreateChattingMessageDto,
+  UpdateChattingRoomDto,
+} from './dto';
+import { ChattingMessage, ChattingRoom } from './entities';
 
 export interface ChattingInfo {
   memeberId: string;

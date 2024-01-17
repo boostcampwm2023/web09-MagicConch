@@ -1,5 +1,6 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import {
+  BadRequestException,
   Inject,
   Injectable,
   InternalServerErrorException,
@@ -11,13 +12,10 @@ import { Cache } from 'cache-manager';
 import { CONTENT_TYPE, METHODS, OAUTH_URL } from 'src/common/constants/apis';
 import { ERR_MSG } from 'src/common/constants/errors';
 import { PROVIDER_ID, PROVIDER_NAME } from 'src/common/constants/etc';
-import { Member } from 'src/members/entities/member.entity';
+import { Member } from 'src/members/entities';
 import { MembersService } from 'src/members/members.service';
-import { JwtPayloadDto } from '../dto/jwt-payload.dto';
-import { KakaoAccessTokenInfoDto } from '../dto/kakao/kakao-access-token-info.dto';
-import { KakaoTokenDto } from '../dto/kakao/kakao-token.dto';
-import { OAuthTokenDto } from '../dto/oauth-token.dto';
-import { ProfileDto } from '../dto/profile.dto';
+import { JwtPayloadDto, OAuthTokenDto, ProfileDto } from '../dto';
+import { KakaoAccessTokenInfoDto, KakaoTokenDto } from '../dto/kakao';
 import { CacheKey } from '../interface/cache-key';
 import { makeRefreshTokenForm, makeRequestTokenForm } from '../util/kakao';
 import { AuthService } from './auth.service';
@@ -115,7 +113,6 @@ export class KakaoAuthService extends AuthService {
   }
 
   /**
-   * TODO : 에러 처리
    * https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#req-user-info
    */
   private async getUser(accessToken: string): Promise<ProfileDto> {
@@ -125,8 +122,11 @@ export class KakaoAuthService extends AuthService {
         'Content-type': CONTENT_TYPE.KAKAO,
       },
     });
-    const resBody: any = await res.json();
-    return ProfileDto.fromKakao(resBody.kakao_account);
+    const detail: any = { status: res.code, body: await res.json() };
+    if (detail.code === 200) {
+      return ProfileDto.fromKakao(detail.body.kakao_account);
+    }
+    throw new BadRequestException(ERR_MSG.OAUTH_KAKAO_USER_FAILED);
   }
 
   /**

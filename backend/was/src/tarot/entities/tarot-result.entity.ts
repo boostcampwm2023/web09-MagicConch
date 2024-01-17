@@ -5,7 +5,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { CreateTarotResultDto } from '../dto/create-tarot-result.dto';
+import { CreateTarotResultDto } from '../dto';
 
 @Entity()
 export class TarotResult {

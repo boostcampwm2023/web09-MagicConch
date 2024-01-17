@@ -26,4 +26,3 @@ export const debugTransports = new transports.Console({
 export const infoTransports: DailyRotateFile = createDailyRotateFile('info');
 export const warnTransports: DailyRotateFile = createDailyRotateFile('warn');
 export const errorTransports: DailyRotateFile = createDailyRotateFile('error');
-export const fatalTransports: DailyRotateFile = createDailyRotateFile('fatal');
