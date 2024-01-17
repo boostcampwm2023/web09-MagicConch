@@ -7,7 +7,7 @@ import {
 } from 'src/common/mocks/clova-studio';
 import { string2Uint8ArrayStream } from 'src/common/utils/stream';
 import { clovaStudioApi } from './api';
-import { ClovaStudioService } from './clova-studio.service';
+import { ClovaStudioService, getAPIKeys } from './clova-studio.service';
 
 jest.mock('./api');
 const mockClovaStudioApi = clovaStudioApi as jest.MockedFunction<
@@ -17,7 +17,7 @@ const mockClovaStudioApi = clovaStudioApi as jest.MockedFunction<
 class MockConfigService {
   get(key: string) {
     if (CLOVA_API_KEY_NAMES.includes(key)) {
-      return 'key data';
+      return key;
     }
     return undefined;
   }
@@ -43,11 +43,20 @@ describe('ClovaStudioService', () => {
     service = module.get<ClovaStudioService>(ClovaStudioService);
   });
 
-  it('test (1): ClovaStudioService 정의', () => {
+  it('ClovaStudioService 생성', () => {
     expect(service).toBeDefined();
   });
 
-  it('test (2): 대화 생성', async () => {
+  it('clova api key 불러 옴', () => {
+    const mockConfigService = new MockConfigService() as ConfigService;
+    const apiKeys = getAPIKeys(mockConfigService);
+
+    CLOVA_API_KEY_NAMES.forEach((key) => {
+      expect(apiKeys[key.replaceAll('_', '-')]).toBe(key);
+    });
+  });
+
+  it('대화 생성', async () => {
     mockAPI(tokens);
 
     const tokenStream = await service.generateTalk([], '안녕!');
@@ -56,7 +65,7 @@ describe('ClovaStudioService', () => {
     expect(result).toBeTruthy();
   });
 
-  it('test (3): 타로 상담 결과 생성', async () => {
+  it('타로 상담 결과 생성', async () => {
     mockAPI(tokens);
 
     const tokenStream = await service.generateTarotReading([], 21);

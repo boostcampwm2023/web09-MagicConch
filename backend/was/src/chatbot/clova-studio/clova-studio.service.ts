@@ -59,7 +59,7 @@ export class ClovaStudioService implements ChatbotService {
   }
 }
 
-function getAPIKeys(configService: ConfigService) {
+export function getAPIKeys(configService: ConfigService) {
   return CLOVA_API_KEY_NAMES.reduce((acc, key) => {
     const value = configService.get(key);
 
