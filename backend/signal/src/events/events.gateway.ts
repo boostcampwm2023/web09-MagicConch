@@ -46,7 +46,7 @@ export class EventsGateway
     const user = this.users[userId];
 
     if (!user) {
-      this.logger.debug(`🚀 접속된 유저가 존재하지 않음 userId: ${userId}`);
+      this.logger.warn(`🚀 접속된 유저가 존재하지 않음 userId: ${userId}`);
       return;
     }
 
@@ -55,7 +55,7 @@ export class EventsGateway
     delete this.users[userId];
 
     if (!this.socketRooms[roomId]) {
-      this.logger.debug(`🚀 존재하지 않는 roomId: ${roomId}`);
+      this.logger.warn(`🚀 존재하지 않는 roomId: ${roomId}`);
       return;
     }
 

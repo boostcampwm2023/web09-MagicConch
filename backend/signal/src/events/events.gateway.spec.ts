@@ -1,16 +1,20 @@
 import { Test } from '@nestjs/testing';
-import { LoggerService } from 'src/logger/logger.service';
+import { loggerServiceMock } from 'mocks/events/logger.mock';
+import {
+  onlyHostInsideRoomMock,
+  roomMock,
+  twoPeopleInsideRoomMock,
+} from 'mocks/events/room.mock';
 import {
   SocketMock,
   guestSocketMock,
   hostSocketMock,
-  loggerServiceMock,
-  onlyHostInsideRoomMock,
+} from 'mocks/events/socket.mock';
+import {
   onlyHostInsideUsersMock,
-  roomMock,
-  twoPeopleInsideRoomMock,
   twoPeopleInsideUsersMock,
-} from '../../mocks/eventGatewayMocks';
+} from 'mocks/events/user.mock';
+import { LoggerService } from 'src/logger/logger.service';
 import { EventsGateway } from './events.gateway';
 
 const expectEmitToRoom = (
@@ -69,7 +73,7 @@ describe('EventsGateway', () => {
 
     it('socket이 비정상(users에 존재하지 않는 socket.id): 로그 찍힘', () => {
       gateway.handleDisconnect(guestSocket);
-      expect(loggerService.debug).toHaveBeenCalledWith(
+      expect(loggerService.warn).toHaveBeenCalledWith(
         `🚀 접속된 유저가 존재하지 않음 userId: ${guestSocket.id}`,
       );
     });
@@ -77,7 +81,7 @@ describe('EventsGateway', () => {
     it('socket이 비정상(socketRooms에 존재하지 않는 roomId): 로그 찍힘', () => {
       gateway['users'] = twoPeopleInsideUsersMock();
       gateway.handleDisconnect(guestSocket);
-      expect(loggerService.debug).toHaveBeenCalledWith(
+      expect(loggerService.warn).toHaveBeenCalledWith(
         `🚀 존재하지 않는 roomId: ${roomMock.roomId}`,
       );
     });
@@ -97,6 +101,7 @@ describe('EventsGateway', () => {
       expect(gateway['socketRooms']).toEqual({});
       expectEmitToRoom(hostSocket, roomMock.roomId, 'hostExit');
     });
+
     it('socket이 정상(guest): 방에서 유저 제거, 방에 "userExit" 이벤트 보냄', () => {
       gateway['users'] = twoPeopleInsideUsersMock();
       gateway['socketRooms'] = twoPeopleInsideRoomMock();
