@@ -12,6 +12,7 @@ import {
   clientMock,
   humanMessageMock,
   loggerServiceMock,
+  tarotIdxMock,
   tarotServiceMock,
 } from 'src/common/mocks/socket';
 import { LoggerService } from 'src/logger/logger.service';
@@ -132,11 +133,57 @@ describe('SocketService', () => {
   });
 
   describe('handleTarotReadEvent()', () => {
-    it('token 단위로 ai 답장 전달', () => {});
-    it('chatLog 업데이트', () => {});
-    it('타로 결과 DB에 저장하고, client에게 결과 링크 ID 전달', () => {});
-    it('채팅 종료 상태 업데이트', () => {});
-    it('chatLog DB에 저장', () => {});
+    it('token 단위로 ai 답장 전달', async () => {
+      const sentMessage = await socketService.handleTarotReadEvent(
+        clientMock,
+        tarotIdxMock,
+      );
+
+      const emitNum = (clientMock.emit as jest.Mock).mock.calls.length;
+      expect(emitNum).toBeGreaterThanOrEqual(3);
+
+      expect(clientMock.emit).toHaveBeenCalledWith('streamStart');
+      expect(clientMock.emit).toHaveBeenCalledWith(
+        'streaming',
+        expect.anything(),
+      );
+      expect(clientMock.emit).toHaveBeenCalledWith('streamEnd');
+
+      expect(sentMessage).toEqual(aiMessageMock);
+    });
+
+    it('chatLog 업데이트', async () => {
+      expect(clientMock.chatLog).toEqual([]);
+      await socketService.handleTarotReadEvent(clientMock, tarotIdxMock);
+
+      expect(clientMock.chatLog).toEqual([
+        { isHost: true, message: aiMessageMock },
+      ]);
+    });
+
+    it('타로 결과 DB에 저장하고, client에게 결과 링크 ID 전달', async () => {
+      const shareLinkIdMock = 'shareLinkId';
+      jest
+        .spyOn(tarotServiceMock, 'createTarotResult')
+        .mockImplementation(() => Promise.resolve(shareLinkIdMock));
+
+      await socketService.handleTarotReadEvent(clientMock, tarotIdxMock);
+
+      expect(tarotServiceMock.createTarotResult).toHaveBeenCalled();
+      expect(clientMock.emit).toHaveBeenCalledWith('chatEnd', shareLinkIdMock);
+    });
+
+    it('채팅 종료 상태 업데이트', async () => {
+      expect(clientMock.chatEnd).toBeFalsy();
+      await socketService.handleTarotReadEvent(clientMock, tarotIdxMock);
+      expect(clientMock.chatEnd).toBeTruthy();
+    });
+
+    it('chatLog DB에 저장', async () => {
+      await socketService.handleTarotReadEvent(clientMock, tarotIdxMock);
+      expect(chatServiceMock.createMessage).toHaveBeenCalled();
+    });
+
     it('오류 발생 시 client에게 알림', () => {});
   });
 

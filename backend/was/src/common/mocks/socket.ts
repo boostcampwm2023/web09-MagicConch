@@ -7,9 +7,10 @@ import { string2Uint8ArrayStream } from '../utils/stream';
 
 export const aiMessageMock = '인공지능입니다.';
 export const humanMessageMock = '사람입니다.';
+export const tarotIdxMock = 0;
 
 export const chatServiceMock = {
-  createRoom: jest.fn(),
+  createRoom: () => 'room_id',
   createMessage: jest.fn(),
 } as unknown as ChatService;
 
