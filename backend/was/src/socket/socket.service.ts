@@ -36,40 +36,60 @@ export class SocketService {
   }
 
   async handleMessageEvent(client: Socket, message: string) {
-    const sentMessage = await this.streamMessage(client, () =>
-      this.chatbotService.generateTalk(client.chatLog, message),
-    );
+    try {
+      const sentMessage = await this.streamMessage(client, () =>
+        this.chatbotService.generateTalk(client.chatLog, message),
+      );
 
-    client.chatLog.push({ isHost: false, message: message });
-    client.chatLog.push({ isHost: true, message: sentMessage });
+      client.chatLog.push({ isHost: false, message: message });
+      client.chatLog.push({ isHost: true, message: sentMessage });
 
-    if (
-      ASK_TAROTCARD_MESSAGE_CANDIDATES.some((string) =>
-        sentMessage.includes(string),
-      )
-    ) {
-      client.emit('tarotCard');
+      if (
+        ASK_TAROTCARD_MESSAGE_CANDIDATES.some((string) =>
+          sentMessage.includes(string),
+        )
+      ) {
+        client.emit('tarotCard');
+      }
+
+      return sentMessage;
+    } catch (err) {
+      if (err instanceof Error) {
+        this.logger.error(
+          `🚀 Failed to handle message event : ${err.message}`,
+          err.stack,
+        );
+      }
+      throw new WsException(ERR_MSG.HANDLE_MESSAGE);
     }
-
-    return sentMessage;
   }
 
   async handleTarotReadEvent(client: Socket, cardIdx: number) {
-    const sentMessage = await this.streamMessage(client, () =>
-      this.chatbotService.generateTarotReading(client.chatLog, cardIdx),
-    );
+    try {
+      const sentMessage = await this.streamMessage(client, () =>
+        this.chatbotService.generateTarotReading(client.chatLog, cardIdx),
+      );
 
-    client.chatLog.push({ isHost: true, message: sentMessage });
+      client.chatLog.push({ isHost: true, message: sentMessage });
 
-    client.chatEnd = true;
+      client.chatEnd = true;
 
-    const shareLinkId = await this.createShareLinkId(cardIdx, sentMessage);
-    client.emit('chatEnd', shareLinkId);
+      const shareLinkId = await this.createShareLinkId(cardIdx, sentMessage);
+      client.emit('chatEnd', shareLinkId);
 
-    const { roomId } = await this.createRoom(client);
-    await this.saveChatLogs(roomId, client.chatLog);
+      const { roomId } = await this.createRoom(client);
+      await this.saveChatLogs(roomId, client.chatLog);
 
-    return sentMessage;
+      return sentMessage;
+    } catch (err) {
+      if (err instanceof Error) {
+        this.logger.error(
+          `🚀 Failed to handle tarot read event : ${err.message}`,
+          err.stack,
+        );
+      }
+      throw new WsException(ERR_MSG.HANDLE_MESSAGE);
+    }
   }
 
   private async streamMessage(

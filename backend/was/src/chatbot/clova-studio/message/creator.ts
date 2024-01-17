@@ -1,3 +1,4 @@
+import { WsException } from '@nestjs/websockets';
 import {
   TALK_SYSTEM_MESSAGE,
   TAROTCARD_NAMES,
@@ -16,14 +17,14 @@ export function createTarotCardSystemMessage(): ClovaStudioMessage {
 
 export function createUserMessage(userMessage: string): ClovaStudioMessage {
   if (!userMessage.trim()) {
-    throw new Error(ERR_MSG.USER_INPUT_EMPTY);
+    throw new WsException(ERR_MSG.USER_INPUT_EMPTY);
   }
   return { role: 'user', content: userMessage };
 }
 
 export function createTarotCardMessage(cardIdx: number): ClovaStudioMessage {
   if (cardIdx < 0 || cardIdx >= TAROTCARD_NAMES.length) {
-    throw new Error(ERR_MSG.TAROT_CARD_IDX_OUT_OF_RANGE);
+    throw new WsException(ERR_MSG.TAROT_CARD_IDX_OUT_OF_RANGE);
   }
   return { role: 'user', content: TAROTCARD_NAMES[cardIdx] };
 }

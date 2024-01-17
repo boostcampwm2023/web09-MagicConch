@@ -48,6 +48,7 @@ export const ERR_MSG = {
   CREATE_ROOM: '채팅방을 생성하는 데 실패했습니다.',
   SAVE_CHATTING_LOG: '채팅 로그를 저장하는 데 실패했습니다.',
   SAVE_TAROT_RESULT: '타로 결과를 저장하는 데 실패했습니다.',
+  HANDLE_MESSAGE: '서버에서 메시지를 처리하는 데 실패했습니다.',
 
   /**
    * common
