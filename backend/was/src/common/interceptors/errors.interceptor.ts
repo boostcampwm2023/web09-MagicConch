@@ -25,7 +25,7 @@ export class ErrorsInterceptor implements NestInterceptor {
     private readonly configService: ConfigService,
   ) {
     this.slackWebhook = new IncomingWebhook(
-      this.configService.get('SLACK_WEBHOOK_FOR_BE') || '',
+      this.configService.get('SLACK_WEBHOOK_URI_FOR_WAS') || '',
     );
   }
 
