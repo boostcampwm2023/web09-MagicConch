@@ -1,19 +1,41 @@
 export const CLOVA_URL =
   'https://clovastudio.stream.ntruss.com/testapp/v1/chat-completions/HCX-002';
 
-export const chatMaxTokens = 100;
-export const tarotMaxTokens = 800;
-
-export const welcomeMessage =
-  '안녕, 나는 어떤 고민이든지 들어주는 마법의 소라고둥이야!\n고민이 있으면 말해줘!';
-export const askTarotCardMessage = '타로 카드를 뽑아볼까?';
-export const askTarotCardCandidates = [
-  '타로 카드를 뽑',
-  '타로를 뽑',
-  '뽑아볼까?',
+export const CLOVA_API_KEY_NAMES = [
+  'X_NCP_APIGW_API_KEY',
+  'X_NCP_CLOVASTUDIO_API_KEY',
 ];
 
-export const tarotReadingSystemMessage = `
+export const CLOVA_API_DEFAULT_HEADER_OPTIONS = {
+  'Content-Type': 'application/json',
+  Accept: 'text/event-stream',
+};
+export const CLOVA_API_DEFAULT_BODY_OPTIONS = {
+  topK: 0,
+  includeAiFilters: true,
+  maxTokens: 0,
+  temperature: 0.28,
+  messages: [],
+  repeatPenalty: 3.0,
+  topP: 0.8,
+};
+
+export const CHAT_MAX_TOKENS = 100;
+export const TAROT_MAX_TOKENS = 800;
+
+export const ASK_TAROTCARD_MESSAGE = '타로 카드를 뽑아볼까?';
+
+export const TALK_SYSTEM_MESSAGE = `
+사용자와 친근한 반말로 상황에 맞게 대화를 이어가며,
+- user의 고민에 대해 공감성 있는 반말로 대화를 이어가기
+- assistant는 user의 고민을 상담해주는 타로 상담사이다. 역할에 벗어나는 대화를 하지 않기
+- 사용자가 무언가를 알려달라고 하거나 알고 싶은 것이 명확해질 때, 정확히 "그럼 ${ASK_TAROTCARD_MESSAGE}"라는 문장으로만 응답하기
+- "그럼 ${ASK_TAROTCARD_MESSAGE}"라는 문장 이외의 표현으로 타로 카드를 뽑자고 말하지 않기
+- 타로 카드 해설을 요구하는 system 메세지가 오기 전까지, 타로에 대한 설명은 하지 않기
+- 답변은 50토큰 이하로 제한되며, 간결하게 표현하기
+- 답변은 반드시 반말로 작성하기. 존댓말을 사용하지 않기`;
+
+export const TAROTREADING_SYSTEM_MESSAGE = `
 사용자가 말한 고민에 대해 공감성 멘트로 친근한 반말로 타로 카드를 해설하시오.
 500토큰 이하로 답변하시오
 ###
@@ -60,17 +82,7 @@ export const tarotReadingSystemMessage = `
 친구와의 관계를 회복하는 데 시간이 걸릴 수 있겠지만, 여황의 힘을 믿고 포기하지 않고 노력해봐. 분명히 긍정적인 전환을 이룰 수 있을 거야. 힘내고 화이팅이야!
 ###`;
 
-export const talkSystemMessage = `
-사용자와 친근한 반말로 상황에 맞게 대화를 이어가며,
-- user의 고민에 대해 공감성 있는 반말로 대화를 이어가기
-- assistant는 user의 고민을 상담해주는 타로 상담사이다. 역할에 벗어나는 대화를 하지 않기
-- 사용자가 무언가를 알려달라고 하거나 알고 싶은 것이 명확해질 때, 정확히 "그럼 ${askTarotCardMessage}"라는 문장으로만 응답하기
-- "그럼 ${askTarotCardMessage}"라는 문장 이외의 표현으로 타로 카드를 뽑자고 말하지 않기
-- 타로 카드 해설을 요구하는 system 메세지가 오기 전까지, 타로에 대한 설명은 하지 않기
-- 답변은 50토큰 이하로 제한되며, 간결하게 표현하기
-- 답변은 반드시 반말로 작성하기. 존댓말을 사용하지 않기`;
-
-export const tarotCardNames = [
+export const TAROTCARD_NAMES = [
   'The Fool',
   'The Magician',
   'The High Priestess',
