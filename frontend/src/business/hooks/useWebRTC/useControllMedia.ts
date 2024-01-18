@@ -1,4 +1,3 @@
-import { HumanSocketManager } from '@business/services/SocketManager';
 import WebRTC from '@business/services/WebRTC';
 
 import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
@@ -30,7 +29,7 @@ export function useControllMedia({ localVideoRef }: useContorollMediaParams) {
 
   const { getLocalStream } = useMedia();
 
-  const webRTC = WebRTC.getInstance(HumanSocketManager.getInstance());
+  const webRTC = WebRTC.getInstance();
 
   const setLocalVideoSrcObj = (stream: MediaStream) => {
     if (!localVideoRef.current) {

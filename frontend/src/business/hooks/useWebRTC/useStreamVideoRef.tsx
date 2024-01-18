@@ -1,10 +1,9 @@
 import { useEffect, useRef } from 'react';
 
-import { HumanSocketManager } from '@business/services/SocketManager';
 import WebRTC from '@business/services/WebRTC';
 
 export function useStreamVideoRef() {
-  const webRTC = WebRTC.getInstance(HumanSocketManager.getInstance());
+  const webRTC = WebRTC.getInstance();
 
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);

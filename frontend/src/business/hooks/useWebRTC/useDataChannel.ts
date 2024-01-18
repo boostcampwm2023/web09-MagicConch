@@ -1,4 +1,3 @@
-import { HumanSocketManager } from '@business/services/SocketManager';
 import WebRTC from '@business/services/WebRTC';
 
 import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
@@ -18,7 +17,7 @@ export function useDataChannel() {
     myProfile: state.myProfile,
   }));
 
-  const webRTC = WebRTC.getInstance(HumanSocketManager.getInstance());
+  const webRTC = WebRTC.getInstance();
 
   const initMediaInfoChannel = () => {
     const mediaInfoChannel = webRTC.addDataChannel('mediaInfoChannel');
