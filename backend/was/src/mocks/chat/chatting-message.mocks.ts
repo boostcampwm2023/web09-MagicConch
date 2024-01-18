@@ -1,6 +1,5 @@
 import { ChattingMessage, ChattingRoom } from 'src/chat/entities';
 import { Message } from 'src/events/type';
-import { v4 as uuidv4 } from 'uuid';
 import { roomMock } from './chatting-room.mocks';
 
 function makeMessageMock(
@@ -16,7 +15,7 @@ function makeMessageMock(
   return messageMock;
 }
 
-const messageId: string = uuidv4();
+const messageId: string = 'messageId';
 
 export const message: Message = {
   roomId: roomMock.id,

@@ -1,6 +1,5 @@
 import { ChattingRoom } from 'src/chat/entities';
 import { Member } from 'src/members/entities';
-import { v4 as uuidv4 } from 'uuid';
 import { memberMock } from '../members';
 
 function makeRoomMock(roomId: string, memberMock: Member): ChattingRoom {
@@ -11,8 +10,8 @@ function makeRoomMock(roomId: string, memberMock: Member): ChattingRoom {
   return roomMock;
 }
 
-export const roomId: string = uuidv4();
+export const roomId: string = 'roomId';
 
-export const wrongRoomId: string = uuidv4();
+export const wrongRoomId: string = 'wrongRoomId';
 
 export const roomMock = makeRoomMock(roomId, memberMock);
