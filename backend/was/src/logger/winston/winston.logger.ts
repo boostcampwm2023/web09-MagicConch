@@ -3,7 +3,6 @@ import { customFormat } from './winston.format';
 import {
   debugTransports,
   errorTransports,
-  fatalTransports,
   infoTransports,
   warnTransports,
 } from './winston.transports';
@@ -15,6 +14,5 @@ export const winstonLogger: Logger = createLogger({
     infoTransports,
     warnTransports,
     errorTransports,
-    fatalTransports,
   ],
 });

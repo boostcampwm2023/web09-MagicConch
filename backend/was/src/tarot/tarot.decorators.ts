@@ -1,25 +1,23 @@
-import {
-  SwaggerDecoratorBuilder,
-  SwaggerParam,
-} from '@kimyu0218/swagger-decorator-builder';
+import { SwaggerDecoratorBuilder } from '@kimyu0218/swagger-decorator-builder';
+import { ApiParamOptions } from '@nestjs/swagger';
 
 export const FindTarotCardDecorator = (
   target: string,
-  param: SwaggerParam,
+  param: ApiParamOptions,
   returnType: any,
 ) =>
   new SwaggerDecoratorBuilder(target, 'GET', returnType)
-    .setParam(param)
-    .remove(403)
+    .addParam(param)
+    .removeResponse(403)
     .build();
 
 export const FindTarotResultDecorator = (
   target: string,
-  param: SwaggerParam,
+  param: ApiParamOptions,
   returnType: any,
 ) =>
   new SwaggerDecoratorBuilder(target, 'GET', returnType)
-    .setParam(param)
-    .remove(401)
-    .remove(403)
+    .addParam(param)
+    .removeResponse(401)
+    .removeResponse(403)
     .build();

@@ -1,38 +1,35 @@
-import {
-  SwaggerBody,
-  SwaggerDecoratorBuilder,
-  SwaggerParam,
-} from '@kimyu0218/swagger-decorator-builder';
+import { SwaggerDecoratorBuilder } from '@kimyu0218/swagger-decorator-builder';
+import { ApiBodyOptions, ApiParamOptions } from '@nestjs/swagger';
 
 export const FindRoomsDecorator = (target: string, returnType: any) =>
   new SwaggerDecoratorBuilder(target, 'GET', returnType)
-    .remove(401)
-    .remove(404)
+    .removeResponse(401)
+    .removeResponse(404)
     .build();
 
 export const FindMessagesDecorator = (
   target: string,
-  param: SwaggerParam,
+  param: ApiParamOptions,
   returnType: any,
 ) =>
   new SwaggerDecoratorBuilder(target, 'GET', returnType)
-    .remove(401)
-    .setParam(param)
+    .addParam(param)
+    .removeResponse(401)
     .build();
 
 export const UpdateRoomDecorator = (
   target: string,
-  param: SwaggerParam,
-  body: SwaggerBody,
+  param: ApiParamOptions,
+  body: ApiBodyOptions,
 ) =>
   new SwaggerDecoratorBuilder(target, 'PATCH')
-    .setParam(param)
+    .addParam(param)
     .setBody(body)
-    .remove(401)
+    .removeResponse(401)
     .build();
 
-export const DeleteRoomDecorator = (target: string, param: SwaggerParam) =>
+export const DeleteRoomDecorator = (target: string, param: ApiParamOptions) =>
   new SwaggerDecoratorBuilder(target, 'DELETE')
-    .setParam(param)
-    .remove(401)
+    .addParam(param)
+    .removeResponse(401)
     .build();

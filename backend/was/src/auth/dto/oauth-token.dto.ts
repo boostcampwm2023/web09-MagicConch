@@ -1,4 +1,4 @@
-import { KakaoTokenDto } from './kakao/kakao-token.dto';
+import { KakaoTokenDto } from './kakao';
 
 export class OAuthTokenDto {
   readonly token_type: string;

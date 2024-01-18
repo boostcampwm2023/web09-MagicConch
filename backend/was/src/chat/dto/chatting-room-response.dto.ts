@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsUUID } from 'class-validator';
-import { ChattingRoom } from '../entities/chatting-room.entity';
+import { ChattingRoom } from '../entities';
 
 export class ChattingRoomResponseDto {
   @IsUUID()

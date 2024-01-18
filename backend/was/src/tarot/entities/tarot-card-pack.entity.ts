@@ -1,4 +1,4 @@
-import { Member } from 'src/members/entities/member.entity';
+import { Member } from 'src/members/entities';
 import {
   Column,
   CreateDateColumn,

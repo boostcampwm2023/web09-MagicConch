@@ -5,8 +5,8 @@ import { APP_FILTER } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
 import { ChatModule } from './chat/chat.module';
 import { ChatbotModule } from './chatbot/chatbot.module';
-import { CacheConfigModule } from './common/config/cache/cache.module';
-import { DatabaseModule } from './common/config/database/database.module';
+import { RedisCacheModule } from './common/config/cache/redis-cache.module';
+import { MysqlModule } from './common/config/database/mysql.module';
 import { JwtConfigModule } from './common/config/jwt/jwt.module';
 import { ErrorsInterceptor } from './common/interceptors/errors.interceptor';
 import { LoggerModule } from './logger/logger.module';
@@ -18,10 +18,10 @@ import { TarotModule } from './tarot/tarot.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    CacheConfigModule.register(),
+    RedisCacheModule.register(),
     JwtConfigModule.register(),
     MembersModule,
-    DatabaseModule,
+    MysqlModule,
     ChatModule,
     TarotModule,
     ChatbotModule,

@@ -6,8 +6,7 @@ import {
   ParseUUIDPipe,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { TarotCardResponseDto } from './dto/tarot-card-response.dto';
-import { TarotResultResponseDto } from './dto/tarot-result-response.dto';
+import { TarotCardDto, TarotResultDto } from './dto';
 import {
   FindTarotCardDecorator,
   FindTarotResultDecorator,
@@ -23,11 +22,11 @@ export class TarotController {
   @FindTarotCardDecorator(
     '타로 카드 이미지',
     { type: 'integer', name: 'id' },
-    TarotCardResponseDto,
+    TarotCardDto,
   )
   async findTarotCardById(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<TarotCardResponseDto> {
+  ): Promise<TarotCardDto> {
     return await this.tarotService.findTarotCardById(id);
   }
 
@@ -35,11 +34,11 @@ export class TarotController {
   @FindTarotResultDecorator(
     '타로 결과',
     { type: 'uuid', name: 'id' },
-    TarotResultResponseDto,
+    TarotResultDto,
   )
   async findTarotResultById(
     @Param('id', ParseUUIDPipe) id: string,
-  ): Promise<TarotResultResponseDto> {
+  ): Promise<TarotResultDto> {
     return await this.tarotService.findTarotResultById(id);
   }
 }

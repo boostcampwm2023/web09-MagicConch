@@ -5,10 +5,10 @@ import { redisStore } from 'cache-manager-redis-store';
 
 @Global()
 @Module({})
-export class CacheConfigModule {
+export class RedisCacheModule {
   static register(): DynamicModule {
     return {
-      module: CacheConfigModule,
+      module: RedisCacheModule,
       imports: [
         CacheModule.registerAsync({
           inject: [ConfigService],

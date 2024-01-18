@@ -31,9 +31,9 @@ export function useChattingPageCreateJoinRoomPasswordPopup({
   const _joinRoom = () => {
     joinRoom({
       roomName: roomName as string,
-      onSuccess: ({ close }) => {
+      onSuccess: ({ closePopup }) => {
         navigate('setting');
-        close();
+        closePopup();
         enableSideBar();
       },
       onFull: () => {
@@ -57,13 +57,12 @@ export function useChattingPageCreateJoinRoomPasswordPopup({
   const _createRoom = () => {
     createRoom({
       roomName: roomName as string,
-      onSuccess: ({ close }) => {
+      onSuccess: ({ closePopup }) => {
         navigate('setting');
-        close();
+        closePopup();
         enableSideBar();
       },
-      onClose: ({ close }) => {
-        close();
+      onCancel: () => {
         navigate('/');
       },
     });
