@@ -32,6 +32,7 @@ export default class WebRTC {
   getRemoteStream = () => this.remoteStream;
   getPeerConnection = () => this.peerConnection;
   getDataChannels = () => this.dataChannels;
+  getDataChannel = (key: RTCDataChannelKey) => this.dataChannels.get(key);
   // getSocketManager = () => this.socketManager;
   // getNextDataChannelId = () => this.nextDataChannelId;
 

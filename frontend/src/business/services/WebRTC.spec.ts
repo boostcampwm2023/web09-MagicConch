@@ -204,7 +204,7 @@ describe('WebRTC.ts', () => {
       });
 
       // 2. 데이터 채널을 생성후 dataChannels에 추가됨
-      const dataChannels = instance.getDataChannels().get(mockKey);
+      const dataChannels = instance.getDataChannel(mockKey);
       expect(dataChannels).toBe(mockDataChannel);
 
       // 3. 데이터 채널을 생성후 리턴

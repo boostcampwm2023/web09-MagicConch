@@ -47,7 +47,7 @@ export function useControllMedia({ localVideoRef }: useContorollMediaParams) {
     videoTrack.getVideoTracks().forEach(toggleTrack);
     toggleMyVideoState();
 
-    const mediaInfoChannel = webRTC.getDataChannels().get('mediaInfoChannel');
+    const mediaInfoChannel = webRTC.getDataChannel('mediaInfoChannel');
     if (!mediaInfoChannel || mediaInfoChannel.readyState !== 'open') {
       return;
     }
@@ -65,7 +65,7 @@ export function useControllMedia({ localVideoRef }: useContorollMediaParams) {
     audioTrack.getAudioTracks().forEach(toggleTrack);
     toggleMyMicState();
 
-    const mediaInfoChannel = webRTC.getDataChannels().get('mediaInfoChannel');
+    const mediaInfoChannel = webRTC.getDataChannel('mediaInfoChannel');
     if (!mediaInfoChannel || mediaInfoChannel.readyState !== 'open') {
       return;
     }
