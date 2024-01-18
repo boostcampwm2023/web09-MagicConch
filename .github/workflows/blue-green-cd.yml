@@ -81,3 +81,11 @@ jobs:
             cd ~/app/backend
             chmod +x deploy.sh
             source deploy.sh
+
+      - uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          author_name: Blue/Green CD
+          fields: message,author,action,workflow,job,took,pullRequest
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URI_FOR_GITHUB_ACTIONS }}
