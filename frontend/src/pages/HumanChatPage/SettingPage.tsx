@@ -3,8 +3,7 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import ProfileSetting from '@components/ProfileSetting';
 
-import { useControllMedia } from '@business/hooks/useWebRTC/useControllMedia';
-import { useStreamVideoRef } from '@business/hooks/useWebRTC/useStreamVideoRef';
+import { useControllMedia, useStreamVideoRef } from '@business/hooks/useWebRTC/';
 import { HumanSocketManager } from '@business/services/SocketManager';
 
 import type { OutletContext } from './HumanChatPage';

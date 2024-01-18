@@ -1,3 +1,4 @@
+import { HumanSocketManager } from '@business/services/SocketManager';
 import WebRTC from '@business/services/WebRTC';
 
 import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
@@ -17,7 +18,7 @@ export function useDataChannel() {
     myProfile: state.myProfile,
   }));
 
-  const webRTC = WebRTC.getInstace();
+  const webRTC = WebRTC.getInstance(HumanSocketManager.getInstance());
 
   const initMediaInfoChannel = () => {
     const mediaInfoChannel = webRTC.addDataChannel('mediaInfoChannel');
@@ -35,8 +36,8 @@ export function useDataChannel() {
     });
 
     mediaInfoChannel?.addEventListener('open', function () {
-      const audioTrack = webRTC.localStream?.getAudioTracks()[0];
-      const videoTrack = webRTC.localStream?.getVideoTracks()[0];
+      const audioTrack = webRTC.getLocalStream()?.getAudioTracks()[0];
+      const videoTrack = webRTC.getLocalStream()?.getVideoTracks()[0];
 
       mediaInfoChannel?.send(
         JSON.stringify([
@@ -91,5 +92,5 @@ export function useDataChannel() {
     initNicknameChannel();
   };
 
-  return { initDataChannels };
+  return { initDataChannels, dataChannels: webRTC.getDataChannels() };
 }

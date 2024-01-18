@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 
-import useWebRTC from '@business/hooks/useWebRTC';
-import { useSignalingSocket } from '@business/hooks/useWebRTC/useSignalingSocket';
+import { useSignalingSocket, useWebRTC } from '@business/hooks/useWebRTC';
 import { HumanSocketManager } from '@business/services/SocketManager';
 
 import { ERROR_MESSAGE } from '@constants/messages';

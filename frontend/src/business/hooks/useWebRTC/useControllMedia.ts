@@ -1,3 +1,4 @@
+import { HumanSocketManager } from '@business/services/SocketManager';
 import WebRTC from '@business/services/WebRTC';
 
 import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
@@ -29,7 +30,7 @@ export function useControllMedia({ localVideoRef }: useContorollMediaParams) {
 
   const { getLocalStream } = useMedia();
 
-  const webRTC = WebRTC.getInstace();
+  const webRTC = WebRTC.getInstance(HumanSocketManager.getInstance());
 
   const setLocalVideoSrcObj = (stream: MediaStream) => {
     if (!localVideoRef.current) {
@@ -47,7 +48,7 @@ export function useControllMedia({ localVideoRef }: useContorollMediaParams) {
     videoTrack.getVideoTracks().forEach(toggleTrack);
     toggleMyVideoState();
 
-    const mediaInfoChannel = webRTC.dataChannels.get('mediaInfoChannel');
+    const mediaInfoChannel = webRTC.getDataChannels().get('mediaInfoChannel');
     if (!mediaInfoChannel || mediaInfoChannel.readyState !== 'open') {
       return;
     }
@@ -65,7 +66,7 @@ export function useControllMedia({ localVideoRef }: useContorollMediaParams) {
     audioTrack.getAudioTracks().forEach(toggleTrack);
     toggleMyMicState();
 
-    const mediaInfoChannel = webRTC.dataChannels.get('mediaInfoChannel');
+    const mediaInfoChannel = webRTC.getDataChannels().get('mediaInfoChannel');
     if (!mediaInfoChannel || mediaInfoChannel.readyState !== 'open') {
       return;
     }

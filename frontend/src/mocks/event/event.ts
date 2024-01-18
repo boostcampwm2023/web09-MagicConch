@@ -8,7 +8,7 @@ export const setupEventListener = (events: any, target: any) => {
   target.addEventListener.mockImplementation((event: string, cb: any) => {
     events[event] = cb;
   });
-  target.removeEventListener.mockImplementation((event: string, cb: any) => {
+  target.removeEventListener.mockImplementation((event: string) => {
     delete events[event];
   });
 };

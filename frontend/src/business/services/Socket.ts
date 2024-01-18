@@ -4,7 +4,7 @@ import { ERROR_MESSAGE } from '@constants/messages';
 
 import { HumanSocketManager } from './SocketManager';
 
-const webRTC = WebRTC.getInstace();
+const webRTC = WebRTC.getInstance(HumanSocketManager.getInstance());
 
 const socketManager = HumanSocketManager.getInstance();
 
