@@ -35,8 +35,8 @@ export const ERR_MSG = {
   /**
    * chatbot
    */
-  USER_INPUT_EMPTY: '사용자 입력이 비어있습니다.',
-  USER_INPUT_TOO_LONG: '사용자 입력이 너무 깁니다.',
+  USER_CHAT_MESSAGE_INPUT_EMPTY: '사용자 입력한 채팅 메세지가 비어있습니다.',
+  USER_CHAT_MESSAGE_INPUT_TOO_LONG: '사용자 입력한 채팅 메세지가 너무 깁니다.',
   TAROT_CARD_IDX_OUT_OF_RANGE: '타로 카드 인덱스가 범위를 벗어났습니다.',
   AI_API_KEY_NOT_FOUND: 'API 키를 찾을 수 없습니다.',
   AI_API_FAILED: '인공지능 API 호출에 실패했습니다.',
