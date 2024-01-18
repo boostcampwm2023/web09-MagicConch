@@ -7,4 +7,4 @@ function makeTarotCardMock(): TarotCard {
   return tarotCard;
 }
 
-export const tarotCardMock = makeTarotCardMock();
+export const tarotCardMock: TarotCard = makeTarotCardMock();

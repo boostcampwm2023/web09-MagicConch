@@ -10,4 +10,4 @@ export const memberId: string = 'memberId';
 
 export const diffMemberId: string = 'diffMemberId';
 
-export const memberMock = makeMemberMock(memberId);
+export const memberMock: Member = makeMemberMock(memberId);
