@@ -8,7 +8,6 @@ import {
   tarotResultMock,
 } from 'src/mocks/tarot';
 import { Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import { CreateTarotResultDto, TarotCardDto, TarotResultDto } from './dto';
 import { TarotCard, TarotResult } from './entities';
 import { TarotService } from './tarot.service';
@@ -47,7 +46,7 @@ describe('TarotService', () => {
   });
 
   describe('createTarotResult', () => {
-    it('should create a tarot result', async () => {
+    it('타로 결과를 생성한다', async () => {
       const createTarotResultDto: CreateTarotResultDto =
         CreateTarotResultDto.fromResult(
           tarotCardMock.cardNo,
@@ -58,10 +57,9 @@ describe('TarotService', () => {
         .spyOn(tarotResultRepository, 'save')
         .mockResolvedValueOnce(new TarotResult());
 
-      await expect(
+      expect(
         service.createTarotResult(createTarotResultDto),
       ).resolves.not.toThrow();
-
       expect(saveMock).toHaveBeenCalledWith({
         cardUrl: createTarotResultDto.cardUrl,
         message: createTarotResultDto.message,
@@ -70,67 +68,62 @@ describe('TarotService', () => {
   });
 
   describe('findTarotCardById', () => {
-    it('should find specific tarot card', async () => {
+    it('해당 번호의 타로 카드를 조회한다', async () => {
       const tarotCardDto: TarotCardDto = TarotCardDto.fromEntity(tarotCardMock);
 
       const findOneByMock = jest
         .spyOn(tarotCardRepository, 'findOneBy')
         .mockResolvedValueOnce(tarotCardMock);
 
-      const result = await service.findTarotCardById(tarotCardMock.cardNo);
-
-      expect(result).toEqual(tarotCardDto);
-
+      const expectation: TarotCardDto = await service.findTarotCardById(
+        tarotCardMock.cardNo,
+      );
+      expect(expectation).toEqual(tarotCardDto);
       expect(findOneByMock).toHaveBeenCalledWith({
         cardNo: tarotCardMock.cardNo,
         cardPack: tarotCardMock.cardPack,
       });
     });
 
-    it('should throw NotFoundException if tarot card is not found', async () => {
+    it('해당 번호의 타로 카드가 존재하지 않아 NotFoundException을 반환한다', async () => {
       const findOneByMock = jest
         .spyOn(tarotCardRepository, 'findOneBy')
         .mockResolvedValueOnce(null);
 
-      const nonTarotCardNo = 80;
-
-      await expect(service.findTarotCardById(nonTarotCardNo)).rejects.toThrow(
+      const wrongTarotCardNo = 80;
+      await expect(service.findTarotCardById(wrongTarotCardNo)).rejects.toThrow(
         NotFoundException,
       );
-
       expect(findOneByMock).toHaveBeenCalledWith({
-        cardNo: nonTarotCardNo,
+        cardNo: wrongTarotCardNo,
         cardPack: undefined,
       });
     });
   });
 
   describe('findTarotResultById', () => {
-    it('should find specific tarot result', async () => {
+    it('해당 PK의 타로 결과를 조회한다', async () => {
       const tarotResultDto = TarotResultDto.fromEntity(tarotResultMock);
 
       const findOneByMock = jest
         .spyOn(tarotResultRepository, 'findOneBy')
         .mockResolvedValueOnce(tarotResultMock);
 
-      const result = await service.findTarotResultById(tarotResultId);
-
-      expect(result).toEqual(tarotResultDto);
-
+      const expectation: TarotResultDto =
+        await service.findTarotResultById(tarotResultId);
+      expect(expectation).toEqual(tarotResultDto);
       expect(findOneByMock).toHaveBeenCalledWith({ id: tarotResultId });
     });
 
-    it('should throw NotFoundException if tarot result is not found', async () => {
+    it('해당 PK의 타로 결과가 존재하지 않아 NotFoundExceptio을 반환한다', async () => {
       const findOneByMock = jest
         .spyOn(tarotResultRepository, 'findOneBy')
         .mockResolvedValueOnce(null);
 
-      const wrongResultId = uuidv4();
-
+      const wrongResultId = 'wrongResultId';
       await expect(service.findTarotResultById(wrongResultId)).rejects.toThrow(
         NotFoundException,
       );
-
       expect(findOneByMock).toHaveBeenCalledWith({ id: wrongResultId });
     });
   });
