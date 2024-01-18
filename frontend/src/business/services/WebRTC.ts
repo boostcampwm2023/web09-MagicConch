@@ -6,7 +6,7 @@ type RTCDataChannelKey = 'mediaInfoChannel' | 'chatChannel' | 'profileChannel' |
 
 export default class WebRTC {
   private static instance: WebRTC;
-  private socketManager = HumanSocketManager.getInstance();
+  private socketManager: HumanSocketManager;
 
   private constructor(socketManager: HumanSocketManager) {
     this.socketManager = socketManager;
