@@ -1,7 +1,7 @@
 import { ChangeEvent } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
-import WebRTC from '@business/services/WebRTC';
+import { useDataChannel } from '@business/hooks/useWebRTC';
 
 import { useProfileInfo } from '@stores/zustandStores/useProfileInfo';
 
@@ -12,7 +12,7 @@ import { OutletContext } from './HumanChatPage';
 export function useSettingPageProfileNicknameSetting() {
   const { setChatPageState }: OutletContext = useOutletContext();
 
-  const { dataChannels } = WebRTC.getInstace();
+  const { dataChannels } = useDataChannel();
   const profileChannel = dataChannels.get('profileChannel');
   const nicknameChannel = dataChannels.get('nicknameChannel');
 
