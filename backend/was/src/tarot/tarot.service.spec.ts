@@ -55,7 +55,7 @@ describe('TarotService', () => {
 
       const saveMock = jest
         .spyOn(tarotResultRepository, 'save')
-        .mockResolvedValueOnce(new TarotResult());
+        .mockResolvedValueOnce(tarotResultMock);
 
       expect(
         service.createTarotResult(createTarotResultDto),
@@ -115,7 +115,7 @@ describe('TarotService', () => {
       expect(findOneByMock).toHaveBeenCalledWith({ id: tarotResultId });
     });
 
-    it('해당 PK의 타로 결과가 존재하지 않아 NotFoundExceptio을 반환한다', async () => {
+    it('해당 PK의 타로 결과가 존재하지 않아 NotFoundException을 반환한다', async () => {
       const findOneByMock = jest
         .spyOn(tarotResultRepository, 'findOneBy')
         .mockResolvedValueOnce(null);
