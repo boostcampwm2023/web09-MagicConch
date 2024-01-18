@@ -1,11 +1,11 @@
-import {
-  mock_compareTokenStream,
-  mock_createResponseChunks,
-  mock_createResponseStream,
-  mock_id,
-  mock_isStreamEventString,
-} from 'src/common/mocks/clova-studio';
 import { string2Uint8Array, uint8Array2String } from 'src/common/utils/stream';
+import {
+  createAllEventStringMock,
+  createResponseStreamMock,
+  eventIdMock,
+  vaildateEventString,
+  vaildateTokenStream,
+} from 'src/mocks/clova-studio';
 import {
   apiResponseStream2TokenStream,
   extractKeyValue,
@@ -18,13 +18,13 @@ import {
 describe('[chatbot/clova-studio/stream]', () => {
   describe('function splitChunk()', () => {
     const tokens = ['안', '녕', '하', '세', '요'];
-    const orignalChunk = string2Uint8Array(mock_createResponseChunks(tokens));
+    const orignalChunk = string2Uint8Array(createAllEventStringMock(tokens));
 
     const vaildateChunk = (chunks: string[]) => {
       expect(chunks.length).toBe(tokens.length + 1);
 
       chunks.forEach((chunk) => {
-        expect(mock_isStreamEventString(chunk)).toBeTruthy();
+        expect(vaildateEventString(chunk)).toBeTruthy();
       });
     };
 
@@ -53,8 +53,8 @@ describe('[chatbot/clova-studio/stream]', () => {
     it('test (1): 기본 실행 테스트', () => {
       const testcases = [
         {
-          input: `id: ${mock_id}`,
-          output: ['id', mock_id],
+          input: `id: ${eventIdMock}`,
+          output: ['id', eventIdMock],
         },
         {
           input: `event: token`,
@@ -78,7 +78,7 @@ describe('[chatbot/clova-studio/stream]', () => {
   describe('function isStreamEvent()', () => {
     it('test (1): 기본 실행 테스트', () => {
       const input = {
-        id: mock_id,
+        id: eventIdMock,
         event: 'token',
         data: { message: { role: 'assistant', content: '안' } },
       };
@@ -87,7 +87,7 @@ describe('[chatbot/clova-studio/stream]', () => {
 
     it('test (2): data가 없는 경우', () => {
       const input = {
-        id: mock_id,
+        id: eventIdMock,
         event: 'token',
       };
       expect(isStreamEvent(input)).toBeFalsy();
@@ -96,12 +96,12 @@ describe('[chatbot/clova-studio/stream]', () => {
     it('test (3): data가 불완전한 경우', () => {
       const inputs = [
         {
-          id: mock_id,
+          id: eventIdMock,
           event: 'token',
           data: '{"message": {"role": "assistant", "conte',
         },
         {
-          id: mock_id,
+          id: eventIdMock,
           event: 'token',
           data: '',
         },
@@ -119,11 +119,11 @@ describe('[chatbot/clova-studio/stream]', () => {
 
   describe('function streamEventParse()', () => {
     it('test (1): 기본 실행 테스트', () => {
-      const input = `id: ${mock_id}
+      const input = `id: ${eventIdMock}
 event: token
 data: {"message": {"role": "assistant", "content": "안"}}`;
       const output = {
-        id: mock_id,
+        id: eventIdMock,
         event: 'token',
         data: { message: { role: 'assistant', content: '안' } },
       };
@@ -132,20 +132,20 @@ data: {"message": {"role": "assistant", "content": "안"}}`;
     });
 
     it('test (2): data가 없는 경우', () => {
-      const input = `id: ${mock_id}
+      const input = `id: ${eventIdMock}
 event: token`;
       expect(streamEventParse(input)).toBeUndefined();
     });
 
     it('test (3): data가 불완전한 경우', () => {
       const inputs = [
-        `id: ${mock_id}
+        `id: ${eventIdMock}
 event: token
 data: {"message": {"role": "assistant", "conte`,
-        `id: ${mock_id}
+        `id: ${eventIdMock}
 event: token
 data: `,
-        `id: ${mock_id}
+        `id: ${eventIdMock}
 event: token
 da`,
       ];
@@ -189,10 +189,10 @@ data: {"message": {"role": "assistant", "conte`;
     it('test (1): 기본 실행 테스트', async () => {
       const tokens = ['안', '녕', '하', '세', '요'];
 
-      const responseStream = await mock_createResponseStream(tokens);
+      const responseStream = await createResponseStreamMock(tokens);
       const tokenStream = apiResponseStream2TokenStream(responseStream);
 
-      expect(await mock_compareTokenStream(tokenStream, tokens)).toBeTruthy();
+      expect(await vaildateTokenStream(tokenStream, tokens)).toBeTruthy();
     });
   });
 });

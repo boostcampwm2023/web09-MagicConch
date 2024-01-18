@@ -1,9 +1,9 @@
 import { LoggerService } from '@nestjs/common';
 import { ChatService } from 'src/chat/chat.service';
 import { ChatbotService } from 'src/chatbot/chatbot.interface';
+import { Socket } from 'src/common/types/socket';
+import { string2Uint8ArrayStream } from 'src/common/utils/stream';
 import { TarotService } from 'src/tarot/tarot.service';
-import { Socket } from '../types/socket';
-import { string2Uint8ArrayStream } from '../utils/stream';
 
 export const aiMessageMock = '인공지능입니다.';
 export const humanMessageMock = '사람입니다.';

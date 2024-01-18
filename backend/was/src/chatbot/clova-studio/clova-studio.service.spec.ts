@@ -1,13 +1,13 @@
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CLOVA_API_KEY_NAMES } from 'src/common/constants/clova-studio';
+import { string2Uint8ArrayStream } from 'src/common/utils/stream';
 import {
   clovaStudioApiMock,
   configServieMock,
-  mock_compareTokenStream,
-  mock_createResponseChunks,
-} from 'src/common/mocks/clova-studio';
-import { string2Uint8ArrayStream } from 'src/common/utils/stream';
+  createAllEventStringMock,
+  vaildateTokenStream,
+} from 'src/mocks/clova-studio';
 import { ClovaStudioService, getAPIKeys } from './clova-studio.service';
 
 jest.mock('./api');
@@ -46,7 +46,7 @@ describe('ClovaStudioService', () => {
 
     const tokenStream = await service.generateTalk([], '안녕!');
 
-    const result = await mock_compareTokenStream(tokenStream, tokens);
+    const result = await vaildateTokenStream(tokenStream, tokens);
     expect(result).toBeTruthy();
   });
 
@@ -55,12 +55,12 @@ describe('ClovaStudioService', () => {
 
     const tokenStream = await service.generateTarotReading([], 21);
 
-    const result = await mock_compareTokenStream(tokenStream, tokens);
+    const result = await vaildateTokenStream(tokenStream, tokens);
     expect(result).toBeTruthy();
   });
 });
 
 function mockAPI(tokens: string[]) {
-  const chunks = mock_createResponseChunks(tokens);
+  const chunks = createAllEventStringMock(tokens);
   clovaStudioApiMock.mockReturnValueOnce(string2Uint8ArrayStream(chunks));
 }

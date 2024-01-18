@@ -5,6 +5,7 @@ import {
   ASK_TAROTCARD_MESSAGE_CANDIDATES,
   WELCOME_MESSAGE,
 } from 'src/common/constants/socket';
+import { LoggerService } from 'src/logger/logger.service';
 import {
   aiMessageMock,
   chatServiceMock,
@@ -14,8 +15,7 @@ import {
   loggerServiceMock,
   tarotIdxMock,
   tarotServiceMock,
-} from 'src/common/mocks/socket';
-import { LoggerService } from 'src/logger/logger.service';
+} from 'src/mocks/socket';
 import { TarotService } from 'src/tarot/tarot.service';
 import { SocketService } from './socket.service';
 
