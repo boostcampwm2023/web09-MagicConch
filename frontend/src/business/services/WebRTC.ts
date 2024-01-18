@@ -29,6 +29,9 @@ export default class WebRTC {
   private nextDataChannelId = 0;
 
   getLocalStream = () => this.localStream;
+  getFirstVideoTrack = () => this.localStream?.getVideoTracks()[0];
+  getFirstAudioTrack = () => this.localStream?.getAudioTracks()[0];
+
   getRemoteStream = () => this.remoteStream;
   getPeerConnection = () => this.peerConnection;
   getDataChannels = () => this.dataChannels;

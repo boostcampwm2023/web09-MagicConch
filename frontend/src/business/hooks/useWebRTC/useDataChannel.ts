@@ -35,8 +35,8 @@ export function useDataChannel() {
     });
 
     mediaInfoChannel?.addEventListener('open', function () {
-      const audioTrack = webRTC.getLocalStream()?.getAudioTracks()[0];
-      const videoTrack = webRTC.getLocalStream()?.getVideoTracks()[0];
+      const audioTrack = webRTC.getFirstAudioTrack();
+      const videoTrack = webRTC.getFirstVideoTrack();
 
       mediaInfoChannel?.send(
         JSON.stringify([
