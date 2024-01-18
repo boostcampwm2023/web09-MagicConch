@@ -11,7 +11,7 @@ import { createTarotCardMessage, createUserMessage } from './creator';
 
 describe('[chatbot/clova-studio/message]', () => {
   describe('function chatLog2clovaStudioMessages()', () => {
-    it('test (1): 기본 실행 테스트', () => {
+    it('ChatLog 타입의 채팅 기록을 ClovaStudioMessage 타입의 채팅 기록으로 전환', () => {
       const input: ChatLog[] = [
         { isHost: true, message: 'host message' },
         { isHost: false, message: 'user message' },
@@ -24,7 +24,7 @@ describe('[chatbot/clova-studio/message]', () => {
       expect(chatLog2clovaStudioMessages(input)).toEqual(output);
     });
 
-    it('test (2): 입력이 빈 배열일 때', () => {
+    it('입력이 빈 배열일 때, 그대로 빈 배열이 출력', () => {
       const input: ChatLog[] = [];
       const output: ClovaStudioMessage[] = [];
 
@@ -33,21 +33,21 @@ describe('[chatbot/clova-studio/message]', () => {
   });
 
   describe('function createUserMessage()', () => {
-    it('test (1): 기본 실행 테스트', () => {
+    it('사용자 채팅 기록을 ClovaStudioMessage 타입으로 반환', () => {
       const output: ClovaStudioMessage = {
         role: 'user',
         content: 'user message',
       };
       expect(createUserMessage('user message')).toEqual(output);
     });
-    it('test (2): 입력이 빈 값일 때', () => {
+    it('입력이 빈 값이면, 오류 발생', () => {
       expect(() => createUserMessage('')).toThrow();
       expect(() => createUserMessage(' ')).toThrow();
     });
   });
 
   describe('function createTarotCardMessage()', () => {
-    it('test (1): 기본 실행 테스트', () => {
+    it('유저가 타로 카드를 뽑은 기록을 ClovaStudioMessage 타입으로 반환', () => {
       const output: ClovaStudioMessage = {
         role: 'user',
         content: TAROTCARD_NAMES[21],
@@ -55,14 +55,14 @@ describe('[chatbot/clova-studio/message]', () => {
 
       expect(createTarotCardMessage(21)).toEqual(output);
     });
-    it('test (2): 입력이 범위에서 벗어난 값일 때', () => {
+    it('입력이 범위에서 벗어난 값일 경우, 오류 발생', () => {
       expect(() => createTarotCardMessage(-1)).toThrow();
       expect(() => createTarotCardMessage(79)).toThrow();
     });
   });
 
   describe('function buildTalkMessages()', () => {
-    it('test (1): 기본 실행 테스트', () => {
+    it('일반 채팅을 위한 시스템 메세지와 유저 메세지를 추가한 ClovaStudioMessage 형식의 채팅 기록 반환', () => {
       const input: ClovaStudioMessage[] = [
         { role: 'assistant', content: 'assistant message 1' },
         { role: 'user', content: 'user message 1' },
@@ -79,7 +79,7 @@ describe('[chatbot/clova-studio/message]', () => {
       expect(buildTalkMessages(input, 'user message 2')).toEqual(output);
     });
 
-    it('test (2): 입력이 빈 값일 때', () => {
+    it('입력이 빈 배열인 경우, 시스템 메세지와 추가된 유저 메세지만 반환', () => {
       const input: ClovaStudioMessage[] = [];
       const output: ClovaStudioMessage[] = [
         { role: 'system', content: TALK_SYSTEM_MESSAGE },
@@ -91,7 +91,7 @@ describe('[chatbot/clova-studio/message]', () => {
   });
 
   describe('function buildTarotReadingMessages()', () => {
-    it('test (1): 기본 실행 테스트', () => {
+    it('타로 카드 해설을 위한 시스템 메세지와 타로 카드 뽑은 기록을 추가한 ClovaStudioMessage 형식의 채팅 기록 반환', () => {
       const input: ClovaStudioMessage[] = [
         { role: 'assistant', content: 'assistant message 1' },
         { role: 'user', content: 'user message 1' },
@@ -108,7 +108,7 @@ describe('[chatbot/clova-studio/message]', () => {
 
       expect(buildTarotReadingMessages(input, 21)).toEqual(output);
     });
-    it('test (2): 입력이 범위에서 벗어난 값일 때', () => {
+    it('타로 카드 index 입력이 범위에서 벗어난 값일 때, 오류 발생', () => {
       expect(() => buildTarotReadingMessages([], -1)).toThrow();
       expect(() => buildTarotReadingMessages([], 79)).toThrow();
     });

@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-// import { WsException } from '@nestjs/websockets';
 import { ChatService } from 'src/chat/chat.service';
 import {
   ASK_TAROTCARD_MESSAGE_CANDIDATES,
@@ -19,11 +18,8 @@ import {
 import { TarotService } from 'src/tarot/tarot.service';
 import { SocketService } from './socket.service';
 
-// import { WsExceptionFilter } from './ws-exception.filter';
-
 describe('SocketService', () => {
   let socketService: SocketService;
-  // let wsExceptionFilter: WsExceptionFilter;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -37,7 +33,6 @@ describe('SocketService', () => {
     }).compile();
 
     socketService = module.get<SocketService>(SocketService);
-    // wsExceptionFilter = new WsExceptionFilter(socketService);
   });
 
   afterEach(() => {
@@ -55,7 +50,7 @@ describe('SocketService', () => {
     expect(clientMock.chatEnd).toBeFalsy();
   });
 
-  describe('sendWelcomeMessage()', () => {
+  describe('SocketService.sendWelcomeMessage()', () => {
     it('token 단위로 메세지 전달', async () => {
       const sentMessage = await socketService.sendWelcomeMessage(clientMock);
 
@@ -80,19 +75,10 @@ describe('SocketService', () => {
       ]);
     });
 
-    it('오류 발생 시 client에게 알림', () => {
-      // jest.spyOn(socketService, 'streamMessage').mockImplementation(() => {
-      //   throw new Error('test');
-      // });
-      // expect(() => socketService.sendWelcomeMessage(clientMock)).toThrow(
-      //   WsException,
-      // );
-      // // TODO: error 발생 시 client에게 알려주는 부분 테스트 필요 (ws-exception.filter 적용 테스트)
-      // expect(clientMock.emit).toHaveBeenCalledWith('error', expect.anything());
-    });
+    it('오류 발생 시 client에게 알림', () => {});
   });
 
-  describe('handleMessageEvent()', () => {
+  describe('SocketService.handleMessageEvent()', () => {
     it('token 단위로 ai 답장 전달', async () => {
       const sentMessage = await socketService.handleMessageEvent(
         clientMock,
@@ -133,7 +119,7 @@ describe('SocketService', () => {
     it('오류 발생 시 client에게 알림', () => {});
   });
 
-  describe('handleTarotReadEvent()', () => {
+  describe('SocketService.handleTarotReadEvent()', () => {
     it('token 단위로 ai 답장 전달', async () => {
       const sentMessage = await socketService.handleTarotReadEvent(
         clientMock,

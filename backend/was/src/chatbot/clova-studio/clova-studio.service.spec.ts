@@ -13,7 +13,7 @@ import { ClovaStudioService, getAPIKeys } from './clova-studio.service';
 jest.mock('./api');
 
 describe('ClovaStudioService', () => {
-  let service: ClovaStudioService;
+  let clovaStudioService: ClovaStudioService;
   const tokens = ['안', '녕', '하', '세', '요'];
 
   beforeEach(async () => {
@@ -26,41 +26,47 @@ describe('ClovaStudioService', () => {
       ],
     }).compile();
 
-    service = module.get<ClovaStudioService>(ClovaStudioService);
+    clovaStudioService = module.get<ClovaStudioService>(ClovaStudioService);
   });
 
   it('ClovaStudioService 생성', () => {
-    expect(service).toBeDefined();
+    expect(clovaStudioService).toBeDefined();
   });
 
-  it('clova api key 불러 옴', () => {
-    const apiKeys = getAPIKeys(configServieMock);
+  describe('function getAPIKeys()', () => {
+    it('getAPIKeys(): clova api key 불러 와서 객체로 만들어서 반환', () => {
+      const apiKeys = getAPIKeys(configServieMock);
 
-    CLOVA_API_KEY_NAMES.forEach((key) => {
-      expect(apiKeys[key.replaceAll('_', '-')]).toBe(key);
+      CLOVA_API_KEY_NAMES.forEach((key) => {
+        expect(apiKeys[key.replaceAll('_', '-')]).toBe(key);
+      });
     });
   });
 
-  it('대화 생성', async () => {
-    mockAPI(tokens);
+  describe('ClovaStudioService.generateTalk()', () => {
+    it('사용자의 메세지 입력으로 AI의 답변을 생성해서 token stream 형식으로 반환', async () => {
+      setApiMock(tokens);
 
-    const tokenStream = await service.generateTalk([], '안녕!');
+      const tokenStream = await clovaStudioService.generateTalk([], '안녕!');
 
-    const result = await vaildateTokenStream(tokenStream, tokens);
-    expect(result).toBeTruthy();
+      const result = await vaildateTokenStream(tokenStream, tokens);
+      expect(result).toBeTruthy();
+    });
   });
 
-  it('타로 상담 결과 생성', async () => {
-    mockAPI(tokens);
+  describe('ClovaStudioService.generateTarotReading()', () => {
+    it('사용자가 뽑은 카드 인덱스로 AI의 해설을 생성해서 token stream 형식으로 반환', async () => {
+      setApiMock(tokens);
 
-    const tokenStream = await service.generateTarotReading([], 21);
+      const tokenStream = await clovaStudioService.generateTarotReading([], 21);
 
-    const result = await vaildateTokenStream(tokenStream, tokens);
-    expect(result).toBeTruthy();
+      const result = await vaildateTokenStream(tokenStream, tokens);
+      expect(result).toBeTruthy();
+    });
   });
 });
 
-function mockAPI(tokens: string[]) {
+function setApiMock(tokens: string[]) {
   const chunks = createAllEventStringMock(tokens);
   clovaStudioApiMock.mockReturnValueOnce(string2Uint8ArrayStream(chunks));
 }
