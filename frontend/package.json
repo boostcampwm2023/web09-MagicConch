@@ -11,7 +11,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "prod": "vite --mode production",
-    "test": "vitest"
+    "test": "vitest --mode development"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.12.2",

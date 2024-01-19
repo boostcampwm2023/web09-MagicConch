@@ -5,9 +5,9 @@ import WebRTC from '@business/services/WebRTC';
 import { useDataChannel } from './useDataChannel';
 import { useMedia } from './useMedia';
 
-export default function useWebRTC() {
-  const webRTC = WebRTC.getInstace();
+export function useWebRTC() {
   const humanSocket = HumanSocketManager.getInstance();
+  const webRTC = WebRTC.getInstance(humanSocket);
 
   const { getLocalStream } = useMedia();
 

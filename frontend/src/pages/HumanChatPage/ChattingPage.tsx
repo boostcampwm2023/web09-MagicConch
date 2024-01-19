@@ -4,8 +4,7 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 import { IconButton } from '@components/Buttons';
 import CamContainer from '@components/CamContainer';
 
-import { useControllMedia } from '@business/hooks/useWebRTC/useControllMedia';
-import { useStreamVideoRef } from '@business/hooks/useWebRTC/useStreamVideoRef';
+import { useControllMedia, useStreamVideoRef } from '@business/hooks/useWebRTC';
 
 import type { OutletContext } from './HumanChatPage';
 import { useChattingPageCreateJoinRoomPasswordPopup } from './useChattingPageCreateJoinRoomPopup';
