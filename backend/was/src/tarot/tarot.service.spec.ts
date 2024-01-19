@@ -71,7 +71,7 @@ describe('TarotService', () => {
     });
   });
 
-  describe('findTarotCardById', () => {
+  describe('findTarotCardByCardNo', () => {
     it('해당 번호의 타로 카드를 조회한다', async () => {
       const tarotCardDto: TarotCardDto = TarotCardDto.fromEntity(tarotCardMock);
 
@@ -79,7 +79,7 @@ describe('TarotService', () => {
         .spyOn(tarotCardRepository, 'findOneBy')
         .mockResolvedValueOnce(tarotCardMock);
 
-      const expectation: TarotCardDto = await service.findTarotCardById(
+      const expectation: TarotCardDto = await service.findTarotCardByCardNo(
         tarotCardMock.cardNo,
       );
       expect(expectation).toEqual(tarotCardDto);
@@ -95,9 +95,9 @@ describe('TarotService', () => {
         .mockResolvedValueOnce(null);
 
       const wrongTarotCardNo = 80;
-      await expect(service.findTarotCardById(wrongTarotCardNo)).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        service.findTarotCardByCardNo(wrongTarotCardNo),
+      ).rejects.toThrow(NotFoundException);
       expect(findOneByMock).toHaveBeenCalledWith({
         cardNo: wrongTarotCardNo,
         cardPack: undefined,
