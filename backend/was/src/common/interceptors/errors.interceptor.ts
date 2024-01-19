@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   CallHandler,
   ExecutionContext,
   Injectable,
@@ -14,7 +13,6 @@ import { catchError } from 'rxjs/operators';
 import { LoggerService } from 'src/logger/logger.service';
 import { QueryFailedError } from 'typeorm';
 import { ERR_MSG } from '../constants/errors';
-import { JwtError } from '../errors/jwt.error';
 import { logErrorWithStack, makeErrorLogMessage } from '../utils/logging';
 import { makeSlackMessage } from '../utils/slack-webhook';
 
@@ -40,9 +38,6 @@ export class ErrorsInterceptor implements NestInterceptor {
       catchError((err: unknown) => {
         const logMessage: string = makeErrorLogMessage(logContext, err);
 
-        if (err instanceof JwtError) {
-          return throwError(() => this.handleJwtError(logMessage));
-        }
         if (err instanceof QueryFailedError) {
           return throwError(() => this.handleQueryFailedError(err, logMessage));
         }
@@ -54,11 +49,6 @@ export class ErrorsInterceptor implements NestInterceptor {
         return throwError(() => new Error(ERR_MSG.UNKNOWN));
       }),
     );
-  }
-
-  private handleJwtError(logMessage: string): void {
-    this.logger.error(logMessage);
-    throw new BadRequestException(ERR_MSG.JWT_VERIFICATION_FAILED);
   }
 
   private handleQueryFailedError(
