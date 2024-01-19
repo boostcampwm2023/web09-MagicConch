@@ -64,9 +64,6 @@ describe('ChatService', () => {
 
   describe('createRoom', () => {
     it('채팅방을 생성한다', async () => {
-      // const findOneByMock = jest
-      //   .spyOn(membersRepository, 'findOneBy')
-      //   .mockResolvedValueOnce(memberMock);
       const saveMemberMock = jest
         .spyOn(membersRepository, 'save')
         .mockResolvedValueOnce(memberMock);
@@ -75,23 +72,16 @@ describe('ChatService', () => {
         .spyOn(chattingRoomRepository, 'save')
         .mockResolvedValueOnce(roomMock);
 
-      // expect(findOneByMock).toHaveBeenCalledWith({ id: memberId });
       await expect(service.createRoom(memberId)).resolves.not.toThrow();
       expect(saveMemberMock).toHaveBeenCalled();
       expect(saveMock).toHaveBeenCalledWith({ participant: memberMock });
     });
 
-    // it('should throw NotFoundException when member is not found', async () => {
-    //   const findOneByMock = jest
-    //     .spyOn(membersRepository, 'findOneBy')
-    //     .mockResolvedValueOnce(null);
-
-    //   await expect(service.createRoom(wrongMemberId)).rejects.toThrow(
-    //     NotFoundException,
-    //   );
-
-    //   expect(findOneByMock).toHaveBeenCalledWith({ id: wrongMemberId });
-    // });
+    /**
+     * TODO : 추후 위의 내용 삭제하고 아래 내용 작성
+     */
+    // it('채팅방을 생성한다 (로그인 하지 않은 사용자)', async () => {});
+    // it('채팅방을 생성한다 (로그인한 사용자)', async () => {});
   });
 
   describe('createMessage', () => {
@@ -105,7 +95,7 @@ describe('ChatService', () => {
         .mockResolvedValueOnce(messageMock);
 
       await expect(
-        service.createMessage(roomId, [createMessageDtoMock]),
+        service.createMessages(roomId, [createMessageDtoMock]),
       ).resolves.not.toThrow();
       expect(findOneByMock).toHaveBeenCalledWith({ id: roomId });
       expect(saveMock).toHaveBeenCalledWith({
@@ -120,7 +110,7 @@ describe('ChatService', () => {
         .spyOn(chattingRoomRepository, 'findOneBy')
         .mockResolvedValueOnce(null);
 
-      await expect(service.createMessage(wrongRoomId, [])).rejects.toThrow(
+      await expect(service.createMessages(wrongRoomId, [])).rejects.toThrow(
         NotFoundException,
       );
       expect(findOneByMock).toHaveBeenCalledWith({ id: wrongRoomId });
