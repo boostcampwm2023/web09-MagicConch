@@ -1,4 +1,3 @@
-// peerConnection 관련 목
 export const mockSender = {
   video: {
     track: {

@@ -1,4 +1,3 @@
-// mediaStream 관련 목
 export const mockMediaStreamTrack: any = 'track';
 
 export const mockMediaStream = {
