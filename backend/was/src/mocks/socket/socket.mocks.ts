@@ -11,7 +11,7 @@ export const tarotIdxMock = 0;
 
 export const chatServiceMock = {
   createRoom: () => 'room_id',
-  createMessage: jest.fn(),
+  createMessages: jest.fn(),
 } as unknown as ChatService;
 
 export const tarotServiceMock = {

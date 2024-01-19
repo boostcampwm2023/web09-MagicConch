@@ -31,22 +31,27 @@ export class ChatService {
     private readonly membersRepository: Repository<Member>,
   ) {}
 
-  async createRoom(memberId: string): Promise<ChattingInfo> {
-    /**
-     * 임시로 쿠키 대신 사용
-     */
-    const member: Member = new Member();
-    const savedMember: Member = await this.membersRepository.save(member);
-
-    // const member: Member | null = await this.membersRepository.findOneBy({
-    //   id: memberId,
-    // });
-    // if (!member) {
-    //   throw new NotFoundException();
-    // }
-
-    const room: ChattingRoom = ChattingRoom.fromMember(savedMember);
+  async createRoom(token?: string): Promise<ChattingInfo> {
     try {
+      /**
+       * TODO : token을 받는다고 가정하고 작성
+       */
+      // let member: Member = new Member();
+      // if (token) {
+      //   const payload: JwtPayloadDto = this.jwtService.verify(token);
+      //   const foundMember: Member | null = await this.membersService.findByEmail(payload.email, payload.providerId);
+      //   if(!foundMember) {
+      //     throw new BadRequestException();
+      //   }
+      //   member = foundMember;
+      // }
+      // else {
+      //   member = await this.membersService.save(member);
+      // }
+      // const room: ChattingRoom = ChattingRoom.fromMember(member);
+      const member: Member = new Member();
+      const savedMember: Member = await this.membersRepository.save(member);
+      const room: ChattingRoom = ChattingRoom.fromMember(savedMember);
       const savedRoom: ChattingRoom =
         await this.chattingRoomRepository.save(room);
       return { memeberId: savedMember.id, roomId: savedRoom.id };
@@ -55,47 +60,53 @@ export class ChatService {
     }
   }
 
-  async createMessage(
+  async createMessages(
     roomId: string,
-    createChattingMessageDto: CreateChattingMessageDto[],
+    createMessageDtos: CreateChattingMessageDto[],
   ): Promise<void> {
-    const room: ChattingRoom | null =
-      await this.chattingRoomRepository.findOneBy({
-        id: roomId,
-      });
-    if (!room) {
-      throw new NotFoundException(ERR_MSG.CHATTING_ROOM_NOT_FOUND);
-    }
     try {
-      createChattingMessageDto.forEach(
-        async (messageDto: CreateChattingMessageDto) => {
-          const message: ChattingMessage = ChattingMessage.fromDto(
-            messageDto,
-            room,
-          );
-          await this.chattingMessageRepository.save(message);
-        },
-      );
+      const room: ChattingRoom | null =
+        await this.chattingRoomRepository.findOneBy({
+          id: roomId,
+        });
+      if (!room) {
+        throw new NotFoundException(ERR_MSG.CHATTING_ROOM_NOT_FOUND);
+      }
+      for (const createMessageDto of createMessageDtos) {
+        const message: ChattingMessage = ChattingMessage.fromDto(
+          createMessageDto,
+          room,
+        );
+        await this.chattingMessageRepository.save(message);
+      }
     } catch (err: unknown) {
       throw err;
     }
   }
 
   async findRoomsById(id: string): Promise<ChattingRoomResponseDto[]> {
-    const rooms: ChattingRoom[] = await this.chattingRoomRepository.findBy({
-      id,
-    });
-    return rooms.map((room: ChattingRoom) =>
-      ChattingRoomResponseDto.fromEntity(room),
-    );
+    try {
+      const rooms: ChattingRoom[] = await this.chattingRoomRepository.findBy({
+        id: id,
+      });
+      return rooms.map((room: ChattingRoom) =>
+        ChattingRoomResponseDto.fromEntity(room),
+      );
+    } catch (err: unknown) {
+      throw err;
+    }
   }
 
   async findMessagesById(id: string): Promise<ChattingMessageResponseDto[]> {
-    const messages: ChattingMessage[] =
-      await this.chattingMessageRepository.findBy({ id });
-    return messages.map((message: ChattingMessage) =>
-      ChattingMessageResponseDto.fromEntity(message),
-    );
+    try {
+      const messages: ChattingMessage[] =
+        await this.chattingMessageRepository.findBy({ id: id });
+      return messages.map((message: ChattingMessage) =>
+        ChattingMessageResponseDto.fromEntity(message),
+      );
+    } catch (err: unknown) {
+      throw err;
+    }
   }
 
   async updateRoom(
@@ -103,17 +114,17 @@ export class ChatService {
     memberId: string,
     updateChattingRoomDto: UpdateChattingRoomDto,
   ): Promise<void> {
-    const room: ChattingRoom | null =
-      await this.chattingRoomRepository.findOneBy({ id });
-    if (!room) {
-      throw new NotFoundException(ERR_MSG.CHATTING_ROOM_NOT_FOUND);
-    }
-    if (room.participant.id !== memberId) {
-      throw new ForbiddenException(ERR_MSG.UPDATE_CHATTING_ROOM_FORBIDDEN);
-    }
     try {
+      const room: ChattingRoom | null =
+        await this.chattingRoomRepository.findOneBy({ id: id });
+      if (!room) {
+        throw new NotFoundException(ERR_MSG.CHATTING_ROOM_NOT_FOUND);
+      }
+      if (room.participant.id !== memberId) {
+        throw new ForbiddenException(ERR_MSG.UPDATE_CHATTING_ROOM_FORBIDDEN);
+      }
       await this.chattingRoomRepository.update(
-        { id },
+        { id: id },
         { title: updateChattingRoomDto.title },
       );
     } catch (err: unknown) {
@@ -123,7 +134,7 @@ export class ChatService {
 
   async removeRoom(id: string, memberId: string): Promise<void> {
     const room: ChattingRoom | null =
-      await this.chattingRoomRepository.findOneBy({ id });
+      await this.chattingRoomRepository.findOneBy({ id: id });
     if (!room) {
       throw new NotFoundException(ERR_MSG.CHATTING_ROOM_NOT_FOUND);
     }
@@ -131,7 +142,7 @@ export class ChatService {
       throw new ForbiddenException(ERR_MSG.DELETE_CHATTING_ROOM_FORBIDDEN);
     }
     try {
-      await this.chattingRoomRepository.softDelete({ id });
+      await this.chattingRoomRepository.softDelete({ id: id });
     } catch (err: unknown) {
       throw err;
     }

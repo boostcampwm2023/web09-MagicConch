@@ -21,15 +21,19 @@ export class MembersService {
   }
 
   async findByEmail(email: string, providerId: number): Promise<Member | null> {
-    return await this.membersRepository.findOneBy({
-      email: email,
-      providerId: providerId,
-    });
+    try {
+      return await this.membersRepository.findOneBy({
+        email: email,
+        providerId: providerId,
+      });
+    } catch (err: unknown) {
+      throw err;
+    }
   }
 
   async update(id: string, updateMemberDto: UpdateMemberDto): Promise<boolean> {
     try {
-      await this.membersRepository.update({ id }, updateMemberDto);
+      await this.membersRepository.update({ id: id }, updateMemberDto);
       return true;
     } catch (err: unknown) {
       throw err;

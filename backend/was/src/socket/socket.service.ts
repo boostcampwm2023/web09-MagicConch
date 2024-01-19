@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 import { ChatService } from 'src/chat/chat.service';
-import { CreateChattingMessageDto } from 'src/chat/dto/create-chatting-message.dto';
+import { CreateChattingMessageDto } from 'src/chat/dto';
 import { ChatbotService } from 'src/chatbot/chatbot.interface';
 import { ERR_MSG } from 'src/common/constants/errors';
 import {
@@ -12,7 +12,7 @@ import { ChatLog } from 'src/common/types/chatbot';
 import type { Socket } from 'src/common/types/socket';
 import { readStream, string2Uint8ArrayStream } from 'src/common/utils/stream';
 import { LoggerService } from 'src/logger/logger.service';
-import { CreateTarotResultDto } from 'src/tarot/dto/create-tarot-result.dto';
+import { CreateTarotResultDto } from 'src/tarot/dto';
 import { TarotService } from 'src/tarot/tarot.service';
 
 @Injectable()
@@ -140,7 +140,7 @@ export class SocketService {
       const chattingMessages = chatLogs.map((chatLog) =>
         CreateChattingMessageDto.fromChatLog(roomId, chatLog),
       );
-      return await this.chatService.createMessage(roomId, chattingMessages);
+      return await this.chatService.createMessages(roomId, chattingMessages);
     } catch (err) {
       if (err instanceof Error) {
         this.logger.error(

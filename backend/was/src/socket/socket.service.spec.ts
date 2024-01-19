@@ -168,7 +168,7 @@ describe('SocketService', () => {
 
     it('chatLog DB에 저장', async () => {
       await socketService.handleTarotReadEvent(clientMock, tarotIdxMock);
-      expect(chatServiceMock.createMessage).toHaveBeenCalled();
+      expect(chatServiceMock.createMessages).toHaveBeenCalled();
     });
 
     it('오류 발생 시 client에게 알림', () => {});

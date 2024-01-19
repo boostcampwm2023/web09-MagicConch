@@ -25,9 +25,9 @@ export class TarotController {
     TarotCardDto,
   )
   async findTarotCardById(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('cardNo', ParseIntPipe) cardNo: number,
   ): Promise<TarotCardDto> {
-    return await this.tarotService.findTarotCardById(id);
+    return await this.tarotService.findTarotCardByCardNo(cardNo);
   }
 
   @Get('result/:id')
