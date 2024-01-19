@@ -140,7 +140,7 @@ export class SocketService {
       const chattingMessages = chatLogs.map((chatLog) =>
         CreateChattingMessageDto.fromChatLog(roomId, chatLog),
       );
-      return await this.chatService.createMessage(roomId, chattingMessages);
+      return await this.chatService.createMessages(roomId, chattingMessages);
     } catch (err) {
       if (err instanceof Error) {
         this.logger.error(
