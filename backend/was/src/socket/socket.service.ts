@@ -122,7 +122,7 @@ export class SocketService {
 
   private async createRoom(client: Socket) {
     try {
-      const chattingInfo = await this.chatService.createRoom(client.id);
+      const chattingInfo = await this.chatService.createRoom(client.user);
       return chattingInfo;
     } catch (err) {
       if (err instanceof Error) {
