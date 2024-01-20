@@ -14,7 +14,7 @@ import { ERR_MSG } from 'src/common/constants/errors';
 import { PROVIDER_ID } from 'src/common/constants/etc';
 import { KakaoLoginDecorator, LogoutDecorator } from './auth.decorators';
 import { JwtPayloadDto } from './dto';
-import { JwtAuthGuard } from './guard/jwt-auth.guard';
+import { JwtAuthGuard } from './guard';
 import { KakaoAuthService } from './service/kakao.auth.service';
 
 @ApiTags('✅ Auth API')
