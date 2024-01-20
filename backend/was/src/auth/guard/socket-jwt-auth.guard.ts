@@ -17,7 +17,10 @@ export class SocketJwtAuthGuard implements CanActivate {
     }
     try {
       const decodedToken: JwtPayloadDto = this.verifyToken(token);
-      client.user = decodedToken;
+      client.user = {
+        email: decodedToken.email,
+        providerId: decodedToken.providerId,
+      };
       return true;
     } catch (err: unknown) {
       throw err;
