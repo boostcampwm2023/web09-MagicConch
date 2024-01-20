@@ -1,3 +1,4 @@
+import { UseGuards } from '@nestjs/common';
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -7,6 +8,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
+import { SocketJwtAuthGuard } from 'src/auth/guard';
 import type { Socket } from 'src/common/types/socket';
 import { LoggerService } from 'src/logger/logger.service';
 import { SocketService } from './socket.service';
@@ -47,6 +49,7 @@ export class SocketGateway
     this.logger.debug(`🚀 Send a message to ${client.id}: ${sentMessage}`);
   }
 
+  @UseGuards(SocketJwtAuthGuard)
   @SubscribeMessage('tarotRead')
   async handleTarotReadEvent(client: Socket, cardIdx: number) {
     this.logger.debug(
