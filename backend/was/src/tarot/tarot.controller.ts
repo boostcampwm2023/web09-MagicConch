@@ -18,13 +18,13 @@ import { TarotService } from './tarot.service';
 export class TarotController {
   constructor(private readonly tarotService: TarotService) {}
 
-  @Get('card/:id')
+  @Get('card/:cardNo')
   @FindTarotCardDecorator(
     '타로 카드 이미지',
-    { type: 'integer', name: 'id' },
+    { type: 'integer', name: 'cardNo' },
     TarotCardDto,
   )
-  async findTarotCardById(
+  async findTarotCardByCardNo(
     @Param('cardNo', ParseIntPipe) cardNo: number,
   ): Promise<TarotCardDto> {
     return await this.tarotService.findTarotCardByCardNo(cardNo);
