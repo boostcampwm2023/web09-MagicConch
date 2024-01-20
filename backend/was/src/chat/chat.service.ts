@@ -4,10 +4,9 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { JwtPayloadDto } from 'src/auth/dto';
 import { ERR_MSG } from 'src/common/constants/errors';
+import { UserInfo } from 'src/common/types/socket';
 import { Member } from 'src/members/entities';
 import { Repository } from 'typeorm';
 import {
@@ -26,7 +25,6 @@ export interface ChattingInfo {
 @Injectable()
 export class ChatService {
   constructor(
-    private readonly jwtService: JwtService,
     @InjectRepository(ChattingRoom)
     private readonly chattingRoomRepository: Repository<ChattingRoom>,
     @InjectRepository(ChattingMessage)
@@ -35,9 +33,9 @@ export class ChatService {
     private readonly membersRepository: Repository<Member>,
   ) {}
 
-  async createRoom(token: string): Promise<ChattingInfo> {
-    return token
-      ? this.createRoomForMember(token)
+  async createRoom(userInfo?: UserInfo): Promise<ChattingInfo> {
+    return userInfo
+      ? this.createRoomForMember(userInfo.email, userInfo.providerId)
       : this.createRoomForNonMember();
   }
 
@@ -129,12 +127,14 @@ export class ChatService {
     }
   }
 
-  private async createRoomForMember(token: string): Promise<ChattingInfo> {
+  private async createRoomForMember(
+    email: string,
+    providerId: number,
+  ): Promise<ChattingInfo> {
     try {
-      const payload: JwtPayloadDto = this.jwtService.verify(token);
       const member: Member | null = await this.membersRepository.findOneBy({
-        email: payload.email,
-        providerId: payload.providerId,
+        email: email,
+        providerId: providerId,
       });
       if (!member) {
         throw new BadRequestException();
