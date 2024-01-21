@@ -23,7 +23,7 @@ describe('ChatService', () => {
   let chattingMessageRepository: Repository<ChattingMessage>;
   let membersRepository: Repository<Member>;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ChatService,
@@ -54,7 +54,7 @@ describe('ChatService', () => {
     );
   });
 
-  afterEach(() => {
+  afterAll(() => {
     jest.clearAllMocks();
   });
 

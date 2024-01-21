@@ -17,7 +17,7 @@ describe('MembersService', () => {
   let service: MembersService;
   let repository: Repository<Member>;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         MembersService,
@@ -32,7 +32,7 @@ describe('MembersService', () => {
     repository = module.get<Repository<Member>>(getRepositoryToken(Member));
   });
 
-  afterEach(() => {
+  afterAll(() => {
     jest.clearAllMocks();
   });
 

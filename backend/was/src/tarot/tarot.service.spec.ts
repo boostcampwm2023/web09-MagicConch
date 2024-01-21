@@ -17,7 +17,7 @@ describe('TarotService', () => {
   let tarotCardRepository: Repository<TarotCard>;
   let tarotResultRepository: Repository<TarotResult>;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         TarotService,
@@ -41,7 +41,7 @@ describe('TarotService', () => {
     );
   });
 
-  afterEach(() => {
+  afterAll(() => {
     jest.clearAllMocks();
   });
 
