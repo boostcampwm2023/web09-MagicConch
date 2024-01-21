@@ -17,12 +17,12 @@ echo "The $STOP_TARGET version is currently running on the server. Starting the 
 DOCKER_COMPOSE_FILE="compose.$RUN_TARGET-deploy.yml"
 sudo docker-compose -f "$DOCKER_COMPOSE_FILE" pull
 sudo docker-compose -f "$DOCKER_COMPOSE_FILE" up -d
-sleep 20
+sleep 50
 
 echo "Starting health check for the new version of the application."
 
 HEALTH_CHECK_PASSED=true
-RUN_CONTAINER_IDS=$(sudo docker ps --filter "name=$RUN_TARGET" --quiet)
+RUN_CONTAINER_IDS=$(sudo docker ps --filter "name=$RUN_TARGET" --quiet --all)
 
 for CONTAINER_ID in $RUN_CONTAINER_IDS; do
   HEALTH_STATUS=$(sudo docker inspect --format "{{.Health.Status}}" $CONTAINER_ID)
