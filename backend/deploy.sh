@@ -25,7 +25,7 @@ HEALTH_CHECK_PASSED=true
 RUN_CONTAINER_IDS=$(sudo docker ps --filter "name=$RUN_TARGET" --quiet --all)
 
 for CONTAINER_ID in $RUN_CONTAINER_IDS; do
-  HEALTH_STATUS=$(sudo docker inspect --format "{{.Status}}" $CONTAINER_ID)
+  HEALTH_STATUS=$(sudo docker inspect --format "{{.State.Health.Status}}" $CONTAINER_ID)
   if [ "$HEALTH_STATUS" != "healthy" ]; then
     HEALTH_CHECK_PASSED=false
     break
