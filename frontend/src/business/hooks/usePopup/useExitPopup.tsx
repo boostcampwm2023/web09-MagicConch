@@ -13,6 +13,7 @@ export function useExitPopup() {
   const openExitPopup = ({ onConfirm, onCancel }: openExitPopupParams) => {
     open(({ close }) => (
       <Popup
+        close={close}
         onConfirm={() => onConfirm({ close })}
         onCancel={() => onCancel?.({ close })}
       >

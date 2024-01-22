@@ -23,6 +23,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.signal
+    env_file: .env
     environment:
       - PORT=3003
     expose:

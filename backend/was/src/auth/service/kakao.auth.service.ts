@@ -122,8 +122,8 @@ export class KakaoAuthService extends AuthService {
         'Content-type': CONTENT_TYPE.KAKAO,
       },
     });
-    const detail: any = { status: res.code, body: await res.json() };
-    if (detail.code === 200) {
+    const detail: any = { status: res.status, body: await res.json() };
+    if (detail.status === 200) {
       return ProfileDto.fromKakao(detail.body.kakao_account);
     }
     throw new BadRequestException(ERR_MSG.OAUTH_KAKAO_USER_FAILED);
@@ -138,7 +138,7 @@ export class KakaoAuthService extends AuthService {
     const res: any = await fetch(OAUTH_URL.KAKAO_ACCESS_TOKEN, {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
-    const detail: any = { status: res.code, body: await res.json() };
+    const detail: any = { status: res.status, body: await res.json() };
     if (detail.status === 200) {
       return detail.body as KakaoAccessTokenInfoDto;
     }

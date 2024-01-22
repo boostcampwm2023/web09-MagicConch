@@ -18,6 +18,7 @@ services:
   signal-green:
     image: "${DOCKER_USERNAME}/magicconch:signal-green-${GITHUB_SHA}"
     container_name: "signal-green"
+    env_file: .env
     environment:
       - PORT=3003
     expose:

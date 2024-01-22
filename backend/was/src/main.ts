@@ -10,9 +10,10 @@ async function bootstrap() {
   const app: INestApplication = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: '*',
+    origin: process.env.CORS_ALLOW_DOMAIN,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
+    allowedHeaders: ['Authorization', 'Content-type'],
   });
   app.enableShutdownHooks();
 

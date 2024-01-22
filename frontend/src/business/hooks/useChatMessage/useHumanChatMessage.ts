@@ -1,8 +1,7 @@
+import { useDataChannel } from '../useWebRTC';
 import { useEffect, useRef, useState } from 'react';
 
 import { MessageButton } from '@components/ChatContainer';
-
-import WebRTC from '@business/services/WebRTC';
 
 import { ProfileInfo, useProfileInfo } from '@stores/zustandStores/useProfileInfo';
 
@@ -15,7 +14,7 @@ import useChatMessage from './useChatMessage';
 const { PICK_CARD, CHAT_MESSAGE } = HumanChatEvents;
 
 export function useHumanChatMessage() {
-  const { dataChannels } = WebRTC.getInstace();
+  const { dataChannels } = useDataChannel();
   const chatChannel = dataChannels.get('chatChannel');
 
   const { messages, pushMessage } = useChatMessage();

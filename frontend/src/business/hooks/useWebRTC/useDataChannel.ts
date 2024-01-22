@@ -17,7 +17,7 @@ export function useDataChannel() {
     myProfile: state.myProfile,
   }));
 
-  const webRTC = WebRTC.getInstace();
+  const webRTC = WebRTC.getInstance();
 
   const initMediaInfoChannel = () => {
     const mediaInfoChannel = webRTC.addDataChannel('mediaInfoChannel');
@@ -35,8 +35,8 @@ export function useDataChannel() {
     });
 
     mediaInfoChannel?.addEventListener('open', function () {
-      const audioTrack = webRTC.localStream?.getAudioTracks()[0];
-      const videoTrack = webRTC.localStream?.getVideoTracks()[0];
+      const audioTrack = webRTC.getFirstAudioTrack();
+      const videoTrack = webRTC.getFirstVideoTrack();
 
       mediaInfoChannel?.send(
         JSON.stringify([
@@ -91,5 +91,5 @@ export function useDataChannel() {
     initNicknameChannel();
   };
 
-  return { initDataChannels };
+  return { initDataChannels, dataChannels: webRTC.getDataChannels() };
 }
