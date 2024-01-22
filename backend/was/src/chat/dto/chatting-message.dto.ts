@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsString, IsUUID } from 'class-validator';
 import { ChattingMessage } from '../entities';
 
-export class ChattingMessageResponseDto {
+export class ChattingMessageDto {
   @IsUUID()
   @ApiProperty({ description: '채팅 메시지 ID', required: true })
   readonly id: string;
@@ -15,7 +15,7 @@ export class ChattingMessageResponseDto {
   @ApiProperty({ description: '채팅 메시지', required: true })
   readonly message: string;
 
-  static fromEntity(entity: ChattingMessage): ChattingMessageResponseDto {
+  static fromEntity(entity: ChattingMessage): ChattingMessageDto {
     return { ...entity };
   }
 }
