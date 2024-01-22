@@ -31,10 +31,10 @@
       "@mocks/*": ["mocks/*"]
     },
 
-    "types": ["vitest/globals"],
+    // "types": ["vitest/globals"],
     
   },
   "typeRoots": ["./node_modules/@types", "./src/@types"],
-  "include": ["src", "vite-env.d.ts", "@types", ".src/test/setup.ts"],
+  "include": ["src", "vite-env.d.ts", "@types", ".src/test/setup.ts", "__mocks__"],
   "references": [{ "path": "./tsconfig.node.json" }],
 }
