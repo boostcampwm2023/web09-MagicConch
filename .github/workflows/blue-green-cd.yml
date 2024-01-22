@@ -72,7 +72,6 @@ jobs:
 
       - name: Run a New Version of the application on Remote Server
         uses: appleboy/ssh-action@master
-        id: deploy
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
