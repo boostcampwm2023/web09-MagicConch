@@ -36,7 +36,7 @@ export const rootRouter = createBrowserRouter(
         element={<ResultSharePage />}
       />
       <Route
-        path="/oauth2/redirect"
+        path="/oauth2redirect/kakao"
         element={<OAuthRedirectHandlePage />}
       />
     </Route>,
