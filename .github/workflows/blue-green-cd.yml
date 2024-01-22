@@ -81,7 +81,8 @@ jobs:
           script: |
             cd ~/app/backend
             chmod +x deploy.sh
-            source deploy.sh || export DEPLOYMENT_SUCCESS=1
+            export DEPLOYMENT_SUCCESS='success'
+            source deploy.sh || export DEPLOYMENT_SUCCESS='failure'
 
       - uses: 8398a7/action-slack@v3
         with:
