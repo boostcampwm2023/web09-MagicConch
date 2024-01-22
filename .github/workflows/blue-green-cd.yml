@@ -80,12 +80,14 @@ jobs:
           script: |
             cd ~/app/backend
             chmod +x deploy.sh
-            source deploy.sh
+            export DEPLOYMENT_SUCCESS='success'
+            source deploy.sh || export DEPLOYMENT_SUCCESS='failure'
 
       - uses: 8398a7/action-slack@v3
         with:
-          status: ${{ job.status }}
+          status: ${{ env.DEPLOYMENT_SUCCESS }}
           author_name: Blue/Green CD
-          fields: message,author,action,workflow,job,took,pullRequest
+          fields: message,author,action,workflow,job
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URI_FOR_GITHUB_ACTIONS }}
+        if: always()
