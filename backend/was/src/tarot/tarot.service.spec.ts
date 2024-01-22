@@ -94,7 +94,7 @@ describe('TarotService', () => {
         .spyOn(tarotCardRepository, 'findOneBy')
         .mockResolvedValueOnce(null);
 
-      const wrongTarotCardNo = 80;
+      const wrongTarotCardNo: number = -1;
       await expect(
         service.findTarotCardByCardNo(wrongTarotCardNo),
       ).rejects.toThrow(NotFoundException);
@@ -124,7 +124,7 @@ describe('TarotService', () => {
         .spyOn(tarotResultRepository, 'findOneBy')
         .mockResolvedValueOnce(null);
 
-      const wrongResultId = 'wrongResultId';
+      const wrongResultId: string = 'wrongResultId';
       await expect(service.findTarotResultById(wrongResultId)).rejects.toThrow(
         NotFoundException,
       );

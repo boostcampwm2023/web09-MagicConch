@@ -15,6 +15,7 @@ import {
 import { diffMemberId, memberId, memberMock } from 'src/mocks/members';
 import { Repository } from 'typeorm';
 import { ChatService } from './chat.service';
+import { ChattingMessageDto, ChattingRoomDto } from './dto';
 import { ChattingMessage, ChattingRoom } from './entities';
 
 describe('ChatService', () => {
@@ -123,7 +124,8 @@ describe('ChatService', () => {
         .spyOn(chattingRoomRepository, 'findBy')
         .mockResolvedValueOnce(roomMocks);
 
-      const expectation = await service.findRoomsById(roomId);
+      const expectation: ChattingRoomDto[] =
+        await service.findRoomsById(roomId);
       expect(expectation).toEqual(
         roomMocks.map((room) =>
           expect.objectContaining({ id: room.id, title: room.title }),
@@ -139,7 +141,8 @@ describe('ChatService', () => {
         .spyOn(chattingMessageRepository, 'findBy')
         .mockResolvedValueOnce(messageMocks);
 
-      const expectation = await service.findMessagesById(roomId);
+      const expectation: ChattingMessageDto[] =
+        await service.findMessagesById(roomId);
       expect(expectation).toEqual(
         messageMocks.map((message) =>
           expect.objectContaining({
