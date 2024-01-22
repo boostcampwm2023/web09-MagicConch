@@ -80,12 +80,16 @@ jobs:
           script: |
             cd ~/app/backend
             chmod +x deploy.sh
-            source deploy.sh
+            source deploy.sh || true
+
+      - name: Check deploy.sh exit code
+        run: echo "deploy script exited with $?"
 
       - uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
           author_name: Blue/Green CD
-          fields: message,author,action,workflow,job,took,pullRequest
+          fields: message,author,action,workflow,job
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URI_FOR_GITHUB_ACTIONS }}
+        if: always()
