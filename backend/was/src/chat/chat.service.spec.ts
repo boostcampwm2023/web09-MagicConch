@@ -24,7 +24,7 @@ describe('ChatService', () => {
   let membersRepository: Repository<Member>;
 
   beforeAll(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const moduleRef: TestingModule = await Test.createTestingModule({
       providers: [
         ChatService,
         {
@@ -42,14 +42,14 @@ describe('ChatService', () => {
       ],
     }).compile();
 
-    service = module.get<ChatService>(ChatService);
-    chattingRoomRepository = module.get<Repository<ChattingRoom>>(
+    service = moduleRef.get<ChatService>(ChatService);
+    chattingRoomRepository = moduleRef.get<Repository<ChattingRoom>>(
       getRepositoryToken(ChattingRoom),
     );
-    chattingMessageRepository = module.get<Repository<ChattingMessage>>(
+    chattingMessageRepository = moduleRef.get<Repository<ChattingMessage>>(
       getRepositoryToken(ChattingMessage),
     );
-    membersRepository = module.get<Repository<Member>>(
+    membersRepository = moduleRef.get<Repository<Member>>(
       getRepositoryToken(Member),
     );
   });

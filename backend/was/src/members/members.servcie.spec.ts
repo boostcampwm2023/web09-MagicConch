@@ -18,7 +18,7 @@ describe('MembersService', () => {
   let repository: Repository<Member>;
 
   beforeAll(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const moduleRef: TestingModule = await Test.createTestingModule({
       providers: [
         MembersService,
         {
@@ -28,8 +28,8 @@ describe('MembersService', () => {
       ],
     }).compile();
 
-    service = module.get<MembersService>(MembersService);
-    repository = module.get<Repository<Member>>(getRepositoryToken(Member));
+    service = moduleRef.get<MembersService>(MembersService);
+    repository = moduleRef.get<Repository<Member>>(getRepositoryToken(Member));
   });
 
   afterAll(() => {

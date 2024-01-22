@@ -18,7 +18,7 @@ describe('TarotService', () => {
   let tarotResultRepository: Repository<TarotResult>;
 
   beforeAll(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const moduleRef: TestingModule = await Test.createTestingModule({
       providers: [
         TarotService,
         {
@@ -32,11 +32,11 @@ describe('TarotService', () => {
       ],
     }).compile();
 
-    service = module.get<TarotService>(TarotService);
-    tarotCardRepository = module.get<Repository<TarotCard>>(
+    service = moduleRef.get<TarotService>(TarotService);
+    tarotCardRepository = moduleRef.get<Repository<TarotCard>>(
       getRepositoryToken(TarotCard),
     );
-    tarotResultRepository = module.get<Repository<TarotResult>>(
+    tarotResultRepository = moduleRef.get<Repository<TarotResult>>(
       getRepositoryToken(TarotResult),
     );
   });
@@ -61,7 +61,7 @@ describe('TarotService', () => {
         .spyOn(tarotResultRepository, 'save')
         .mockResolvedValueOnce(tarotResultMock);
 
-      expect(
+      await expect(
         service.createTarotResult(createTarotResultDto),
       ).resolves.not.toThrow();
       expect(saveMock).toHaveBeenCalledWith({
