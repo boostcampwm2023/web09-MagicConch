@@ -3,7 +3,7 @@ name: Blue/Green CD
 on:
   push:
     paths: ["backend/**"]
-    branches: ["dev"]
+    branches: ["dev", "BE/bugfix/#488-도커-healthcheck"]
 
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
