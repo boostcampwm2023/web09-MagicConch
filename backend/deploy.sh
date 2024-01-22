@@ -62,3 +62,6 @@ else
 fi
 
 rm .env
+
+echo "Deployment success."
+exit 0
