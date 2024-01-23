@@ -2,11 +2,11 @@ import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import {
+  resultId,
   tarotCardMock,
-  tarotResultId,
   tarotResultMessage,
   tarotResultMock,
-} from 'src/mocks/tarot';
+} from 'src/tarot/__mocks__';
 import { Repository } from 'typeorm';
 import { CreateTarotResultDto, TarotCardDto, TarotResultDto } from './dto';
 import { TarotCard, TarotResult } from './entities';
@@ -114,9 +114,9 @@ describe('TarotService', () => {
         .mockResolvedValueOnce(tarotResultMock);
 
       const expectation: TarotResultDto =
-        await service.findTarotResultById(tarotResultId);
+        await service.findTarotResultById(resultId);
       expect(expectation).toEqual(tarotResultDto);
-      expect(findOneByMock).toHaveBeenCalledWith({ id: tarotResultId });
+      expect(findOneByMock).toHaveBeenCalledWith({ id: resultId });
     });
 
     it('해당 PK의 타로 결과가 존재하지 않아 NotFoundException을 반환한다', async () => {
