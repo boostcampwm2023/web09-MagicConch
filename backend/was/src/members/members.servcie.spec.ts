@@ -8,7 +8,7 @@ import {
   memberMock,
   providerId,
   updateMemberDtoMock,
-} from 'src/mocks/members';
+} from 'src/members/__mocks__/member';
 import { Repository } from 'typeorm';
 import { Member } from './entities';
 import { MembersService } from './members.service';

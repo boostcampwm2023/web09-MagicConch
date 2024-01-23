@@ -1,7 +1,7 @@
 import { UpdateChattingRoomDto } from 'src/chat/dto';
 import { ChattingRoom } from 'src/chat/entities';
+import { memberMock } from 'src/members/__mocks__/member';
 import { Member } from 'src/members/entities';
-import { memberMock } from '../../mocks/members';
 
 function makeRoomMock(roomId: string, memberMock: Member): ChattingRoom {
   const roomMock: ChattingRoom = new ChattingRoom();

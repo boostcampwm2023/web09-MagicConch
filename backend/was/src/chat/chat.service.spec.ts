@@ -1,19 +1,25 @@
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import {
+  diffMemberId,
+  memberId,
+  memberMock,
+} from 'src/members/__mocks__/member';
 import { Member } from 'src/members/entities';
+import { Repository } from 'typeorm';
 import {
   createMessageDtoMock,
   messageMock,
   messageMocks,
+} from './__mocks__/chatting-message';
+import {
   roomId,
   roomMock,
   roomMocks,
   updateRoomDtoMock,
   wrongRoomId,
-} from 'src/mocks/chat';
-import { diffMemberId, memberId, memberMock } from 'src/mocks/members';
-import { Repository } from 'typeorm';
+} from './__mocks__/chatting-room';
 import { ChatService } from './chat.service';
 import { ChattingMessageDto, ChattingRoomDto } from './dto';
 import { ChattingMessage, ChattingRoom } from './entities';
