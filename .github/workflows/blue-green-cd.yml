@@ -41,7 +41,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          source: "backend/.env,backend/deploy.sh,backend/config,backend/compose.blue-deploy.yml,backend/compose.green-deploy.yml,backend/Dockerfile.nginx"
+          source: "backend/.env,backend/deploy.sh,backend/send-slack-message.sh,backend/config,backend/compose.blue-deploy.yml,backend/compose.green-deploy.yml,backend/Dockerfile.nginx"
           target: "~/app/"
           overwrite: true
 
@@ -72,22 +72,21 @@ jobs:
 
       - name: Run a New Version of the application on Remote Server
         uses: appleboy/ssh-action@master
+        env:
+          SLACK_WEBHOOK_URI: ${{ secrets.SLACK_WEBHOOK_URI_FOR_GITHUB_ACTIONS }}
+          GITHUB_WORKFLOW: ${{ github.workflow }}
+          GITHUB_REF: ${{ github.ref }}
+          GITHUB_ACTOR: ${{ github.actor }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
+          envs: SLACK_WEBHOOK_URI,GITHUB_WORKFLOW,GITHUB_REF,GITHUB_ACTOR
           script: |
             cd ~/app/backend
             chmod +x deploy.sh
-            export DEPLOYMENT_SUCCESS='success'
-            source deploy.sh || export DEPLOYMENT_SUCCESS='failure'
-
-      - uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ env.DEPLOYMENT_SUCCESS }}
-          author_name: Blue/Green CD
-          fields: message,author,action,workflow,job
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URI_FOR_GITHUB_ACTIONS }}
-        if: always()
+            DEPLOYMENT_RESULT='Success'
+            ./deploy.sh || DEPLOYMENT_RESULT='Fail'
+            chmod +x send-slack-message.sh
+            ./send-slack-message.sh $SLACK_WEBHOOK_URI $DEPLOYMENT_RESULT $GITHUB_REF $GITHUB_ACTOR $GITHUB_WORKFLOW
