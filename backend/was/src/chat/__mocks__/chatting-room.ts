@@ -1,7 +1,7 @@
 import { UpdateChattingRoomDto } from 'src/chat/dto';
 import { ChattingRoom } from 'src/chat/entities';
 import { Member } from 'src/members/entities';
-import { memberMock } from '../members';
+import { memberMock } from '../../mocks/members';
 
 function makeRoomMock(roomId: string, memberMock: Member): ChattingRoom {
   const roomMock: ChattingRoom = new ChattingRoom();
@@ -17,9 +17,9 @@ function makeUpdateRoomDtoMock(title: string): UpdateChattingRoomDto {
   return updateRoomDto;
 }
 
-export const roomId: string = 'roomId';
+export const roomId: string = '12345678-1234-5678-1234-567812345678';
 
-export const wrongRoomId: string = 'wrongRoomId';
+export const wrongRoomId: string = '12345678-1234-5678-1234-567812345679';
 
 export const roomMock: ChattingRoom = makeRoomMock(roomId, memberMock);
 
