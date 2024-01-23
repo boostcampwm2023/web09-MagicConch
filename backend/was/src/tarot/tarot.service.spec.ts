@@ -1,13 +1,13 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { tarotCardMock } from './__mocks__/tarot-card';
 import {
   resultId,
-  tarotCardMock,
   tarotResultMessage,
   tarotResultMock,
-} from 'src/tarot/__mocks__';
-import { Repository } from 'typeorm';
+} from './__mocks__/tarot-result';
 import { CreateTarotResultDto, TarotCardDto, TarotResultDto } from './dto';
 import { TarotCard, TarotResult } from './entities';
 import { TarotService } from './tarot.service';
