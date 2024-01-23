@@ -5,7 +5,7 @@ import * as Media from '@business/services/Media';
 
 import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
 
-import { mockMediaStream } from '@mocks/webRTC';
+import { __setMockMediaStreamTracks, createFakeMediaStreamTrack, mockMediaStream } from '@mocks/webRTC';
 
 import { useMedia } from './useMedia';
 
@@ -31,6 +31,13 @@ describe('useMedia훅', () => {
 
   beforeEach(() => {
     rerenderHook();
+    __setMockMediaStreamTracks([
+      createFakeMediaStreamTrack('video', mockCameraId),
+      createFakeMediaStreamTrack('audio', mockAudioId),
+    ]);
+  });
+
+  afterEach(() => {
     vi.clearAllMocks();
   });
 
@@ -104,11 +111,6 @@ describe('useMedia훅', () => {
 
     describe('내 마이크가 꺼져있다면(전역상태 myMicOn이 false라면)', () => {
       it('stream의 audioTrack들의 enabled가 false가 됨', async () => {
-        const mockTracks = [{ enabled: true }, { enabled: false }] as any;
-        // 모킹한걸 또 한번 더 모킹..?
-        // TODO: 이거 더 좋은 방법 없을까?
-        vi.spyOn(mockMediaStream, 'getAudioTracks').mockReturnValue(mockTracks);
-
         act(() => {
           useMediaInfo.getState().setMyMicOn(false);
         });
@@ -124,9 +126,6 @@ describe('useMedia훅', () => {
 
     describe('내 카메라가 꺼져있다면(전역상태 myVideoOn이 false라면)', () => {
       it('stream의 videoTrack들의 enabled가 false가 됨', async () => {
-        const mockTracks = [{ enabled: false }, { enabled: true }] as any;
-        vi.spyOn(mockMediaStream, 'getVideoTracks').mockReturnValue(mockTracks);
-
         act(() => {
           useMediaInfo.getState().setMyVideoOn(false);
         });

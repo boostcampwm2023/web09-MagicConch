@@ -5,33 +5,35 @@ export const createFakeMediaStreamTrack = (kind: 'video' | 'audio', id: string):
 });
 
 export const mockMediaStream = {
-  getTracks: vi
-    .fn()
-    .mockImplementation(() => [
-      createFakeMediaStreamTrack('video', 'video1'),
-      createFakeMediaStreamTrack('video', 'video2'),
-      createFakeMediaStreamTrack('audio', 'audio1'),
-      createFakeMediaStreamTrack('audio', 'audio2'),
-    ]),
-  getVideoTracks: vi
-    .fn()
-    .mockImplementation(() => [
-      createFakeMediaStreamTrack('video', 'video1'),
-      createFakeMediaStreamTrack('video', 'video2'),
-    ]),
-  getAudioTracks: vi
-    .fn()
-    .mockImplementation(() => [
-      createFakeMediaStreamTrack('audio', 'audio1'),
-      createFakeMediaStreamTrack('audio', 'audio2'),
-    ]),
-} as any as MediaStream;
+  getTracks: vi.fn() as any,
+  getVideoTracks: vi.fn() as any,
+  getAudioTracks: vi.fn() as any,
+} as any;
 
-export const mockRTCTrackEvent = {
-  streams: [
-    createFakeMediaStreamTrack('video', 'video1'),
-    createFakeMediaStreamTrack('video', 'video2'),
-    createFakeMediaStreamTrack('audio', 'audio1'),
-    createFakeMediaStreamTrack('audio', 'audio2'),
-  ],
-};
+let originalNavigator: Navigator;
+let tracks: MediaStreamTrack[];
+
+export function __setMockNavigatorWithTracks(tracks: MediaStreamTrack[]) {
+  originalNavigator = window.navigator;
+  __setMockMediaStreamTracks(tracks);
+
+  window.navigator = {
+    mediaDevices: {
+      enumerateDevices: vi.fn().mockResolvedValue(tracks),
+      getUserMedia: vi.fn().mockResolvedValue(mockMediaStream),
+    },
+  } as any as Navigator;
+}
+
+export function __setMockMediaStreamTracks(tracks: MediaStreamTrack[]) {
+  tracks = tracks;
+  vi.spyOn(mockMediaStream, 'getTracks').mockReturnValue(tracks);
+  vi.spyOn(mockMediaStream, 'getVideoTracks').mockReturnValue(tracks.filter(track => track.kind === 'video'));
+  vi.spyOn(mockMediaStream, 'getAudioTracks').mockReturnValue(tracks.filter(track => track.kind === 'audio'));
+}
+
+afterAll(() => {
+  window.navigator = originalNavigator;
+  tracks = [];
+  vi.clearAllMocks();
+});
