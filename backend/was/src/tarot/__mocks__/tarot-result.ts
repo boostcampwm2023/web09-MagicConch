@@ -7,11 +7,13 @@ function makeTarotResultMock(id: string, message: string): TarotResult {
   return tarotResult;
 }
 
-export const tarotResultId: string = 'tarotResultId';
+export const resultId: string = '12345678-1234-5678-1234-567812345678';
+
+export const invalidResultId: string = '12345678-1234-5678-1234-567812345679';
 
 export const tarotResultMessage: string = 'tarotResultMessage';
 
 export const tarotResultMock: TarotResult = makeTarotResultMock(
-  tarotResultId,
+  resultId,
   tarotResultMessage,
 );
