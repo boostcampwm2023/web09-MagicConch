@@ -5,6 +5,7 @@ export const iconColorMap = {
   textWeak: 'text-weak',
   textWhite: 'text-white-default',
   kakaoIcon: 'kakao-icon',
+  kakao: 'text-kakao',
 };
 
 export type IconColor = keyof typeof iconColorMap;
