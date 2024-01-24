@@ -15,6 +15,7 @@ export const ButtonColorMap: Record<string, string> = {
   disabled: 'surface-box text-weak',
   dark: 'surface-alt text-white',
   transparent: 'bg-transparent hover:bg-transparent hover:border-transparent',
+  kakao: 'surface-kakao text-kakao',
 };
 
 export type ButtonColor = keyof typeof ButtonColorMap;

@@ -3,11 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import Background from '@components/Background';
 import { Button, KakaoLoginButton } from '@components/Buttons';
 
+import { useLoginPopup } from '@business/hooks/usePopup/useLoginPopup';
+
 function HomePage() {
   const navigate = useNavigate();
+  const { openLoginPopup } = useLoginPopup();
 
   const moveAiChat = () => {
-    navigate('/chat/ai');
+    // navigate('/chat/ai');
+    openLoginPopup();
   };
 
   const moveHumanChat = () => {
