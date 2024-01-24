@@ -19,7 +19,7 @@ export default function LoginPopup({ moveAiChat }: LoginPopupProps) {
             width={240}
             onClick={moveAiChat}
           >
-            로그인없이 타로 볼래요
+            로그인 없이 타로 볼래요
           </Button>
         </div>
       </div>
