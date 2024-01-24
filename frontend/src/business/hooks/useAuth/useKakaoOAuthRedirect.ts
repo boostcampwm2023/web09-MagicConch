@@ -7,7 +7,9 @@ export function useKakaoOAuthRedirect() {
   const code = new URLSearchParams(window.location.search).get('code');
 
   const login = async () => {
-    const res = await fetch(KAKAO_LOGIN_URL + `?code=${code}`);
+    const res = await fetch(KAKAO_LOGIN_URL + `?code=${code}`, {
+      credentials: 'include',
+    });
     if (!res.ok || res.status !== 200) {
       navigate('/');
     }
