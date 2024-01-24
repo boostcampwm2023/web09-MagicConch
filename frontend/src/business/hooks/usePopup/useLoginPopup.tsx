@@ -2,11 +2,15 @@ import LoginPopup from '@components/Popup/LoginPopup';
 
 import useOverlay from '@business/hooks/useOverlay';
 
-export function useLoginPopup() {
+interface UseLoginPopupParams {
+  moveAiChat: () => void;
+}
+
+export function useLoginPopup({ moveAiChat }: UseLoginPopupParams) {
   const { open } = useOverlay();
 
   const openLoginPopup = () => {
-    open(() => <LoginPopup></LoginPopup>);
+    open(() => <LoginPopup moveAiChat={moveAiChat}></LoginPopup>);
   };
 
   return { openLoginPopup };
