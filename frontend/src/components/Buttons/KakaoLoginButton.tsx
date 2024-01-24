@@ -21,7 +21,7 @@ function KakaoLoginButton({ width }: KakaoLoginButtonProps) {
         <div className="absolute h-full flex-with-center">
           <Icon icon="f7:chat-bubble-fill" />
         </div>
-        <div className="w-full">카카오로 시작하기</div>
+        <div className="pl-12">카카오로 시작하기</div>
       </div>
     </Button>
   );
