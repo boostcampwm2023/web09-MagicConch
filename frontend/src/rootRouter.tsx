@@ -3,6 +3,7 @@ import { Route, createBrowserRouter, createRoutesFromElements } from 'react-rout
 import AIChatPage from '@pages/AIChatPage';
 import HomePage from '@pages/HomePage';
 import HumanChatPage, { ChattingPage, SettingPage } from '@pages/HumanChatPage';
+import OAuthRedirectHandlePage from '@pages/OAuth2RedirectHandlePage';
 import ResultSharePage from '@pages/ResultSharePage';
 
 export const rootRouter = createBrowserRouter(
@@ -33,6 +34,10 @@ export const rootRouter = createBrowserRouter(
       <Route
         path="/result/:id"
         element={<ResultSharePage />}
+      />
+      <Route
+        path="/oauth2redirect/kakao"
+        element={<OAuthRedirectHandlePage />}
       />
     </Route>,
   ),

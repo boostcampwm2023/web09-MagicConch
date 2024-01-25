@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
 import Background from '@components/Background';
-import { Button } from '@components/Buttons';
+import { Button, KakaoLoginButton } from '@components/Buttons';
 
 function HomePage() {
   const navigate = useNavigate();
@@ -16,14 +16,17 @@ function HomePage() {
 
   return (
     <Background>
-      <div className="relative top-75 flex gap-36 z-1">
-        <Button onClick={moveAiChat}>AI에게 타로보기</Button>
-        <Button
-          onClick={moveHumanChat}
-          color="dark"
-        >
-          채팅방 개설하기
-        </Button>
+      <div>
+        <KakaoLoginButton />
+        <div className="relative top-75 flex gap-36 z-1">
+          <Button onClick={moveAiChat}>AI에게 타로보기</Button>
+          <Button
+            onClick={moveHumanChat}
+            color="dark"
+          >
+            채팅방 개설하기
+          </Button>
+        </div>
       </div>
     </Background>
   );
