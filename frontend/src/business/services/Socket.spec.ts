@@ -90,11 +90,14 @@ describe('Socket 서비스', () => {
     });
 
     it('roomFull 이벤트 발생: alert(ERROR_MESSAGE.FULL_ROOM) 함수가 실행된다.', () => {
-      const spyOnAlert = vi.spyOn(window, 'alert');
+      const originAlert = window.alert;
+      window.alert = vi.fn();
 
       alert(ERROR_MESSAGE.FULL_ROOM);
 
-      expect(spyOnAlert).toBeCalledWith(ERROR_MESSAGE.FULL_ROOM);
+      expect(alert).toBeCalledWith(ERROR_MESSAGE.FULL_ROOM);
+
+      window.alert = originAlert;
     });
 
     it('userExit 이벤트 발생: onExitUser() 함수가 실행된다.', () => {
