@@ -9,7 +9,11 @@ function OAuthRedirectHandlePage() {
     login();
   }, []);
 
-  return <div>카카오 로그인 중...</div>;
+  return (
+    <div className="w-full h-full flex-with-center">
+      <span className="loading loading-spinner loading-lg"></span>
+    </div>
+  );
 }
 
 export default OAuthRedirectHandlePage;
