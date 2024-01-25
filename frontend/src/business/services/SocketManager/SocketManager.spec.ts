@@ -1,4 +1,4 @@
-import SocketManager from '.';
+import { SocketManager } from '.';
 import { io } from 'socket.io-client';
 
 const url = 'http://localhost:3000';

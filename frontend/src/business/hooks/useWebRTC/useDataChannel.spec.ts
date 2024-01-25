@@ -44,6 +44,11 @@ describe('useDataChannel 테스트', () => {
     vi.clearAllMocks();
   });
 
+  afterAll(() => {
+    vi.resetAllMocks();
+    vi.resetModules();
+  });
+
   describe('initDataChannels 함수 테스트: 아래 A ~ B의 함수가 실행됨', () => {
     describe('A. initMediaInfoChannel 함수 테스트', () => {
       it('mediaInfoChannel 데이터 채널 추가 + message와 open 이벤트가 등록됨.', () => {

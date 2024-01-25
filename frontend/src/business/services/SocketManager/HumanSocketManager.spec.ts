@@ -1,6 +1,4 @@
-import { HumanSocketManager } from '.';
-
-import SocketManager from './SocketManager';
+import { HumanSocketManager, SocketManager } from '.';
 
 vi.mock('socket.io-client');
 

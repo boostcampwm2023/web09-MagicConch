@@ -12,8 +12,6 @@ import {
   setRemoteProfileImageState,
 } from './useDataChannel.eventListeners';
 
-const webRTC = WebRTC.getInstance();
-
 export function useDataChannel() {
   const { setRemoteMicOn, setRemoteVideoOn } = useMediaInfo(state => ({
     setRemoteMicOn: state.setRemoteMicOn,
@@ -25,6 +23,7 @@ export function useDataChannel() {
     myNickname: state.myNickname,
     myProfile: state.myProfile,
   }));
+  const webRTC = WebRTC.getInstance();
 
   const initMediaInfoChannel = () => {
     const mediaInfoChannel = webRTC.addDataChannel('mediaInfoChannel');

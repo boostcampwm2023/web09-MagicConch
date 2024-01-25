@@ -1,8 +1,7 @@
+import { SocketManager } from '.';
 import { AIClientEvent, AIServerEvent } from '@tarotmilktea/ai-socketio-event';
 
-import SocketManager from './SocketManager';
-
-class AISocketManager extends SocketManager {
+export class AISocketManager extends SocketManager {
   static instance: AISocketManager | null = null;
 
   private constructor() {
@@ -24,5 +23,3 @@ class AISocketManager extends SocketManager {
     super.emit(eventName, ...eventArgs);
   }
 }
-
-export default AISocketManager;
