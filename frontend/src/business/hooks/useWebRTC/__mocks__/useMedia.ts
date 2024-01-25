@@ -1,7 +1,7 @@
 import { mockMediaStream } from '@mocks/webRTC';
 
-export function useMedia() {
-  return {
-    getLocalStream: vi.fn().mockReturnValue(mockMediaStream),
-  };
-}
+const getLocalStream = vi.fn().mockReturnValue(Promise.resolve(mockMediaStream));
+
+export const useMedia = vi.fn().mockReturnValue({
+  getLocalStream,
+});
