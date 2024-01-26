@@ -106,17 +106,14 @@ describe('useStreamVideoRef 훅', () => {
       },
       {
         scenario: 'remoteStream의 id가 변경되지 않았으면 useEffect를 실행하지 않는다',
-        mediaStream: [{ ...mockMediaStream, id: 'sameId' }],
+        mediaStream: [createMockMediaStream('sameId')],
         willInitLocalVideoRef: true,
         runBeforeRerender: [setRefToStrem],
         resultId: 'sameId',
       },
       {
         scenario: 'remoteStream의 id가 변경되면 remoteVideoRef.srcObject를 새로운 remoteStream으로 변경한다',
-        mediaStream: [
-          { ...mockMediaStream, id: 'oldId' },
-          { ...mockMediaStream, id: 'newId' },
-        ],
+        mediaStream: [createMockMediaStream('oldId'), createMockMediaStream('newId')],
         willInitLocalVideoRef: true,
         runBeforeRerender: [setRefToStrem, setRefToStrem],
         resultId: 'newId',
