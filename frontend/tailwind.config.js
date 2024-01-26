@@ -120,6 +120,7 @@ export default {
         '.text-weak': { color: '#879298' },
         '.text-white-default': { color: '#FFFFFF' },
         '.text-white-alt': { color: '#d7dde4' },
+        '.text-kakao': { color: 'rgba(0, 0, 0, 0.9)' },
         '.kakao-icon': { color: '#FEE500' },
         '.display-bold24': themeBase.bold_L,
         '.display-bold16': themeBase.bold_M,
@@ -152,6 +153,7 @@ export default {
         '.surface-content': { background: '#FFFFFF' },
         '.surface-box': { background: '#ECECEC' },
         '.surface-box-alt': { background: '#7390B1' },
+        '.surface-kakao': { background: '#FEE500' },
       };
       addComponents(surfaceTheme);
     },
