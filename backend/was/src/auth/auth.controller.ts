@@ -7,8 +7,8 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { ApiTags } from '@nestjs/swagger';
+import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import { ERR_MSG } from 'src/common/constants/errors';
 import { PROVIDER_ID } from 'src/common/constants/etc';
@@ -17,17 +17,16 @@ import { JwtPayloadDto } from './dto';
 import { JwtAuthGuard } from './guard';
 import { KakaoAuthService } from './service/kakao.auth.service';
 
+dotenv.config();
+
 @ApiTags('✅ Auth API')
 @Controller('oauth')
 export class AuthController {
   private readonly cookieOptions: object;
-  constructor(
-    private readonly configService: ConfigService,
-    private readonly kakaoAuthService: KakaoAuthService,
-  ) {
+  constructor(private readonly kakaoAuthService: KakaoAuthService) {
     this.cookieOptions = {
       httpOnly: true,
-      secure: this.configService.get('ENV') === 'PROD',
+      secure: process.env.ENV === 'PROD',
       sameSite: 'lax',
       maxAge: 3600,
     };

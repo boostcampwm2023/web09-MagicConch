@@ -1,6 +1,8 @@
 import { DynamicModule, Global, Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 @Global()
 @Module({})
@@ -10,11 +12,10 @@ export class JwtConfigModule {
       module: JwtConfigModule,
       imports: [
         JwtModule.registerAsync({
-          inject: [ConfigService],
-          useFactory: (configService: ConfigService): JwtModule => {
+          useFactory: (): JwtModule => {
             return {
-              secret: configService.get('JWT_SECRET_KEY'),
-              signOptions: { expiresIn: configService.get('JWT_EXPIRES_IN') },
+              secret: process.env.JWT_SECRET_KEY,
+              signOptions: { expiresIn: process.env.JWT_EXPIRES_IN },
             };
           },
         }),

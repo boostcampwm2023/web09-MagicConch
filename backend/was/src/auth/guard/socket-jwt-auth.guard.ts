@@ -11,7 +11,10 @@ export class SocketJwtAuthGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const client = context.switchToWs().getClient();
-    const token: string | null = client.handshake.headers.authorization;
+    /**
+     * TODO : 쿠키 어디에 붙는지 확인 후 수정 필요
+     */
+    const token: string | null = client.request.cookie.magicconch;
     if (!token) {
       return true;
     }

@@ -5,9 +5,9 @@ import {
   InternalServerErrorException,
   NestInterceptor,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import * as Sentry from '@sentry/node';
 import { IncomingWebhook } from '@slack/client';
+import * as dotenv from 'dotenv';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { LoggerService } from 'src/logger/logger.service';
@@ -16,16 +16,15 @@ import { ERR_MSG } from '../constants/errors';
 import { logErrorWithStack, makeErrorLogMessage } from '../utils/logging';
 import { makeSlackMessage } from '../utils/slack-webhook';
 
+dotenv.config();
+
 @Injectable()
 export class ErrorsInterceptor implements NestInterceptor {
   private readonly slackWebhook: IncomingWebhook;
 
-  constructor(
-    private readonly logger: LoggerService,
-    private readonly configService: ConfigService,
-  ) {
+  constructor(private readonly logger: LoggerService) {
     this.slackWebhook = new IncomingWebhook(
-      this.configService.get('SLACK_WEBHOOK_URI_FOR_WAS') || '',
+      process.env.SLACK_WEBHOOK_URI_FOR_WAS || '',
     );
   }
 

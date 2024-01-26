@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import * as dotenv from 'dotenv';
 import {
   CHAT_MAX_TOKENS,
   CLOVA_API_KEY_NAMES,
@@ -20,12 +20,14 @@ import {
 } from './message';
 import { apiResponseStream2TokenStream } from './stream';
 
+dotenv.config();
+
 @Injectable()
 export class ClovaStudioService implements ChatbotService {
   private readonly apiKeys: ClovaStudioApiKeys;
 
-  constructor(private readonly configService: ConfigService) {
-    this.apiKeys = getAPIKeys(this.configService);
+  constructor() {
+    this.apiKeys = getAPIKeys();
   }
 
   generateTalk(
@@ -59,9 +61,9 @@ export class ClovaStudioService implements ChatbotService {
   }
 }
 
-export function getAPIKeys(configService: ConfigService) {
+export function getAPIKeys() {
   return CLOVA_API_KEY_NAMES.reduce((acc, key) => {
-    const value = configService.get(key);
+    const value = process.env[key];
 
     if (!value) throw new Error(ERR_MSG.AI_API_KEY_NOT_FOUND);
 

@@ -7,14 +7,17 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
+import * as dotenv from 'dotenv';
 import { Server } from 'socket.io';
 import { SocketJwtAuthGuard } from 'src/auth/guard';
 import type { Socket } from 'src/common/types/socket';
 import { LoggerService } from 'src/logger/logger.service';
 import { SocketService } from './socket.service';
 
+dotenv.config();
+
 @WebSocketGateway({
-  cors: { origin: '*' },
+  cors: { origin: process.env.CORS_ALLOW_DOMAIN, credentials: true },
 })
 export class SocketGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
@@ -28,6 +31,7 @@ export class SocketGateway
   ) {}
 
   afterInit(server: Server) {
+    console.log(this.server);
     this.logger.info('🚀 웹소켓 서버 초기화');
   }
 
