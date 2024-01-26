@@ -96,5 +96,5 @@ export function useControllMedia({ localVideoRef }: useContorollMediaParams) {
     webRTC.replacePeerconnectionAudioTrack2NowLocalStream();
   };
 
-  return { changeMyVideoTrack, changeMyAudioTrack, toggleVideo, toggleAudio };
+  return { changeMyVideoTrack, changeMyAudioTrack, toggleVideo, toggleAudio, setLocalVideoSrcObj };
 }
