@@ -4,8 +4,8 @@ import { renderHook } from '@testing-library/react';
 
 import { HumanSocketManager } from '@business/services/SocketManager';
 
-vi.mock('@business/hooks/usePopup/usePasswordPopup');
-vi.mock('@business/services/SocketManager/HumanSocketManager');
+vi.mock('@business/hooks/usePopup');
+vi.mock('@business/services/SocketManager');
 
 describe('useSignalingSocket 훅', () => {
   const rerenderHook = () => renderHook(() => useSignalingSocket()).result.current;

@@ -11,7 +11,7 @@ export const mockMediaStream = {
 } as any as MediaStream;
 
 let originalNavigator: Navigator;
-let tracks: MediaStreamTrack[];
+let tracks: MediaStreamTrack[] = [];
 
 export function __setMockNavigatorWithTracks(tracks: MediaStreamTrack[]) {
   originalNavigator = window.navigator;
@@ -25,8 +25,8 @@ export function __setMockNavigatorWithTracks(tracks: MediaStreamTrack[]) {
   } as any as Navigator;
 }
 
-export function __setMockMediaStreamTracks(tracks: MediaStreamTrack[]) {
-  tracks = tracks;
+export function __setMockMediaStreamTracks(_tracks: MediaStreamTrack[]) {
+  tracks = _tracks;
   vi.spyOn(mockMediaStream, 'getTracks').mockReturnValue(tracks);
   vi.spyOn(mockMediaStream, 'getVideoTracks').mockReturnValue(tracks.filter(track => track.kind === 'video'));
   vi.spyOn(mockMediaStream, 'getAudioTracks').mockReturnValue(tracks.filter(track => track.kind === 'audio'));

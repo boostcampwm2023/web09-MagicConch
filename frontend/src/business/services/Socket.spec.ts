@@ -5,7 +5,7 @@ import { HumanSocketManager } from './SocketManager';
 import WebRTC from './WebRTC';
 
 vi.mock('./WebRTC');
-vi.mock('./SocketManager/HumanSocketManager');
+vi.mock('./SocketManager');
 
 describe('Socket 서비스', () => {
   let webRTC: WebRTC;
