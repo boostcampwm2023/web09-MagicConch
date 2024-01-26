@@ -1,1 +1,3 @@
-export default function SideBarButton() {}
+export default function SideBarButton() {
+  return <></>;
+}
