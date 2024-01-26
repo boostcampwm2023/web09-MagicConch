@@ -23,7 +23,7 @@ export class SocketGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
   @WebSocketServer()
-  server: Server;
+  readonly server: Server;
 
   constructor(
     private readonly socketService: SocketService,
@@ -31,7 +31,6 @@ export class SocketGateway
   ) {}
 
   afterInit(server: Server) {
-    console.log(this.server);
     this.logger.info('🚀 웹소켓 서버 초기화');
   }
 
