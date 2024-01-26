@@ -1,3 +1,3 @@
 export default function SideBarButton() {
-  return <></>;
+  return <button></button>;
 }

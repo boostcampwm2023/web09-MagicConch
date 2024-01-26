@@ -3,5 +3,5 @@ interface ContentAreaProps {
 }
 
 export default function ContentArea({ children }: ContentAreaProps) {
-  return <>{children}</>;
+  return <article>{children}</article>;
 }

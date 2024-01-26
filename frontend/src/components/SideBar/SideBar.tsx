@@ -3,5 +3,5 @@ interface SideBarProps {
 }
 
 export default function SideBar({ children }: SideBarProps) {
-  return <>{children}</>;
+  return <aside>{children}</aside>;
 }
