@@ -8,6 +8,31 @@ import { mockMediaStream } from '@mocks/webRTC';
 
 vi.mock('@business/services/WebRTC');
 
+const renderUserStreamVideoRef = () => {
+  const {
+    result: {
+      current: { localVideoRef, remoteVideoRef },
+    },
+    rerender,
+  } = renderHook(() => useStreamVideoRef());
+
+  return { localVideoRef, remoteVideoRef, rerender };
+};
+
+const initRemoteVideoRef = (remoteVideoRef: React.MutableRefObject<HTMLVideoElement | null>) => {
+  act(() => {
+    (remoteVideoRef.current as any) = document.createElement('video');
+  });
+};
+
+const setRefToStrem = (ref: React.MutableRefObject<HTMLVideoElement | null>, stream: MediaStream) => {
+  act(() => {
+    (ref.current as any).srcObject = stream;
+  });
+};
+
+const createMockMediaStream = (id: string) => ({ ...mockMediaStream, id });
+
 describe('useStreamVideoRef 훅', () => {
   let webRTC: WebRTC;
 
@@ -15,23 +40,6 @@ describe('useStreamVideoRef 훅', () => {
     vi.clearAllMocks();
     webRTC = WebRTC.getInstance();
   });
-
-  const renderUserStreamVideoRef = () => {
-    const {
-      result: {
-        current: { localVideoRef, remoteVideoRef },
-      },
-      rerender,
-    } = renderHook(() => useStreamVideoRef());
-
-    return { localVideoRef, remoteVideoRef, rerender };
-  };
-
-  const initRemoteVideoRef = (remoteVideoRef: React.MutableRefObject<HTMLVideoElement | null>) => {
-    act(() => {
-      (remoteVideoRef.current as any) = document.createElement('video');
-    });
-  };
 
   describe('현재 remoteStream의 id가 변경되었을 때', () => {
     [
@@ -50,20 +58,20 @@ describe('useStreamVideoRef 훅', () => {
 
       {
         scenario: 'remoteStream의 id가 변경되지 않았으면 useEffect를 실행하지 않는다',
-        mediaStream: { ...mockMediaStream, id: 'sameId' },
+        mediaStream: createMockMediaStream('sameId'),
         willInitRemoteVideoRef: true,
-        resultMediaStream: { ...mockMediaStream, id: 'sameId' },
+        resultMediaStream: createMockMediaStream('sameId'),
         resultId: 'sameId',
       },
       {
         scenario: 'remoteStream의 id가 변경되면 remoteVideoRef.srcObject를 새로운 remoteStream으로 변경한다',
-        mediaStream: { ...mockMediaStream, id: 'oldId' },
+        mediaStream: createMockMediaStream('oldId'),
         willInitRemoteVideoRef: true,
-        resultMediaStream: { ...mockMediaStream, id: 'newId' },
+        resultMediaStream: createMockMediaStream('newId'),
         resultId: 'newId',
         runBeforeRerender: [
           () => {
-            vi.spyOn(webRTC, 'getRemoteStream').mockReturnValue({ ...mockMediaStream, id: 'newId' });
+            vi.spyOn(webRTC, 'getRemoteStream').mockReturnValue(createMockMediaStream('newId'));
           },
         ],
       },
@@ -100,11 +108,7 @@ describe('useStreamVideoRef 훅', () => {
         scenario: 'remoteStream의 id가 변경되지 않았으면 useEffect를 실행하지 않는다',
         mediaStream: [{ ...mockMediaStream, id: 'sameId' }],
         willInitLocalVideoRef: true,
-        runBeforeRerender: [
-          (ref: any, stream: any) => {
-            ref.current.srcObject = stream;
-          },
-        ],
+        runBeforeRerender: [setRefToStrem],
         resultId: 'sameId',
       },
       {
@@ -114,10 +118,7 @@ describe('useStreamVideoRef 훅', () => {
           { ...mockMediaStream, id: 'newId' },
         ],
         willInitLocalVideoRef: true,
-        runBeforeRerender: [
-          (ref: any, stream: any) => (ref.current.srcObject = stream),
-          (ref: any, stream: any) => (ref.current.srcObject = stream),
-        ],
+        runBeforeRerender: [setRefToStrem, setRefToStrem],
         resultId: 'newId',
       },
     ].forEach(({ scenario, mediaStream, willInitLocalVideoRef, runBeforeRerender, resultId }) => {
