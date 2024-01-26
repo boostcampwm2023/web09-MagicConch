@@ -94,37 +94,37 @@ describe('useStreamVideoRef 훅', () => {
     [
       {
         scenario: 'remoteVideoRef가 초기화 되지 않았으면 아무것도 하지안흠',
-        mediaStream: [mockMediaStream],
+        mediaStreams: [mockMediaStream],
         willInitLocalVideoRef: false,
         resultId: undefined,
       },
       {
         scenario: 'remoteStream이 초기화 되지 않았으면 아무것도 하지안흠',
-        mediaStream: [undefined],
+        mediaStreams: [undefined],
         willInitLocalVideoRef: true,
         resultId: undefined,
       },
       {
         scenario: 'remoteStream의 id가 변경되지 않았으면 useEffect를 실행하지 않는다',
-        mediaStream: [createMockMediaStream('sameId')],
+        mediaStreams: [createMockMediaStream('sameId')],
         willInitLocalVideoRef: true,
-        runBeforeRerender: [setRefToStrem],
+        runsBeforeRerender: [setRefToStrem],
         resultId: 'sameId',
       },
       {
         scenario: 'remoteStream의 id가 변경되면 remoteVideoRef.srcObject를 새로운 remoteStream으로 변경한다',
-        mediaStream: [createMockMediaStream('oldId'), createMockMediaStream('newId')],
+        mediaStreams: [createMockMediaStream('oldId'), createMockMediaStream('newId')],
         willInitLocalVideoRef: true,
-        runBeforeRerender: [setRefToStrem, setRefToStrem],
+        runsBeforeRerender: [setRefToStrem, setRefToStrem],
         resultId: 'newId',
       },
-    ].forEach(({ scenario, mediaStream, willInitLocalVideoRef, runBeforeRerender, resultId }) => {
+    ].forEach(({ scenario, mediaStreams, willInitLocalVideoRef, runsBeforeRerender, resultId }) => {
       it(scenario, () => {
         const { localVideoRef, rerender } = renderUserStreamVideoRef();
 
         willInitLocalVideoRef && initRemoteVideoRef(localVideoRef);
-        runBeforeRerender?.[0]?.(localVideoRef, mediaStream?.[0]) && rerender();
-        runBeforeRerender?.[1]?.(localVideoRef, mediaStream?.[1]) && rerender();
+        runsBeforeRerender?.[0]?.(localVideoRef, mediaStreams?.[0]) && rerender();
+        runsBeforeRerender?.[1]?.(localVideoRef, mediaStreams?.[1]) && rerender();
 
         expect((localVideoRef.current as any)?.srcObject?.id).toBe(resultId);
       });
