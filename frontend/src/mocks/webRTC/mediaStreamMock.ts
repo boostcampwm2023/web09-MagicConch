@@ -8,7 +8,7 @@ export const mockMediaStream = {
   getTracks: vi.fn() as any,
   getVideoTracks: vi.fn() as any,
   getAudioTracks: vi.fn() as any,
-} as any;
+} as any as MediaStream;
 
 let originalNavigator: Navigator;
 let tracks: MediaStreamTrack[];
