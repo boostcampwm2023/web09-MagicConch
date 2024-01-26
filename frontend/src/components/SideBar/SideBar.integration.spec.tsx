@@ -70,9 +70,13 @@ describe('SideBar 관련 컴포넌트 통합 테스트', () => {
   describe('상태가 바뀌는 경우', () => {
     it('side bar hide 상태에서 side bar 버튼을 클릭하면, side bar가 화면에 보여진다.', async () => {
       const { findByText, findByLabelText } = render(<IntegrationComponent />);
+      const { result } = renderHook(() => useSideBarStore());
 
       const sideBar = await findByText('side bar');
       const sideBarButton = await findByLabelText('button');
+
+      result.current.hideSideBar();
+      await sleep(1000);
 
       expect(sideBar).not.toBeVisible();
 
@@ -84,9 +88,13 @@ describe('SideBar 관련 컴포넌트 통합 테스트', () => {
 
     it('side bar hide 상태에서 side bar 버튼을 클릭하면, content area는 x축 기준 화면 중앙에서 왼쪽으로 이동된다.', async () => {
       const { findByText, findByLabelText } = render(<IntegrationComponent />);
+      const { result } = renderHook(() => useSideBarStore());
 
       const contentArea = await findByText('content area');
       const sideBarButton = await findByLabelText('button');
+
+      result.current.hideSideBar();
+      await sleep(1000);
 
       expect(contentArea).toBeCenterOfScreenX();
 
@@ -98,11 +106,12 @@ describe('SideBar 관련 컴포넌트 통합 테스트', () => {
 
     it('side bar show 상태에서 side bar 버튼을 클릭하면, side bar는 화면에서 사라진다.', async () => {
       const { findByText, findByLabelText } = render(<IntegrationComponent />);
+      const { result } = renderHook(() => useSideBarStore());
 
       const sideBar = await findByText('side bar');
       const sideBarButton = await findByLabelText('button');
 
-      sideBarButton?.click();
+      result.current.showSideBar();
       await sleep(1000);
 
       expect(sideBar).toBeVisible();
@@ -115,11 +124,12 @@ describe('SideBar 관련 컴포넌트 통합 테스트', () => {
 
     it('side bar show 상태에서 side bar 버튼을 클릭하면, content area는 x축 기준 화면 중앙으로 이동된다.', async () => {
       const { findByText, findByLabelText } = render(<IntegrationComponent />);
+      const { result } = renderHook(() => useSideBarStore());
 
       const contentArea = await findByText('content area');
       const sideBarButton = await findByLabelText('button');
 
-      sideBarButton?.click();
+      result.current.showSideBar();
       await sleep(1000);
 
       expect(contentArea).toBeLeftOfScreenX();
@@ -132,16 +142,19 @@ describe('SideBar 관련 컴포넌트 통합 테스트', () => {
 
     it('side bar hide 상태에서 side bar 버튼이 비활성화되면 버튼을 클릭해도 작동하지 않는다.', async () => {
       const { findByText, findByLabelText } = render(<IntegrationComponent />);
+      const { result } = renderHook(() => useSideBarStore());
 
       const sideBar = await findByText('side bar');
       const contentArea = await findByText('content area');
       const sideBarButton = await findByLabelText('button');
 
-      const { result } = renderHook(() => useSideBarStore());
-      result.current.deactiveSideBarButton();
+      result.current.hideSideBar();
+      await sleep(1000);
 
       expect(sideBar).not.toBeVisible();
       expect(contentArea).toBeCenterOfScreenX();
+
+      result.current.deactiveSideBarButton();
 
       sideBarButton?.click();
       await sleep(1000);
@@ -152,18 +165,18 @@ describe('SideBar 관련 컴포넌트 통합 테스트', () => {
 
     it('side bar show 상태에서 side bar 버튼이 비활성화되면 content area가 x축 기준 화면 중앙으로 이동하면서 side bar가 화면에서 사라지고, 버튼을 클릭해도 작동하지 않는다.', async () => {
       const { findByText, findByLabelText } = render(<IntegrationComponent />);
+      const { result } = renderHook(() => useSideBarStore());
 
       const sideBar = await findByText('side bar');
       const contentArea = await findByText('content area');
       const sideBarButton = await findByLabelText('button');
 
-      sideBarButton?.click();
+      result.current.showSideBar();
       await sleep(1000);
 
       expect(sideBar).toBeVisible();
       expect(contentArea).toBeLeftOfScreenX();
 
-      const { result } = renderHook(() => useSideBarStore());
       result.current.deactiveSideBarButton();
 
       expect(sideBar).not.toBeVisible();
