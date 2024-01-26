@@ -7,28 +7,28 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { ApiTags } from '@nestjs/swagger';
+import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import { ERR_MSG } from 'src/common/constants/errors';
 import { PROVIDER_ID } from 'src/common/constants/etc';
 import { KakaoLoginDecorator, LogoutDecorator } from './auth.decorators';
 import { JwtPayloadDto } from './dto';
-import { JwtAuthGuard } from './guard/jwt-auth.guard';
+import { JwtAuthGuard } from './guard';
 import { KakaoAuthService } from './service/kakao.auth.service';
+
+dotenv.config();
 
 @ApiTags('✅ Auth API')
 @Controller('oauth')
 export class AuthController {
   private readonly cookieOptions: object;
-  constructor(
-    private readonly configService: ConfigService,
-    private readonly kakaoAuthService: KakaoAuthService,
-  ) {
+  constructor(private readonly kakaoAuthService: KakaoAuthService) {
     this.cookieOptions = {
       httpOnly: true,
-      secure: this.configService.get('ENV') === 'PROD',
+      secure: process.env.ENV === 'PROD',
       sameSite: 'lax',
+      maxAge: 3600000,
     };
   }
 
@@ -44,12 +44,6 @@ export class AuthController {
     const jwt: string = await this.kakaoAuthService.loginOAuth(
       req.query.code as string,
     );
-    /**
-     * TODO : socket.io에서 헤더 접근 확인 후에 수정 필요
-     * - socket.io의 handshake에서 접근할 수 있는 값이 정해져 있음
-     * - cookie는 접근을 못하는 듯 하여 authorization 헤더에 jwt 붙여주도록 구현
-     */
-    res.setHeader('Authorization', `Bearer ${jwt}`);
     res.cookie('magicconch', jwt, this.cookieOptions);
     res.sendStatus(200);
   }
@@ -68,7 +62,6 @@ export class AuthController {
       case PROVIDER_ID.GOOGLE:
         break;
     }
-    res.removeHeader('Authorization');
     res.clearCookie('magicconch');
     res.sendStatus(200);
   }

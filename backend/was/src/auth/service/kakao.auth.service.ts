@@ -6,7 +6,6 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Cache } from 'cache-manager';
 import { CONTENT_TYPE, METHODS, OAUTH_URL } from 'src/common/constants/apis';
@@ -25,11 +24,10 @@ export class KakaoAuthService extends AuthService {
   constructor(
     readonly membersService: MembersService,
     readonly jwtService: JwtService,
-    readonly configService: ConfigService,
     @Inject(CACHE_MANAGER)
     readonly cacheManager: Cache,
   ) {
-    super(membersService, jwtService, configService, cacheManager);
+    super(membersService, jwtService, cacheManager);
     this.init(PROVIDER_NAME.KAKAO);
   }
 

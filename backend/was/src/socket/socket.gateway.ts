@@ -1,3 +1,4 @@
+import { UseGuards } from '@nestjs/common';
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -6,19 +7,23 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
+import * as dotenv from 'dotenv';
 import { Server } from 'socket.io';
+import { SocketJwtAuthGuard } from 'src/auth/guard';
 import type { Socket } from 'src/common/types/socket';
 import { LoggerService } from 'src/logger/logger.service';
 import { SocketService } from './socket.service';
 
+dotenv.config();
+
 @WebSocketGateway({
-  cors: { origin: '*' },
+  cors: { origin: process.env.CORS_ALLOW_DOMAIN, credentials: true },
 })
 export class SocketGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
   @WebSocketServer()
-  server: Server;
+  readonly server: Server;
 
   constructor(
     private readonly socketService: SocketService,
@@ -47,6 +52,7 @@ export class SocketGateway
     this.logger.debug(`🚀 Send a message to ${client.id}: ${sentMessage}`);
   }
 
+  @UseGuards(SocketJwtAuthGuard)
   @SubscribeMessage('tarotRead')
   async handleTarotReadEvent(client: Socket, cardIdx: number) {
     this.logger.debug(

@@ -1,8 +1,8 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Cache } from 'cache-manager';
+import * as dotenv from 'dotenv';
 import { CreateMemberDto, UpdateMemberDto } from 'src/members/dto';
 import { MembersService } from 'src/members/members.service';
 import { JwtPayloadDto, OAuthTokenDto, ProfileDto } from '../dto';
@@ -18,17 +18,15 @@ export class AuthService {
   constructor(
     readonly membersService: MembersService,
     readonly jwtService: JwtService,
-    readonly configService: ConfigService,
     @Inject(CACHE_MANAGER)
     readonly cacheManager: Cache,
   ) {}
 
   init(provider: string) {
-    this.clientId = this.configService.get(`${provider}_CLIENT_ID`) ?? '';
-    this.redirectUri = this.configService.get(`${provider}_REDIRECT_URI`) ?? '';
-    this.clientSecret =
-      this.configService.get(`${provider}_CLIENT_SECRET`) ?? '';
-    this.ttl = this.configService.get<number>('TTL') ?? 0;
+    this.clientId = process.env[`${provider}_CLIENT_ID`] ?? '';
+    this.redirectUri = process.env[`${provider}_REDIRECT_URI`] ?? '';
+    this.clientSecret = process.env[`${provider}_CLIENT_SECRET`] ?? '';
+    this.ttl = parseInt(process.env.TTL ?? '0');
   }
 
   async signup(

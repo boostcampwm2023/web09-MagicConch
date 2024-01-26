@@ -1,10 +1,12 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ERR_MSG } from 'src/common/constants/errors';
+import { UserInfo } from 'src/common/types/socket';
 import { Member } from 'src/members/entities';
 import { Repository } from 'typeorm';
 import {
@@ -31,33 +33,10 @@ export class ChatService {
     private readonly membersRepository: Repository<Member>,
   ) {}
 
-  async createRoom(token?: string): Promise<ChattingInfo> {
-    try {
-      /**
-       * TODO : token을 받는다고 가정하고 작성
-       */
-      // let member: Member = new Member();
-      // if (token) {
-      //   const payload: JwtPayloadDto = this.jwtService.verify(token);
-      //   const foundMember: Member | null = await this.membersService.findByEmail(payload.email, payload.providerId);
-      //   if(!foundMember) {
-      //     throw new BadRequestException();
-      //   }
-      //   member = foundMember;
-      // }
-      // else {
-      //   member = await this.membersService.save(member);
-      // }
-      // const room: ChattingRoom = ChattingRoom.fromMember(member);
-      const member: Member = new Member();
-      const savedMember: Member = await this.membersRepository.save(member);
-      const room: ChattingRoom = ChattingRoom.fromMember(savedMember);
-      const savedRoom: ChattingRoom =
-        await this.chattingRoomRepository.save(room);
-      return { memeberId: savedMember.id, roomId: savedRoom.id };
-    } catch (err: unknown) {
-      throw err;
-    }
+  async createRoom(userInfo?: UserInfo): Promise<ChattingInfo> {
+    return userInfo
+      ? this.createRoomForMember(userInfo.email, userInfo.providerId)
+      : this.createRoomForNonMember();
   }
 
   async createMessages(
@@ -143,6 +122,39 @@ export class ChatService {
     }
     try {
       await this.chattingRoomRepository.softDelete({ id: id });
+    } catch (err: unknown) {
+      throw err;
+    }
+  }
+
+  private async createRoomForMember(
+    email: string,
+    providerId: number,
+  ): Promise<ChattingInfo> {
+    try {
+      const member: Member | null = await this.membersRepository.findOneBy({
+        email: email,
+        providerId: providerId,
+      });
+      if (!member) {
+        throw new BadRequestException();
+      }
+      const room: ChattingRoom = await this.chattingRoomRepository.save(
+        ChattingRoom.fromMember(member),
+      );
+      return { memeberId: member.id, roomId: room.id };
+    } catch (err: unknown) {
+      throw err;
+    }
+  }
+
+  private async createRoomForNonMember(): Promise<ChattingInfo> {
+    try {
+      const member: Member = await this.membersRepository.save(new Member());
+      const room: ChattingRoom = await this.chattingRoomRepository.save(
+        ChattingRoom.fromMember(member),
+      );
+      return { memeberId: member.id, roomId: room.id };
     } catch (err: unknown) {
       throw err;
     }
