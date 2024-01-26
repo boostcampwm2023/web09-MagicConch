@@ -13,7 +13,7 @@ interface SideBarActions {
   deactiveSideBarButton: () => void;
 }
 
-const initialState: SideBarState = {
+export const initialState: SideBarState = {
   sideBarState: false,
   sideBarButtonState: true,
 };
