@@ -1,13 +1,13 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { tarotCardMock } from './__mocks__/tarot-card';
 import {
-  tarotCardMock,
-  tarotResultId,
+  resultId,
   tarotResultMessage,
   tarotResultMock,
-} from 'src/mocks/tarot';
-import { Repository } from 'typeorm';
+} from './__mocks__/tarot-result';
 import { CreateTarotResultDto, TarotCardDto, TarotResultDto } from './dto';
 import { TarotCard, TarotResult } from './entities';
 import { TarotService } from './tarot.service';
@@ -17,8 +17,8 @@ describe('TarotService', () => {
   let tarotCardRepository: Repository<TarotCard>;
   let tarotResultRepository: Repository<TarotResult>;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+  beforeAll(async () => {
+    const moduleRef: TestingModule = await Test.createTestingModule({
       providers: [
         TarotService,
         {
@@ -32,16 +32,16 @@ describe('TarotService', () => {
       ],
     }).compile();
 
-    service = module.get<TarotService>(TarotService);
-    tarotCardRepository = module.get<Repository<TarotCard>>(
+    service = moduleRef.get<TarotService>(TarotService);
+    tarotCardRepository = moduleRef.get<Repository<TarotCard>>(
       getRepositoryToken(TarotCard),
     );
-    tarotResultRepository = module.get<Repository<TarotResult>>(
+    tarotResultRepository = moduleRef.get<Repository<TarotResult>>(
       getRepositoryToken(TarotResult),
     );
   });
 
-  afterEach(() => {
+  afterAll(() => {
     jest.clearAllMocks();
   });
 
@@ -61,7 +61,7 @@ describe('TarotService', () => {
         .spyOn(tarotResultRepository, 'save')
         .mockResolvedValueOnce(tarotResultMock);
 
-      expect(
+      await expect(
         service.createTarotResult(createTarotResultDto),
       ).resolves.not.toThrow();
       expect(saveMock).toHaveBeenCalledWith({
@@ -94,7 +94,7 @@ describe('TarotService', () => {
         .spyOn(tarotCardRepository, 'findOneBy')
         .mockResolvedValueOnce(null);
 
-      const wrongTarotCardNo = 80;
+      const wrongTarotCardNo: number = -1;
       await expect(
         service.findTarotCardByCardNo(wrongTarotCardNo),
       ).rejects.toThrow(NotFoundException);
@@ -114,9 +114,9 @@ describe('TarotService', () => {
         .mockResolvedValueOnce(tarotResultMock);
 
       const expectation: TarotResultDto =
-        await service.findTarotResultById(tarotResultId);
+        await service.findTarotResultById(resultId);
       expect(expectation).toEqual(tarotResultDto);
-      expect(findOneByMock).toHaveBeenCalledWith({ id: tarotResultId });
+      expect(findOneByMock).toHaveBeenCalledWith({ id: resultId });
     });
 
     it('해당 PK의 타로 결과가 존재하지 않아 NotFoundException을 반환한다', async () => {
@@ -124,7 +124,7 @@ describe('TarotService', () => {
         .spyOn(tarotResultRepository, 'findOneBy')
         .mockResolvedValueOnce(null);
 
-      const wrongResultId = 'wrongResultId';
+      const wrongResultId: string = 'wrongResultId';
       await expect(service.findTarotResultById(wrongResultId)).rejects.toThrow(
         NotFoundException,
       );

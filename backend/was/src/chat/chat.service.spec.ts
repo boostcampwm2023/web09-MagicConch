@@ -1,20 +1,27 @@
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import {
+  diffMemberId,
+  memberId,
+  memberMock,
+} from 'src/members/__mocks__/member';
 import { Member } from 'src/members/entities';
+import { Repository } from 'typeorm';
 import {
   createMessageDtoMock,
   messageMock,
   messageMocks,
+} from './__mocks__/chatting-message';
+import {
   roomId,
   roomMock,
   roomMocks,
   updateRoomDtoMock,
   wrongRoomId,
-} from 'src/mocks/chat';
-import { diffMemberId, memberId, memberMock } from 'src/mocks/members';
-import { Repository } from 'typeorm';
+} from './__mocks__/chatting-room';
 import { ChatService } from './chat.service';
+import { ChattingMessageDto, ChattingRoomDto } from './dto';
 import { ChattingMessage, ChattingRoom } from './entities';
 
 describe('ChatService', () => {
@@ -23,8 +30,8 @@ describe('ChatService', () => {
   let chattingMessageRepository: Repository<ChattingMessage>;
   let membersRepository: Repository<Member>;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+  beforeAll(async () => {
+    const moduleRef: TestingModule = await Test.createTestingModule({
       providers: [
         ChatService,
         {
@@ -42,19 +49,19 @@ describe('ChatService', () => {
       ],
     }).compile();
 
-    service = module.get<ChatService>(ChatService);
-    chattingRoomRepository = module.get<Repository<ChattingRoom>>(
+    service = moduleRef.get<ChatService>(ChatService);
+    chattingRoomRepository = moduleRef.get<Repository<ChattingRoom>>(
       getRepositoryToken(ChattingRoom),
     );
-    chattingMessageRepository = module.get<Repository<ChattingMessage>>(
+    chattingMessageRepository = moduleRef.get<Repository<ChattingMessage>>(
       getRepositoryToken(ChattingMessage),
     );
-    membersRepository = module.get<Repository<Member>>(
+    membersRepository = moduleRef.get<Repository<Member>>(
       getRepositoryToken(Member),
     );
   });
 
-  afterEach(() => {
+  afterAll(() => {
     jest.clearAllMocks();
   });
 
@@ -123,7 +130,8 @@ describe('ChatService', () => {
         .spyOn(chattingRoomRepository, 'findBy')
         .mockResolvedValueOnce(roomMocks);
 
-      const expectation = await service.findRoomsById(roomId);
+      const expectation: ChattingRoomDto[] =
+        await service.findRoomsById(roomId);
       expect(expectation).toEqual(
         roomMocks.map((room) =>
           expect.objectContaining({ id: room.id, title: room.title }),
@@ -139,7 +147,8 @@ describe('ChatService', () => {
         .spyOn(chattingMessageRepository, 'findBy')
         .mockResolvedValueOnce(messageMocks);
 
-      const expectation = await service.findMessagesById(roomId);
+      const expectation: ChattingMessageDto[] =
+        await service.findMessagesById(roomId);
       expect(expectation).toEqual(
         messageMocks.map((message) =>
           expect.objectContaining({

@@ -10,8 +10,8 @@ import { UserInfo } from 'src/common/types/socket';
 import { Member } from 'src/members/entities';
 import { Repository } from 'typeorm';
 import {
-  ChattingMessageResponseDto,
-  ChattingRoomResponseDto,
+  ChattingMessageDto,
+  ChattingRoomDto,
   CreateChattingMessageDto,
   UpdateChattingRoomDto,
 } from './dto';
@@ -63,25 +63,25 @@ export class ChatService {
     }
   }
 
-  async findRoomsById(id: string): Promise<ChattingRoomResponseDto[]> {
+  async findRoomsById(id: string): Promise<ChattingRoomDto[]> {
     try {
       const rooms: ChattingRoom[] = await this.chattingRoomRepository.findBy({
         id: id,
       });
       return rooms.map((room: ChattingRoom) =>
-        ChattingRoomResponseDto.fromEntity(room),
+        ChattingRoomDto.fromEntity(room),
       );
     } catch (err: unknown) {
       throw err;
     }
   }
 
-  async findMessagesById(id: string): Promise<ChattingMessageResponseDto[]> {
+  async findMessagesById(id: string): Promise<ChattingMessageDto[]> {
     try {
       const messages: ChattingMessage[] =
         await this.chattingMessageRepository.findBy({ id: id });
       return messages.map((message: ChattingMessage) =>
-        ChattingMessageResponseDto.fromEntity(message),
+        ChattingMessageDto.fromEntity(message),
       );
     } catch (err: unknown) {
       throw err;
