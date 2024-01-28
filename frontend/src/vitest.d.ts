@@ -1,6 +1,8 @@
+import { Assertion, AsymmetricMatchersContaining } from 'vitest';
+
 import { CustomMatchers } from '@utils/matchers';
 
 declare module 'vitest' {
-  interface Assertion<T = any> extends CustomMatchers<T> {}
-  interface AsymmetricMatchersContaining extends CustomMatchers {}
+  type Assertion<T = any> = Assertion<T> & CustomMatchers<T>;
+  type AsymmetricMatchersContaining = AsymmetricMatchersContaining & CustomMatchers;
 }
