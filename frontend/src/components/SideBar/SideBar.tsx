@@ -1,21 +1,21 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
+
+import animationNames from '@constants/animation';
 
 interface SideBarProps {
+  hidden: boolean;
   children: React.ReactNode;
 }
 
-export default function SideBar({ children }: SideBarProps) {
+export default function SideBar({ hidden, children }: SideBarProps) {
   const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!ref.current) return;
-    ref.current.style.marginRight = '-100%';
-  });
+  const animation = hidden ? animationNames.HIDE_SIDEBAR : animationNames.SHOW_SIDEBAR;
 
   return (
     <aside
       ref={ref}
-      className="w-fit h-full"
+      className={`w-fit h-full ${animation}`}
     >
       {children}
     </aside>

@@ -50,21 +50,13 @@ export default {
           '0%': { transform: 'scale(1.02) translateY(-1000px)' },
           '100%': { transform: 'translateY(-1000px)' },
         },
-        openingSidebar: {
-          '0%': { right: '-100%' },
-          '100%': { right: 0 },
+        showSidebar: {
+          '0%': { marginRight: '-100%' },
+          '100%': { marginRight: 0 },
         },
-        closingSidebar: {
-          '0%': { right: 0 },
-          '100%': { right: '-100%' },
-        },
-        contentSideWithOpeningSidebar: {
-          '0%': { width: '100%' },
-          '100%': { width: 'calc(100% - 500px)' },
-        },
-        contentSideWithClosingSidebar: {
-          '0%': { width: 'calc(100% - 500px)' },
-          '100%': { width: '100%' },
+        hideSidebar: {
+          '0%': { marginRight: 0 },
+          '100%': { marginRight: '-100%' },
         },
         flappingCard: {
           '0%': { transform: 'rotateY(0deg)' },

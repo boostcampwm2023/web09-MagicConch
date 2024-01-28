@@ -1,4 +1,5 @@
-import ContentArea from './ContentArea';
+import { useSideBarStore } from '@stores/zustandStores/useSideBarStore';
+
 import SideBar from './SideBar';
 
 interface ContentAreaWithSideBarProps {
@@ -7,11 +8,13 @@ interface ContentAreaWithSideBarProps {
 }
 
 export default function ContentAreaWithSideBar({ children, sideBar }: ContentAreaWithSideBarProps) {
+  const { sideBarState } = useSideBarStore();
+
   return (
     <div className="w-screen h-full flex justify-end overflow-hidden">
       <div className="w-screen h-full flex">
-        <ContentArea>{children}</ContentArea>
-        <SideBar>{sideBar}</SideBar>
+        <article className="w-screen h-full flex justify-center">{children}</article>
+        <SideBar hidden={!sideBarState}>{sideBar}</SideBar>
       </div>
     </div>
   );
