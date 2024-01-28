@@ -5,21 +5,7 @@ import { initialState, useSideBarStore } from '@stores/zustandStores/useSideBarS
 import { toBeCenterOfScreenX, toBeLeftOfScreenX } from '@utils/matcher';
 import { sleep } from '@utils/time';
 
-import ContentAreaWithSideBar from './ContentAreaWithSideBar';
-import SideBarButton from './SideBarButton';
-
-const IntegrationComponent = () => {
-  return (
-    <div className="w-full h-full">
-      <header>
-        <SideBarButton />
-      </header>
-      <ContentAreaWithSideBar sideBar={<div>side bar</div>}>
-        <div>content area</div>
-      </ContentAreaWithSideBar>
-    </div>
-  );
-};
+import { IntegratedSideBar } from './__mocks__';
 
 expect.extend({ toBeCenterOfScreenX, toBeLeftOfScreenX });
 
@@ -31,7 +17,7 @@ describe('SideBar 관련 컴포넌트 통합 테스트', () => {
       result.current.showSideBar();
       result.current.deactiveSideBarButton();
 
-      render(<IntegrationComponent />);
+      render(<IntegratedSideBar />);
 
       const curState = {
         sideBarState: result.current.sideBarState,
@@ -41,21 +27,21 @@ describe('SideBar 관련 컴포넌트 통합 테스트', () => {
     });
 
     it('side bar는 화면에 보이지 않는다.', async () => {
-      const { findByText } = render(<IntegrationComponent />);
+      const { findByText } = render(<IntegratedSideBar />);
       const sideBar = await findByText('side bar');
 
       expect(sideBar).not.toBeVisible();
     });
 
     it('content area는 x축 기준 화면 중앙에 있다.', async () => {
-      const { findByText } = render(<IntegrationComponent />);
+      const { findByText } = render(<IntegratedSideBar />);
       const contentArea = await findByText('content area');
 
       expect(contentArea).toBeCenterOfScreenX();
     });
 
     it('애니메이션 효과는 발생하지 않는다. (시간이 지나도 상태가 그대로이다)', async () => {
-      const { findByText } = render(<IntegrationComponent />);
+      const { findByText } = render(<IntegratedSideBar />);
 
       const sideBar = await findByText('side bar');
       const contentArea = await findByText('content area');
@@ -140,7 +126,7 @@ describe('SideBar 관련 컴포넌트 통합 테스트', () => {
       },
     ].forEach(({ scenario, initialState, expected, loopCount = 1 }) => {
       it(scenario, async () => {
-        const { findByText, findByLabelText } = render(<IntegrationComponent />);
+        const { findByText, findByLabelText } = render(<IntegratedSideBar />);
         const { result } = renderHook(() => useSideBarStore());
 
         const sideBar = await findByText('side bar');
