@@ -330,6 +330,30 @@ describe('ChatService', () => {
     });
 
     describe('실패', () => {
+      it('해당 PK의 채팅방이 존재하지 않아 NotFoundException을 반환한다', async () => {
+        const wrongRoomId: string = '12345678-1234-0000-1234-567812345678';
+
+        const memberFindOneByMock = jest
+          .spyOn(membersRepository, 'findOneBy')
+          .mockResolvedValueOnce(member);
+        const roomFindOneByMock = jest
+          .spyOn(chattingRoomRepository, 'findOneBy')
+          .mockResolvedValueOnce(null);
+
+        await expect(
+          service.findMessagesById(
+            wrongRoomId,
+            member.email ?? '',
+            member.providerId ?? 0,
+          ),
+        ).rejects.toThrow(NotFoundException);
+        expect(memberFindOneByMock).toHaveBeenCalledWith({
+          email: member.email,
+          providerId: member.providerId,
+        });
+        expect(roomFindOneByMock).toHaveBeenCalledWith({ id: wrongRoomId });
+      });
+
       it('해당 PK의 채팅방을 조회할 수 있는 권한이 없어 ForbiddenException을 반환한다', async () => {
         const forbiddenMember: Member = {
           id: '12345678-1234-5678-1234-567812345679',
