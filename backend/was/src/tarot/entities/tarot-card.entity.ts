@@ -20,14 +20,14 @@ export class TarotCard {
   ext: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt?: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt?: Date;
 
   @Column({ nullable: true })
-  deletedAt: Date;
+  deletedAt?: Date;
 
   @ManyToOne(() => TarotCardPack, (tarotCardPack) => tarotCardPack.tarotCards)
-  cardPack: TarotCardPack;
+  cardPack?: TarotCardPack;
 }
