@@ -9,7 +9,7 @@ import {
   WELCOME_MESSAGE,
 } from 'src/common/constants/socket';
 import { ChatLog } from 'src/common/types/chatbot';
-import type { Socket } from 'src/common/types/socket';
+import type { Socket, UserInfo } from 'src/common/types/socket';
 import { readStream, string2Uint8ArrayStream } from 'src/common/utils/stream';
 import { LoggerService } from 'src/logger/logger.service';
 import { CreateTarotResultDto } from 'src/tarot/dto';
@@ -89,8 +89,8 @@ export class SocketService {
       const shareLinkId = await this.createShareLinkId(cardIdx, sentMessage);
       client.emit('chatEnd', shareLinkId);
 
-      const { roomId } = await this.createRoom(client);
-      await this.saveChatLogs(roomId, client.chatLog);
+      const { memberId, roomId } = await this.createRoom(client);
+      await this.saveChatLogs(roomId, memberId, client.chatLog);
 
       return sentMessage;
     } catch (err) {
@@ -135,12 +135,20 @@ export class SocketService {
     }
   }
 
-  private async saveChatLogs(roomId: string, chatLogs: ChatLog[]) {
+  private async saveChatLogs(
+    roomId: string,
+    memberId: string,
+    chatLogs: ChatLog[],
+  ) {
     try {
       const chattingMessages = chatLogs.map((chatLog) =>
         CreateChattingMessageDto.fromChatLog(roomId, chatLog),
       );
-      return await this.chatService.createMessages(roomId, chattingMessages);
+      return await this.chatService.createMessages(
+        roomId,
+        memberId,
+        chattingMessages,
+      );
     } catch (err) {
       if (err instanceof Error) {
         this.logger.error(
