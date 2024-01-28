@@ -10,42 +10,30 @@ import { IntegratedSideBar } from './__mocks__';
 expect.extend({ toBeCenterOfScreenX, toBeLeftOfScreenX });
 
 describe('SideBar 관련 컴포넌트 통합 테스트', () => {
+  const sidebarStore = renderHook(() => useSideBarStore()).result;
+
+  let sideBar: HTMLElement;
+  let contentArea: HTMLElement;
+  let sideBarButton: HTMLElement;
+
+  beforeEach(async () => {
+    const { findByText, findByLabelText } = render(<IntegratedSideBar />);
+
+    sideBar = await findByText('side bar');
+    contentArea = await findByText('content area');
+    sideBarButton = await findByLabelText('button');
+  });
+
   describe('처음 렌더링 이후', () => {
-    it('sidebar 관련 zustand store는 초기화된다.', () => {
-      const { result } = renderHook(() => useSideBarStore());
-
-      result.current.showSideBar();
-      result.current.deactiveSideBarButton();
-
-      render(<IntegratedSideBar />);
-
-      const curState = {
-        sideBarState: result.current.sideBarState,
-        sideBarButtonState: result.current.sideBarButtonState,
-      };
-      expect(curState).toEqual(initialState);
-    });
-
     it('side bar는 화면에 보이지 않는다.', async () => {
-      const { findByText } = render(<IntegratedSideBar />);
-      const sideBar = await findByText('side bar');
-
       expect(sideBar).not.toBeVisible();
     });
 
     it('content area는 x축 기준 화면 중앙에 있다.', async () => {
-      const { findByText } = render(<IntegratedSideBar />);
-      const contentArea = await findByText('content area');
-
       expect(contentArea).toBeCenterOfScreenX();
     });
 
     it('애니메이션 효과는 발생하지 않는다. (시간이 지나도 상태가 그대로이다)', async () => {
-      const { findByText } = render(<IntegratedSideBar />);
-
-      const sideBar = await findByText('side bar');
-      const contentArea = await findByText('content area');
-
       expect(sideBar).not.toBeVisible();
       expect(contentArea).toBeCenterOfScreenX();
 
@@ -53,6 +41,19 @@ describe('SideBar 관련 컴포넌트 통합 테스트', () => {
 
       expect(sideBar).not.toBeVisible();
       expect(contentArea).toBeCenterOfScreenX();
+    });
+
+    it('sidebar 관련 zustand store는 초기화된다.', () => {
+      sidebarStore.current.showSideBar();
+      sidebarStore.current.deactiveSideBarButton();
+
+      render(<IntegratedSideBar />);
+
+      const curState = {
+        sideBarState: sidebarStore.current.sideBarState,
+        sideBarButtonState: sidebarStore.current.sideBarButtonState,
+      };
+      expect(curState).toEqual(initialState);
     });
   });
 
@@ -126,27 +127,20 @@ describe('SideBar 관련 컴포넌트 통합 테스트', () => {
       },
     ].forEach(({ scenario, initialState, expected, loopCount = 1 }) => {
       it(scenario, async () => {
-        const { findByText, findByLabelText } = render(<IntegratedSideBar />);
-        const { result } = renderHook(() => useSideBarStore());
-
-        const sideBar = await findByText('side bar');
-        const contentArea = await findByText('content area');
-        const sideBarButton = await findByLabelText('button');
-
         // 초기 store 설정
         if (initialState.sideBarState) {
-          result.current.showSideBar();
+          sidebarStore.current.showSideBar();
         } else {
-          result.current.hideSideBar();
+          sidebarStore.current.hideSideBar();
         }
-        expect(result.current.sideBarState).toBe(initialState.sideBarState);
+        expect(sidebarStore.current.sideBarState).toBe(initialState.sideBarState);
 
         if (initialState.sideBarButtonState) {
-          result.current.activeSideBarButton();
+          sidebarStore.current.activeSideBarButton();
         } else {
-          result.current.deactiveSideBarButton();
+          sidebarStore.current.deactiveSideBarButton();
         }
-        expect(result.current.sideBarButtonState).toBe(initialState.sideBarButtonState);
+        expect(sidebarStore.current.sideBarButtonState).toBe(initialState.sideBarButtonState);
 
         await sleep(1000);
 

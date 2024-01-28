@@ -4,26 +4,28 @@ import { initialState, useSideBarStore } from '@stores/zustandStores/useSideBarS
 
 import SideBarButton from './SideBarButton';
 
-describe('SideBarButton', () => {
-  it('<button> 태그가 렌더링에 포함된다', async () => {
+describe('<SideBarButton> 컴포넌트 테스트', () => {
+  const sidebarStore = renderHook(() => useSideBarStore()).result;
+  let button: HTMLElement;
+
+  beforeEach(async () => {
     const { findByLabelText } = render(<SideBarButton />);
+    button = await findByLabelText('button');
+  });
 
-    const button = await findByLabelText('button');
-
+  it('<button> 태그가 렌더링에 포함된다', async () => {
     expect(button).toBeInTheDocument();
   });
 
   it('처음 렌더링 된 이후에 sidebar 관련 zustand store는 초기화된다.', () => {
-    const { result } = renderHook(() => useSideBarStore());
-
-    result.current.showSideBar();
-    result.current.deactiveSideBarButton();
+    sidebarStore.current.showSideBar();
+    sidebarStore.current.deactiveSideBarButton();
 
     render(<SideBarButton />);
 
     const curState = {
-      sideBarState: result.current.sideBarState,
-      sideBarButtonState: result.current.sideBarButtonState,
+      sideBarState: sidebarStore.current.sideBarState,
+      sideBarButtonState: sidebarStore.current.sideBarButtonState,
     };
     expect(curState).toEqual(initialState);
   });
@@ -75,33 +77,28 @@ describe('SideBarButton', () => {
     },
   ].forEach(({ scenario, initialState, expected, loopCount = 1 }) => {
     it(scenario, async () => {
-      const { result } = renderHook(() => useSideBarStore());
-      const { findByLabelText } = render(<SideBarButton />);
-
-      const button = await findByLabelText('button');
-
       // 초기 store 설정
       if (initialState.sideBarState) {
-        result.current.showSideBar();
+        sidebarStore.current.showSideBar();
       } else {
-        result.current.hideSideBar();
+        sidebarStore.current.hideSideBar();
       }
-      expect(result.current.sideBarState).toBe(initialState.sideBarState);
+      expect(sidebarStore.current.sideBarState).toBe(initialState.sideBarState);
 
       if (initialState.sideBarButtonState) {
-        result.current.activeSideBarButton();
+        sidebarStore.current.activeSideBarButton();
       } else {
-        result.current.deactiveSideBarButton();
+        sidebarStore.current.deactiveSideBarButton();
       }
-      expect(result.current.sideBarButtonState).toBe(initialState.sideBarButtonState);
+      expect(sidebarStore.current.sideBarButtonState).toBe(initialState.sideBarButtonState);
 
       // 테스트 시작 (loopCount 만큼 반복해서 테스트)
       for (let i = 0; i < loopCount; i += 1) {
         button?.click();
 
         // 예상한 store가 맞는지 확인
-        expect(result.current.sideBarState).toBe(expected.sideBarState);
-        expect(result.current.sideBarButtonState).toBe(expected.sideBarButtonState);
+        expect(sidebarStore.current.sideBarState).toBe(expected.sideBarState);
+        expect(sidebarStore.current.sideBarButtonState).toBe(expected.sideBarButtonState);
       }
     });
   });
