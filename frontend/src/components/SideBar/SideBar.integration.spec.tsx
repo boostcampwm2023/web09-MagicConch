@@ -110,7 +110,6 @@ describe('SideBar 관련 컴포넌트 통합 테스트', () => {
           act(() => {
             sideBarButton?.click();
           });
-          await sleep(1000); // 애니메이션 효과가 발생하므로 1초 대기
 
           // 예상한 상태가 맞는지 확인
           if (expected.sideBarVisible) {
