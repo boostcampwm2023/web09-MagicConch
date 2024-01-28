@@ -1,23 +1,12 @@
-import { useEffect } from 'react';
-
-import { initSideBarStore, useSideBarStore } from '@stores/zustandStores/useSideBarStore';
+import { useSideBarButton } from '@business/hooks/useSideBar';
 
 export default function SideBarButton() {
-  const { sideBarState, sideBarButtonState, toggleSideBarState } = useSideBarStore();
+  const { handleClick, buttonDisabled } = useSideBarButton();
 
-  const handleClick = () => {
-    if (!sideBarButtonState) return;
-    toggleSideBarState();
-  };
-
-  useEffect(() => {
-    initSideBarStore();
-  }, []);
-
-  useEffect(() => {
-    if (sideBarButtonState || !sideBarState) return;
-    toggleSideBarState();
-  }, [sideBarButtonState]);
-
-  return <button onClick={handleClick}></button>;
+  return (
+    <button
+      onClick={handleClick}
+      disabled={buttonDisabled}
+    ></button>
+  );
 }
