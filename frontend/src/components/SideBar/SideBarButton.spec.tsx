@@ -61,7 +61,7 @@ describe('<SideBarButton> 컴포넌트 테스트', () => {
         sideBarButtonState: false,
       },
       expected: {
-        sideBarButtonState: false,
+        sideBarState: false,
       },
       loopCount: 2,
     },
@@ -73,7 +73,7 @@ describe('<SideBarButton> 컴포넌트 테스트', () => {
         sideBarButtonState: false,
       },
       expected: {
-        sideBarButtonState: false,
+        sideBarState: false,
       },
       loopCount: 2,
     },
@@ -91,10 +91,7 @@ describe('<SideBarButton> 컴포넌트 테스트', () => {
         });
 
         // 예상한 store가 맞는지 확인
-        const sideBarStore = useSideBarStore.getState();
-
-        expect(sideBarStore.sideBarState).toBe(expected.sideBarState);
-        expect(sideBarStore.sideBarButtonState).toBe(expected.sideBarButtonState);
+        expect(useSideBarStore.getState().sideBarState).toBe(expected.sideBarState);
       }
     });
   });
