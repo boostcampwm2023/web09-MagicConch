@@ -10,7 +10,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/guard';
 import {
   DeleteRoomDecorator,
@@ -33,8 +32,11 @@ export class ChatController {
 
   @Get('ai')
   @FindRoomsDecorator('채팅방', [ChattingRoomDto])
-  async findRooms(@Req() req: Request): Promise<ChattingRoomDto[]> {
-    return await this.chatService.findRoomsById(req.cookies.magicConch);
+  async findRooms(@Req() req: any): Promise<ChattingRoomDto[]> {
+    return await this.chatService.findRoomsByEmail(
+      req.user.email,
+      req.user.providerId,
+    );
   }
 
   @Get('ai/:id')
@@ -55,12 +57,13 @@ export class ChatController {
   )
   async updateRoom(
     @Param('id', ParseUUIDPipe) id: string,
-    @Req() req: Request,
+    @Req() req: any,
     @Body() updateChattingRoomDto: UpdateChattingRoomDto,
   ): Promise<void> {
     await this.chatService.updateRoom(
       id,
-      req.cookies.magicConch,
+      req.user.email,
+      req.user.providerId,
       updateChattingRoomDto,
     );
   }
@@ -69,8 +72,8 @@ export class ChatController {
   @DeleteRoomDecorator('채팅방', { type: 'uuid', name: 'id' })
   async removeRoom(
     @Param('id', ParseUUIDPipe) id: string,
-    @Req() req: Request,
+    @Req() req: any,
   ): Promise<void> {
-    await this.chatService.removeRoom(id, req.cookies.magicConch);
+    await this.chatService.removeRoom(id, req.user.email, req.user.providerId);
   }
 }
