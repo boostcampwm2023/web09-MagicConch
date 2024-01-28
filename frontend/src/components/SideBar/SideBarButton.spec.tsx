@@ -16,7 +16,7 @@ describe('<SideBarButton> 컴포넌트 테스트', () => {
     expect(button).toBeInTheDocument();
   });
 
-  it('처음 렌더링 된 이후에 sidebar 관련 zustand store는 초기화된다.', () => {
+  it('처음 렌더링 된 이후에 sidebar 관련 store는 초기화된다.', () => {
     act(() => {
       useSideBarStore.setState({ ...initialState, sideBarState: !initialState.sideBarState });
     });
