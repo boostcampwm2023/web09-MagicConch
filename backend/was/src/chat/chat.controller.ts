@@ -45,8 +45,13 @@ export class ChatController {
   ])
   async findMessages(
     @Param('id', ParseUUIDPipe) id: string,
+    @Req() req: any,
   ): Promise<ChattingMessageDto[]> {
-    return await this.chatService.findMessagesById(id);
+    return await this.chatService.findMessagesById(
+      id,
+      req.user.email,
+      req.user.providerId,
+    );
   }
 
   @Patch('ai/:id')

@@ -75,8 +75,14 @@ export class ChatService {
     }
   }
 
-  async findMessagesById(id: string): Promise<ChattingMessageDto[]> {
+  async findMessagesById(
+    id: string,
+    email: string,
+    providerId: number,
+  ): Promise<ChattingMessageDto[]> {
     try {
+      const memberId: string = await this.findMemberId(email, providerId);
+      await this.findRoom(id, memberId);
       const messages: ChattingMessage[] =
         await this.chattingMessageRepository.findBy({ id: id });
       return messages.map((message: ChattingMessage) =>
