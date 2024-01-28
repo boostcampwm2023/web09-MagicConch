@@ -15,11 +15,11 @@ describe('SideBar 관련 컴포넌트 통합 테스트', () => {
   let sideBarButton: HTMLElement;
 
   beforeEach(async () => {
-    const { findByText, findByLabelText } = render(<IntegratedSideBar />);
+    const { findByText, getByRole } = render(<IntegratedSideBar />);
 
     sideBar = await findByText('side bar');
     contentArea = await findByText('content area');
-    sideBarButton = await findByLabelText('button');
+    sideBarButton = await getByRole('button');
   });
 
   describe('처음 렌더링 이후', () => {
