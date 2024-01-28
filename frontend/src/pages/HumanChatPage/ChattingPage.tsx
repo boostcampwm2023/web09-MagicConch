@@ -13,12 +13,11 @@ export default function ChattingPage() {
   const {
     tarotButtonDisabled,
     tarotButtonClick,
-    enableSideBar,
     chatPageState: { joined },
     unblockGoBack,
   }: OutletContext = useOutletContext();
 
-  useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack, enableSideBar });
+  useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack });
   const { localVideoRef, remoteVideoRef } = useStreamVideoRef();
   const { toggleAudio, toggleVideo, changeMyVideoTrack } = useControllMedia({ localVideoRef });
 
