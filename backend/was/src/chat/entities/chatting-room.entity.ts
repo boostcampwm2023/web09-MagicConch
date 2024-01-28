@@ -16,19 +16,19 @@ export class ChattingRoom {
   id: string;
 
   @Column({ nullable: true })
-  title: string;
+  title?: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt?: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt?: Date;
 
   @Column({ nullable: true })
-  deletedAt: Date;
+  deletedAt?: Date;
 
   @OneToMany(() => ChattingMessage, (chattingMessage) => chattingMessage.id)
-  chattingMessages: ChattingMessage[];
+  chattingMessages?: ChattingMessage[];
 
   @ManyToOne(() => Member, (member) => member.chattingRooms)
   participant: Member;

@@ -9,7 +9,7 @@ export class ChattingRoomDto {
 
   @IsString()
   @ApiProperty({ description: '채팅방 제목', required: true })
-  readonly title: string;
+  readonly title?: string;
 
   static fromEntity(entity: ChattingRoom): ChattingRoomDto {
     return { ...entity };
