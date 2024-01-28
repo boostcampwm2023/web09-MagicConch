@@ -9,6 +9,10 @@ interface SideBarState {
 interface SideBarActions {
   toggleSideBarState: () => void;
   toggleSideBarButtonState: () => void;
+  showSideBar: () => void;
+  hideSideBar: () => void;
+  enableSideBar: () => void;
+  disableSideBarButton: () => void;
 }
 
 export const initialState: SideBarState = {
@@ -21,6 +25,10 @@ export const useSideBarStore = create<SideBarState & SideBarActions>()(
     ...initialState,
     toggleSideBarState: () => set(state => ({ sideBarState: !state.sideBarState })),
     toggleSideBarButtonState: () => set(state => ({ sideBarButtonState: !state.sideBarButtonState })),
+    showSideBar: () => set({ sideBarState: true }),
+    hideSideBar: () => set({ sideBarState: false }),
+    enableSideBar: () => set({ sideBarButtonState: true }),
+    disableSideBarButton: () => set({ sideBarButtonState: false }),
   })),
 );
 
