@@ -3,5 +3,5 @@ interface ContentAreaProps {
 }
 
 export default function ContentArea({ children }: ContentAreaProps) {
-  return <article>{children}</article>;
+  return <article className="w-screen h-full flex justify-center">{children}</article>;
 }

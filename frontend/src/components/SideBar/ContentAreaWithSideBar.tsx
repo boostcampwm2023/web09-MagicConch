@@ -8,9 +8,11 @@ interface ContentAreaWithSideBarProps {
 
 export default function ContentAreaWithSideBar({ children, sideBar }: ContentAreaWithSideBarProps) {
   return (
-    <div>
-      <ContentArea>{children}</ContentArea>
-      <SideBar>{sideBar}</SideBar>
+    <div className="w-screen h-full flex justify-end overflow-hidden">
+      <div className="w-screen h-full flex">
+        <ContentArea>{children}</ContentArea>
+        <SideBar>{sideBar}</SideBar>
+      </div>
     </div>
   );
 }
