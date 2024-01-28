@@ -3,9 +3,9 @@ import { useEffect } from 'react';
 import { initSideBarStore, useSideBarStore } from '@stores/zustandStores/useSideBarStore';
 
 export default function SideBarButton() {
-  const { sideBarButtonState, toggleSideBarState } = useSideBarStore();
+  const { sideBarState, sideBarButtonState, toggleSideBarState } = useSideBarStore();
 
-  const handleButtonClick = () => {
+  const handleClick = () => {
     if (!sideBarButtonState) return;
     toggleSideBarState();
   };
@@ -14,5 +14,10 @@ export default function SideBarButton() {
     initSideBarStore();
   }, []);
 
-  return <button onClick={handleButtonClick}></button>;
+  useEffect(() => {
+    if (sideBarButtonState || !sideBarState) return;
+    toggleSideBarState();
+  }, [sideBarButtonState]);
+
+  return <button onClick={handleClick}></button>;
 }
