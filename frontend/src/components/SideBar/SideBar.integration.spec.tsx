@@ -1,4 +1,4 @@
-import { render, renderHook } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 
 import { initialState, useSideBarStore } from '@stores/zustandStores/useSideBarStore';
 
@@ -10,8 +10,6 @@ import { IntegratedSideBar } from './__mocks__';
 expect.extend({ toBeCenterOfScreenX, toBeLeftOfScreenX });
 
 describe('SideBar 관련 컴포넌트 통합 테스트', () => {
-  const sidebarStore = renderHook(() => useSideBarStore()).result;
-
   let sideBar: HTMLElement;
   let contentArea: HTMLElement;
   let sideBarButton: HTMLElement;
@@ -44,15 +42,18 @@ describe('SideBar 관련 컴포넌트 통합 테스트', () => {
     });
 
     it('sidebar 관련 zustand store는 초기화된다.', () => {
-      sidebarStore.current.showSideBar();
-      sidebarStore.current.deactiveSideBarButton();
+      act(() => {
+        useSideBarStore.setState({ ...initialState, sideBarState: !initialState.sideBarState });
+      });
 
       render(<IntegratedSideBar />);
 
+      const sideBarStore = useSideBarStore.getState();
       const curState = {
-        sideBarState: sidebarStore.current.sideBarState,
-        sideBarButtonState: sidebarStore.current.sideBarButtonState,
+        sideBarState: sideBarStore.sideBarState,
+        sideBarButtonState: sideBarStore.sideBarButtonState,
       };
+
       expect(curState).toEqual(initialState);
     });
   });
@@ -128,27 +129,17 @@ describe('SideBar 관련 컴포넌트 통합 테스트', () => {
     ].forEach(({ scenario, initialState, expected, loopCount = 1 }) => {
       it(scenario, async () => {
         // 초기 store 설정
-        if (initialState.sideBarState) {
-          sidebarStore.current.showSideBar();
-        } else {
-          sidebarStore.current.hideSideBar();
-        }
-        expect(sidebarStore.current.sideBarState).toBe(initialState.sideBarState);
-
-        if (initialState.sideBarButtonState) {
-          sidebarStore.current.activeSideBarButton();
-        } else {
-          sidebarStore.current.deactiveSideBarButton();
-        }
-        expect(sidebarStore.current.sideBarButtonState).toBe(initialState.sideBarButtonState);
-
-        await sleep(1000);
+        act(() => {
+          useSideBarStore.setState(initialState);
+        });
 
         // 테스트 시작 (loopCount 만큼 반복해서 테스트)
         for (let i = 0; i < loopCount; i++) {
           // 클릭 이벤트 발생
-          sideBarButton?.click();
-          await sleep(1000);
+          act(() => {
+            sideBarButton?.click();
+          });
+          await sleep(1000); // 애니메이션 효과가 발생하므로 1초 대기
 
           // 예상한 상태가 맞는지 확인
           if (expected.sideBarVisible != undefined) {
