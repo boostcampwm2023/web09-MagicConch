@@ -28,54 +28,81 @@ describe('SideBarButton', () => {
     expect(curState).toEqual(initialState);
   });
 
-  it('sideBarState가 false인 상태에서 side bar 버튼을 클릭하면, sideBarState가 true가 된다.', async () => {
-    const { result } = renderHook(() => useSideBarStore());
-    const { findByLabelText } = render(<SideBarButton />);
+  [
+    {
+      scenario: 'sideBarState가 false인 상태에서 side bar 버튼을 클릭하면, sideBarState가 true가 된다.',
+      initialState: {
+        sideBarState: false,
+        sideBarButtonState: true,
+      },
+      expected: {
+        sideBarState: true,
+      },
+    },
+    {
+      scenario: 'sideBarState가 true인 상태에서 side bar 버튼을 클릭하면, sideBarState가 false가 된다.',
+      initialState: {
+        sideBarState: true,
+        sideBarButtonState: true,
+      },
+      expected: {
+        sideBarState: false,
+      },
+    },
+    {
+      scenario:
+        'side bar 버튼이 비활성화된 상태이고 sideBarState가 false인 상태에서 side bar 버튼을 클릭하면, sideBarState가 바뀌지 않는다.',
+      initialState: {
+        sideBarState: false,
+        sideBarButtonState: false,
+      },
+      expected: {
+        sideBarButtonState: false,
+      },
+      loopCount: 2,
+    },
+    {
+      scenario: `sideBarState가 true인 상태에서 side bar 버튼이 비활성화된 상태되면, sideBarState가 false가 되고, 
+      이후에 side bar 버튼을 클릭해도 sideBarState가 바뀌지 않는다.`,
+      initialState: {
+        sideBarState: true,
+        sideBarButtonState: false,
+      },
+      expected: {
+        sideBarButtonState: false,
+      },
+      loopCount: 2,
+    },
+  ].forEach(({ scenario, initialState, expected, loopCount = 1 }) => {
+    it(scenario, async () => {
+      const { result } = renderHook(() => useSideBarStore());
+      const { findByLabelText } = render(<SideBarButton />);
 
-    const button = await findByLabelText('button');
+      const button = await findByLabelText('button');
 
-    result.current.hideSideBar();
+      // 초기 store 설정
+      if (initialState.sideBarState) {
+        result.current.showSideBar();
+      } else {
+        result.current.hideSideBar();
+      }
+      expect(result.current.sideBarState).toBe(initialState.sideBarState);
 
-    expect(result.current.sideBarState).toBeFalsy();
+      if (initialState.sideBarButtonState) {
+        result.current.activeSideBarButton();
+      } else {
+        result.current.deactiveSideBarButton();
+      }
+      expect(result.current.sideBarButtonState).toBe(initialState.sideBarButtonState);
 
-    button?.click();
+      // 테스트 시작 (loopCount 만큼 반복해서 테스트)
+      for (let i = 0; i < loopCount; i += 1) {
+        button?.click();
 
-    expect(result.current.sideBarState).toBeTruthy();
-  });
-
-  it('sideBarState가 true인 상태에서 side bar 버튼을 클릭하면, sideBarState가 false가 된다.', async () => {
-    const { result } = renderHook(() => useSideBarStore());
-    const { findByLabelText } = render(<SideBarButton />);
-
-    const button = await findByLabelText('button');
-
-    result.current.showSideBar();
-
-    expect(result.current.sideBarState).toBeTruthy();
-
-    button?.click();
-
-    expect(result.current.sideBarState).toBeFalsy();
-  });
-
-  it('sideBarButtonState가 false인 상태에서 side bar 버튼을 클릭하면, sideBarButtonState가 바뀌지 않는다.', async () => {
-    const { result } = renderHook(() => useSideBarStore());
-    const { findByLabelText } = render(<SideBarButton />);
-
-    const button = await findByLabelText('button');
-
-    result.current.hideSideBar();
-
-    expect(result.current.sideBarState).toBeFalsy();
-
-    result.current.deactiveSideBarButton();
-    button?.click();
-
-    expect(result.current.sideBarButtonState).toBeFalsy();
-
-    result.current.activeSideBarButton();
-    button?.click();
-
-    expect(result.current.sideBarButtonState).toBeTruthy();
+        // 예상한 store가 맞는지 확인
+        expect(result.current.sideBarState).toBe(expected.sideBarState);
+        expect(result.current.sideBarButtonState).toBe(expected.sideBarButtonState);
+      }
+    });
   });
 });
