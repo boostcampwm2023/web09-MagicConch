@@ -12,6 +12,6 @@ export class TarotResultDto {
   readonly message: string;
 
   static fromEntity(entity: TarotResult): TarotResultDto {
-    return { ...entity };
+    return { cardUrl: entity.cardUrl, message: entity.message };
   }
 }
