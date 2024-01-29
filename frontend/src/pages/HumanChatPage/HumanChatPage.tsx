@@ -48,13 +48,19 @@ export default function HumanChatPage() {
 
   return (
     <Background type="dynamic">
-      <Header rightItems={[<SideBarButton />]} />
+      <Header
+        rightItems={[
+          <SideBarButton
+            activeIcon="mdi:message"
+            inactiveIcon="mdi:message-off"
+          />,
+        ]}
+      />
       <ContentAreaWithSideBar
         sideBar={
           <ChatContainer
-            width="w-[90%]"
-            height="h-[80%]"
-            position="top-[5vh]"
+            width="w-400"
+            height="h-full"
             messages={messages}
             onSubmitMessage={onSubmitMessage}
             inputDisabled={inputDisabled}

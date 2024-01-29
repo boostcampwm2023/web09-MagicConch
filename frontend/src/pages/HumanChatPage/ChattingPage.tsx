@@ -31,7 +31,7 @@ export default function ChattingPage() {
   const goSettingPage = () => navigate('setting');
 
   return (
-    <div className={`${joined ? '' : 'hidden'}`}>
+    <div className={`flex-with-center ${joined ? '' : 'hidden'}`}>
       <CamContainer
         localVideoRef={localVideoRef}
         remoteVideoRef={remoteVideoRef}
@@ -40,7 +40,7 @@ export default function ChattingPage() {
         tarotButtonClick={tarotButtonClick}
         tarotButtonDisabled={tarotButtonDisabled}
       />
-      <div className="absolute top-[10vh] right-90">
+      <div className="absolute z-10 top-[10vh] right-90">
         <IconButton
           icon="uil:setting"
           iconColor="textWhite"
