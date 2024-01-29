@@ -2,7 +2,7 @@ import { act, render } from '@testing-library/react';
 
 import { initialState, useSideBarStore } from '@stores/zustandStores/useSideBarStore';
 
-import SideBarButton from './SideBarButton';
+import { SideBarButton } from './__mocks__';
 
 describe('<SideBarButton> 컴포넌트 테스트', () => {
   let button: HTMLElement;
