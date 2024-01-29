@@ -66,10 +66,10 @@ describe('ChatService', () => {
         [
           {
             memberId: '12345678-1234-5678-1234-567812345670',
-            roomId: '12345678-1234-5678-1234-567812345671',
+            roomId: '12345678-1234-5678-1234-567812345672',
           },
           {
-            memberId: '12345678-1234-5678-1234-567812345672',
+            memberId: '12345678-1234-5678-1234-567812345671',
             roomId: '12345678-1234-5678-1234-567812345673',
           },
         ].forEach(async (scenario) => {
@@ -100,10 +100,10 @@ describe('ChatService', () => {
             memberId: '12345678-1234-5678-1234-567812345670',
             email: 'tarotmilktea@kakao.com',
             providerId: PROVIDER_ID.KAKAO,
-            roomId: '12345678-1234-5678-1234-567812345671',
+            roomId: '12345678-1234-5678-1234-567812345672',
           },
           {
-            memberId: '12345678-1234-5678-1234-567812345672',
+            memberId: '12345678-1234-5678-1234-567812345671',
             email: 'tarotmilktea2@kakao.com',
             providerId: PROVIDER_ID.KAKAO,
             roomId: '12345678-1234-5678-1234-567812345673',
@@ -206,7 +206,7 @@ describe('ChatService', () => {
           },
           {
             roomId: '12345678-1234-5678-1234-567812345671',
-            memberId: '12345678-1234-5678-1234-567812345672',
+            memberId: '12345678-1234-5678-1234-567812345673',
           },
         ].forEach(async (scenario) => {
           const findOneByMock = jest
@@ -226,18 +226,18 @@ describe('ChatService', () => {
     describe('성공', () => {
       it('해당 PK의 채팅방을 조회한다', async () => {
         const member: Member = {
-          id: '12345678-1234-5678-1234-567812345678',
+          id: '12345678-1234-5678-1234-567812345670',
           email: 'tarotmilktea@kakao.com',
           providerId: PROVIDER_ID.KAKAO,
         };
         const rooms: ChattingRoom[] = [
           {
-            id: '12345678-1234-5678-1234-567812345670',
+            id: '12345678-1234-5678-1234-567812345671',
             title: '오늘의 운세 채팅방',
             participant: member,
           },
           {
-            id: '12345678-1234-5678-1234-567812345671',
+            id: '12345678-1234-5678-1234-567812345672',
             title: '내일의 운세 채팅방',
             participant: member,
           },
@@ -278,25 +278,25 @@ describe('ChatService', () => {
 
     beforeEach(() => {
       member = {
-        id: '12345678-1234-5678-1234-567812345678',
+        id: '12345678-1234-5678-1234-567812345670',
         email: 'tarotmilktea@kakao.com',
         providerId: PROVIDER_ID.KAKAO,
       };
 
       room = {
-        id: '12345678-1234-5678-1234-567812345670',
+        id: '12345678-1234-5678-1234-567812345671',
         participant: member,
       };
 
       messages = [
         {
-          id: '12345678-1234-5678-1234-567812345671',
+          id: '12345678-1234-5678-1234-567812345672',
           isHost: true,
           message: '어떤 고민이 있어?',
           room: room,
         },
         {
-          id: '12345678-1234-5678-1234-567812345672',
+          id: '12345678-1234-5678-1234-567812345673',
           isHost: false,
           message: '오늘 운세를 알고 싶어',
           room: room,
@@ -340,7 +340,7 @@ describe('ChatService', () => {
 
     describe('실패', () => {
       it('해당 PK의 채팅방이 존재하지 않아 NotFoundException을 반환한다', async () => {
-        const wrongRoomId: string = '12345678-1234-0000-1234-567812345678';
+        const wrongRoomId: string = '12345678-1234-0000-1234-567812345679';
 
         const memberFindOneByMock = jest
           .spyOn(membersRepository, 'findOneBy')
@@ -365,7 +365,7 @@ describe('ChatService', () => {
 
       it('해당 PK의 채팅방을 조회할 수 있는 권한이 없어 ForbiddenException을 반환한다', async () => {
         const forbiddenMember: Member = {
-          id: '12345678-1234-5678-1234-567812345679',
+          id: '12345678-0000-0000-1234-567812345678',
           email: 'tarotmilktea2@kakao.com',
           providerId: PROVIDER_ID.KAKAO,
         };
@@ -400,13 +400,13 @@ describe('ChatService', () => {
 
     beforeEach(() => {
       member = {
-        id: '12345678-1234-5678-1234-567812345678',
+        id: '12345678-1234-5678-1234-567812345670',
         email: 'tarotmilktea@kakao.com',
         providerId: PROVIDER_ID.KAKAO,
       };
 
       room = {
-        id: '12345678-1234-5678-1234-567812345670',
+        id: '12345678-1234-5678-1234-567812345671',
         participant: member,
       };
 
@@ -449,7 +449,7 @@ describe('ChatService', () => {
 
     describe('실패', () => {
       it('해당 PK의 채팅방이 존재하지 않아 NotFoundException을 반환한다', async () => {
-        const wrongRoomId: string = '12345678-1234-0000-1234-567812345678';
+        const wrongRoomId: string = '12345678-0000-0000-1234-567812345678';
         const memberFindOneByMock = jest
           .spyOn(membersRepository, 'findOneBy')
           .mockResolvedValueOnce(member);
@@ -474,7 +474,7 @@ describe('ChatService', () => {
 
       it('해당 PK의 채팅방을 수정할 수 있는 권한이 없어 ForbiddenException을 반환한다', async () => {
         const forbiddenMember: Member = {
-          id: '12345678-1234-5678-1234-567812345679',
+          id: '12345678-0000-0000-1234-567812345678',
           email: 'tarotmilktea2@kakao.com',
           providerId: PROVIDER_ID.KAKAO,
         };
@@ -509,13 +509,13 @@ describe('ChatService', () => {
 
     beforeEach(() => {
       member = {
-        id: '12345678-1234-5678-1234-567812345678',
+        id: '12345678-1234-5678-1234-567812345670',
         email: 'tarotmilktea@kakao.com',
         providerId: PROVIDER_ID.KAKAO,
       };
 
       room = {
-        id: '12345678-1234-5678-1234-567812345670',
+        id: '12345678-1234-5678-1234-567812345671',
         participant: member,
       };
     });
@@ -550,7 +550,7 @@ describe('ChatService', () => {
 
     describe('실패', () => {
       it('해당 PK의 채팅방이 존재하지 않아 NotFoundException을 반환한다', async () => {
-        const wrongRoomId: string = '12345678-1234-0000-1234-567812345678';
+        const wrongRoomId: string = '12345678-0000-0000-1234-567812345678';
 
         const memberFindOneByMock = jest
           .spyOn(membersRepository, 'findOneBy')
@@ -575,7 +575,7 @@ describe('ChatService', () => {
 
       it('해당 PK의 채팅방을 삭제할 수 있는 권한이 없어 ForbiddenException을 반환한다', async () => {
         const forbiddenMember: Member = {
-          id: '12345678-1234-5678-1234-567812345679',
+          id: '12345678-0000-0000-1234-567812345678',
           email: 'tarotmilktea2@kakao.com',
           providerId: PROVIDER_ID.KAKAO,
         };
