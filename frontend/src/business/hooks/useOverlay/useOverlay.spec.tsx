@@ -1,5 +1,5 @@
 import useOverlay, { OverlayProvider } from '.';
-import { renderHook, screen, waitFor } from '@testing-library/react';
+import { act, renderHook, screen } from '@testing-library/react';
 
 describe('useOvelay훅 테스트', () => {
   const wrapper = ({ children }: { children: React.ReactNode }) => <OverlayProvider>{children}</OverlayProvider>;
@@ -9,15 +9,15 @@ describe('useOvelay훅 테스트', () => {
     const { open, close } = result.current;
 
     // 오버레이가 열린다.
-    waitFor(() => {
+    act(() => {
       open(() => <div>testOverlay</div>);
-      expect(screen.getByText('testOverlay')).toBeInTheDocument();
     });
+    expect(screen.getByText('testOverlay')).toBeInTheDocument();
 
     // 오버레이가 닫힌다.
-    waitFor(() => {
+    act(() => {
       close();
-      expect(screen.queryByText('testOverlay')).not.toBeInTheDocument();
     });
+    expect(screen.queryByText('testOverlay')).not.toBeInTheDocument();
   });
 });
