@@ -21,7 +21,7 @@ export function useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack }: us
   const humanSocket = HumanSocketManager.getInstance();
   const { createRoom, joinRoom, checkRoomExist } = useSignalingSocket();
   const { startWebRTC } = useWebRTC();
-  const { enableSideBar } = useSideBarStore();
+  const { enableSideBarButton } = useSideBarStore();
 
   const { roomName } = useParams();
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ export function useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack }: us
       onSuccess: ({ closePopup }) => {
         navigate('setting');
         closePopup();
-        enableSideBar();
+        enableSideBarButton();
       },
       onFull: () => {
         unblockGoBack(() => {
@@ -58,7 +58,7 @@ export function useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack }: us
       onSuccess: ({ closePopup }) => {
         navigate('setting');
         closePopup();
-        enableSideBar();
+        enableSideBarButton();
       },
       onCancel: () => {
         navigate('/');
