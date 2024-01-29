@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import ProfileSetting from '@components/ProfileSetting';
 
@@ -20,7 +20,7 @@ export default function ChattingPage() {
 
   const { changeMyAudioTrack, changeMyVideoTrack, toggleAudio, toggleVideo } = useControllMedia({ localVideoRef });
 
-  const { enableSideBar, disableSideBarButton } = useSideBarStore();
+  const { enableSideBarButton, disableSideBarButton } = useSideBarStore();
 
   useEffect(() => {
     disableSideBarButton();
@@ -46,7 +46,7 @@ export default function ChattingPage() {
       videoRef={localVideoRef}
       onConfirm={() => {
         sendProfileInfo();
-        enableSideBar();
+        enableSideBarButton();
         navigate('..');
       }}
       onChangeProfileImage={setLocalProfileImage}

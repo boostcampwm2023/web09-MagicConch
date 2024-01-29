@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
 interface SideBarState {
+  first: boolean;
   sideBarState: boolean;
   sideBarButtonState: boolean;
 }
@@ -11,11 +12,13 @@ interface SideBarActions {
   toggleSideBarButtonState: () => void;
   showSideBar: () => void;
   hideSideBar: () => void;
-  enableSideBar: () => void;
+  enableSideBarButton: () => void;
   disableSideBarButton: () => void;
+  visited: () => void;
 }
 
 export const initialState: SideBarState = {
+  first: true,
   sideBarState: false,
   sideBarButtonState: true,
 };
@@ -27,8 +30,9 @@ export const useSideBarStore = create<SideBarState & SideBarActions>()(
     toggleSideBarButtonState: () => set(state => ({ sideBarButtonState: !state.sideBarButtonState })),
     showSideBar: () => set({ sideBarState: true }),
     hideSideBar: () => set({ sideBarState: false }),
-    enableSideBar: () => set({ sideBarButtonState: true }),
+    enableSideBarButton: () => set({ sideBarButtonState: true }),
     disableSideBarButton: () => set({ sideBarButtonState: false }),
+    visited: () => set({ first: false }),
   })),
 );
 
