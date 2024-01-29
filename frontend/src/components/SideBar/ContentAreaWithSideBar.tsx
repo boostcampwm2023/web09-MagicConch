@@ -11,7 +11,7 @@ export default function ContentAreaWithSideBar({ children, sideBar }: ContentAre
   const { sideBarState } = useSideBarStore();
 
   return (
-    <div className="w-screen h-full flex justify-end overflow-hidden">
+    <div className="w-screen h-full flex justify-end overflow-hidden absolute z-10">
       <div className="w-screen h-full flex">
         <article className="w-screen h-full flex justify-center">{children}</article>
         <SideBar hidden={!sideBarState}>{sideBar}</SideBar>
