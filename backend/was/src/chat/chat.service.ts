@@ -63,9 +63,12 @@ export class ChatService {
     providerId: number,
   ): Promise<ChattingRoomDto[]> {
     try {
-      const memberId: string = await this.findMemberId(email, providerId);
-      const rooms: ChattingRoom[] = await this.chattingRoomRepository.findBy({
-        id: memberId,
+      const memberId: string = await this.findMemberIdByEmail(
+        email,
+        providerId,
+      );
+      const rooms = await this.chattingRoomRepository.findBy({
+        participant: { id: memberId },
       });
       return rooms.map((room: ChattingRoom) =>
         ChattingRoomDto.fromEntity(room),
@@ -81,10 +84,13 @@ export class ChatService {
     providerId: number,
   ): Promise<ChattingMessageDto[]> {
     try {
-      const memberId: string = await this.findMemberId(email, providerId);
+      const memberId: string = await this.findMemberIdByEmail(
+        email,
+        providerId,
+      );
       await this.findRoom(id, memberId);
       const messages: ChattingMessage[] =
-        await this.chattingMessageRepository.findBy({ id: id });
+        await this.chattingMessageRepository.findBy({ room: { id: id } });
       return messages.map((message: ChattingMessage) =>
         ChattingMessageDto.fromEntity(message),
       );
@@ -100,7 +106,10 @@ export class ChatService {
     updateChattingRoomDto: UpdateChattingRoomDto,
   ): Promise<void> {
     try {
-      const memberId: string = await this.findMemberId(email, providerId);
+      const memberId: string = await this.findMemberIdByEmail(
+        email,
+        providerId,
+      );
       await this.findRoom(id, memberId);
       await this.chattingRoomRepository.update(
         { id: id },
@@ -117,7 +126,10 @@ export class ChatService {
     providerId: number,
   ): Promise<void> {
     try {
-      const memberId: string = await this.findMemberId(email, providerId);
+      const memberId: string = await this.findMemberIdByEmail(
+        email,
+        providerId,
+      );
       await this.findRoom(id, memberId);
       await this.chattingRoomRepository.softDelete({ id: id });
     } catch (err: unknown) {
@@ -170,7 +182,7 @@ export class ChatService {
     return room;
   }
 
-  private async findMemberId(
+  private async findMemberIdByEmail(
     email: string,
     providerId: number,
   ): Promise<string> {

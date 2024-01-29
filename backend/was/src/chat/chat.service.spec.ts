@@ -233,10 +233,12 @@ describe('ChatService', () => {
         const rooms: ChattingRoom[] = [
           {
             id: '12345678-1234-5678-1234-567812345670',
+            title: '오늘의 운세 채팅방',
             participant: member,
           },
           {
             id: '12345678-1234-5678-1234-567812345671',
+            title: '내일의 운세 채팅방',
             participant: member,
           },
         ];
@@ -253,13 +255,18 @@ describe('ChatService', () => {
           member.providerId ?? 0,
         );
         expect(expectation).toEqual(
-          rooms.map((room) => expect.objectContaining({ participant: member })),
+          rooms.map((room: ChattingRoom) => ({
+            id: room.id,
+            title: room.title,
+          })),
         );
         expect(memberFindOneByMock).toHaveBeenCalledWith({
           email: member.email,
           providerId: member.providerId,
         });
-        expect(roomFindByMock).toHaveBeenCalledWith({ id: member.id });
+        expect(roomFindByMock).toHaveBeenCalledWith({
+          participant: { id: member.id },
+        });
       });
     });
   });
@@ -291,7 +298,7 @@ describe('ChatService', () => {
         {
           id: '12345678-1234-5678-1234-567812345672',
           isHost: false,
-          message: '오늘 운세를 알고 싶어?',
+          message: '오늘 운세를 알고 싶어',
           room: room,
         },
       ];
@@ -325,7 +332,9 @@ describe('ChatService', () => {
           providerId: member.providerId,
         });
         expect(roomFindOneByMock).toHaveBeenCalledWith({ id: room.id });
-        expect(messageFindByMock).toHaveBeenCalledWith({ id: room.id });
+        expect(messageFindByMock).toHaveBeenCalledWith({
+          room: { id: room.id },
+        });
       });
     });
 
