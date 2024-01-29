@@ -6,6 +6,7 @@ import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { JwtStrategy } from 'src/auth/strategies/jwt.strategy';
 import { ChatController } from 'src/chat/chat.controller';
 import { ChatService } from 'src/chat/chat.service';
+import { ChattingMessageDto } from 'src/chat/dto';
 import { ChattingMessage, ChattingRoom } from 'src/chat/entities';
 import { PROVIDER_ID } from 'src/common/constants/etc';
 import { Member } from 'src/members/entities';
@@ -15,10 +16,11 @@ import { EntityManager } from 'typeorm';
 describe('Chat', () => {
   let app: INestApplication;
   let entityManager: EntityManager;
-  let savedMember: Member;
   let savedRoom: ChattingRoom;
   const jwtToken: string =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImV4cCI6IjFoIn0.eyJlbWFpbCI6InRhcm90bWlsa3RlYUBrYWthby5jb20iLCJwcm92aWRlcklkIjowLCJhY2Nlc3NUb2tlbiI6ImFjY2Vzc1Rva2VuIn0.DpYPxbwWGA6kYkyYb3vJSS0PTiyy3ihkiM54Bm6XAoM';
+  const id: string = '12345678-1234-5678-1234-567812345670';
+  const wrongId: string = '12345678-0000-0000-1234-567812345678';
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -42,27 +44,12 @@ describe('Chat', () => {
     const member: Member = new Member();
     member.email = 'tarotmilktea@kakao.com';
     member.providerId = PROVIDER_ID.KAKAO;
-    savedMember = await entityManager.save(member);
+    await entityManager.save(member);
 
-    const room: ChattingRoom = ChattingRoom.fromMember(savedMember);
+    const room: ChattingRoom = new ChattingRoom();
+    room.id = id;
+    room.participant = member;
     savedRoom = await entityManager.save(room);
-
-    [
-      {
-        isHost: true,
-        message: '어떤 고민이 있어?',
-      },
-      {
-        isHost: false,
-        message: '오늘 운세를 알고 싶어',
-      },
-    ].forEach(async (chatLog) => {
-      const message: ChattingMessage = new ChattingMessage();
-      message.isHost = chatLog.isHost;
-      message.message = chatLog.message;
-      message.room = savedRoom;
-      await entityManager.save(message);
-    });
 
     app.use(cookieParser());
     await app.init();
@@ -97,10 +84,59 @@ describe('Chat', () => {
     });
   });
 
-  /**
-   * TODO
-   */
-  describe('GET /chat/ai/:id', () => {});
+  describe('GET /chat/ai/:id', () => {
+    let messages: ChattingMessageDto[] = [];
+
+    beforeAll(() => {
+      [
+        {
+          isHost: true,
+          message: '어떤 고민이 있어?',
+        },
+        {
+          isHost: false,
+          message: '오늘 운세를 알고 싶어',
+        },
+      ].forEach(async (chatLog) => {
+        const message: ChattingMessage = new ChattingMessage();
+        message.isHost = chatLog.isHost;
+        message.message = chatLog.message;
+        message.room = savedRoom;
+        await entityManager.save(message);
+        messages.push(ChattingMessageDto.fromEntity(message));
+      });
+    });
+
+    describe('성공', () => {
+      it(`[인증 받은 사용자/올바른 아이디] GET /chat/ai/${id}`, () => {
+        return request(app.getHttpServer())
+          .get(`/chat/ai/${id}`)
+          .set('Cookie', `magicconch=${jwtToken}`)
+          .expect(200)
+          .expect((res) => expect(res.body).toEqual(messages));
+      });
+    });
+
+    describe('실패', () => {
+      it(`[인증 받지 않은 사용자/올바른 아이디] GET /chat/ai/${id}`, () => {
+        return request(app.getHttpServer()).get(`/chat/ai/${id}`).expect(401);
+      });
+
+      it('[인증 받지 않은 사용자/UUID 형식이 아닌 아이디] GET /chat/ai/invalidUUID', () => {
+        return request(app.getHttpServer())
+          .get('/chat/ai/invalidUUID')
+          .set('Cookie', `magicconch=${jwtToken}`)
+          .expect(400);
+      });
+
+      it(`[인증 받지 않은 사용자/존재하지 않는 아이디] GET /chat/ai/${wrongId}`, () => {
+        return request(app.getHttpServer())
+          .get(`/chat/ai/${wrongId}`)
+          .set('Cookie', `magicconch=${jwtToken}`)
+          .expect(404);
+      });
+    });
+  });
 
   describe('GET /chat/ai', () => {});
 
