@@ -18,7 +18,7 @@ function ChatList({ messages }: ChatListProps) {
   return (
     <ul
       ref={messagesRef}
-      className={`w-full h-full pt-10 mb-20 overflow-auto sm:text-12`}
+      className={`w-[90%] h-[80%] pt-50 mb-20 overflow-auto sm:text-12`}
     >
       {messages.map(({ type, message, profile, tarotId, button, shareLinkId }, index) => {
         return (
