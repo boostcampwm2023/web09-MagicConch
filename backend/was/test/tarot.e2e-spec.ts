@@ -70,8 +70,8 @@ describe('Tarot', () => {
   });
 
   describe('GET /tarot/result/:id', () => {
-    const id: string = '12345678-1234-5678-1234-567812345678';
-    const wrongId: string = '12345678-1234-5678-1234-567812345679';
+    const id: string = '12345678-1234-5678-1234-567812345670';
+    const wrongId: string = '12345678-0000-0000-1234-567812345678';
 
     beforeAll(async () => {
       const tarotResult: TarotResult = new TarotResult();
