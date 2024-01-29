@@ -1,7 +1,7 @@
 import { CreateChattingMessageDto } from 'src/chat/dto';
 import { ChattingMessage, ChattingRoom } from 'src/chat/entities';
 import { ChatLog } from 'src/common/types/chatbot';
-import { roomMock } from './chatting-room.mocks';
+import { roomMock } from './chatting-room';
 
 function makeMessageMock(
   messageId: string,
@@ -16,7 +16,7 @@ function makeMessageMock(
   return messageMock;
 }
 
-const messageId: string = 'messageId';
+const messageId: string = '12345678-1234-5678-1234-567812345678';
 
 const chatLog: ChatLog = {
   isHost: false,

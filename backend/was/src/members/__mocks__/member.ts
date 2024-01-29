@@ -29,9 +29,9 @@ export const providerId: number = 0;
 
 export const diffProviderId: number = 1;
 
-export const memberId: string = 'memberId';
+export const memberId: string = '12345678-1234-5678-1234-567812345678';
 
-export const diffMemberId: string = 'diffMemberId';
+export const diffMemberId: string = '12345678-1234-5678-1234-567812345679';
 
 export const memberMock: Member = makeMemberMock(
   memberId,
@@ -40,6 +40,8 @@ export const memberMock: Member = makeMemberMock(
   profileUrl,
   providerId,
 );
+
+export const memberMocks: Member[] = [memberMock];
 
 export const createMemberDtoMock: CreateMemberDto = CreateMemberDto.fromProfile(
   providerId,

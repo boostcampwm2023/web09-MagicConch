@@ -5,6 +5,7 @@ export const iconColorMap = {
   textWeak: 'text-weak',
   textWhite: 'text-white-default',
   kakaoIcon: 'kakao-icon',
+  kakao: 'text-kakao',
 };
 
 export type IconColor = keyof typeof iconColorMap;
@@ -15,6 +16,7 @@ export const ButtonColorMap: Record<string, string> = {
   disabled: 'surface-box text-weak',
   dark: 'surface-alt text-white',
   transparent: 'bg-transparent hover:bg-transparent hover:border-transparent',
+  kakao: 'surface-kakao text-kakao',
 };
 
 export type ButtonColor = keyof typeof ButtonColorMap;

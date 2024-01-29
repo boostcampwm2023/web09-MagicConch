@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
-import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/auth/guard';
 import {
   DeleteRoomDecorator,
   FindMessagesDecorator,
@@ -20,8 +20,8 @@ import {
 } from './chat.decorators';
 import { ChatService } from './chat.service';
 import {
-  ChattingMessageResponseDto,
-  ChattingRoomResponseDto,
+  ChattingMessageDto,
+  ChattingRoomDto,
   UpdateChattingRoomDto,
 } from './dto';
 
@@ -32,18 +32,18 @@ export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
   @Get('ai')
-  @FindRoomsDecorator('채팅방', [ChattingRoomResponseDto])
-  async findRooms(@Req() req: Request): Promise<ChattingRoomResponseDto[]> {
+  @FindRoomsDecorator('채팅방', [ChattingRoomDto])
+  async findRooms(@Req() req: Request): Promise<ChattingRoomDto[]> {
     return await this.chatService.findRoomsById(req.cookies.magicConch);
   }
 
   @Get('ai/:id')
   @FindMessagesDecorator('채팅 메시지', { type: 'uuid', name: 'id' }, [
-    ChattingMessageResponseDto,
+    ChattingMessageDto,
   ])
   async findMessages(
     @Param('id', ParseUUIDPipe) id: string,
-  ): Promise<ChattingMessageResponseDto[]> {
+  ): Promise<ChattingMessageDto[]> {
     return await this.chatService.findMessagesById(id);
   }
 

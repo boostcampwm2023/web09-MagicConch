@@ -1,12 +1,12 @@
 import { mockEventType, mockListener, mockOptions, setupEventListener } from '@mocks/event';
 import { mockSocketManager } from '@mocks/socket';
 import {
+  __setMockMediaStreamTracks,
   createFakeDataChannel,
+  createFakeMediaStreamTrack,
   mockMediaStream,
-  mockMediaStreamTrack,
   mockPeerConnection,
   mockRTCDataChannelKeys,
-  mockRTCTrackEvent,
   mockRoomName,
   mockSdp,
   mockSender,
@@ -26,6 +26,15 @@ describe('WebRTC.ts', () => {
     setupEventListener(events, mockPeerConnection);
     instance.resetForTesting();
 
+    __setMockMediaStreamTracks([
+      createFakeMediaStreamTrack('video', 'video1'),
+      createFakeMediaStreamTrack('video', 'video2'),
+      createFakeMediaStreamTrack('audio', 'audio1'),
+      createFakeMediaStreamTrack('audio', 'audio2'),
+    ]);
+  });
+
+  afterEach(() => {
     vi.clearAllMocks();
   });
 
@@ -74,9 +83,17 @@ describe('WebRTC.ts', () => {
     });
 
     it('track 이벤트 발생: setRemoteStream 메서드를 호출 해야함', () => {
+      const event = {
+        streams: [
+          createFakeMediaStreamTrack('video', 'video1'),
+          createFakeMediaStreamTrack('video', 'video2'),
+          createFakeMediaStreamTrack('audio', 'audio1'),
+          createFakeMediaStreamTrack('audio', 'audio2'),
+        ],
+      };
       instance.connectRTCPeerConnection(mockRoomName);
-      events.track(mockRTCTrackEvent);
-      expect(instance.getRemoteStream()).toEqual(mockMediaStream);
+      events.track(event);
+      expect(instance.getRemoteStream()).toEqual(event.streams[0]);
     });
 
     it('icecandidate 이벤트 발생: candidate가 없으면 아무것도 하지 않음', () => {
@@ -245,14 +262,14 @@ describe('WebRTC.ts', () => {
       expect(mockPeerConnection.addTrack).not.toBeCalled();
     });
 
-    it('localStream이 있음: addTrack(track, this.localStream)이 호출됨', () => {
-      mockMediaStream.getTracks = vi.fn().mockReturnValue([mockMediaStreamTrack]);
-
+    it('localStream이 있음: localStream.getTracks를 forEach로 돌며 peerConnection.addTrack(track, localStream)실행 ', () => {
       instance.connectRTCPeerConnection(mockRoomName);
       instance.setLocalStream(mockMediaStream);
       instance.addTracks();
 
-      expect(mockPeerConnection.addTrack).toBeCalledWith(mockMediaStreamTrack, mockMediaStream);
+      mockMediaStream.getTracks().forEach((track: any) => {
+        expect(mockPeerConnection.addTrack).toBeCalledWith(track, mockMediaStream);
+      });
     });
   });
 
@@ -262,14 +279,13 @@ describe('WebRTC.ts', () => {
       expect(mockPeerConnection.addTrack).not.toBeCalled();
     });
 
-    it('localStream이 있음: sender의 replaceTrack(nowVideoTrack)이 호출됨', () => {
-      mockMediaStream.getVideoTracks = vi.fn().mockReturnValue([mockMediaStreamTrack]);
-
+    it('localStream이 있음: sender의 replaceTrack(firstVideoTrack)이 호출됨', () => {
       instance.connectRTCPeerConnection(mockRoomName);
       instance.setLocalStream(mockMediaStream);
       instance.replacePeerconnectionVideoTrack2NowLocalStream();
 
-      expect(mockSender.video.replaceTrack).toBeCalledWith(mockMediaStreamTrack);
+      const firstVideoTrack = mockMediaStream.getVideoTracks()[0];
+      expect(mockSender.video.replaceTrack).toBeCalledWith(firstVideoTrack);
     });
   });
 
@@ -279,14 +295,13 @@ describe('WebRTC.ts', () => {
       expect(mockPeerConnection.addTrack).not.toBeCalled();
     });
 
-    it('localStream이 있음: sender의 replaceTrack(nowAudioTrack)이 호출됨', () => {
-      mockMediaStream.getAudioTracks = vi.fn().mockReturnValue([mockMediaStreamTrack]);
-
+    it('localStream이 있음: sender의 replaceTrack(firstVideoTrack)이 호출됨', () => {
       instance.connectRTCPeerConnection(mockRoomName);
       instance.setLocalStream(mockMediaStream);
       instance.replacePeerconnectionAudioTrack2NowLocalStream();
 
-      expect(mockSender.audio.replaceTrack).toBeCalledWith(mockMediaStreamTrack);
+      const firstAudioTrack = mockMediaStream.getAudioTracks()[0];
+      expect(mockSender.audio.replaceTrack).toBeCalledWith(firstAudioTrack);
     });
   });
 });

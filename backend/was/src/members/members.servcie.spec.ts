@@ -8,7 +8,7 @@ import {
   memberMock,
   providerId,
   updateMemberDtoMock,
-} from 'src/mocks/members';
+} from 'src/members/__mocks__/member';
 import { Repository } from 'typeorm';
 import { Member } from './entities';
 import { MembersService } from './members.service';
@@ -17,8 +17,8 @@ describe('MembersService', () => {
   let service: MembersService;
   let repository: Repository<Member>;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+  beforeAll(async () => {
+    const moduleRef: TestingModule = await Test.createTestingModule({
       providers: [
         MembersService,
         {
@@ -28,11 +28,11 @@ describe('MembersService', () => {
       ],
     }).compile();
 
-    service = module.get<MembersService>(MembersService);
-    repository = module.get<Repository<Member>>(getRepositoryToken(Member));
+    service = moduleRef.get<MembersService>(MembersService);
+    repository = moduleRef.get<Repository<Member>>(getRepositoryToken(Member));
   });
 
-  afterEach(() => {
+  afterAll(() => {
     jest.clearAllMocks();
   });
 

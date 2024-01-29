@@ -1,9 +1,8 @@
+import { useDataChannel, useMedia } from '.';
+
 import { initSignalingSocket } from '@business/services/Socket';
 import { HumanSocketManager } from '@business/services/SocketManager';
 import WebRTC from '@business/services/WebRTC';
-
-import { useDataChannel } from './useDataChannel';
-import { useMedia } from './useMedia';
 
 export function useWebRTC() {
   const humanSocket = HumanSocketManager.getInstance();
@@ -15,21 +14,14 @@ export function useWebRTC() {
 
   const startWebRTC = async ({ roomName }: { roomName: string }) => {
     if (webRTC.isConnectedPeerConnection()) {
-      return;
+      return false;
     }
-
     const stream = await getLocalStream();
     webRTC.setLocalStream(stream);
 
     initSignalingSocket({
       roomName,
-      onExitUser: () => {
-        webRTC.closeRTCPeerConnection();
-        webRTC.closeDataChannels();
-        webRTC.connectRTCPeerConnection(roomName);
-        initDataChannels();
-        webRTC.addTracks();
-      },
+      onExitUser: () => resetWebRTCDataChannel(webRTC, initDataChannels, roomName),
     });
 
     webRTC.connectRTCPeerConnection(roomName);
@@ -47,4 +39,12 @@ export function useWebRTC() {
     startWebRTC,
     endWebRTC,
   };
+}
+
+export function resetWebRTCDataChannel(webRTC: WebRTC, initDataChannels: () => void, roomName: string) {
+  webRTC.closeRTCPeerConnection();
+  webRTC.closeDataChannels();
+  webRTC.connectRTCPeerConnection(roomName);
+  initDataChannels();
+  webRTC.addTracks();
 }

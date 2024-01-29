@@ -1,6 +1,6 @@
 import { Socket, io } from 'socket.io-client';
 
-class SocketManager {
+export class SocketManager {
   #socket: Socket | undefined;
 
   #url: string;
@@ -49,5 +49,3 @@ class SocketManager {
     this.socket.emit(eventName, ...eventArgs);
   }
 }
-
-export default SocketManager;

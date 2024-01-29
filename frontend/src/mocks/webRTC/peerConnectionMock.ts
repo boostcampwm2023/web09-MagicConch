@@ -1,14 +1,12 @@
+import { createFakeMediaStreamTrack } from './mediaStreamMock';
+
 export const mockSender = {
   video: {
-    track: {
-      kind: 'video',
-    },
+    track: createFakeMediaStreamTrack('video', 'videoTrack1'),
     replaceTrack: vi.fn(),
   },
   audio: {
-    track: {
-      kind: 'audio',
-    },
+    track: createFakeMediaStreamTrack('audio', 'audioTrack1'),
     replaceTrack: vi.fn(),
   },
 };
