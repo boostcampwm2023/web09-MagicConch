@@ -190,5 +190,41 @@ describe('Chat', () => {
     });
   });
 
-  describe('DELETE /chat/ai/:id', () => {});
+  describe('DELETE /chat/ai/:id', () => {
+    describe('성공', () => {
+      it(`[인증 받은 사용자/올바른 아이디] DELETE /chat/ai/${id}`, async () => {
+        await request(app.getHttpServer())
+          .delete(`/chat/ai/${id}`)
+          .set('Cookie', `magicconch=${jwtToken}`)
+          .expect(200);
+
+        await request(app.getHttpServer())
+          .delete(`/chat/ai/${id}`)
+          .set('Cookie', `magicconch=${jwtToken}`)
+          .expect(404);
+      });
+    });
+
+    describe('실패', () => {
+      it(`[인증 받지 않은 사용자/올바른 아이디] DELETE /chat/ai/${id}`, () => {
+        return request(app.getHttpServer())
+          .delete(`/chat/ai/${id}`)
+          .expect(401);
+      });
+
+      it('[인증 받은 사용자/UUID 형식이 아닌 아이디] DELETE /chat/ai/invalidUUID', () => {
+        return request(app.getHttpServer())
+          .delete('/chat/ai/invalidUUID')
+          .set('Cookie', `magicconch=${jwtToken}`)
+          .expect(400);
+      });
+
+      it(`[인증 받은 사용자/존재하지 않는 아이디] DELETE /chat/ai/${wrongId}`, () => {
+        return request(app.getHttpServer())
+          .delete(`/chat/ai/${wrongId}`)
+          .set('Cookie', `magicconch=${jwtToken}`)
+          .expect(404);
+      });
+    });
+  });
 });
