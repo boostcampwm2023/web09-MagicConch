@@ -7,6 +7,7 @@ import { TarotController } from 'src/tarot/tarot.controller';
 import { TarotService } from 'src/tarot/tarot.service';
 import * as request from 'supertest';
 import { EntityManager } from 'typeorm';
+import { id, wrongId } from './constants';
 
 describe('Tarot', () => {
   let app: INestApplication;
@@ -70,9 +71,6 @@ describe('Tarot', () => {
   });
 
   describe('GET /tarot/result/:id', () => {
-    const id: string = '12345678-1234-5678-1234-567812345670';
-    const wrongId: string = '12345678-0000-0000-1234-567812345678';
-
     beforeAll(async () => {
       const tarotResult: TarotResult = new TarotResult();
       tarotResult.id = id;
