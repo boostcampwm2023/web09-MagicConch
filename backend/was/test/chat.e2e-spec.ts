@@ -12,15 +12,12 @@ import { PROVIDER_ID } from 'src/common/constants/etc';
 import { Member } from 'src/members/entities';
 import * as request from 'supertest';
 import { EntityManager } from 'typeorm';
+import { id, jwtToken, wrongId } from './constants';
 
 describe('Chat', () => {
   let app: INestApplication;
   let entityManager: EntityManager;
   let savedRoom: ChattingRoom;
-  const jwtToken: string =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImV4cCI6IjFoIn0.eyJlbWFpbCI6InRhcm90bWlsa3RlYUBrYWthby5jb20iLCJwcm92aWRlcklkIjowLCJhY2Nlc3NUb2tlbiI6ImFjY2Vzc1Rva2VuIn0.DpYPxbwWGA6kYkyYb3vJSS0PTiyy3ihkiM54Bm6XAoM';
-  const id: string = '12345678-1234-5678-1234-567812345670';
-  const wrongId: string = '12345678-0000-0000-1234-567812345678';
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -87,8 +84,8 @@ describe('Chat', () => {
   describe('GET /chat/ai/:id', () => {
     let messages: ChattingMessageDto[] = [];
 
-    beforeAll(() => {
-      [
+    beforeAll(async () => {
+      const chatLogs = [
         {
           isHost: true,
           message: '어떤 고민이 있어?',
@@ -97,14 +94,15 @@ describe('Chat', () => {
           isHost: false,
           message: '오늘 운세를 알고 싶어',
         },
-      ].forEach(async (chatLog) => {
+      ];
+      for (const chatLog of chatLogs) {
         const message: ChattingMessage = new ChattingMessage();
         message.isHost = chatLog.isHost;
         message.message = chatLog.message;
         message.room = savedRoom;
         await entityManager.save(message);
         messages.push(ChattingMessageDto.fromEntity(message));
-      });
+      }
     });
 
     describe('성공', () => {
