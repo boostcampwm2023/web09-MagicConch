@@ -30,7 +30,7 @@ export class ChattingRoom {
   @OneToMany(() => ChattingMessage, (chattingMessage) => chattingMessage.id)
   chattingMessages?: ChattingMessage[];
 
-  @ManyToOne(() => Member, (member) => member.chattingRooms)
+  @ManyToOne(() => Member, (member) => member.chattingRooms, { eager: true })
   participant: Member;
 
   static fromMember(member: Member): ChattingRoom {
