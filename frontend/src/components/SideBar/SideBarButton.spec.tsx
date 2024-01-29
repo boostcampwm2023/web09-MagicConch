@@ -25,6 +25,7 @@ describe('<SideBarButton> 컴포넌트 테스트', () => {
 
     const sideBarStore = useSideBarStore.getState();
     const curState = {
+      first: sideBarStore.first,
       sideBarState: sideBarStore.sideBarState,
       sideBarButtonState: sideBarStore.sideBarButtonState,
     };

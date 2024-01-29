@@ -3,7 +3,6 @@ import { act, render } from '@testing-library/react';
 import { initialState, useSideBarStore } from '@stores/zustandStores/useSideBarStore';
 
 import { toBeVisibleSideBar } from '@utils/test/matcher';
-import { renderWithTailwind } from '@utils/test/render';
 import { sleep } from '@utils/time';
 
 import { IntegratedSideBar } from './__mocks__';
@@ -15,7 +14,7 @@ describe('SideBar 관련 컴포넌트 통합 테스트', () => {
   let sideBarButton: HTMLElement | null;
 
   beforeEach(async () => {
-    renderWithTailwind(<IntegratedSideBar />);
+    render(<IntegratedSideBar />);
 
     sideBar = document.querySelector('aside');
     sideBarButton = document.querySelector('button');
@@ -44,6 +43,7 @@ describe('SideBar 관련 컴포넌트 통합 테스트', () => {
 
       const sideBarStore = useSideBarStore.getState();
       const curState = {
+        first: sideBarStore.first,
         sideBarState: sideBarStore.sideBarState,
         sideBarButtonState: sideBarStore.sideBarButtonState,
       };
