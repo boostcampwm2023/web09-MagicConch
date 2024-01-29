@@ -6,7 +6,7 @@ import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { JwtStrategy } from 'src/auth/strategies/jwt.strategy';
 import { ChatController } from 'src/chat/chat.controller';
 import { ChatService } from 'src/chat/chat.service';
-import { ChattingMessageDto } from 'src/chat/dto';
+import { ChattingMessageDto, UpdateChattingRoomDto } from 'src/chat/dto';
 import { ChattingMessage, ChattingRoom } from 'src/chat/entities';
 import { PROVIDER_ID } from 'src/common/constants/etc';
 import { Member } from 'src/members/entities';
@@ -122,14 +122,14 @@ describe('Chat', () => {
         return request(app.getHttpServer()).get(`/chat/ai/${id}`).expect(401);
       });
 
-      it('[인증 받지 않은 사용자/UUID 형식이 아닌 아이디] GET /chat/ai/invalidUUID', () => {
+      it('[인증 받은 사용자/UUID 형식이 아닌 아이디] GET /chat/ai/invalidUUID', () => {
         return request(app.getHttpServer())
           .get('/chat/ai/invalidUUID')
           .set('Cookie', `magicconch=${jwtToken}`)
           .expect(400);
       });
 
-      it(`[인증 받지 않은 사용자/존재하지 않는 아이디] GET /chat/ai/${wrongId}`, () => {
+      it(`[인증 받은 사용자/존재하지 않는 아이디] GET /chat/ai/${wrongId}`, () => {
         return request(app.getHttpServer())
           .get(`/chat/ai/${wrongId}`)
           .set('Cookie', `magicconch=${jwtToken}`)
@@ -138,9 +138,57 @@ describe('Chat', () => {
     });
   });
 
-  describe('GET /chat/ai', () => {});
+  describe('PATCH /chat/ai/:id', () => {
+    const updateRoomDto: UpdateChattingRoomDto = {
+      title: '수정된 채팅방 제목',
+    };
 
-  describe('PATCH /chat/ai/:id', () => {});
+    describe('성공', () => {
+      it(`[인증 받은 사용자/올바른 아이디] PATCH /chat/ai/${id}`, async () => {
+        await request(app.getHttpServer())
+          .patch(`/chat/ai/${id}`)
+          .set('Cookie', `magicconch=${jwtToken}`)
+          .send(updateRoomDto)
+          .expect(200);
+
+        const res = await request(app.getHttpServer())
+          .get(`/chat/ai/`)
+          .set('Cookie', `magicconch=${jwtToken}`)
+          .expect(200);
+
+        const room: ChattingRoom[] = res.body.filter(
+          (room: ChattingRoom) => id === room.id,
+        );
+        expect(room).toHaveLength(1);
+        expect(room[0].title).toBe(updateRoomDto.title);
+      });
+    });
+
+    describe('실패', () => {
+      it(`[인증 받지 않은 사용자/올바른 아이디] PATCH /chat/ai/${id}`, () => {
+        return request(app.getHttpServer())
+          .patch(`/chat/ai/${id}`)
+          .send(updateRoomDto)
+          .expect(401);
+      });
+
+      it('[인증 받은 사용자/UUID 형식이 아닌 아이디] PATCH /chat/ai/invalidUUID', () => {
+        return request(app.getHttpServer())
+          .patch('/chat/ai/invalidUUID')
+          .set('Cookie', `magicconch=${jwtToken}`)
+          .send(updateRoomDto)
+          .expect(400);
+      });
+
+      it(`[인증 받은 사용자/존재하지 않는 아이디] PATCH /chat/ai/${wrongId}`, () => {
+        return request(app.getHttpServer())
+          .patch(`/chat/ai/${wrongId}`)
+          .set('Cookie', `magicconch=${jwtToken}`)
+          .send(updateRoomDto)
+          .expect(404);
+      });
+    });
+  });
 
   describe('DELETE /chat/ai/:id', () => {});
 });
