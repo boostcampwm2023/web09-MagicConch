@@ -16,7 +16,7 @@ import {
 import { ChattingMessage, ChattingRoom } from './entities';
 
 describe('ChatService', () => {
-  let service: ChatService;
+  let chatService: ChatService;
   let chattingRoomRepository: Repository<ChattingRoom>;
   let chattingMessageRepository: Repository<ChattingMessage>;
   let membersRepository: Repository<Member>;
@@ -40,7 +40,7 @@ describe('ChatService', () => {
       ],
     }).compile();
 
-    service = moduleRef.get<ChatService>(ChatService);
+    chatService = moduleRef.get<ChatService>(ChatService);
     chattingRoomRepository = moduleRef.get<Repository<ChattingRoom>>(
       getRepositoryToken(ChattingRoom),
     );
@@ -57,7 +57,7 @@ describe('ChatService', () => {
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(chatService).toBeDefined();
   });
 
   describe('createRoom', () => {
@@ -88,7 +88,7 @@ describe('ChatService', () => {
             .spyOn(chattingRoomRepository, 'save')
             .mockResolvedValueOnce(room);
 
-          await expect(service.createRoom()).resolves.not.toThrow();
+          await expect(chatService.createRoom()).resolves.not.toThrow();
           expect(memberSaveMock).toHaveBeenCalled();
           expect(roomSaveMock).toHaveBeenCalledWith({ participant: member });
         });
@@ -130,7 +130,8 @@ describe('ChatService', () => {
             .spyOn(chattingRoomRepository, 'save')
             .mockResolvedValueOnce(room);
 
-          const expectation: ChattingInfo = await service.createRoom(userInfo);
+          const expectation: ChattingInfo =
+            await chatService.createRoom(userInfo);
           expect(expectation).toEqual({
             memberId: scenario.memberId,
             roomId: scenario.roomId,
@@ -185,7 +186,7 @@ describe('ChatService', () => {
             .mockResolvedValueOnce(message);
 
           await expect(
-            service.createMessages(scenario.roomId, scenario.memberId, [
+            chatService.createMessages(scenario.roomId, scenario.memberId, [
               createMessageDto,
             ]),
           ).resolves.not.toThrow();
@@ -214,7 +215,7 @@ describe('ChatService', () => {
             .mockResolvedValueOnce(null);
 
           await expect(
-            service.createMessages(scenario.roomId, scenario.memberId, []),
+            chatService.createMessages(scenario.roomId, scenario.memberId, []),
           ).rejects.toThrow(NotFoundException);
           expect(findOneByMock).toHaveBeenCalledWith({ id: scenario.roomId });
         });
@@ -250,10 +251,11 @@ describe('ChatService', () => {
           .spyOn(chattingRoomRepository, 'findBy')
           .mockResolvedValueOnce(rooms);
 
-        const expectation: ChattingRoomDto[] = await service.findRoomsByEmail(
-          member.email ?? '',
-          member.providerId ?? 0,
-        );
+        const expectation: ChattingRoomDto[] =
+          await chatService.findRoomsByEmail(
+            member.email ?? '',
+            member.providerId ?? 0,
+          );
         expect(expectation).toEqual(
           rooms.map((room: ChattingRoom) => ({
             id: room.id,
@@ -317,7 +319,7 @@ describe('ChatService', () => {
           .mockResolvedValueOnce(messages);
 
         const expectation: ChattingMessageDto[] =
-          await service.findMessagesById(
+          await chatService.findMessagesById(
             room.id,
             member.email ?? '',
             member.providerId ?? 0,
@@ -350,7 +352,7 @@ describe('ChatService', () => {
           .mockResolvedValueOnce(null);
 
         await expect(
-          service.findMessagesById(
+          chatService.findMessagesById(
             wrongRoomId,
             member.email ?? '',
             member.providerId ?? 0,
@@ -378,7 +380,7 @@ describe('ChatService', () => {
           .mockResolvedValueOnce(room);
 
         await expect(
-          service.findMessagesById(
+          chatService.findMessagesById(
             room.id,
             forbiddenMember.email ?? '',
             forbiddenMember.providerId ?? 0,
@@ -428,7 +430,7 @@ describe('ChatService', () => {
           .mockResolvedValueOnce({ affected: 1 } as any);
 
         await expect(
-          service.updateRoom(
+          chatService.updateRoom(
             room.id,
             member.email ?? '',
             member.providerId ?? 0,
@@ -458,7 +460,7 @@ describe('ChatService', () => {
           .mockResolvedValueOnce(null);
 
         await expect(
-          service.updateRoom(
+          chatService.updateRoom(
             wrongRoomId,
             member.email ?? '',
             member.providerId ?? 0,
@@ -487,7 +489,7 @@ describe('ChatService', () => {
           .mockResolvedValueOnce(room);
 
         await expect(
-          service.updateRoom(
+          chatService.updateRoom(
             room.id,
             forbiddenMember.email ?? '',
             forbiddenMember.providerId ?? 0,
@@ -533,7 +535,7 @@ describe('ChatService', () => {
           .mockResolvedValueOnce({ affected: 1 } as any);
 
         await expect(
-          service.removeRoom(
+          chatService.removeRoom(
             room.id,
             member.email ?? '',
             member.providerId ?? 0,
@@ -560,7 +562,7 @@ describe('ChatService', () => {
           .mockResolvedValueOnce(null);
 
         await expect(
-          service.removeRoom(
+          chatService.removeRoom(
             wrongRoomId,
             member.email ?? '',
             member.providerId ?? 0,
@@ -588,7 +590,7 @@ describe('ChatService', () => {
           .mockResolvedValueOnce(room);
 
         await expect(
-          service.removeRoom(
+          chatService.removeRoom(
             room.id,
             forbiddenMember.email ?? '',
             forbiddenMember.providerId ?? 0,
