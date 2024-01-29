@@ -2,6 +2,7 @@ import { Member } from 'src/members/entities';
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
@@ -24,7 +25,7 @@ export class ChattingRoom {
   @UpdateDateColumn()
   updatedAt?: Date;
 
-  @Column({ nullable: true })
+  @DeleteDateColumn({ name: 'deletedAt', nullable: true })
   deletedAt?: Date;
 
   @OneToMany(() => ChattingMessage, (chattingMessage) => chattingMessage.id)

@@ -1,6 +1,7 @@
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -25,7 +26,7 @@ export class TarotCard {
   @UpdateDateColumn()
   updatedAt?: Date;
 
-  @Column({ nullable: true })
+  @DeleteDateColumn({ name: 'deletedAt', nullable: true })
   deletedAt?: Date;
 
   @ManyToOne(() => TarotCardPack, (tarotCardPack) => tarotCardPack.tarotCards)
