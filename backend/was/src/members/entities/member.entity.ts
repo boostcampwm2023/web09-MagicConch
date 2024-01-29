@@ -3,6 +3,7 @@ import { TarotCardPack } from 'src/tarot/entities';
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -33,7 +34,7 @@ export class Member {
   @UpdateDateColumn()
   updatedAt?: Date;
 
-  @Column({ nullable: true })
+  @DeleteDateColumn({ name: 'deletedAt', nullable: true })
   deletedAt?: Date;
 
   @OneToMany(() => ChattingRoom, (chattingRoom) => chattingRoom.participant)
