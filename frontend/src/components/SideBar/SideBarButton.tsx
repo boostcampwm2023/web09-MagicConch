@@ -1,12 +1,27 @@
+import { IconButton } from '@components/Buttons';
+
 import { useSideBarButton } from '@business/hooks/useSideBar';
 
-export default function SideBarButton() {
-  const { handleClick, buttonDisabled } = useSideBarButton();
+interface SideBarButtonProps {
+  activeIcon: string;
+  inactiveIcon: string;
+}
+
+export default function SideBarButton({ activeIcon, inactiveIcon }: SideBarButtonProps) {
+  const { sideBarState, handleClick, buttonDisabled } = useSideBarButton();
+
+  if (buttonDisabled) {
+    return undefined;
+  }
+
+  const icon = sideBarState ? inactiveIcon : activeIcon;
 
   return (
-    <button
+    <IconButton
+      icon={icon}
+      iconColor="textWeak"
+      buttonColor="transparent"
       onClick={handleClick}
-      disabled={buttonDisabled}
-    ></button>
+    />
   );
 }

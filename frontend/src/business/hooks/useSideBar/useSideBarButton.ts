@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { initSideBarStore, useSideBarStore } from '@stores/zustandStores/useSideBarStore';
 
 export function useSideBarButton() {
-  const { sideBarButtonState, toggleSideBarState, hideSideBar } = useSideBarStore();
+  const { sideBarState, sideBarButtonState, toggleSideBarState, hideSideBar } = useSideBarStore();
 
   const buttonDisabled = !sideBarButtonState;
 
@@ -22,5 +22,5 @@ export function useSideBarButton() {
     hideSideBar();
   }, [sideBarButtonState]);
 
-  return { handleClick, buttonDisabled };
+  return { sideBarState, handleClick, buttonDisabled };
 }
