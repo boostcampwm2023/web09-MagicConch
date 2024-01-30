@@ -30,9 +30,6 @@
       "@utils/*": ["utils/*"],
       "@mocks/*": ["mocks/*"]
     },
-
-    "types": ["vite/globals"]
-    
   },
   "typeRoots": ["./node_modules/@types", "./src/@types"],
   "include": ["src", "vite-env.d.ts", "@types", ".src/test/setup.ts"],
