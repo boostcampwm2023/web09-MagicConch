@@ -6,13 +6,13 @@
 export class ProfileDto {
   readonly email: string;
   readonly nickname: string;
-  readonly profileUrl: string;
+  readonly profileUrl?: string;
 
   static fromKakao(account: any): ProfileDto {
     return {
       email: account.email,
       nickname: account.profile.nickname,
-      profileUrl: account.profile.picture ?? null,
+      profileUrl: account.profile.picture,
     };
   }
 }
