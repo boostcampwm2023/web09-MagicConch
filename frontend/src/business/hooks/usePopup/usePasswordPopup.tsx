@@ -6,22 +6,22 @@ import { randomString } from '@utils/ramdom';
 
 type openPasswordPopupParams = {
   host?: boolean;
-  onSubmit?: ({ password, closePopup }: { password: string; closePopup: () => void }) => void;
+  onSubmit?: ({ password, closeOverlay }: { password: string } & CloseOverlayFunc) => void;
   onCancel?: () => void;
 };
 
 export function usePasswordPopup() {
-  const { open } = useOverlay();
+  const { openOverlay } = useOverlay();
 
   const openPasswordPopup = ({ host, onSubmit, onCancel }: openPasswordPopupParams) => {
     const defaultValue = host ? randomString() : '';
 
-    open(({ close: closePopup }) => (
+    openOverlay(({ closeOverlay }) => (
       <PasswordPopup
-        close={closePopup}
+        closePopup={closeOverlay}
         onCancel={onCancel}
         onSubmit={password => {
-          onSubmit?.({ password, closePopup });
+          onSubmit?.({ password, closeOverlay });
         }}
         defaultValue={defaultValue}
       />
