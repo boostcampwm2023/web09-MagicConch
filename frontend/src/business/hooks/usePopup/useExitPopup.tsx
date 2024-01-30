@@ -4,7 +4,7 @@ import Popup from '@components/Popup';
 
 interface openExitPopupParams {
   onConfirm: ({ close }: CloseFunc) => void;
-  onCancel?: ({ close }: CloseFunc) => void;
+  onCancel?: () => void;
 }
 
 export function useExitPopup() {
@@ -15,7 +15,7 @@ export function useExitPopup() {
       <Popup
         close={close}
         onConfirm={() => onConfirm({ close })}
-        onCancel={() => onCancel?.({ close })}
+        onCancel={onCancel}
       >
         <div className="flex-with-center flex-col gap-16">
           <div>나갈거야?</div>

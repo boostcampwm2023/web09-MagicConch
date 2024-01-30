@@ -7,7 +7,7 @@ interface PopupProps {
   children: React.ReactNode;
 }
 
-export default function Popup({ onCancel, onConfirm, children }: PopupProps) {
+export default function Popup({ close, onCancel, onConfirm, children }: PopupProps) {
   const closeWithCancel = () => {
     onCancel?.();
     close();

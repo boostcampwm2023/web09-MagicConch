@@ -18,7 +18,7 @@ export function usePasswordPopup() {
 
     open(({ close: closePopup }) => (
       <PasswordPopup
-        close={close}
+        close={closePopup}
         onCancel={onCancel}
         onSubmit={password => {
           onSubmit?.({ password, closePopup });
