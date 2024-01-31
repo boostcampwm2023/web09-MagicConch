@@ -1,12 +1,16 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Cache } from 'cache-manager';
 import * as dotenv from 'dotenv';
 import { CreateMemberDto, UpdateMemberDto } from 'src/members/dto';
-import { MembersService } from 'src/members/members.service';
+import { Member } from 'src/members/entities';
+import { Repository } from 'typeorm';
 import { JwtPayloadDto, OAuthTokenDto, ProfileDto } from '../dto';
 import { CacheKey } from '../interface/cache-key';
+
+dotenv.config();
 
 @Injectable()
 export class AuthService {
@@ -16,8 +20,9 @@ export class AuthService {
   ttl: number;
 
   constructor(
-    readonly membersService: MembersService,
     readonly jwtService: JwtService,
+    @InjectRepository(Member)
+    readonly membersRepository: Repository<Member>,
     @Inject(CACHE_MANAGER)
     readonly cacheManager: Cache,
   ) {}
@@ -38,7 +43,7 @@ export class AuthService {
       providerId,
       profile,
     );
-    await this.membersService.create(createMemberDto);
+    await this.createMember(createMemberDto);
     return this.authenticate(providerId, profile, token);
   }
 
@@ -48,7 +53,7 @@ export class AuthService {
     profile: ProfileDto,
     token: OAuthTokenDto,
   ): Promise<string> {
-    await this.membersService.update(
+    await this.updateMember(
       id,
       UpdateMemberDto.fromProfile(providerId, profile),
     );
@@ -80,5 +85,42 @@ export class AuthService {
 
   private signPayload(payload: JwtPayloadDto): string {
     return this.jwtService.sign(payload);
+  }
+
+  private async createMember(
+    createMemberDto: CreateMemberDto,
+  ): Promise<Member> {
+    try {
+      const member: Member = Member.fromDto(createMemberDto);
+      return await this.membersRepository.save(member);
+    } catch (err: unknown) {
+      throw err;
+    }
+  }
+
+  async findMemberByEmail(
+    email: string,
+    providerId: number,
+  ): Promise<Member | null> {
+    try {
+      return await this.membersRepository.findOneBy({
+        email: email,
+        providerId: providerId,
+      });
+    } catch (err: unknown) {
+      throw err;
+    }
+  }
+
+  private async updateMember(
+    id: string,
+    updateMemberDto: UpdateMemberDto,
+  ): Promise<boolean> {
+    try {
+      await this.membersRepository.update({ id: id }, updateMemberDto);
+      return true;
+    } catch (err: unknown) {
+      throw err;
+    }
   }
 }

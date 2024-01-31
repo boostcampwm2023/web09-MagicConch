@@ -7,12 +7,13 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Cache } from 'cache-manager';
 import { CONTENT_TYPE, METHODS, OAUTH_URL } from 'src/common/constants/apis';
 import { ERR_MSG } from 'src/common/constants/errors';
 import { PROVIDER_ID, PROVIDER_NAME } from 'src/common/constants/etc';
 import { Member } from 'src/members/entities';
-import { MembersService } from 'src/members/members.service';
+import { Repository } from 'typeorm';
 import { JwtPayloadDto, OAuthTokenDto, ProfileDto } from '../dto';
 import { KakaoAccessTokenInfoDto, KakaoTokenDto } from '../dto/kakao';
 import { CacheKey } from '../interface/cache-key';
@@ -22,19 +23,20 @@ import { AuthService } from './auth.service';
 @Injectable()
 export class KakaoAuthService extends AuthService {
   constructor(
-    readonly membersService: MembersService,
     readonly jwtService: JwtService,
+    @InjectRepository(Member)
+    readonly membersRepository: Repository<Member>,
     @Inject(CACHE_MANAGER)
     readonly cacheManager: Cache,
   ) {
-    super(membersService, jwtService, cacheManager);
+    super(jwtService, membersRepository, cacheManager);
     this.init(PROVIDER_NAME.KAKAO);
   }
 
   async loginOAuth(code: string): Promise<string> {
     const token: KakaoTokenDto = await this.requestToken(code);
     const profile: ProfileDto = await this.getUser(token.access_token ?? '');
-    const member: Member | null = await this.membersService.findByEmail(
+    const member: Member | null = await this.findMemberByEmail(
       profile.email,
       PROVIDER_ID.KAKAO,
     );

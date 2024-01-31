@@ -21,10 +21,10 @@ export class ChattingMessage {
   message: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt?: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt?: Date;
 
   @ManyToOne(
     () => ChattingRoom,

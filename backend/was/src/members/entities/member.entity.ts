@@ -3,6 +3,7 @@ import { TarotCardPack } from 'src/tarot/entities';
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -15,32 +16,32 @@ export class Member {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ length: 320 })
-  email: string;
-
-  @Column()
-  providerId: number;
-
-  @Column({ length: 30 })
-  nickname: string;
-
-  @Column({ length: 2083, nullable: true })
-  profileUrl: string;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
+  @Column({ length: 320, nullable: true })
+  email?: string;
 
   @Column({ nullable: true })
-  deletedAt: Date;
+  providerId?: number;
+
+  @Column({ length: 30, nullable: true })
+  nickname?: string;
+
+  @Column({ length: 2083, nullable: true })
+  profileUrl?: string;
+
+  @CreateDateColumn()
+  createdAt?: Date;
+
+  @UpdateDateColumn()
+  updatedAt?: Date;
+
+  @DeleteDateColumn({ name: 'deletedAt', nullable: true })
+  deletedAt?: Date;
 
   @OneToMany(() => ChattingRoom, (chattingRoom) => chattingRoom.participant)
-  chattingRooms: ChattingRoom[];
+  chattingRooms?: ChattingRoom[];
 
   @OneToMany(() => TarotCardPack, (tarotCardPack) => tarotCardPack.owner)
-  tarotCardPacks: TarotCardPack[];
+  tarotCardPacks?: TarotCardPack[];
 
   static fromDto(createMemberDto: CreateMemberDto): Member {
     const member: Member = new Member();

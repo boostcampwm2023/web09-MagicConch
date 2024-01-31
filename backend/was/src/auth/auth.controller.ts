@@ -4,13 +4,11 @@ import {
   Get,
   Req,
   Res,
-  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
-import { ERR_MSG } from 'src/common/constants/errors';
 import { PROVIDER_ID } from 'src/common/constants/etc';
 import { KakaoLoginDecorator, LogoutDecorator } from './auth.decorators';
 import { JwtPayloadDto } from './dto';
@@ -32,14 +30,17 @@ export class AuthController {
     };
   }
 
+  @Get('authenticate')
+  authorize(@Req() req: Request): object {
+    const isAuthenticated: boolean = req.cookies.magicconch ? true : false;
+    return { isAuthenticated: isAuthenticated };
+  }
+
   @Get('login/kakao')
   @KakaoLoginDecorator()
   async kakaoLogin(@Req() req: Request, @Res() res: Response): Promise<void> {
-    if (req.cookies.magicconch) {
+    if (req.cookies.magicconch || !req.query.code) {
       throw new BadRequestException();
-    }
-    if (req.query.error) {
-      throw new UnauthorizedException(ERR_MSG.OAUTH_KAKAO_AUTH_CODE_FAILED);
     }
     const jwt: string = await this.kakaoAuthService.loginOAuth(
       req.query.code as string,
