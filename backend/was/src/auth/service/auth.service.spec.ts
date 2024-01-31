@@ -82,10 +82,10 @@ describe('AuthService', () => {
             profile: profileDto,
             token: oauthTokenDto,
           },
-        ].forEach(async (scenario) => {
+        ].forEach(async ({ providerId, profile, token }) => {
           const createMemberDto: CreateMemberDto = CreateMemberDto.fromProfile(
-            scenario.providerId,
-            scenario.profile,
+            providerId,
+            profile,
           );
           const member: Member = Member.fromDto(createMemberDto);
 
@@ -94,11 +94,7 @@ describe('AuthService', () => {
             .mockResolvedValueOnce(member);
 
           await expect(
-            authService.signup(
-              scenario.providerId,
-              scenario.profile,
-              scenario.token,
-            ),
+            authService.signup(providerId, profile, token),
           ).resolves.not.toThrow();
           expect(memberSaveMock).toHaveBeenCalledWith(member);
         });
@@ -128,10 +124,10 @@ describe('AuthService', () => {
             profile: profileDto,
             token: oauthTokenDto,
           },
-        ].forEach(async (scenario) => {
+        ].forEach(async ({ id, providerId, profile, token }) => {
           const updateMemberDto: UpdateMemberDto = UpdateMemberDto.fromProfile(
-            scenario.providerId,
-            scenario.profile,
+            providerId,
+            profile,
           );
 
           const memberUpdateMock = jest
@@ -139,15 +135,10 @@ describe('AuthService', () => {
             .mockResolvedValueOnce({ affected: 1 } as any);
 
           await expect(
-            authService.login(
-              scenario.id,
-              scenario.providerId,
-              scenario.profile,
-              scenario.token,
-            ),
+            authService.login(id, providerId, profile, token),
           ).resolves.not.toThrow();
           expect(memberUpdateMock).toHaveBeenCalledWith(
-            { id: scenario.id },
+            { id: id },
             updateMemberDto,
           );
         });

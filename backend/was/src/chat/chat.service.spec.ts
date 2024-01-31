@@ -72,12 +72,10 @@ describe('ChatService', () => {
             memberId: '12345678-1234-5678-1234-567812345671',
             roomId: '12345678-1234-5678-1234-567812345673',
           },
-        ].forEach(async (scenario) => {
-          const member: Member = {
-            id: scenario.memberId,
-          };
+        ].forEach(async ({ memberId, roomId }) => {
+          const member: Member = { id: memberId };
           const room: ChattingRoom = {
-            id: scenario.roomId,
+            id: roomId,
             participant: member,
           };
 
@@ -108,19 +106,19 @@ describe('ChatService', () => {
             providerId: PROVIDER_ID.KAKAO,
             roomId: '12345678-1234-5678-1234-567812345673',
           },
-        ].forEach(async (scenario) => {
+        ].forEach(async ({ memberId, email, providerId, roomId }) => {
           const member: Member = {
-            id: scenario.memberId,
-            email: scenario.email,
-            providerId: scenario.providerId,
+            id: memberId,
+            email: email,
+            providerId: providerId,
           };
           const room: ChattingRoom = {
-            id: scenario.roomId,
+            id: roomId,
             participant: member,
           };
           const userInfo: UserInfo = {
-            email: scenario.email ?? '',
-            providerId: scenario.providerId ?? 0,
+            email: email ?? '',
+            providerId: providerId ?? 0,
           };
 
           const memberFindOneByMock = jest
@@ -133,8 +131,8 @@ describe('ChatService', () => {
           const expectation: ChattingInfo =
             await chatService.createRoom(userInfo);
           expect(expectation).toEqual({
-            memberId: scenario.memberId,
-            roomId: scenario.roomId,
+            memberId: memberId,
+            roomId: roomId,
           });
           expect(memberFindOneByMock).toHaveBeenCalledWith({
             email: userInfo.email,
@@ -153,23 +151,23 @@ describe('ChatService', () => {
           {
             roomId: '12345678-1234-5678-1234-567812345670',
             memberId: '12345678-1234-5678-1234-567812345671',
-            chatLog: {
+            messages: {
               id: '12345678-1234-5678-1234-567812345672',
               role: 'assistant',
               message: '어떤 내용을 상담하고 싶어?',
             },
           },
-        ].forEach(async (scenario) => {
+        ].forEach(async ({ roomId, memberId, messages }) => {
           const member: Member = {
-            id: scenario.memberId,
+            id: memberId,
           };
           const room: ChattingRoom = {
-            id: scenario.roomId,
+            id: roomId,
             participant: member,
           };
           const chatLog: ChatLog = {
-            isHost: scenario.chatLog.role === 'assistant',
-            message: scenario.chatLog.message,
+            isHost: messages.role === 'assistant',
+            message: messages.message,
           };
           const createMessageDto: CreateChattingMessageDto =
             CreateChattingMessageDto.fromChatLog(room.id, chatLog);
@@ -186,9 +184,7 @@ describe('ChatService', () => {
             .mockResolvedValueOnce(message);
 
           await expect(
-            chatService.createMessages(scenario.roomId, scenario.memberId, [
-              createMessageDto,
-            ]),
+            chatService.createMessages(roomId, memberId, [createMessageDto]),
           ).resolves.not.toThrow();
           expect(roomFindOneByMock).toHaveBeenCalledWith({
             id: room.id,
@@ -209,15 +205,15 @@ describe('ChatService', () => {
             roomId: '12345678-1234-5678-1234-567812345671',
             memberId: '12345678-1234-5678-1234-567812345673',
           },
-        ].forEach(async (scenario) => {
+        ].forEach(async ({ roomId, memberId }) => {
           const findOneByMock = jest
             .spyOn(chattingRoomRepository, 'findOneBy')
             .mockResolvedValueOnce(null);
 
           await expect(
-            chatService.createMessages(scenario.roomId, scenario.memberId, []),
+            chatService.createMessages(roomId, memberId, []),
           ).rejects.toThrow(NotFoundException);
-          expect(findOneByMock).toHaveBeenCalledWith({ id: scenario.roomId });
+          expect(findOneByMock).toHaveBeenCalledWith({ id: roomId });
         });
       });
     });

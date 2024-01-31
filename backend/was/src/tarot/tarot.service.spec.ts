@@ -49,32 +49,31 @@ describe('TarotService', () => {
       it('타로 결과를 생성한다', async () => {
         [
           {
+            id: '12345678-1234-5678-1234-567812345670',
             cardNo: 0,
             message: '0번 카드에 대한 해설',
             cardUrl: `${BUCKET_URL}/basic/0.jpg`,
           },
           {
+            id: '12345678-1234-5678-1234-567812345671',
             cardNo: 1,
             message: '1번 카드에 대한 해설',
             cardUrl: `${BUCKET_URL}/basic/1.jpg`,
           },
           {
+            id: '12345678-1234-5678-1234-567812345672',
             cardNo: 2,
             message: '2번 카드에 대한 해설',
             cardUrl: `${BUCKET_URL}/basic/2.jpg`,
           },
-        ].forEach(async (scenario) => {
-          const ext: string = scenario.cardNo === 78 ? '.png' : '.jpg';
+        ].forEach(async ({ id, cardNo, message, cardUrl }) => {
           const tarotResult: TarotResult = {
-            id: '12345678-1234-5678-1234-567812345678',
-            message: scenario.message,
-            cardUrl: `${BUCKET_URL}/basic/${scenario.cardNo}${ext}`,
+            id: id,
+            message: message,
+            cardUrl: cardUrl,
           };
           const createTarotResultDto: CreateTarotResultDto =
-            CreateTarotResultDto.fromResult(
-              scenario.cardNo,
-              tarotResult.message,
-            );
+            CreateTarotResultDto.fromResult(cardNo, message);
 
           const saveMock = jest
             .spyOn(tarotResultRepository, 'save')
@@ -84,8 +83,8 @@ describe('TarotService', () => {
             tarotService.createTarotResult(createTarotResultDto),
           ).resolves.not.toThrow();
           expect(saveMock).toHaveBeenCalledWith({
-            cardUrl: scenario.cardUrl,
-            message: scenario.message,
+            cardUrl: cardUrl,
+            message: message,
           });
         });
       });
@@ -96,14 +95,26 @@ describe('TarotService', () => {
     describe('성공', () => {
       it('해당 번호의 타로 카드를 조회한다', async () => {
         [
-          { cardNo: 0, ext: '.jpg' },
-          { cardNo: 1, ext: '.jpg' },
-          { cardNo: 2, ext: '.jpg' },
-        ].forEach(async (scenario) => {
+          {
+            id: '12345678-1234-5678-1234-567812345670',
+            cardNo: 0,
+            ext: '.jpg',
+          },
+          {
+            id: '12345678-1234-5678-1234-567812345671',
+            cardNo: 1,
+            ext: '.jpg',
+          },
+          {
+            id: '12345678-1234-5678-1234-567812345672',
+            cardNo: 2,
+            ext: '.jpg',
+          },
+        ].forEach(async ({ id, cardNo, ext }) => {
           const tarotCard: TarotCard = {
-            id: '12345678-1234-5678-1234-567812345678',
-            cardNo: scenario.cardNo,
-            ext: scenario.ext,
+            id: id,
+            cardNo: cardNo,
+            ext: ext,
           };
           const tarotCardDto: TarotCardDto = TarotCardDto.fromEntity(tarotCard);
 
@@ -115,7 +126,7 @@ describe('TarotService', () => {
             await tarotService.findTarotCardByCardNo(tarotCard.cardNo);
           expect(expectation).toEqual(tarotCardDto);
           expect(findOneByMock).toHaveBeenCalledWith({
-            cardNo: scenario.cardNo,
+            cardNo: cardNo,
             cardPack: undefined,
           });
         });
@@ -124,16 +135,16 @@ describe('TarotService', () => {
 
     describe('실패', () => {
       it('해당 번호의 타로 카드가 존재하지 않아 NotFoundException을 반환한다', async () => {
-        [{ cardNo: -1 }, { cardNo: 79 }].forEach(async (scenario) => {
+        [{ cardNo: -1 }, { cardNo: 79 }].forEach(async ({ cardNo }) => {
           const findOneByMock = jest
             .spyOn(tarotCardRepository, 'findOneBy')
             .mockResolvedValueOnce(null);
 
           await expect(
-            tarotService.findTarotCardByCardNo(scenario.cardNo),
+            tarotService.findTarotCardByCardNo(cardNo),
           ).rejects.toThrow(NotFoundException);
           expect(findOneByMock).toHaveBeenCalledWith({
-            cardNo: scenario.cardNo,
+            cardNo: cardNo,
             cardPack: undefined,
           });
         });
@@ -160,11 +171,11 @@ describe('TarotService', () => {
             message: '2번 카드에 대한 해설',
             cardUrl: `${BUCKET_URL}/basic/2.jpg`,
           },
-        ].forEach(async (scenario) => {
+        ].forEach(async ({ id, message, cardUrl }) => {
           const tarotResult: TarotResult = {
-            id: scenario.id,
-            message: scenario.message,
-            cardUrl: scenario.cardUrl,
+            id: id,
+            message: message,
+            cardUrl: cardUrl,
           };
           const tarotResultDto = TarotResultDto.fromEntity(tarotResult);
 
@@ -173,9 +184,9 @@ describe('TarotService', () => {
             .mockResolvedValueOnce(tarotResult);
 
           const expectation: TarotResultDto =
-            await tarotService.findTarotResultById(scenario.id);
+            await tarotService.findTarotResultById(id);
           expect(expectation).toEqual(tarotResultDto);
-          expect(findOneByMock).toHaveBeenCalledWith({ id: scenario.id });
+          expect(findOneByMock).toHaveBeenCalledWith({ id: id });
         });
       });
     });
@@ -185,15 +196,15 @@ describe('TarotService', () => {
         [
           { id: '12345678-1234-5678-1234-567812345670' },
           { id: '12345678-1234-5678-1234-567812345671' },
-        ].forEach(async (scenario) => {
+        ].forEach(async ({ id }) => {
           const findOneByMock = jest
             .spyOn(tarotResultRepository, 'findOneBy')
             .mockResolvedValueOnce(null);
 
-          await expect(
-            tarotService.findTarotResultById(scenario.id),
-          ).rejects.toThrow(NotFoundException);
-          expect(findOneByMock).toHaveBeenCalledWith({ id: scenario.id });
+          await expect(tarotService.findTarotResultById(id)).rejects.toThrow(
+            NotFoundException,
+          );
+          expect(findOneByMock).toHaveBeenCalledWith({ id: id });
         });
       });
     });
