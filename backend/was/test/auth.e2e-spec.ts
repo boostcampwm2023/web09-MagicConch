@@ -20,7 +20,6 @@ dotenv.config();
 
 describe('Auth', () => {
   let app: INestApplication;
-  let kakaoAuthService: MockedKakaoAuthService;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -57,7 +56,6 @@ describe('Auth', () => {
       .compile();
 
     app = moduleRef.createNestApplication();
-    kakaoAuthService = moduleRef.get(KakaoAuthService);
 
     app.use(cookieParser());
     await app.init();
@@ -116,11 +114,18 @@ describe('Auth', () => {
 
   describe('GET /oauth/logout', () => {
     describe('성공', () => {
-      it('[인증 받은 사용자] GET /oauth/logout', () => {});
+      it('[인증 받은 사용자] GET /oauth/logout', () => {
+        return request(app.getHttpServer())
+          .get('/oauth/logout')
+          .set('Cookie', `magicconch=${jwtToken}`)
+          .expect(200);
+      });
     });
 
     describe('실패', () => {
-      it('[인증 받지 않은 사용자] GET /oauth/logout', () => {});
+      it('[인증 받지 않은 사용자] GET /oauth/logout', () => {
+        return request(app.getHttpServer()).get('/oauth/logout').expect(401);
+      });
     });
   });
 });
