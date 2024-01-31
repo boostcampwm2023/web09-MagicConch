@@ -5,7 +5,7 @@ import { Test } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as cookieParser from 'cookie-parser';
 import * as dotenv from 'dotenv';
-import { MockedKakaoAuthService } from 'src/auth/__mocks__/kakao.auth.service.spec';
+import { MockedKakaoAuthService } from 'src/auth/__mocks__/kakao.auth.service';
 import { AuthController } from 'src/auth/auth.controller';
 import { JwtAuthGuard, SocketJwtAuthGuard } from 'src/auth/guard';
 import { AuthService, KakaoAuthService } from 'src/auth/service';
