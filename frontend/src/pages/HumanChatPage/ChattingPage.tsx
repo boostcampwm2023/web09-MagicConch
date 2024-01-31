@@ -13,12 +13,11 @@ export default function ChattingPage() {
   const {
     tarotButtonDisabled,
     tarotButtonClick,
-    enableSideBar,
     chatPageState: { joined },
     unblockGoBack,
   }: OutletContext = useOutletContext();
 
-  useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack, enableSideBar });
+  useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack });
   const { localVideoRef, remoteVideoRef } = useStreamVideoRef();
   const { toggleAudio, toggleVideo, changeMyVideoTrack } = useControllMedia({ localVideoRef });
 
@@ -32,7 +31,7 @@ export default function ChattingPage() {
   const goSettingPage = () => navigate('setting');
 
   return (
-    <div className={`${joined ? '' : 'hidden'}`}>
+    <div className={`flex-with-center ${joined ? '' : 'hidden'}`}>
       <CamContainer
         localVideoRef={localVideoRef}
         remoteVideoRef={remoteVideoRef}
@@ -41,7 +40,7 @@ export default function ChattingPage() {
         tarotButtonClick={tarotButtonClick}
         tarotButtonDisabled={tarotButtonDisabled}
       />
-      <div className="absolute top-[10vh] right-90">
+      <div className="absolute z-10 top-[10vh] right-90">
         <IconButton
           icon="uil:setting"
           iconColor="textWhite"

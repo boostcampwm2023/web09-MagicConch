@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
-import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import ProfileSetting from '@components/ProfileSetting';
 
 import { useControllMedia, useStreamVideoRef } from '@business/hooks/useWebRTC/';
 import { HumanSocketManager } from '@business/services/SocketManager';
 
-import type { OutletContext } from './HumanChatPage';
+import { useSideBarStore } from '@stores/zustandStores/useSideBarStore';
+
 import { useSettingPageMediaOptinos } from './useSettingPageMediaOptions';
 import { useSettingPageProfileNicknameSetting } from './useSettingPageProfileNicknameSetting';
 
@@ -16,11 +17,13 @@ export default function ChattingPage() {
   const navigate = useNavigate();
 
   const { localVideoRef } = useStreamVideoRef();
-  const { enableSideBar, disableSideBar }: OutletContext = useOutletContext();
+
   const { changeMyAudioTrack, changeMyVideoTrack, toggleAudio, toggleVideo } = useControllMedia({ localVideoRef });
 
+  const { enableSideBarButton, disableSideBarButton } = useSideBarStore();
+
   useEffect(() => {
-    disableSideBar();
+    disableSideBarButton();
     if (!socketManager.connected) {
       navigate('..');
     }
@@ -43,7 +46,7 @@ export default function ChattingPage() {
       videoRef={localVideoRef}
       onConfirm={() => {
         sendProfileInfo();
-        enableSideBar();
+        enableSideBarButton();
         navigate('..');
       }}
       onChangeProfileImage={setLocalProfileImage}
