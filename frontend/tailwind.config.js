@@ -50,21 +50,13 @@ export default {
           '0%': { transform: 'scale(1.02) translateY(-1000px)' },
           '100%': { transform: 'translateY(-1000px)' },
         },
-        openingSidebar: {
-          '0%': { right: '-100%' },
-          '100%': { right: 0 },
+        showSidebar: {
+          '0%': { marginRight: '-100%' },
+          '100%': { marginRight: '0%' },
         },
-        closingSidebar: {
-          '0%': { right: 0 },
-          '100%': { right: '-100%' },
-        },
-        contentSideWithOpeningSidebar: {
-          '0%': { width: '100%' },
-          '100%': { width: 'calc(100% - 500px)' },
-        },
-        contentSideWithClosingSidebar: {
-          '0%': { width: 'calc(100% - 500px)' },
-          '100%': { width: '100%' },
+        hideSidebar: {
+          '0%': { marginRight: '0%' },
+          '100%': { marginRight: '-100%' },
         },
         flappingCard: {
           '0%': { transform: 'rotateY(0deg)' },
@@ -85,10 +77,8 @@ export default {
         fadeOut: 'fadeOut 2s ease-in-out forwards',
         tarotHovering: 'tarotHovering 0.5s ease-in-out forwards',
         tarotLeaving: 'tarotLeaving 0.3s ease-in-out forwards',
-        openingSidebar: 'openingSidebar 0.5s ease-in-out forwards',
-        closingSidebar: 'closingSidebar 0.5s ease-in-out forwards',
-        contentSideWithOpeningSidebar: 'contentSideWithOpeningSidebar 0.5s ease-in-out forwards',
-        contentSideWithClosingSidebar: 'contentSideWithClosingSidebar 0.5s ease-in-out forwards',
+        showSidebar: 'showSidebar 0.5s ease-in-out forwards',
+        hideSidebar: 'hideSidebar 0.5s ease-in-out forwards',
         flappingCard: 'flappingCard 1s ease-in-out forwards infinite alternate',
         flippingCard: 'flippingCard 1s ease-in-out forwards',
         rotatingConch: 'rotatingConch 2s ease-in-out',

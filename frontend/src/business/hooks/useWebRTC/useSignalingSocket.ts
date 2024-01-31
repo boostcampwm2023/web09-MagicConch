@@ -20,8 +20,7 @@ export function useSignalingSocket() {
     openPasswordPopup({
       host: true,
       onCancel,
-      onSubmit: ({ password, closePopup }) =>
-        initHostSocketEvents({ password, closePopup: closePopup, roomName, onSuccess }),
+      onSubmit: ({ password, closePopup }) => initHostSocketEvents({ password, closePopup, roomName, onSuccess }),
     });
   };
 

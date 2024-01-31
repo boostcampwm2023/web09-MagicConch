@@ -27,10 +27,7 @@ export function useBlocker({ when, onConfirm, onCancel }: useBlockerParams) {
             onConfirm?.();
           });
         },
-        onCancel: ({ close }) => {
-          onCancel?.();
-          close();
-        },
+        onCancel,
       });
       return true;
     }

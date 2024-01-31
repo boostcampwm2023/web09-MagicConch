@@ -4,16 +4,14 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import Background from '@components/Background';
 import ChatContainer from '@components/ChatContainer';
 import Header from '@components/Header';
-import SideBar from '@components/SideBar';
+import { ContentAreaWithSideBar, SideBarButton } from '@components/SideBar';
 
 import { useBlocker } from '@business/hooks/useBlocker';
 import { useHumanChatMessage } from '@business/hooks/useChatMessage';
 import { useHumanTarotSpread } from '@business/hooks/useTarotSpread';
 import { useWebRTC } from '@business/hooks/useWebRTC';
 
-import { useHumanChatPageContentAnimation } from './useHumanChatPageContentAnimation';
 import { ChatPageState, useHumanChatPageCreateRoomEvent } from './useHumanChatPageCreateRoomEvent';
-import { useHumanChatPageSideBar } from './useHumanChatPageSIdeBar';
 import { useHumanChatPageWrongURL } from './useHumanChatPageWrongURL';
 
 export interface OutletContext {
@@ -37,13 +35,6 @@ export default function HumanChatPage() {
   const { messages, onSubmitMessage, inputDisabled, addPickCardMessage } = useHumanChatMessage();
   const { tarotButtonClick, tarotButtonDisabled } = useHumanTarotSpread(addPickCardMessage);
 
-  const { changeContentAnimation, contentAnimation } = useHumanChatPageContentAnimation();
-  const { disableSideBar, enableSideBar, sideBarDisabled } = useHumanChatPageSideBar({
-    onDisableSideBar: () => {
-      changeContentAnimation(false);
-    },
-  });
-
   const { unblockGoBack } = useBlocker({
     when: ({ nextLocation }) => nextLocation.pathname === '/' || nextLocation.pathname === '/chat/human',
     onConfirm: () => navigate('/'),
@@ -59,38 +50,33 @@ export default function HumanChatPage() {
     <Background type="dynamic">
       <Header
         rightItems={[
-          <SideBar
-            key="chat-side-bar"
-            onSide={changeContentAnimation}
-            icon={{ open: 'mdi:message-off', close: 'mdi:message' }}
-            disabled={sideBarDisabled}
-          >
-            <ChatContainer
-              width="w-[90%]"
-              height="h-[80%]"
-              position="top-[5vh]"
-              messages={messages}
-              onSubmitMessage={onSubmitMessage}
-              inputDisabled={inputDisabled}
-            />
-          </SideBar>,
+          <SideBarButton
+            activeIcon="mdi:message"
+            inactiveIcon="mdi:message-off"
+          />,
         ]}
       />
-      <div className="w-h-screen">
-        <div className={`flex-with-center h-full ${contentAnimation}`}>
-          <Outlet
-            context={{
-              tarotButtonClick,
-              tarotButtonDisabled,
-              chatPageState,
-              setChatPageState,
-              disableSideBar,
-              enableSideBar,
-              unblockGoBack,
-            }}
+      <ContentAreaWithSideBar
+        sideBar={
+          <ChatContainer
+            width="w-400"
+            height="h-full"
+            messages={messages}
+            onSubmitMessage={onSubmitMessage}
+            inputDisabled={inputDisabled}
           />
-        </div>
-      </div>
+        }
+      >
+        <Outlet
+          context={{
+            tarotButtonClick,
+            tarotButtonDisabled,
+            chatPageState,
+            setChatPageState,
+            unblockGoBack,
+          }}
+        />
+      </ContentAreaWithSideBar>
     </Background>
   );
 }

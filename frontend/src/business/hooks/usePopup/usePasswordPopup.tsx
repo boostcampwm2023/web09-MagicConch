@@ -11,7 +11,7 @@ type openPasswordPopupParams = {
 };
 
 export function usePasswordPopup() {
-  const { open } = useOverlay();
+  const { openOverlay } = useOverlay();
 
   const openPasswordPopup = ({ host, onSubmit, onCancel }: openPasswordPopupParams) => {
     const defaultValue = host ? randomString() : '';
@@ -21,7 +21,6 @@ export function usePasswordPopup() {
         closePopup={closePopup}
         onCancel={onCancel}
         onSubmit={password => {
-          onSubmit?.({ password, closePopup });
           onSubmit?.({ password, closePopup });
         }}
         defaultValue={defaultValue}

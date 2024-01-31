@@ -4,18 +4,16 @@ import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 import { useSignalingSocket, useWebRTC } from '@business/hooks/useWebRTC';
 import { HumanSocketManager } from '@business/services/SocketManager';
 
+import { useSideBarStore } from '@stores/zustandStores/useSideBarStore';
+
 import { ERROR_MESSAGE } from '@constants/messages';
 
 import { OutletContext } from './HumanChatPage';
 
 interface useChattingPageCreateJoinRoomParams {
   unblockGoBack: (cb: () => void) => void;
-  enableSideBar: () => void;
 }
-export function useChattingPageCreateJoinRoomPasswordPopup({
-  unblockGoBack,
-  enableSideBar,
-}: useChattingPageCreateJoinRoomParams) {
+export function useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack }: useChattingPageCreateJoinRoomParams) {
   const {
     chatPageState: { host, joined },
   }: OutletContext = useOutletContext();
@@ -23,6 +21,7 @@ export function useChattingPageCreateJoinRoomPasswordPopup({
   const humanSocket = HumanSocketManager.getInstance();
   const { createRoom, joinRoom, checkRoomExist } = useSignalingSocket();
   const { startWebRTC } = useWebRTC();
+  const { enableSideBarButton } = useSideBarStore();
 
   const { roomName } = useParams();
   const navigate = useNavigate();
@@ -33,7 +32,7 @@ export function useChattingPageCreateJoinRoomPasswordPopup({
       onSuccess: ({ closePopup }) => {
         navigate('setting');
         closePopup();
-        enableSideBar();
+        enableSideBarButton();
       },
       onFull: () => {
         unblockGoBack(() => {
@@ -59,7 +58,7 @@ export function useChattingPageCreateJoinRoomPasswordPopup({
       onSuccess: ({ closePopup }) => {
         navigate('setting');
         closePopup();
-        enableSideBar();
+        enableSideBarButton();
       },
       onCancel: () => {
         navigate('/');

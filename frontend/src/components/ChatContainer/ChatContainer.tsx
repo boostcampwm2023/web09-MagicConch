@@ -6,15 +6,14 @@ import ChatList from './ChatList';
 interface ChatContainerProps {
   width: string;
   height: string;
-  position?: string;
   messages: Message[];
   inputDisabled: boolean;
   onSubmitMessage: (message: string) => void;
 }
 
-function ChatContainer({ width, height, position, messages, inputDisabled, onSubmitMessage }: ChatContainerProps) {
+function ChatContainer({ width, height, messages, inputDisabled, onSubmitMessage }: ChatContainerProps) {
   return (
-    <div className={`${width} ${height} ${position} absolute`}>
+    <div className={`${width} ${height} flex-with-center flex-col`}>
       <ChatList messages={messages} />
       <ChatInput
         disabled={inputDisabled}
