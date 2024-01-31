@@ -95,7 +95,7 @@ export class MockedKakaoAuthService extends AuthService {
     const keyString: string = JSON.stringify(key);
     const refreshToken: string | undefined =
       await this.cacheManager.get<string>(keyString);
-    const newToken: KakaoTokenDto = await this.refreshToken(refreshToken ?? '');
+    const newToken: KakaoTokenDto = this.refreshToken(refreshToken ?? '');
     return this.requestLogout(newToken.access_token);
   }
 
