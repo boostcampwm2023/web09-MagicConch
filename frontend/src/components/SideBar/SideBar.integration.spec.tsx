@@ -3,33 +3,32 @@ import { act, render } from '@testing-library/react';
 import { initialState, useSideBarStore } from '@stores/zustandStores/useSideBarStore';
 
 import { toBeVisibleSideBar } from '@utils/test/matcher';
-import { sleep } from '@utils/time';
 
 import { IntegratedSideBar } from './__mocks__';
 
+vi.useFakeTimers();
 expect.extend({ toBeVisibleSideBar });
 
 describe('SideBar 관련 컴포넌트 통합 테스트', () => {
   let sideBar: HTMLElement | null;
   let sideBarButton: HTMLElement | null;
 
-  beforeEach(async () => {
-    render(<IntegratedSideBar />);
+  beforeEach(() => {
+    const { getByRole } = render(<IntegratedSideBar />);
 
     sideBar = document.querySelector('aside');
-    sideBarButton = document.querySelector('button');
+    sideBarButton = getByRole('button');
   });
 
   describe('처음 렌더링 이후', () => {
     it('side bar는 화면에 보이지 않는다.', () => {
-      if (sideBar) console.log(window.getComputedStyle(sideBar).width);
       expect(sideBar).not.toBeVisibleSideBar();
     });
 
     it('애니메이션 효과는 발생하지 않는다. (시간이 지나도 상태가 그대로이다)', async () => {
       expect(sideBar).not.toBeVisibleSideBar();
 
-      await sleep(1000);
+      vi.advanceTimersByTime(1000);
 
       expect(sideBar).not.toBeVisibleSideBar();
     });
