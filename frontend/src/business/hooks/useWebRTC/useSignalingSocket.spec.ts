@@ -62,7 +62,7 @@ describe('useSignalingSocket 훅', () => {
     const testDatas = [{ onSuccess: vi.fn() }, { onHostExit: vi.fn() }, { onFail: vi.fn() }, { onFull: vi.fn() }];
 
     testDatas.forEach(({ onFail, onFull, onHostExit, onSuccess }) => {
-      initGuestSocketEvents({ password, roomName, closeOverlay: vi.fn(), onSuccess, onHostExit, onFail, onFull });
+      initGuestSocketEvents({ password, roomName, closePopup: vi.fn(), onSuccess, onHostExit, onFail, onFull });
 
       expect(socket.emit).toBeCalledWith('joinRoom', roomName, password);
 
