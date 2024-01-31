@@ -162,7 +162,8 @@ describe('useDataChannelEventListener 훅 테스트', () => {
       },
     ].forEach(({ scenario, myProfile }) => {
       it(scenario, () => {
-        vi.spyOn(useProfileInfo.getState(), 'myProfile', 'get').mockReturnValueOnce(myProfile);
+        useProfileInfo.getState().setMyProfile(myProfile as any);
+        vi.spyOn(useProfileInfo.getState(), 'myProfile', 'get')?.mockReturnValueOnce(myProfile);
         const RTCDataChannelSendFn = vi.fn();
 
         const { sendMyProfileImage } = rerenderHook();
@@ -192,6 +193,7 @@ describe('useDataChannelEventListener 훅 테스트', () => {
       },
     ].forEach(({ scenario, myNickname }) => {
       it(scenario, () => {
+        useProfileInfo.getState().setMyNickname(myNickname as any);
         vi.spyOn(useProfileInfo.getState(), 'myNickname', 'get').mockReturnValueOnce(myNickname);
         const RTCDataChannelSendFn = vi.fn();
 

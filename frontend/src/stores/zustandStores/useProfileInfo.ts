@@ -8,7 +8,7 @@ export interface ProfileInfo {
 
 interface ProfileInfoState {
   myNickname?: string;
-  myProfile?: ProfileInfo | undefined;
+  myProfile?: ProfileInfo;
   remoteNickname?: string;
   remoteProfile?: ProfileInfo;
 }
@@ -22,10 +22,6 @@ interface ProfileInfoActions {
 
 export const useProfileInfo = create<ProfileInfoState & ProfileInfoActions>()(
   devtools(set => ({
-    myNickname: '',
-    myProfile: undefined,
-    remoteNickname: '',
-    remoteProfile: undefined,
     setMyNickname: (myNickname: string) => set(() => ({ myNickname })),
     setMyProfile: (myProfile: ProfileInfo) => set(() => ({ myProfile })),
     setRemoteNickname: (remoteNickname: string) => set(() => ({ remoteNickname })),
