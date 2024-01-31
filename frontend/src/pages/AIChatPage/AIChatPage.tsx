@@ -1,5 +1,6 @@
 import Background from '@components/Background';
 import ChatContainer from '@components/ChatContainer';
+import ChatLogContainer from '@components/ChatLogContainer';
 import Header from '@components/Header';
 import { ContentAreaWithSideBar, SideBarButton } from '@components/SideBar';
 
@@ -22,7 +23,7 @@ function AIChatPage({}: AIChatPageProps) {
           />,
         ]}
       />
-      <ContentAreaWithSideBar sideBar={<div className="w-500"></div>}>
+      <ContentAreaWithSideBar sideBar={<ChatLogContainer />}>
         <div className="w-full h-full flex-with-center">
           <ChatContainer
             width="w-[80vw] max-w-700"
