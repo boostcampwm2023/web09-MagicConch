@@ -20,7 +20,6 @@ export const ERR_MSG = {
   /**
    * oauth
    */
-  OAUTH_KAKAO_AUTH_CODE_FAILED: '카카오 인가코드 발급에 실패했습니다',
   OAUTH_KAKAO_TOKEN_FAILED: '카카오 토큰 발급에 실패했습니다.',
   OAUTH_KAKAO_USER_FAILED: '카카오 사용자 정보 조회에 실패했습니다.',
   OAUTH_KAKAO_ACCESS_TOKEN_INFO_KAKAO_ERROR:
