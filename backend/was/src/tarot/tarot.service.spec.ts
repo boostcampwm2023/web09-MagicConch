@@ -8,7 +8,7 @@ import { TarotCard, TarotResult } from './entities';
 import { TarotService } from './tarot.service';
 
 describe('TarotService', () => {
-  let service: TarotService;
+  let tarotService: TarotService;
   let tarotCardRepository: Repository<TarotCard>;
   let tarotResultRepository: Repository<TarotResult>;
 
@@ -27,7 +27,7 @@ describe('TarotService', () => {
       ],
     }).compile();
 
-    service = moduleRef.get<TarotService>(TarotService);
+    tarotService = moduleRef.get<TarotService>(TarotService);
     tarotCardRepository = moduleRef.get<Repository<TarotCard>>(
       getRepositoryToken(TarotCard),
     );
@@ -41,7 +41,7 @@ describe('TarotService', () => {
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(tarotService).toBeDefined();
   });
 
   describe('createTarotResult', () => {
@@ -81,7 +81,7 @@ describe('TarotService', () => {
             .mockResolvedValueOnce(tarotResult);
 
           await expect(
-            service.createTarotResult(createTarotResultDto),
+            tarotService.createTarotResult(createTarotResultDto),
           ).resolves.not.toThrow();
           expect(saveMock).toHaveBeenCalledWith({
             cardUrl: scenario.cardUrl,
@@ -111,9 +111,8 @@ describe('TarotService', () => {
             .spyOn(tarotCardRepository, 'findOneBy')
             .mockResolvedValueOnce(tarotCard);
 
-          const expectation: TarotCardDto = await service.findTarotCardByCardNo(
-            tarotCard.cardNo,
-          );
+          const expectation: TarotCardDto =
+            await tarotService.findTarotCardByCardNo(tarotCard.cardNo);
           expect(expectation).toEqual(tarotCardDto);
           expect(findOneByMock).toHaveBeenCalledWith({
             cardNo: scenario.cardNo,
@@ -131,7 +130,7 @@ describe('TarotService', () => {
             .mockResolvedValueOnce(null);
 
           await expect(
-            service.findTarotCardByCardNo(scenario.cardNo),
+            tarotService.findTarotCardByCardNo(scenario.cardNo),
           ).rejects.toThrow(NotFoundException);
           expect(findOneByMock).toHaveBeenCalledWith({
             cardNo: scenario.cardNo,
@@ -173,9 +172,8 @@ describe('TarotService', () => {
             .spyOn(tarotResultRepository, 'findOneBy')
             .mockResolvedValueOnce(tarotResult);
 
-          const expectation: TarotResultDto = await service.findTarotResultById(
-            scenario.id,
-          );
+          const expectation: TarotResultDto =
+            await tarotService.findTarotResultById(scenario.id);
           expect(expectation).toEqual(tarotResultDto);
           expect(findOneByMock).toHaveBeenCalledWith({ id: scenario.id });
         });
@@ -193,7 +191,7 @@ describe('TarotService', () => {
             .mockResolvedValueOnce(null);
 
           await expect(
-            service.findTarotResultById(scenario.id),
+            tarotService.findTarotResultById(scenario.id),
           ).rejects.toThrow(NotFoundException);
           expect(findOneByMock).toHaveBeenCalledWith({ id: scenario.id });
         });

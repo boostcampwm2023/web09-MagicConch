@@ -22,7 +22,7 @@ export class CreateMemberDto {
 
   @IsUrl()
   @IsOptional()
-  readonly profileUrl: string;
+  readonly profileUrl?: string;
 
   static fromProfile(providerId: number, profile: ProfileDto): CreateMemberDto {
     return {
