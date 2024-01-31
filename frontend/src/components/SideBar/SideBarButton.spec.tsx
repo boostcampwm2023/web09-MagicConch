@@ -7,9 +7,9 @@ import { SideBarButton } from './__mocks__';
 describe('<SideBarButton> 컴포넌트 테스트', () => {
   let button: HTMLElement;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const { getByRole } = render(<SideBarButton />);
-    button = await getByRole('button');
+    button = getByRole('button');
   });
 
   it('<button> 태그가 렌더링에 포함된다', () => {
