@@ -10,7 +10,7 @@ import type { OutletContext } from './HumanChatPage';
 import { useSettingPageMediaOptinos } from './useSettingPageMediaOptions';
 import { useSettingPageProfileNicknameSetting } from './useSettingPageProfileNicknameSetting';
 
-export default function ChattingPage() {
+export default function SettingPage() {
   const socketManager = HumanSocketManager.getInstance();
 
   const navigate = useNavigate();
