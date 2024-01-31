@@ -7,10 +7,10 @@ interface UseLoginPopupParams {
 }
 
 export function useLoginPopup({ moveAiChat }: UseLoginPopupParams) {
-  const { open } = useOverlay();
+  const { openOverlay } = useOverlay();
 
   const openLoginPopup = () => {
-    open(() => <LoginPopup moveAiChat={moveAiChat}></LoginPopup>);
+    openOverlay(() => <LoginPopup moveAiChat={moveAiChat}></LoginPopup>);
   };
 
   return { openLoginPopup };

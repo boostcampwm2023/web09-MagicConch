@@ -28,15 +28,14 @@ export function useHumanTarotSpread(onPickCard: (idx: number) => void) {
   const { openTarotSpread } = useTarotSpread(pickCard);
   const { displayTarotCard } = useDisplayTarotCard();
 
-  const { open } = useOverlay();
+  const { openOverlay } = useOverlay();
 
   const tarotButtonClick = () => {
-    open(({ close }) => (
+    openOverlay(({ closeOverlay }) => (
       <Popup
-        close={close}
-        onCancel={() => close()}
+        closePopup={closeOverlay}
         onConfirm={() => {
-          close();
+          closeOverlay();
           requestTarotSpread();
         }}
       >

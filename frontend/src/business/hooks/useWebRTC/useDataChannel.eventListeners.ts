@@ -1,10 +1,11 @@
-import WebRTC from '@business/services/__mocks__/WebRTC';
+import { HumanSocketManager } from '@business/services/SocketManager';
+import WebRTC from '@business/services/WebRTC';
 
 import { ProfileInfo } from '@stores/zustandStores/useProfileInfo';
 
 import { array2ArrayBuffer } from '@utils/array';
 
-const webRTC = WebRTC.getInstance();
+const webRTC = WebRTC.getInstance(HumanSocketManager.getInstance());
 
 export async function setMediaStates({
   ev: { data },
