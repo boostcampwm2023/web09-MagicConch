@@ -5,6 +5,8 @@ import { useHost } from '@stores/zustandStores/useHost';
 import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
 import { useProfileInfo } from '@stores/zustandStores/useProfileInfo';
 
+import { DEFAULT_NICKNAME } from '@constants/nickname';
+
 interface CamContainerProps {
   localVideoRef: React.RefObject<HTMLVideoElement>;
   remoteVideoRef: React.RefObject<HTMLVideoElement>;
@@ -50,7 +52,7 @@ export default function CamContainer({
           defaultImage="bg-ddung"
           profileInfo={myProfile}
           nickname={myNickname}
-          defaultNickname="나"
+          defaultNickname={DEFAULT_NICKNAME.ME}
         />
         <CamBox
           videoRef={remoteVideoRef}
@@ -59,7 +61,7 @@ export default function CamContainer({
           defaultImage="bg-sponge"
           profileInfo={remoteProfile}
           nickname={remoteNickname}
-          defaultNickname="상대방"
+          defaultNickname={DEFAULT_NICKNAME.OTHER}
         />
       </div>
       <div className="flex-with-center flex-col gap-30 z-10">
