@@ -116,22 +116,35 @@ describe('Chat', () => {
     });
 
     describe('실패', () => {
-      it(`[인증 받지 않은 사용자/올바른 아이디] GET /chat/ai/${id}`, () => {
-        return request(app.getHttpServer()).get(`/chat/ai/${id}`).expect(401);
-      });
-
-      it('[인증 받은 사용자/UUID 형식이 아닌 아이디] GET /chat/ai/invalidUUID', () => {
-        return request(app.getHttpServer())
-          .get('/chat/ai/invalidUUID')
-          .set('Cookie', `magicconch=${jwtToken}`)
-          .expect(400);
-      });
-
-      it(`[인증 받은 사용자/존재하지 않는 아이디] GET /chat/ai/${wrongId}`, () => {
-        return request(app.getHttpServer())
-          .get(`/chat/ai/${wrongId}`)
-          .set('Cookie', `magicconch=${jwtToken}`)
-          .expect(404);
+      [
+        {
+          scenario: `[인증 받지 않은 사용자/올바른 아이디] GET /chat/ai/${id}`,
+          route: `/chat/ai/${id}`,
+          status: 401,
+        },
+        {
+          scenario:
+            '[인증 받은 사용자/UUID 형식이 아닌 아이디] GET /chat/ai/invalidUUID',
+          route: '/chat/ai/invalidUUID',
+          cookie: `magicconch=${jwtToken}`,
+          status: 400,
+        },
+        {
+          scenario: `[인증 받은 사용자/존재하지 않는 아이디] GET /chat/ai/${wrongId}`,
+          route: `/chat/ai/${wrongId}`,
+          cookie: `magicconch=${jwtToken}`,
+          status: 404,
+        },
+      ].forEach(({ scenario, route, cookie, status }) => {
+        it(scenario, () => {
+          if (!cookie) {
+            return request(app.getHttpServer()).get(route).expect(status);
+          }
+          return request(app.getHttpServer())
+            .get(route)
+            .set('Cookie', cookie)
+            .expect(status);
+        });
       });
     });
   });
@@ -163,27 +176,42 @@ describe('Chat', () => {
     });
 
     describe('실패', () => {
-      it(`[인증 받지 않은 사용자/올바른 아이디] PATCH /chat/ai/${id}`, () => {
-        return request(app.getHttpServer())
-          .patch(`/chat/ai/${id}`)
-          .send(updateRoomDto)
-          .expect(401);
-      });
-
-      it('[인증 받은 사용자/UUID 형식이 아닌 아이디] PATCH /chat/ai/invalidUUID', () => {
-        return request(app.getHttpServer())
-          .patch('/chat/ai/invalidUUID')
-          .set('Cookie', `magicconch=${jwtToken}`)
-          .send(updateRoomDto)
-          .expect(400);
-      });
-
-      it(`[인증 받은 사용자/존재하지 않는 아이디] PATCH /chat/ai/${wrongId}`, () => {
-        return request(app.getHttpServer())
-          .patch(`/chat/ai/${wrongId}`)
-          .set('Cookie', `magicconch=${jwtToken}`)
-          .send(updateRoomDto)
-          .expect(404);
+      [
+        {
+          scenario: `[인증 받지 않은 사용자/올바른 아이디] PATCH /chat/ai/${id}`,
+          route: `/chat/ai/${id}`,
+          body: updateRoomDto,
+          status: 401,
+        },
+        {
+          scenario:
+            '[인증 받은 사용자/UUID 형식이 아닌 아이디] PATCH /chat/ai/invalidUUID',
+          route: '/chat/ai/invalidUUID',
+          cookie: `magicconch=${jwtToken}`,
+          body: updateRoomDto,
+          status: 400,
+        },
+        {
+          scenario: `[인증 받은 사용자/존재하지 않는 아이디] PATCH /chat/ai/${wrongId}`,
+          route: `/chat/ai/${wrongId}`,
+          cookie: `magicconch=${jwtToken}`,
+          body: updateRoomDto,
+          status: 404,
+        },
+      ].forEach(({ scenario, route, cookie, body, status }) => {
+        it(scenario, () => {
+          if (!cookie) {
+            return request(app.getHttpServer())
+              .patch(route)
+              .send(body)
+              .expect(status);
+          }
+          return request(app.getHttpServer())
+            .patch(route)
+            .set('Cookie', cookie)
+            .send(body)
+            .expect(status);
+        });
       });
     });
   });
@@ -204,24 +232,35 @@ describe('Chat', () => {
     });
 
     describe('실패', () => {
-      it(`[인증 받지 않은 사용자/올바른 아이디] DELETE /chat/ai/${id}`, () => {
-        return request(app.getHttpServer())
-          .delete(`/chat/ai/${id}`)
-          .expect(401);
-      });
-
-      it('[인증 받은 사용자/UUID 형식이 아닌 아이디] DELETE /chat/ai/invalidUUID', () => {
-        return request(app.getHttpServer())
-          .delete('/chat/ai/invalidUUID')
-          .set('Cookie', `magicconch=${jwtToken}`)
-          .expect(400);
-      });
-
-      it(`[인증 받은 사용자/존재하지 않는 아이디] DELETE /chat/ai/${wrongId}`, () => {
-        return request(app.getHttpServer())
-          .delete(`/chat/ai/${wrongId}`)
-          .set('Cookie', `magicconch=${jwtToken}`)
-          .expect(404);
+      [
+        {
+          scenario: `[인증 받지 않은 사용자/올바른 아이디] DELETE /chat/ai/${id}`,
+          route: `/chat/ai/${id}`,
+          status: 401,
+        },
+        {
+          scenario:
+            '[인증 받은 사용자/UUID 형식이 아닌 아이디] DELETE /chat/ai/invalidUUID',
+          route: '/chat/ai/invalidUUID',
+          cookie: `magicconch=${jwtToken}`,
+          status: 400,
+        },
+        {
+          scenario: `[인증 받은 사용자/존재하지 않는 아이디] DELETE /chat/ai/${wrongId}`,
+          route: `/chat/ai/${wrongId}`,
+          cookie: `magicconch=${jwtToken}`,
+          status: 404,
+        },
+      ].forEach(({ scenario, route, cookie, status }) => {
+        it(scenario, () => {
+          if (!cookie) {
+            return request(app.getHttpServer()).delete(route).expect(status);
+          }
+          return request(app.getHttpServer())
+            .delete(route)
+            .set('Cookie', cookie)
+            .expect(status);
+        });
       });
     });
   });

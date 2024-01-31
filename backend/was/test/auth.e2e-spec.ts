@@ -79,35 +79,47 @@ describe('Auth', () => {
     });
 
     describe('실패', () => {
-      it('[인증 받은 사용자] GET /oauth/login/kakao', () => {
-        return request(app.getHttpServer())
-          .get('/oauth/login/kakao')
-          .set('Cookie', `magicconch=${jwtToken}`)
-          .expect(400);
-      });
-
-      it('[인증 받지 않은 사용자/인증코드 누락] GET /oauth/login/kakao', () => {
-        return request(app.getHttpServer())
-          .get('/oauth/login/kakao')
-          .expect(400);
-      });
-
-      it(`[인증 받지 않은 사용자/올바르지 않은 인증코드] GET /oauth/login/kakao?code=${wrongCode}`, () => {
-        return request(app.getHttpServer())
-          .get(`/oauth/login/kakao?code=${wrongCode}`)
-          .expect(401)
-          .expect((res) =>
-            expect(res.body.message).toBe(ERR_MSG.OAUTH_KAKAO_TOKEN_FAILED),
-          );
-      });
-
-      it(`[인증 받지 않은 사용자/올바른 인증 코드/사용자 정보 조회 실패] GET /oauth/login/kakao?code=${codeGetUserFail}`, () => {
-        return request(app.getHttpServer())
-          .get(`/oauth/login/kakao?code=${codeGetUserFail}`)
-          .expect(400)
-          .expect((res) =>
-            expect(res.body.message).toBe(ERR_MSG.OAUTH_KAKAO_USER_FAILED),
-          );
+      [
+        {
+          scenario: '[인증 받은 사용자] GET /oauth/login/kakao',
+          route: '/oauth/login/kakao',
+          cookie: `magicconch=${jwtToken}`,
+          status: 400,
+        },
+        {
+          scenario:
+            '[인증 받지 않은 사용자/인증코드 누락] GET /oauth/login/kakao',
+          route: '/oauth/login/kakao',
+          status: 400,
+        },
+        {
+          scenario: `[인증 받지 않은 사용자/올바르지 않은 인증코드] GET /oauth/login/kakao?code=${wrongCode}`,
+          route: `/oauth/login/kakao?code=${wrongCode}`,
+          status: 401,
+          message: ERR_MSG.OAUTH_KAKAO_TOKEN_FAILED,
+        },
+        {
+          scenario: `[인증 받지 않은 사용자/올바른 인증 코드/사용자 정보 조회 실패] GET /oauth/login/kakao?code=${codeGetUserFail}`,
+          route: `/oauth/login/kakao?code=${codeGetUserFail}`,
+          status: 400,
+          message: ERR_MSG.OAUTH_KAKAO_USER_FAILED,
+        },
+      ].forEach(({ scenario, route, cookie, status, message }) => {
+        it(scenario, () => {
+          if (cookie) {
+            return request(app.getHttpServer())
+              .get(route)
+              .set('Cookie', cookie)
+              .expect(status);
+          }
+          if (!message) {
+            return request(app.getHttpServer()).get(route).expect(status);
+          }
+          return request(app.getHttpServer())
+            .get(route)
+            .expect(status)
+            .expect((res) => expect(res.body.message).toBe(message));
+        });
       });
     });
   });
