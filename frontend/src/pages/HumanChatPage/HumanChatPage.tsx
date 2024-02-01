@@ -28,7 +28,7 @@ export function HumanChatPage() {
   const navigate = useNavigate();
   const { endWebRTC } = useWebRTC();
 
-  const { chatPageState, setChatPageState } = useHumanChatPageCreateRoomEvent();
+  useHumanChatPageCreateRoomEvent();
 
   const { messages, onSubmitMessage, inputDisabled, addPickCardMessage } = useHumanChatMessage();
   const { tarotButtonClick, tarotButtonDisabled } = useHumanTarotSpread(addPickCardMessage);
@@ -69,8 +69,6 @@ export function HumanChatPage() {
           context={{
             tarotButtonClick,
             tarotButtonDisabled,
-            chatPageState,
-            setChatPageState,
             unblockGoBack,
           }}
         />

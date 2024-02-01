@@ -28,7 +28,6 @@ export function ChattingPage() {
 
   const navigate = useNavigate();
   const goSettingPage = () => navigate('setting');
-  console.log('chattingpage renderred', joined);
 
   return (
     <div className={joined ? 'flex-with-center' : 'hidden'}>

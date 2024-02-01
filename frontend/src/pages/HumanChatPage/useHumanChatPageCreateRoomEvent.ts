@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { HumanSocketManager } from '@business/services/SocketManager';
@@ -16,16 +16,10 @@ export function useHumanChatPageCreateRoomEvent() {
 
   const { setHost } = useHumanChatPage(state => ({ setHost: state.setHost }));
 
-  const [chatPageState, setChatPageState] = useState<ChatPageState>({
-    joined: false,
-    host: false,
-  });
-
   useEffect(() => {
     if (!location.state?.host) {
       return;
     }
-    // setChatPageState(prev => ({ ...prev, host: true }));
 
     humanSocket.connect();
     humanSocket.emit('generateRoomName');
@@ -38,6 +32,4 @@ export function useHumanChatPageCreateRoomEvent() {
       humanSocket.disconnect();
     };
   }, []);
-
-  return { chatPageState, setChatPageState };
 }
