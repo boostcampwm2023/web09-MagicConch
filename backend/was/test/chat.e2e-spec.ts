@@ -45,6 +45,7 @@ describe('Chat', () => {
 
     const room: ChattingRoom = new ChattingRoom();
     room.id = id;
+    room.title = '채팅방 제목';
     room.participant = member;
     savedRoom = await entityManager.save(room);
 
