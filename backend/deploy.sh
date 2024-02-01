@@ -38,26 +38,27 @@ for CONTAINER_ID in $RUN_CONTAINER_IDS; do
   fi
 done
 
-if [ "$HEALTH_CHECK_PASSED" = true ]; then
-  echo "Health check passed. Reloading nginx to transfer traffic from $STOP_TARGET to $RUN_TARGET."
+if [ "$HEALTH_CHECK_PASSED" = false ]; then
+  sudo docker image prune -af
+  ERR_MSG="Health check failed."
+  exit 1
+fi
+
+echo "Health check passed. Reloading nginx to transfer traffic from $STOP_TARGET to $RUN_TARGET."
   
-  NGINX_ID=$(sudo docker ps --filter "name=nginx" --quiet)
-  NGINX_CONFIG="/etc/nginx/conf.d/default.conf"
+NGINX_ID=$(sudo docker ps --filter "name=nginx" --quiet)
+NGINX_CONFIG="/etc/nginx/conf.d/default.conf"
 
-  sudo docker exec $NGINX_ID /bin/bash -c "sed -i 's/was-$STOP_TARGET:$WAS_STOP_PORT/was-$RUN_TARGET:$WAS_RUN_PORT/' $NGINX_CONFIG"
-  sudo docker exec $NGINX_ID /bin/bash -c "sed -i 's/signal-$STOP_TARGET:$((WAS_STOP_PORT + 1))/signal-$RUN_TARGET:$((WAS_RUN_PORT + 1))/' $NGINX_CONFIG"
-  sudo docker exec $NGINX_ID /bin/bash -c "nginx -s reload" || { ERR_MSG='Failed to reload nginx'; exit 1; }
+sudo docker exec $NGINX_ID /bin/bash -c "sed -i 's/was-$STOP_TARGET:$WAS_STOP_PORT/was-$RUN_TARGET:$WAS_RUN_PORT/' $NGINX_CONFIG"
+sudo docker exec $NGINX_ID /bin/bash -c "sed -i 's/signal-$STOP_TARGET:$((WAS_STOP_PORT + 1))/signal-$RUN_TARGET:$((WAS_RUN_PORT + 1))/' $NGINX_CONFIG"
+sudo docker exec $NGINX_ID /bin/bash -c "nginx -s reload" || { ERR_MSG='Failed to reload nginx'; exit 1; }
 
-  echo "Terminating the $STOP_TARGET applications."
+echo "Terminating the $STOP_TARGET applications."
 
-  STOP_CONTAINER_ID=$(sudo docker ps --filter "name=$STOP_TARGET" --quiet)
-  if [ -n "$STOP_CONTAINER_ID" ]; then
-    sudo docker stop $STOP_CONTAINER_ID
-    sudo docker rm $STOP_CONTAINER_ID
-    sudo docker image prune -af
-  fi
-else
-  echo "Health check failed."
+STOP_CONTAINER_ID=$(sudo docker ps --filter "name=$STOP_TARGET" --quiet)
+if [ -n "$STOP_CONTAINER_ID" ]; then
+  sudo docker stop $STOP_CONTAINER_ID
+  sudo docker rm $STOP_CONTAINER_ID
   sudo docker image prune -af
 fi
 
