@@ -12,7 +12,7 @@ import { PROVIDER_ID } from 'src/common/constants/etc';
 import { Member } from 'src/members/entities';
 import * as request from 'supertest';
 import { EntityManager } from 'typeorm';
-import { id, jwtToken, wrongId } from './constants';
+import { diffJwtToken, id, jwtToken, wrongId } from './constants';
 
 describe('Chat', () => {
   let app: INestApplication;
@@ -43,6 +43,11 @@ describe('Chat', () => {
     member.providerId = PROVIDER_ID.KAKAO;
     await entityManager.save(member);
 
+    const diffMember: Member = new Member();
+    diffMember.email = 'tarotmilktea2@kakako.com';
+    diffMember.providerId = PROVIDER_ID.KAKAO;
+    await entityManager.save(diffMember);
+
     const room: ChattingRoom = new ChattingRoom();
     room.id = id;
     room.title = '채팅방 제목';
@@ -58,27 +63,23 @@ describe('Chat', () => {
   });
 
   describe('GET /chat/ai', () => {
-    describe('성공', () => {
-      it('[인증 받은 사용자] GET /chat/ai', () => {
-        return request(app.getHttpServer())
-          .get('/chat/ai')
-          .set('Cookie', `magicconch=${jwtToken}`)
-          .expect(200)
-          .expect((res) =>
-            expect(res.body).toEqual([
-              {
-                id: savedRoom.id,
-                title: savedRoom.title,
-              },
-            ]),
-          );
-      });
+    it('인증 받은 사용자는 자신의 채팅방 목록을 조회할 수 있다.', () => {
+      return request(app.getHttpServer())
+        .get('/chat/ai')
+        .set('Cookie', `magicconch=${jwtToken}`)
+        .expect(200)
+        .expect((res) =>
+          expect(res.body).toEqual([
+            {
+              id: savedRoom.id,
+              title: savedRoom.title,
+            },
+          ]),
+        );
     });
 
-    describe('실패', () => {
-      it('[인증 받지 않은 사용자] GET /chat/ai', () => {
-        return request(app.getHttpServer()).get('/chat/ai').expect(401);
-      });
+    it('인증 받지 않은 사용자가 채팅방 목록 조회를 시도하면 401번 에러를 반환한다.', () => {
+      return request(app.getHttpServer()).get('/chat/ai').expect(401);
     });
   });
 
@@ -106,35 +107,42 @@ describe('Chat', () => {
       }
     });
 
-    describe('성공', () => {
-      it(`[인증 받은 사용자/올바른 아이디] GET /chat/ai/${id}`, () => {
-        return request(app.getHttpServer())
-          .get(`/chat/ai/${id}`)
-          .set('Cookie', `magicconch=${jwtToken}`)
-          .expect(200)
-          .expect((res) => expect(res.body).toEqual(messages));
-      });
+    it('인증 받은 사용자는 특정 채팅방에서 오간 메시지 목록을 조회할 수 있다.', () => {
+      return request(app.getHttpServer())
+        .get(`/chat/ai/${id}`)
+        .set('Cookie', `magicconch=${jwtToken}`)
+        .expect(200)
+        .expect((res) => expect(res.body).toEqual(messages));
     });
 
-    describe('실패', () => {
+    describe('잘못된 요청을 받으면 에러를 던진다.', () => {
       [
         {
-          scenario: `[인증 받지 않은 사용자/올바른 아이디] GET /chat/ai/${id}`,
+          scenario:
+            '인증 받지 않은 사용자가 채팅 메시지 조회를 시도하면 401번 에러를 반환한다.',
           route: `/chat/ai/${id}`,
           status: 401,
         },
         {
           scenario:
-            '[인증 받은 사용자/UUID 형식이 아닌 아이디] GET /chat/ai/invalidUUID',
+            '인증 받은 사용자가 UUID 형식이 아닌 아이디를 전달하면 400번 에러를 반환한다.',
           route: '/chat/ai/invalidUUID',
           cookie: `magicconch=${jwtToken}`,
           status: 400,
         },
         {
-          scenario: `[인증 받은 사용자/존재하지 않는 아이디] GET /chat/ai/${wrongId}`,
+          scenario:
+            '인증 받은 사용자가 존재하지 않는 아이디를 전달하면 404번 에러를 반환한다.',
           route: `/chat/ai/${wrongId}`,
           cookie: `magicconch=${jwtToken}`,
           status: 404,
+        },
+        {
+          scenario:
+            '권한이 없는 사용자가 채팅 메시지 조회를 시도하면 403번 에러를 반환한다.',
+          route: `/chat/ai/${id}`,
+          cookie: `magicconch=${diffJwtToken}`,
+          status: 403,
         },
       ].forEach(({ scenario, route, cookie, status }) => {
         it(scenario, () => {
@@ -155,49 +163,56 @@ describe('Chat', () => {
       title: '수정된 채팅방 제목',
     };
 
-    describe('성공', () => {
-      it(`[인증 받은 사용자/올바른 아이디] PATCH /chat/ai/${id}`, async () => {
-        await request(app.getHttpServer())
-          .patch(`/chat/ai/${id}`)
-          .set('Cookie', `magicconch=${jwtToken}`)
-          .send(updateRoomDto)
-          .expect(200);
+    it('인증 받은 사용자는 특정 채팅방 정보를 수정할 수 있다.', async () => {
+      await request(app.getHttpServer())
+        .patch(`/chat/ai/${id}`)
+        .set('Cookie', `magicconch=${jwtToken}`)
+        .send(updateRoomDto)
+        .expect(200);
 
-        const res = await request(app.getHttpServer())
-          .get(`/chat/ai/`)
-          .set('Cookie', `magicconch=${jwtToken}`)
-          .expect(200);
+      const res = await request(app.getHttpServer())
+        .get(`/chat/ai/`)
+        .set('Cookie', `magicconch=${jwtToken}`)
+        .expect(200);
 
-        const room: ChattingRoom[] = res.body.filter(
-          (room: ChattingRoom) => id === room.id,
-        );
-        expect(room).toHaveLength(1);
-        expect(room[0].title).toBe(updateRoomDto.title);
-      });
+      const room: ChattingRoom[] = res.body.filter(
+        (room: ChattingRoom) => id === room.id,
+      );
+      expect(room).toHaveLength(1);
+      expect(room[0].title).toBe(updateRoomDto.title);
     });
 
-    describe('실패', () => {
+    describe('잘못된 요청을 받으면 에러를 던진다.', () => {
       [
         {
-          scenario: `[인증 받지 않은 사용자/올바른 아이디] PATCH /chat/ai/${id}`,
+          scenario:
+            '인증 받지 않은 사용자가 채팅방 정보 수정을 시도하면 401번 에러를 반환한다.',
           route: `/chat/ai/${id}`,
           body: updateRoomDto,
           status: 401,
         },
         {
           scenario:
-            '[인증 받은 사용자/UUID 형식이 아닌 아이디] PATCH /chat/ai/invalidUUID',
+            '인증 받은 사용자가 UUID 형식이 아닌 아이디를 전달하면 400번 에러를 반환한다.',
           route: '/chat/ai/invalidUUID',
           cookie: `magicconch=${jwtToken}`,
           body: updateRoomDto,
           status: 400,
         },
         {
-          scenario: `[인증 받은 사용자/존재하지 않는 아이디] PATCH /chat/ai/${wrongId}`,
+          scenario:
+            '인증 받은 사용자가 존재하지 않는 아이디를 전달하면 404번 에러를 반환한다.',
           route: `/chat/ai/${wrongId}`,
           cookie: `magicconch=${jwtToken}`,
           body: updateRoomDto,
           status: 404,
+        },
+        {
+          scenario:
+            '권한이 없는 사용자가 채팅방 정보 수정을 시도하면 403번 에러를 반환한다.',
+          route: `/chat/ai/${id}`,
+          cookie: `magicconch=${diffJwtToken}`,
+          status: 403,
         },
       ].forEach(({ scenario, route, cookie, body, status }) => {
         it(scenario, () => {
@@ -218,39 +233,50 @@ describe('Chat', () => {
   });
 
   describe('DELETE /chat/ai/:id', () => {
-    describe('성공', () => {
-      it(`[인증 받은 사용자/올바른 아이디] DELETE /chat/ai/${id}`, async () => {
-        await request(app.getHttpServer())
-          .delete(`/chat/ai/${id}`)
-          .set('Cookie', `magicconch=${jwtToken}`)
-          .expect(200);
-
-        await request(app.getHttpServer())
-          .delete(`/chat/ai/${id}`)
-          .set('Cookie', `magicconch=${jwtToken}`)
-          .expect(404);
-      });
+    beforeEach(async () => {
+      await entityManager.save(savedRoom);
     });
 
-    describe('실패', () => {
+    it('인증 받은 사용자는 특정 채팅방을 삭제할 수 있다.', async () => {
+      await request(app.getHttpServer())
+        .delete(`/chat/ai/${id}`)
+        .set('Cookie', `magicconch=${jwtToken}`)
+        .expect(200);
+
+      await request(app.getHttpServer())
+        .delete(`/chat/ai/${id}`)
+        .set('Cookie', `magicconch=${jwtToken}`)
+        .expect(404);
+    });
+
+    describe('잘못된 요청을 받으면 에러를 던진다.', () => {
       [
         {
-          scenario: `[인증 받지 않은 사용자/올바른 아이디] DELETE /chat/ai/${id}`,
+          scenario:
+            '인증 받지 않은 사용자가 채팅방 삭제를 시도하면 401번 에러를 반환한다.',
           route: `/chat/ai/${id}`,
           status: 401,
         },
         {
           scenario:
-            '[인증 받은 사용자/UUID 형식이 아닌 아이디] DELETE /chat/ai/invalidUUID',
+            '인증 받은 사용자가 UUID 형식이 아닌 아이디를 전달하면 400번 에러를 반환한다.',
           route: '/chat/ai/invalidUUID',
           cookie: `magicconch=${jwtToken}`,
           status: 400,
         },
         {
-          scenario: `[인증 받은 사용자/존재하지 않는 아이디] DELETE /chat/ai/${wrongId}`,
+          scenario:
+            '인증 받은 사용자가 존재하지 않는 아이디를 전달하면 404번 에러를 반환한다.',
           route: `/chat/ai/${wrongId}`,
           cookie: `magicconch=${jwtToken}`,
           status: 404,
+        },
+        {
+          scenario:
+            '권한이 없는 사용자가 채팅방 삭제를 시도하면 403번 에러를 반환한다.',
+          route: `/chat/ai/${id}`,
+          cookie: `magicconch=${diffJwtToken}`,
+          status: 403,
         },
       ].forEach(({ scenario, route, cookie, status }) => {
         it(scenario, () => {
