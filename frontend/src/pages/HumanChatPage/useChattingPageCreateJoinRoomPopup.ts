@@ -61,7 +61,9 @@ export function useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack }: us
         enableSideBarButton();
       },
       onCancel: () => {
-        navigate('/');
+        unblockGoBack(() => {
+          navigate('/');
+        });
       },
     });
   };
