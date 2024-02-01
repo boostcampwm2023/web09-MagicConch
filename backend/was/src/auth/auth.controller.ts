@@ -10,7 +10,11 @@ import { ApiTags } from '@nestjs/swagger';
 import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import { PROVIDER_ID } from 'src/common/constants/etc';
-import { KakaoLoginDecorator, LogoutDecorator } from './auth.decorators';
+import {
+  AuthenticateDecorator,
+  KakaoLoginDecorator,
+  LogoutDecorator,
+} from './auth.decorators';
 import { JwtPayloadDto } from './dto';
 import { JwtAuthGuard } from './guard';
 import { KakaoAuthService } from './service/kakao.auth.service';
@@ -31,6 +35,7 @@ export class AuthController {
   }
 
   @Get('authenticate')
+  @AuthenticateDecorator()
   authorize(@Req() req: Request): object {
     const isAuthenticated: boolean = req.cookies.magicconch ? true : false;
     return { isAuthenticated: isAuthenticated };
