@@ -9,7 +9,7 @@ import { useControllMedia, useStreamVideoRef } from '@business/hooks/useWebRTC';
 import type { OutletContext } from './HumanChatPage';
 import { useChattingPageCreateJoinRoomPasswordPopup } from './useChattingPageCreateJoinRoomPopup';
 
-export default function ChattingPage() {
+export function ChattingPage() {
   const {
     tarotButtonDisabled,
     tarotButtonClick,

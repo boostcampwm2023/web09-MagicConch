@@ -24,7 +24,7 @@ export interface OutletContext {
   unblockGoBack: () => void;
 }
 
-export default function HumanChatPage() {
+export function HumanChatPage() {
   useHumanChatPageWrongURL();
 
   const navigate = useNavigate();
