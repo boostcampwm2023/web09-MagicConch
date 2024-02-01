@@ -71,11 +71,13 @@
   <tr>
     <td align="center"><b>common</b></td>
     <td>
-      <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=flat&logo=typescript&logoColor=white" />
+      <img src="https://img.shields.io/badge/Typescript-%23007ACC.svg?style=flat&logo=typescript&logoColor=white" />
       <img src="https://img.shields.io/badge/ESLint-4B3263?style=flat&logo=eslint&logoColor=white" />
       <img src="https://img.shields.io/badge/Prettier-F7B93E?style=flat&logo=Prettier&logoColor=white" />
       <img src="https://img.shields.io/badge/dotenv-ecd53f?style=flat&logo=dotenv&logoColor=white" />
       <img src="https://img.shields.io/badge/Socket.io-black?style=flat&logo=socket.io&badgeColor=010101" />
+      <img src="https://img.shields.io/badge/Jest-%23C21325?style=flat&logo=jest&logoColor=white" />
+      <img src="https://img.shields.io/badge/npm-%23CB3837.svg?style=flat&logo=npm&logoColor=white" />
     </td>
   </tr>
   <tr>
@@ -86,38 +88,55 @@
       <img src="https://img.shields.io/badge/Zustand-000000?style=flat&logo=zustand&logoColor=white" />
       <img src="https://img.shields.io/badge/TailwindCss-06B6D4.svg?style=flat&logo=tailwindcss&logoColor=white" />
       <img src="https://img.shields.io/badge/WebRTC-DB4437.svg?style=flat&logo=WebRTC&logoColor=white" />
+      <img src="https://img.shields.io/badge/Vite-%23646CFF.svg?style=flat&logo=vite&logoColor=white" />
     </td>
   </tr>
   <tr>
     <td align="center"><b>backend</b></td>
     <td>
-      <img src="https://img.shields.io/badge/nestjs-%23E0234E.svg?style=flat&logo=nestjs&logoColor=white" />
-      <img src="https://img.shields.io/badge/TypeORM-fe0902.svg?style=flat&logo=TypeORM&logoColor=white" />
+      <img src="https://img.shields.io/badge/NestJS-%23E0234E.svg?style=flat&logo=nestjs&logoColor=white" />
+      <img src="https://img.shields.io/badge/TypeORM-fe0902.svg?style=flat&logo=typeorm&logoColor=white" />
+      <img src="https://img.shields.io/badge/Supertest-red.svg?style=flat&logo=supertest&logoColor=white" />
+      <img src="https://img.shields.io/badge/Passport-black.svg?style=flat&logo=passport&logoColor=35df79" />
+      <img src="https://img.shields.io/badge/winston-white.svg?style=flat&logo=winston&logoColor=black" />
     </td>
   </tr>
   <tr>
     <td align="center"><b>DB<b></td>
     <td>
-      <img src="https://img.shields.io/badge/MySQL-00758f.svg?style=flat&logo=MySQL&logoColor=white" />
+      <img src="https://img.shields.io/badge/MySQL-00758f.svg?style=flat&logo=mysql&logoColor=white" />
+      <img src="https://img.shields.io/badge/Redis-%23DD0031.svg?style=flat&logo=redis&logoColor=white" />
     </td>
   </tr>
   <tr>
     <td align="center"><b>CI/CD</b></td>
     <td>
-      <img src="https://img.shields.io/badge/github%20actions-%232671E5.svg?style=flat&logo=githubactions&logoColor=white" />
+      <img src="https://img.shields.io/badge/GitHub%20Actions-%232671E5.svg?style=flat&logo=githubactions&logoColor=white" />
     </td>
   </tr>
   <tr>
     <td align="center"><b>deployment</b></td>
     <td>
       <img src="https://img.shields.io/badge/Cloudflare-F38020?style=flat&logo=Cloudflare&logoColor=white" />
-      <img src="https://img.shields.io/badge/docker-%230db7ed.svg?style=flat&logo=docker&logoColor=white" />
-      <img src="https://img.shields.io/badge/nginx-%23009639.svg?style=flat&logo=nginx&logoColor=white" />
-      <img src="https://img.shields.io/badge/%20Naver%20Cloud%20Platform-03C75A?logo=naver&logoColor=white" />
+      <img src="https://img.shields.io/badge/docker-1D63ED.svg?style=flat&logo=docker&logoColor=white" />
+      <img src="https://img.shields.io/badge/NGINX-%23009639.svg?style=flat&logo=nginx&logoColor=white" />
+      <img src="https://img.shields.io/badge/%20NAVER%20Cloud%20Platform-333333" />
+      <img src="https://img.shields.io/badge/aws-%23FF9900.svg?style=flat&logo=amazon-aws&logoColor=white" />
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><b>others</b></td>
+    <td>
+      <img src="https://img.shields.io/badge/Notion-%23000000.svg?style=flat&logo=notion&logoColor=white" />
+      <img src="https://img.shields.io/badge/Slack-4A154B?style=flat&logo=slack" />
+      <img src="https://img.shields.io/badge/Jitsi-17a0db?style=flat&logo=jitsi&logoColor=white" />
+      <img src="https://img.shields.io/badge/-Swagger-173647.svg?style=flat&logo=swagger" />
     </td>
   </tr>
 </table>
-
+<p>
+    🔗 <a href="https://github.com/boostcampwm2023/web09-MagicConch/wiki/%EA%B8%B0%EC%88%A0-%EC%8A%A4%ED%83%9D#-%EA%B8%B0%EC%88%A0-%EC%84%A0%ED%83%9D-%EC%9D%B4%EC%9C%A0">기술 선택 이유</a>
+</p>
 <br>
 
 ## 🔮🥛 타로 밀크티 소개
