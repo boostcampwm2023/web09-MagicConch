@@ -28,9 +28,10 @@ export function ChattingPage() {
 
   const navigate = useNavigate();
   const goSettingPage = () => navigate('setting');
+  console.log('chattingpage renderred', joined);
 
   return (
-    <div className={`flex-with-center ${joined ? '' : 'hidden'}`}>
+    <div className={joined ? 'flex-with-center' : 'hidden'}>
       <CamContainer
         localVideoRef={localVideoRef}
         remoteVideoRef={remoteVideoRef}
