@@ -1,7 +1,7 @@
 import { IconButton, IconToggleButton } from '@components/Buttons';
 import CamBox from '@components/CamBox';
 
-import { useHost } from '@stores/zustandStores/useHost';
+import { useHumanChatPage } from '@stores/zustandStores/useHost';
 import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
 import { useProfileInfo } from '@stores/zustandStores/useProfileInfo';
 
@@ -40,7 +40,7 @@ export default function CamContainer({
     setRemoteVideoOn: state.setRemoteVideoOn,
   }));
 
-  const { host } = useHost(state => ({ host: state.host }));
+  const { host } = useHumanChatPage(state => ({ host: state.host }));
 
   return (
     <div className="flex-with-center flex-col gap-80 pt-80 sm:gap-20">

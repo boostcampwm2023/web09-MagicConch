@@ -1,16 +1,14 @@
 import { ChangeEvent } from 'react';
-import { useOutletContext } from 'react-router-dom';
 
 import { useDataChannel } from '@business/hooks/useWebRTC';
 
+import { useHumanChatPage } from '@stores/zustandStores/useHost';
 import { useProfileInfo } from '@stores/zustandStores/useProfileInfo';
 
 import { arrayBuffer2Array } from '@utils/array';
 
-import { OutletContext } from './HumanChatPage';
-
 export function useSettingPageProfileNicknameSetting() {
-  const { setChatPageState }: OutletContext = useOutletContext();
+  const { setJoined } = useHumanChatPage(stat => ({ setJoined: stat.setJoined }));
 
   const { dataChannels } = useDataChannel();
   const profileChannel = dataChannels.get('profileChannel');
@@ -50,7 +48,7 @@ export function useSettingPageProfileNicknameSetting() {
       nicknameChannel?.send?.(myNickname);
     }
 
-    setChatPageState(prev => ({ ...prev, joined: true }));
+    setJoined(true);
   };
 
   return { setLocalProfileImage, setLocalNickname, sendProfileInfo };

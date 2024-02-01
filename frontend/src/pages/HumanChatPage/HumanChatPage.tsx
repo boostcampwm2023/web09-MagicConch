@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
 import Background from '@components/Background';
@@ -11,14 +11,12 @@ import { useHumanChatMessage } from '@business/hooks/useChatMessage';
 import { useHumanTarotSpread } from '@business/hooks/useTarotSpread';
 import { useWebRTC } from '@business/hooks/useWebRTC';
 
-import { ChatPageState, useHumanChatPageCreateRoomEvent } from './useHumanChatPageCreateRoomEvent';
+import { useHumanChatPageCreateRoomEvent } from './useHumanChatPageCreateRoomEvent';
 import { useHumanChatPageWrongURL } from './useHumanChatPageWrongURL';
 
 export interface OutletContext {
   tarotButtonClick: () => void;
   tarotButtonDisabled: boolean;
-  chatPageState: ChatPageState;
-  setChatPageState: Dispatch<SetStateAction<ChatPageState>>;
   disableSideBar: () => void;
   enableSideBar: () => void;
   unblockGoBack: () => void;

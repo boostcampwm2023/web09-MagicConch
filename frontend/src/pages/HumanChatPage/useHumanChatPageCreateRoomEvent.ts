@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { HumanSocketManager } from '@business/services/SocketManager';
 
-import { useHost } from '@stores/zustandStores/useHost';
+import { useHumanChatPage } from '@stores/zustandStores/useHost';
 
 export interface ChatPageState {
   joined: boolean;
@@ -14,7 +14,7 @@ export function useHumanChatPageCreateRoomEvent() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { setHost } = useHost(state => ({ setHost: state.setHost }));
+  const { setHost } = useHumanChatPage(state => ({ setHost: state.setHost }));
 
   const [chatPageState, setChatPageState] = useState<ChatPageState>({
     joined: false,
@@ -25,7 +25,7 @@ export function useHumanChatPageCreateRoomEvent() {
     if (!location.state?.host) {
       return;
     }
-    setChatPageState(prev => ({ ...prev, host: true }));
+    // setChatPageState(prev => ({ ...prev, host: true }));
 
     humanSocket.connect();
     humanSocket.emit('generateRoomName');

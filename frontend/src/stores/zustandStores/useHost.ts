@@ -3,19 +3,23 @@ import { devtools } from 'zustand/middleware';
 
 interface HostState {
   host: boolean;
+  joined: boolean;
 }
 
 interface HostActions {
   setHost: (value: boolean) => void;
+  setJoined: (value: boolean) => void;
 }
 
 const initialState: HostState = {
   host: false,
+  joined: false,
 };
 
-export const useHost = create<HostState & HostActions>()(
+export const useHumanChatPage = create<HostState & HostActions>()(
   devtools(set => ({
     ...initialState,
     setHost: (value: boolean) => set(() => ({ host: value })),
+    setJoined: (value: boolean) => set(() => ({ joined: value })),
   })),
 );

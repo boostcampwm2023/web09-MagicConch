@@ -6,20 +6,19 @@ import CamContainer from '@components/CamContainer';
 
 import { useControllMedia, useStreamVideoRef } from '@business/hooks/useWebRTC';
 
+import { useHumanChatPage } from '@stores/zustandStores/useHost';
+
 import type { OutletContext } from './HumanChatPage';
 import { useChattingPageCreateJoinRoomPasswordPopup } from './useChattingPageCreateJoinRoomPopup';
 
 export function ChattingPage() {
-  const {
-    tarotButtonDisabled,
-    tarotButtonClick,
-    chatPageState: { joined },
-    unblockGoBack,
-  }: OutletContext = useOutletContext();
+  const { tarotButtonDisabled, tarotButtonClick, unblockGoBack }: OutletContext = useOutletContext();
 
   useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack });
   const { localVideoRef, remoteVideoRef } = useStreamVideoRef();
   const { toggleAudio, toggleVideo, changeMyVideoTrack } = useControllMedia({ localVideoRef });
+
+  const { joined } = useHumanChatPage(state => ({ joined: state.joined }));
 
   useEffect(() => {
     if (joined) {
