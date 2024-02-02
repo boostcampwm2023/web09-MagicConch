@@ -2,12 +2,9 @@ import { act, render } from '@testing-library/react';
 
 import { initialState, useSideBarStore } from '@stores/zustandStores/useSideBarStore';
 
-import { toBeVisibleSideBar } from '@utils/test/matcher';
-
 import { IntegratedSideBar } from './__mocks__';
 
 vi.useFakeTimers();
-expect.extend({ toBeVisibleSideBar });
 
 describe('SideBar 관련 컴포넌트 통합 테스트', () => {
   let sideBar: HTMLElement | null;
