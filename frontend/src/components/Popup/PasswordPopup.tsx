@@ -23,7 +23,6 @@ export default function PasswordPopup({
 
   const passwordSubmit = () => {
     const password = passwordInput.current?.value;
-    console.log('pass: ', password ?? '');
     onSubmit(password ?? '');
   };
 
