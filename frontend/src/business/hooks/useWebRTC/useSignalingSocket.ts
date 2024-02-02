@@ -16,7 +16,6 @@ export function useSignalingSocket() {
     onSuccess?: InitSocketEvents;
     onCancel?: VoidFunction;
   }) => {
-    // console.log(socketManager.emit);
     openPasswordPopup({
       host: true,
       onCancel,

@@ -9,6 +9,7 @@ interface HostState {
 interface HostActions {
   setHost: (value: boolean) => void;
   setJoined: (value: boolean) => void;
+  reset: () => void;
 }
 
 const initialState: HostState = {
@@ -21,5 +22,6 @@ export const useHumanChatPage = create<HostState & HostActions>()(
     ...initialState,
     setHost: (value: boolean) => set(() => ({ host: value })),
     setJoined: (value: boolean) => set(() => ({ joined: value })),
+    reset: () => set(initialState),
   })),
 );
