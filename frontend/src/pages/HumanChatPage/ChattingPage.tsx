@@ -26,23 +26,25 @@ export function ChattingPage() {
   const goSettingPage = () => navigate('setting');
 
   return (
-    <div className={joinedRoom ? 'flex-with-center' : 'hidden'}>
-      <CamContainer
-        localVideoRef={localVideoRef}
-        remoteVideoRef={remoteVideoRef}
-        toggleVideo={toggleVideo}
-        toggleAudio={toggleAudio}
-        tarotButtonClick={tarotButtonClick}
-        tarotButtonDisabled={tarotButtonDisabled}
-      />
-      <div className="absolute z-10 top-[10vh] right-90">
-        <IconButton
-          icon="uil:setting"
-          iconColor="textWhite"
-          buttonColor="cancel"
-          onClick={goSettingPage}
+    joinedRoom && (
+      <div className={`flex-with-center`}>
+        <CamContainer
+          localVideoRef={localVideoRef}
+          remoteVideoRef={remoteVideoRef}
+          toggleVideo={toggleVideo}
+          toggleAudio={toggleAudio}
+          tarotButtonClick={tarotButtonClick}
+          tarotButtonDisabled={tarotButtonDisabled}
         />
+        <div className="absolute z-10 top-[10vh] right-90">
+          <IconButton
+            icon="uil:setting"
+            iconColor="textWhite"
+            buttonColor="cancel"
+            onClick={goSettingPage}
+          />
+        </div>
       </div>
-    </div>
+    )
   );
 }
