@@ -8,7 +8,9 @@ export const FindTarotCardDecorator = (
 ) =>
   new SwaggerDecoratorBuilder(target, 'GET', returnType)
     .addParam(param)
+    .removeResponse(401)
     .removeResponse(403)
+    .addResponse(400)
     .build();
 
 export const FindTarotResultDecorator = (
@@ -20,4 +22,5 @@ export const FindTarotResultDecorator = (
     .addParam(param)
     .removeResponse(401)
     .removeResponse(403)
+    .addResponse(400)
     .build();
