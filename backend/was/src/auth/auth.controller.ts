@@ -15,7 +15,7 @@ import {
   KakaoLoginDecorator,
   LogoutDecorator,
 } from './auth.decorators';
-import { JwtPayloadDto } from './dto';
+import { AuthStatusDto, JwtPayloadDto } from './dto';
 import { JwtAuthGuard } from './guard';
 import { KakaoAuthService } from './service/kakao.auth.service';
 
@@ -35,8 +35,8 @@ export class AuthController {
   }
 
   @Get('authenticate')
-  @AuthenticateDecorator()
-  authorize(@Req() req: Request): object {
+  @AuthenticateDecorator(AuthStatusDto)
+  authorize(@Req() req: Request): AuthStatusDto {
     const isAuthenticated: boolean = req.cookies.magicconch ? true : false;
     return { isAuthenticated: isAuthenticated };
   }
