@@ -65,6 +65,38 @@ describe('Auth', () => {
     await app.close();
   });
 
+  describe('GET /oauth/authenticate', () => {
+    [
+      {
+        scenario: '로그인 한 사용자가 요청을 보내면 true를 반환한다.',
+        route: '/oauth/authenticate',
+        cookie: `magicconch=${jwtToken}`,
+        status: 200,
+        body: { isAuthenticated: true },
+      },
+      {
+        scenario: '로그인 하지 않은 사용자가 요청을 보내면 false를 반환한다.',
+        route: '/oauth/authenticate',
+        status: 200,
+        body: { isAuthenticated: false },
+      },
+    ].forEach(({ scenario, route, cookie, status, body }) => {
+      it(scenario, () => {
+        if (cookie) {
+          return request(app.getHttpServer())
+            .get(route)
+            .set('Cookie', cookie)
+            .expect(status)
+            .expect((res) => expect(res.body).toEqual(body));
+        }
+        return request(app.getHttpServer())
+          .get(route)
+          .expect(status)
+          .expect((res) => expect(res.body).toEqual(body));
+      });
+    });
+  });
+
   describe('GET /oauth/login/kakao', () => {
     const code: string = 'code';
     const wrongCode: string = 'wrongCode';
