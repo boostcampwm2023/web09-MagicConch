@@ -33,7 +33,7 @@ export class AuthController {
   @Get('authenticate')
   authorize(@Req() req: Request): object {
     const isAuthenticated: boolean = req.cookies.magicconch ? true : false;
-    return { isAuthenticated: isAuthenticated };
+    return { isAuthenticated };
   }
 
   @Get('login/kakao')

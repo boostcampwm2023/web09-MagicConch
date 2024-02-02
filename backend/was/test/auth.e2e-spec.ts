@@ -65,66 +65,118 @@ describe('Auth', () => {
     await app.close();
   });
 
+  describe('GET /oauth/authenticate', () => {
+    [
+      {
+        scenario: '로그인 한 사용자가 요청을 보내면 true를 반환한다.',
+        route: '/oauth/authenticate',
+        cookie: `magicconch=${jwtToken}`,
+        status: 200,
+        body: { isAuthenticated: true },
+      },
+      {
+        scenario: '로그인 하지 않은 사용자가 요청을 보내면 false를 반환한다.',
+        route: '/oauth/authenticate',
+        status: 200,
+        body: { isAuthenticated: false },
+      },
+    ].forEach(({ scenario, route, cookie, status, body }) => {
+      it(scenario, () => {
+        if (cookie) {
+          return request(app.getHttpServer())
+            .get(route)
+            .set('Cookie', cookie)
+            .expect(status)
+            .expect((res) => expect(res.body).toEqual(body));
+        }
+        return request(app.getHttpServer())
+          .get(route)
+          .expect(status)
+          .expect((res) => expect(res.body).toEqual(body));
+      });
+    });
+  });
+
   describe('GET /oauth/login/kakao', () => {
     const code: string = 'code';
     const wrongCode: string = 'wrongCode';
     const codeGetUserFail: string = 'codeGetUserFail';
 
-    describe('성공', () => {
-      it(`[인증 받지 않은 사용자/올바른 인증코드] GET /oauth/login/kakao?code=${code}`, () => {
-        return request(app.getHttpServer())
-          .get(`/oauth/login/kakao?code=${code}`)
-          .expect(200);
-      });
+    it('올바른 인증 코드를 발급 받은 사용자는 로그인 할 수 있다.', () => {
+      return request(app.getHttpServer())
+        .get(`/oauth/login/kakao?code=${code}`)
+        .expect(200);
     });
 
-    describe('실패', () => {
-      it('[인증 받은 사용자] GET /oauth/login/kakao', () => {
-        return request(app.getHttpServer())
-          .get('/oauth/login/kakao')
-          .set('Cookie', `magicconch=${jwtToken}`)
-          .expect(400);
-      });
-
-      it('[인증 받지 않은 사용자/인증코드 누락] GET /oauth/login/kakao', () => {
-        return request(app.getHttpServer())
-          .get('/oauth/login/kakao')
-          .expect(400);
-      });
-
-      it(`[인증 받지 않은 사용자/올바르지 않은 인증코드] GET /oauth/login/kakao?code=${wrongCode}`, () => {
-        return request(app.getHttpServer())
-          .get(`/oauth/login/kakao?code=${wrongCode}`)
-          .expect(401)
-          .expect((res) =>
-            expect(res.body.message).toBe(ERR_MSG.OAUTH_KAKAO_TOKEN_FAILED),
-          );
-      });
-
-      it(`[인증 받지 않은 사용자/올바른 인증 코드/사용자 정보 조회 실패] GET /oauth/login/kakao?code=${codeGetUserFail}`, () => {
-        return request(app.getHttpServer())
-          .get(`/oauth/login/kakao?code=${codeGetUserFail}`)
-          .expect(400)
-          .expect((res) =>
-            expect(res.body.message).toBe(ERR_MSG.OAUTH_KAKAO_USER_FAILED),
-          );
+    describe('잘못된 요청을 받으면 에러를 던진다.', () => {
+      [
+        {
+          scenario:
+            '이미 로그인 한 사용자가 로그인을 시도하면 400번 에러를 반환한다.',
+          route: '/oauth/login/kakao',
+          cookie: `magicconch=${jwtToken}`,
+          status: 400,
+        },
+        {
+          scenario: '인증 코드가 누락되면 400번 에러를 반환한다.',
+          route: '/oauth/login/kakao',
+          status: 400,
+        },
+        {
+          scenario: '잘못된 인증 코드를 받으면 401번 에러를 반환한다.',
+          route: `/oauth/login/kakao?code=${wrongCode}`,
+          status: 401,
+          message: ERR_MSG.OAUTH_KAKAO_TOKEN_FAILED,
+        },
+        {
+          scenario: '사용자 정보 조회에 실패하면 400번 에러를 반환한다.',
+          route: `/oauth/login/kakao?code=${codeGetUserFail}`,
+          status: 400,
+          message: ERR_MSG.OAUTH_KAKAO_USER_FAILED,
+        },
+      ].forEach(({ scenario, route, cookie, status, message }) => {
+        it(scenario, () => {
+          if (cookie) {
+            return request(app.getHttpServer())
+              .get(route)
+              .set('Cookie', cookie)
+              .expect(status);
+          }
+          if (message) {
+            return request(app.getHttpServer())
+              .get(route)
+              .expect(status)
+              .expect((res) => expect(res.body.message).toBe(message));
+          }
+          return request(app.getHttpServer()).get(route).expect(status);
+        });
       });
     });
   });
 
   describe('GET /oauth/logout', () => {
-    describe('성공', () => {
-      it('[인증 받은 사용자] GET /oauth/logout', () => {
-        return request(app.getHttpServer())
-          .get('/oauth/logout')
-          .set('Cookie', `magicconch=${jwtToken}`)
-          .expect(200);
-      });
-    });
-
-    describe('실패', () => {
-      it('[인증 받지 않은 사용자] GET /oauth/logout', () => {
-        return request(app.getHttpServer()).get('/oauth/logout').expect(401);
+    [
+      {
+        scenario: '로그인 한 사용자는 로그아웃 할 수 있다.',
+        route: '/oauth/logout',
+        cookie: `magicconch=${jwtToken}`,
+        status: 200,
+      },
+      {
+        scenario:
+          '로그인 하지 않은 사용자가 로그아웃을 시도하면 401번 에러를 반환한다.',
+        route: '/oauth/logout',
+        status: 401,
+      },
+    ].forEach(({ scenario, route, cookie, status }) => {
+      it(scenario, () => {
+        if (cookie) {
+          return request(app.getHttpServer())
+            .get(route)
+            .set('Cookie', cookie)
+            .expect(status);
+        }
+        return request(app.getHttpServer()).get(route).expect(status);
       });
     });
   });

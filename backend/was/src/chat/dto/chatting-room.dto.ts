@@ -12,6 +12,9 @@ export class ChattingRoomDto {
   readonly title?: string;
 
   static fromEntity(entity: ChattingRoom): ChattingRoomDto {
-    return { id: entity.id, title: entity.title };
+    return {
+      id: entity.id,
+      title: entity.title ?? entity.createdAt?.toLocaleTimeString('ko-KR'),
+    };
   }
 }
