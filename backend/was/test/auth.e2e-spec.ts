@@ -123,15 +123,29 @@ describe('Auth', () => {
   });
 
   describe('GET /oauth/logout', () => {
-    it('로그인 한 사용자는 로그아웃 할 수 있다.', () => {
-      return request(app.getHttpServer())
-        .get('/oauth/logout')
-        .set('Cookie', `magicconch=${jwtToken}`)
-        .expect(200);
-    });
-
-    it('로그인 하지 않은 사용자가 로그아웃을 시도하면 401번 에러를 반환한다.', () => {
-      return request(app.getHttpServer()).get('/oauth/logout').expect(401);
+    [
+      {
+        scenario: '로그인 한 사용자는 로그아웃 할 수 있다.',
+        route: '/oauth/logout',
+        cookie: `magicconch=${jwtToken}`,
+        status: 200,
+      },
+      {
+        scenario:
+          '로그인 하지 않은 사용자가 로그아웃을 시도하면 401번 에러를 반환한다.',
+        route: '/oauth/logout',
+        status: 401,
+      },
+    ].forEach(({ scenario, route, cookie, status }) => {
+      it(scenario, () => {
+        if (cookie) {
+          return request(app.getHttpServer())
+            .get(route)
+            .set('Cookie', cookie)
+            .expect(status);
+        }
+        return request(app.getHttpServer()).get(route).expect(status);
+      });
     });
   });
 });

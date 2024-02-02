@@ -63,23 +63,36 @@ describe('Chat', () => {
   });
 
   describe('GET /chat/ai', () => {
-    it('인증 받은 사용자는 자신의 채팅방 목록을 조회할 수 있다.', () => {
-      return request(app.getHttpServer())
-        .get('/chat/ai')
-        .set('Cookie', `magicconch=${jwtToken}`)
-        .expect(200)
-        .expect((res) =>
-          expect(res.body).toEqual([
-            {
-              id: savedRoom.id,
-              title: savedRoom.title,
-            },
-          ]),
-        );
-    });
-
-    it('인증 받지 않은 사용자가 채팅방 목록 조회를 시도하면 401번 에러를 반환한다.', () => {
-      return request(app.getHttpServer()).get('/chat/ai').expect(401);
+    [
+      {
+        scenario: '인증 받은 사용자는 자신의 채팅방 목록을 조회할 수 있다.',
+        route: '/chat/ai',
+        cookie: `magicconch=${jwtToken}`,
+        status: 200,
+        body: [
+          {
+            id: id,
+            title: '채팅방 제목',
+          },
+        ],
+      },
+      {
+        scenario:
+          '인증 받지 않은 사용자가 채팅방 목록 조회를 시도하면 401번 에러를 반환한다.',
+        route: '/chat/ai',
+        status: 401,
+      },
+    ].forEach(({ scenario, route, cookie, status, body }) => {
+      it(scenario, () => {
+        if (cookie) {
+          return request(app.getHttpServer())
+            .get(route)
+            .set('Cookie', cookie)
+            .expect(status)
+            .expect((res) => expect(res.body).toEqual(body));
+        }
+        return request(app.getHttpServer()).get(route).expect(status);
+      });
     });
   });
 
