@@ -110,13 +110,13 @@ describe('Auth', () => {
               .set('Cookie', cookie)
               .expect(status);
           }
-          if (!message) {
-            return request(app.getHttpServer()).get(route).expect(status);
+          if (message) {
+            return request(app.getHttpServer())
+              .get(route)
+              .expect(status)
+              .expect((res) => expect(res.body.message).toBe(message));
           }
-          return request(app.getHttpServer())
-            .get(route)
-            .expect(status)
-            .expect((res) => expect(res.body.message).toBe(message));
+          return request(app.getHttpServer()).get(route).expect(status);
         });
       });
     });

@@ -159,13 +159,13 @@ describe('Chat', () => {
         },
       ].forEach(({ scenario, route, cookie, status }) => {
         it(scenario, () => {
-          if (!cookie) {
-            return request(app.getHttpServer()).get(route).expect(status);
+          if (cookie) {
+            return request(app.getHttpServer())
+              .get(route)
+              .set('Cookie', cookie)
+              .expect(status);
           }
-          return request(app.getHttpServer())
-            .get(route)
-            .set('Cookie', cookie)
-            .expect(status);
+          return request(app.getHttpServer()).get(route).expect(status);
         });
       });
     });
@@ -229,15 +229,15 @@ describe('Chat', () => {
         },
       ].forEach(({ scenario, route, cookie, body, status }) => {
         it(scenario, () => {
-          if (!cookie) {
+          if (cookie) {
             return request(app.getHttpServer())
               .patch(route)
+              .set('Cookie', cookie)
               .send(body)
               .expect(status);
           }
           return request(app.getHttpServer())
             .patch(route)
-            .set('Cookie', cookie)
             .send(body)
             .expect(status);
         });
@@ -293,13 +293,13 @@ describe('Chat', () => {
         },
       ].forEach(({ scenario, route, cookie, status }) => {
         it(scenario, () => {
-          if (!cookie) {
-            return request(app.getHttpServer()).delete(route).expect(status);
+          if (cookie) {
+            return request(app.getHttpServer())
+              .delete(route)
+              .set('Cookie', cookie)
+              .expect(status);
           }
-          return request(app.getHttpServer())
-            .delete(route)
-            .set('Cookie', cookie)
-            .expect(status);
+          return request(app.getHttpServer()).delete(route).expect(status);
         });
       });
     });
