@@ -1,8 +1,7 @@
+import type { InitSocketEvents } from '@components/Popup/PasswordPopup';
+
 import { usePasswordPopup } from '@business/hooks/usePopup';
 import { HumanSocketManager } from '@business/services/SocketManager';
-
-type onSuccessCreateRoom = ({ password, closePopup }: { password: string } & ClosePopupFunc) => void;
-type onSuccessJoinRoom = ({ closePopup }: ClosePopupFunc) => void;
 
 export function useSignalingSocket() {
   const { openPasswordPopup } = usePasswordPopup();
@@ -14,13 +13,15 @@ export function useSignalingSocket() {
     onCancel,
   }: {
     roomName: string;
-    onSuccess?: onSuccessCreateRoom;
+    onSuccess?: InitSocketEvents;
     onCancel?: VoidFunction;
   }) => {
+    // console.log(socketManager.emit);
     openPasswordPopup({
       host: true,
       onCancel,
-      onSubmit: ({ password, closePopup }) => initHostSocketEvents({ password, closePopup, roomName, onSuccess }),
+      onSubmit: ({ password }) => socketManager.emit('createRoom', roomName, password),
+      initSocketEvents: ({ password, closePopup }) => initHostSocketEvents({ password, closePopup, onSuccess }),
     });
   };
 
@@ -34,14 +35,18 @@ export function useSignalingSocket() {
     roomName: string;
     onFull?: VoidFunction;
     onFail?: VoidFunction;
-    onSuccess?: onSuccessJoinRoom;
+    onSuccess?: InitSocketEvents;
     onHostExit?: VoidFunction;
   }) => {
+    const socketManager = HumanSocketManager.getInstance();
+
     openPasswordPopup({
-      onSubmit: ({ password, closePopup }) =>
-        initGuestSocketEvents({ password, roomName, closePopup, onSuccess, onHostExit, onFail, onFull }),
+      onSubmit: ({ password }) => socketManager.emit('joinRoom', roomName, password),
+      initSocketEvents: ({ closePopup }) =>
+        initGuestSocketEvents({ closePopup, onSuccess, onHostExit, onFail, onFull }),
     });
   };
+
   const checkRoomExist = ({
     roomName,
     onExistRoom,
@@ -52,13 +57,11 @@ export function useSignalingSocket() {
     onRoomNotExist?: () => void;
   }) => {
     socketManager.emit('checkRoomExist', roomName);
-    if (onRoomNotExist) {
-      socketManager.on('roomNotExist', onRoomNotExist);
-    }
-    if (onExistRoom) {
-      socketManager.on('roomExist', onExistRoom);
-    }
+
+    onRoomNotExist && socketManager.on('roomNotExist', onRoomNotExist);
+    onExistRoom && socketManager.on('roomExist', onExistRoom);
   };
+
   return {
     createRoom,
     joinRoom,
@@ -68,53 +71,35 @@ export function useSignalingSocket() {
 
 export function initHostSocketEvents({
   password,
-  roomName,
   closePopup,
   onSuccess,
 }: {
-  password: string;
-  roomName: string;
+  password?: string;
   closePopup: VoidFunction;
-  onSuccess?: onSuccessCreateRoom;
+  onSuccess?: InitSocketEvents;
 }) {
   const socketManager = HumanSocketManager.getInstance();
 
-  socketManager.emit('createRoom', roomName, password);
-
-  socketManager.on('roomCreated', () => onSuccess?.({ password, closePopup }));
+  onSuccess && socketManager.on('roomCreated', () => onSuccess({ password, closePopup }));
 }
 
 export function initGuestSocketEvents({
-  password,
-  roomName,
-  onFail,
-  onFull,
+  closePopup,
   onSuccess,
   onHostExit,
-  closePopup,
+  onFail,
+  onFull,
 }: {
-  password: string;
-  roomName: string;
-  onFull?: VoidFunction;
-  onFail?: VoidFunction;
-  onSuccess?: onSuccessJoinRoom;
-  onHostExit?: VoidFunction;
   closePopup: VoidFunction;
+  onSuccess?: InitSocketEvents;
+  onHostExit?: VoidFunction;
+  onFail?: VoidFunction;
+  onFull?: VoidFunction;
 }) {
   const socketManager = HumanSocketManager.getInstance();
 
-  socketManager.emit('joinRoom', roomName, password);
-
-  if (onFail) {
-    socketManager.on('joinRoomFailed', onFail);
-  }
-  if (onFull) {
-    socketManager.on('roomFull', onFull);
-  }
-  if (onSuccess) {
-    socketManager.on('joinRoomSuccess', () => onSuccess({ closePopup }));
-  }
-  if (onHostExit) {
-    socketManager.on('hostExit', onHostExit);
-  }
+  onFail && socketManager.on('joinRoomFailed', onFail);
+  onFull && socketManager.on('roomFull', onFull);
+  onSuccess && socketManager.on('joinRoomSuccess', () => onSuccess({ closePopup }));
+  onHostExit && socketManager.on('hostExit', onHostExit);
 }
