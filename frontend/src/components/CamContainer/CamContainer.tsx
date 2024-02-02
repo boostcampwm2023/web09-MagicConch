@@ -1,7 +1,10 @@
+import { useOutletContext } from 'react-router-dom';
+
+import { OutletContext } from '@pages/HumanChatPage';
+
 import { IconButton, IconToggleButton } from '@components/Buttons';
 import CamBox from '@components/CamBox';
 
-import { useHumanChatPage } from '@stores/zustandStores/useHost';
 import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
 import { useProfileInfo } from '@stores/zustandStores/useProfileInfo';
 
@@ -24,6 +27,8 @@ export default function CamContainer({
   tarotButtonClick,
   tarotButtonDisabled,
 }: CamContainerProps) {
+  const { host } = useOutletContext<OutletContext>();
+
   const { myNickname, myProfile, remoteNickname, remoteProfile } = useProfileInfo(state => ({
     myNickname: state.myNickname,
     myProfile: state.myProfile,
@@ -39,8 +44,6 @@ export default function CamContainer({
     setRemoteMicOn: state.setRemoteMicOn,
     setRemoteVideoOn: state.setRemoteVideoOn,
   }));
-
-  const { host } = useHumanChatPage(state => ({ host: state.host }));
 
   return (
     <div className="flex-with-center flex-col gap-80 pt-80 sm:gap-20">

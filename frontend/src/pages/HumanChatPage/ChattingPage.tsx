@@ -6,31 +6,27 @@ import CamContainer from '@components/CamContainer';
 
 import { useControllMedia, useStreamVideoRef } from '@business/hooks/useWebRTC';
 
-import { useHumanChatPage } from '@stores/zustandStores/useHost';
-
 import type { OutletContext } from './HumanChatPage';
 import { useChattingPageCreateJoinRoomPasswordPopup } from './useChattingPageCreateJoinRoomPopup';
 
 export function ChattingPage() {
-  const { tarotButtonDisabled, tarotButtonClick, unblockGoBack }: OutletContext = useOutletContext();
+  const { tarotButtonDisabled, tarotButtonClick, unblockGoBack, joinedRoom } = useOutletContext<OutletContext>();
 
   useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack });
   const { localVideoRef, remoteVideoRef } = useStreamVideoRef();
   const { toggleAudio, toggleVideo, changeMyVideoTrack } = useControllMedia({ localVideoRef });
 
-  const { joined } = useHumanChatPage(state => ({ joined: state.joined }));
-
   useEffect(() => {
-    if (joined) {
+    if (joinedRoom) {
       changeMyVideoTrack();
     }
-  }, [joined]);
+  }, [joinedRoom]);
 
   const navigate = useNavigate();
   const goSettingPage = () => navigate('setting');
 
   return (
-    <div className={joined ? 'flex-with-center' : 'hidden'}>
+    <div className={joinedRoom ? 'flex-with-center' : 'hidden'}>
       <CamContainer
         localVideoRef={localVideoRef}
         remoteVideoRef={remoteVideoRef}

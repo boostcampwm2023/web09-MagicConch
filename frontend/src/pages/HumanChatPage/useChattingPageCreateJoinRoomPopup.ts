@@ -1,10 +1,10 @@
+import { OutletContext } from '.';
 import { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 
 import { useSignalingSocket, useWebRTC } from '@business/hooks/useWebRTC';
 import { HumanSocketManager } from '@business/services/SocketManager';
 
-import { useHumanChatPage } from '@stores/zustandStores/useHost';
 import { useSideBarStore } from '@stores/zustandStores/useSideBarStore';
 
 import { ERROR_MESSAGE } from '@constants/messages';
@@ -13,9 +13,9 @@ interface useChattingPageCreateJoinRoomParams {
   unblockGoBack: (cb: () => void) => void;
 }
 export function useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack }: useChattingPageCreateJoinRoomParams) {
-  const { host, joined } = useHumanChatPage(state => ({ host: state.host, joined: state.joined }));
-
   const humanSocket = HumanSocketManager.getInstance();
+  const { host, joinedRoom } = useOutletContext<OutletContext>();
+
   const { createRoom, joinRoom, checkRoomExist } = useSignalingSocket();
   const { startWebRTC } = useWebRTC();
   const { enableSideBarButton } = useSideBarStore();
@@ -73,7 +73,7 @@ export function useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack }: us
   };
 
   useEffect(() => {
-    if (joined) {
+    if (joinedRoom) {
       return;
     }
 

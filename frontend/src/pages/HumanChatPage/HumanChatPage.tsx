@@ -11,12 +11,13 @@ import { useHumanChatMessage } from '@business/hooks/useChatMessage';
 import { useHumanTarotSpread } from '@business/hooks/useTarotSpread';
 import { useWebRTC } from '@business/hooks/useWebRTC';
 
-import { useHumanChatPage } from '@stores/zustandStores/useHost';
-
 import { useHumanChatPageCreateRoomEvent } from './useHumanChatPageCreateRoomEvent';
+import { useHumanChatPageState } from './useHumanChatPageState';
 import { useHumanChatPageWrongURL } from './useHumanChatPageWrongURL';
 
-export interface OutletContext {
+type HumanChatPageState = ReturnType<typeof useHumanChatPageState>;
+
+export interface OutletContext extends HumanChatPageState {
   tarotButtonClick: () => void;
   tarotButtonDisabled: boolean;
   disableSideBar: () => void;
@@ -26,15 +27,14 @@ export interface OutletContext {
 
 export function HumanChatPage() {
   useHumanChatPageWrongURL();
+  const humanChatPageState = useHumanChatPageState();
+  useHumanChatPageCreateRoomEvent({ ...humanChatPageState });
 
   const navigate = useNavigate();
   const { endWebRTC } = useWebRTC();
 
-  useHumanChatPageCreateRoomEvent();
-
   const { messages, onSubmitMessage, inputDisabled, addPickCardMessage } = useHumanChatMessage();
   const { tarotButtonClick, tarotButtonDisabled } = useHumanTarotSpread(addPickCardMessage);
-  const { resetHumanChatPageState } = useHumanChatPage(state => ({ resetHumanChatPageState: state.reset }));
 
   const { unblockGoBack } = useBlocker({
     when: ({ nextLocation }) => nextLocation.pathname === '/' || nextLocation.pathname === '/chat/human',
@@ -44,7 +44,6 @@ export function HumanChatPage() {
   useEffect(() => {
     return () => {
       endWebRTC();
-      resetHumanChatPageState();
     };
   }, []);
 
@@ -74,6 +73,7 @@ export function HumanChatPage() {
             tarotButtonClick,
             tarotButtonDisabled,
             unblockGoBack,
+            ...humanChatPageState,
           }}
         />
       </ContentAreaWithSideBar>

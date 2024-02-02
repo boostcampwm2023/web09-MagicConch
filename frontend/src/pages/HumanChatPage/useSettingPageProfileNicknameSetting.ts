@@ -1,14 +1,15 @@
+import { OutletContext } from '.';
 import { ChangeEvent } from 'react';
+import { useOutletContext } from 'react-router-dom';
 
 import { useDataChannel } from '@business/hooks/useWebRTC';
 
-import { useHumanChatPage } from '@stores/zustandStores/useHost';
 import { useProfileInfo } from '@stores/zustandStores/useProfileInfo';
 
 import { arrayBuffer2Array } from '@utils/array';
 
 export function useSettingPageProfileNicknameSetting() {
-  const { setJoined } = useHumanChatPage(stat => ({ setJoined: stat.setJoined }));
+  const { joinRoom } = useOutletContext<OutletContext>();
 
   const { dataChannels } = useDataChannel();
   const profileChannel = dataChannels.get('profileChannel');
@@ -47,8 +48,8 @@ export function useSettingPageProfileNicknameSetting() {
     if (nicknameChannel?.readyState === 'open' && myNickname) {
       nicknameChannel?.send?.(myNickname);
     }
-
-    setJoined(true);
+    //TODO: 얘가 여기있는거 맞는지
+    joinRoom();
   };
 
   return { setLocalProfileImage, setLocalNickname, sendProfileInfo };
