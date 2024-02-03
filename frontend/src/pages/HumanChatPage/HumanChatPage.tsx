@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
 import Background from '@components/Background';
@@ -11,26 +11,27 @@ import { useHumanChatMessage } from '@business/hooks/useChatMessage';
 import { useHumanTarotSpread } from '@business/hooks/useTarotSpread';
 import { useWebRTC } from '@business/hooks/useWebRTC';
 
-import { ChatPageState, useHumanChatPageCreateRoomEvent } from './useHumanChatPageCreateRoomEvent';
+import { useHumanChatPageCreateRoomEvent } from './useHumanChatPageCreateRoomEvent';
+import { useHumanChatPageState } from './useHumanChatPageState';
 import { useHumanChatPageWrongURL } from './useHumanChatPageWrongURL';
 
-export interface OutletContext {
+type HumanChatPageState = ReturnType<typeof useHumanChatPageState>;
+
+export interface OutletContext extends HumanChatPageState {
   tarotButtonClick: () => void;
   tarotButtonDisabled: boolean;
-  chatPageState: ChatPageState;
-  setChatPageState: Dispatch<SetStateAction<ChatPageState>>;
   disableSideBar: () => void;
   enableSideBar: () => void;
   unblockGoBack: () => void;
 }
 
-export default function HumanChatPage() {
+export function HumanChatPage() {
   useHumanChatPageWrongURL();
+  const humanChatPageState = useHumanChatPageState();
+  useHumanChatPageCreateRoomEvent({ ...humanChatPageState });
 
   const navigate = useNavigate();
   const { endWebRTC } = useWebRTC();
-
-  const { chatPageState, setChatPageState } = useHumanChatPageCreateRoomEvent();
 
   const { messages, onSubmitMessage, inputDisabled, addPickCardMessage } = useHumanChatMessage();
   const { tarotButtonClick, tarotButtonDisabled } = useHumanTarotSpread(addPickCardMessage);
@@ -71,9 +72,8 @@ export default function HumanChatPage() {
           context={{
             tarotButtonClick,
             tarotButtonDisabled,
-            chatPageState,
-            setChatPageState,
             unblockGoBack,
+            ...humanChatPageState,
           }}
         />
       </ContentAreaWithSideBar>

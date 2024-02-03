@@ -11,7 +11,7 @@ import { useSideBarStore } from '@stores/zustandStores/useSideBarStore';
 import { useSettingPageMediaOptinos } from './useSettingPageMediaOptions';
 import { useSettingPageProfileNicknameSetting } from './useSettingPageProfileNicknameSetting';
 
-export default function SettingPage() {
+export function SettingPage() {
   const socketManager = HumanSocketManager.getInstance();
 
   const navigate = useNavigate();

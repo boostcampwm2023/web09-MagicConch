@@ -2,7 +2,7 @@ import { Route, createBrowserRouter, createRoutesFromElements } from 'react-rout
 
 import AIChatPage from '@pages/AIChatPage';
 import HomePage from '@pages/HomePage';
-import HumanChatPage, { ChattingPage, SettingPage } from '@pages/HumanChatPage';
+import { ChattingPage, HumanChatPage, SettingPage } from '@pages/HumanChatPage';
 import OAuthRedirectHandlePage from '@pages/OAuth2RedirectHandlePage';
 import ResultSharePage from '@pages/ResultSharePage';
 

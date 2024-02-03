@@ -9,45 +9,42 @@ import { useControllMedia, useStreamVideoRef } from '@business/hooks/useWebRTC';
 import type { OutletContext } from './HumanChatPage';
 import { useChattingPageCreateJoinRoomPasswordPopup } from './useChattingPageCreateJoinRoomPopup';
 
-export default function ChattingPage() {
-  const {
-    tarotButtonDisabled,
-    tarotButtonClick,
-    chatPageState: { joined },
-    unblockGoBack,
-  }: OutletContext = useOutletContext();
+export function ChattingPage() {
+  const { tarotButtonDisabled, tarotButtonClick, unblockGoBack, joinedRoom } = useOutletContext<OutletContext>();
 
   useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack });
   const { localVideoRef, remoteVideoRef } = useStreamVideoRef();
   const { toggleAudio, toggleVideo, changeMyVideoTrack } = useControllMedia({ localVideoRef });
 
   useEffect(() => {
-    if (joined) {
+    if (joinedRoom) {
       changeMyVideoTrack();
     }
-  }, [joined]);
+  }, [joinedRoom]);
 
   const navigate = useNavigate();
   const goSettingPage = () => navigate('setting');
 
   return (
-    <div className={`flex-with-center ${joined ? '' : 'hidden'}`}>
-      <CamContainer
-        localVideoRef={localVideoRef}
-        remoteVideoRef={remoteVideoRef}
-        toggleVideo={toggleVideo}
-        toggleAudio={toggleAudio}
-        tarotButtonClick={tarotButtonClick}
-        tarotButtonDisabled={tarotButtonDisabled}
-      />
-      <div className="absolute z-10 top-[10vh] right-90">
-        <IconButton
-          icon="uil:setting"
-          iconColor="textWhite"
-          buttonColor="cancel"
-          onClick={goSettingPage}
+    joinedRoom && (
+      <div className={`flex-with-center`}>
+        <CamContainer
+          localVideoRef={localVideoRef}
+          remoteVideoRef={remoteVideoRef}
+          toggleVideo={toggleVideo}
+          toggleAudio={toggleAudio}
+          tarotButtonClick={tarotButtonClick}
+          tarotButtonDisabled={tarotButtonDisabled}
         />
+        <div className="absolute z-10 top-[10vh] right-90">
+          <IconButton
+            icon="uil:setting"
+            iconColor="textWhite"
+            buttonColor="cancel"
+            onClick={goSettingPage}
+          />
+        </div>
       </div>
-    </div>
+    )
   );
 }
