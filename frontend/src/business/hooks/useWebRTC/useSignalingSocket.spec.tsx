@@ -26,7 +26,6 @@ describe('useSignalingSocket 훅', () => {
     };
   };
   const roomName = '123lk12j3';
-  // const password = '1234';
   let socket: HumanSocketManager;
 
   beforeAll(() => {
@@ -49,7 +48,7 @@ describe('useSignalingSocket 훅', () => {
       expect(socket.on).toBeCalledWith('roomCreated', expect.any(Function));
     });
 
-    it('방 생성 후 Popup에서 확인을 누를시 비밀번호와 함께socket의 createRoom 이벤트를 emit한다', async () => {
+    it('방 생성 후 Popup에서 확인을 누를시 비밀번호와 함께 socket의 createRoom 이벤트를 emit한다', async () => {
       const randomPassword = randomString();
       const { createRoom } = rerenderHook();
 
