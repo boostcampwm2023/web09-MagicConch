@@ -115,32 +115,38 @@ describe('TarotService', () => {
         };
         const tarotCardDto: TarotCardDto = TarotCardDto.fromEntity(tarotCard);
 
-        const findOneByMock = jest
-          .spyOn(tarotCardRepository, 'findOneBy')
+        const findOneMock = jest
+          .spyOn(tarotCardRepository, 'findOne')
           .mockResolvedValueOnce(tarotCard);
 
         const expectation: TarotCardDto =
           await tarotService.findTarotCardByCardNo(tarotCard.cardNo);
         expect(expectation).toEqual(tarotCardDto);
-        expect(findOneByMock).toHaveBeenCalledWith({
-          cardNo: cardNo,
-          cardPack: undefined,
+        expect(findOneMock).toHaveBeenCalledWith({
+          where: {
+            cardNo: cardNo,
+            cardPack: undefined,
+          },
+          select: ['cardNo', 'ext', 'cardPack'],
         });
       });
     });
 
     it('해당 번호의 타로 카드가 존재하지 않아 NotFoundException을 반환한다.', async () => {
       [{ cardNo: -1 }, { cardNo: 79 }].forEach(async ({ cardNo }) => {
-        const findOneByMock = jest
-          .spyOn(tarotCardRepository, 'findOneBy')
+        const findOneMock = jest
+          .spyOn(tarotCardRepository, 'findOne')
           .mockResolvedValueOnce(null);
 
         await expect(
           tarotService.findTarotCardByCardNo(cardNo),
         ).rejects.toThrow(NotFoundException);
-        expect(findOneByMock).toHaveBeenCalledWith({
-          cardNo: cardNo,
-          cardPack: undefined,
+        expect(findOneMock).toHaveBeenCalledWith({
+          where: {
+            cardNo: cardNo,
+            cardPack: undefined,
+          },
+          select: ['cardNo', 'ext', 'cardPack'],
         });
       });
     });
@@ -172,14 +178,17 @@ describe('TarotService', () => {
         };
         const tarotResultDto = TarotResultDto.fromEntity(tarotResult);
 
-        const findOneByMock = jest
-          .spyOn(tarotResultRepository, 'findOneBy')
+        const findOneMock = jest
+          .spyOn(tarotResultRepository, 'findOne')
           .mockResolvedValueOnce(tarotResult);
 
         const expectation: TarotResultDto =
           await tarotService.findTarotResultById(id);
         expect(expectation).toEqual(tarotResultDto);
-        expect(findOneByMock).toHaveBeenCalledWith({ id: id });
+        expect(findOneMock).toHaveBeenCalledWith({
+          where: { id: id },
+          select: ['cardUrl', 'message'],
+        });
       });
     });
 
@@ -188,14 +197,17 @@ describe('TarotService', () => {
         { id: '12345678-1234-5678-1234-567812345670' },
         { id: '12345678-1234-5678-1234-567812345671' },
       ].forEach(async ({ id }) => {
-        const findOneByMock = jest
-          .spyOn(tarotResultRepository, 'findOneBy')
+        const findOneMock = jest
+          .spyOn(tarotResultRepository, 'findOne')
           .mockResolvedValueOnce(null);
 
         await expect(tarotService.findTarotResultById(id)).rejects.toThrow(
           NotFoundException,
         );
-        expect(findOneByMock).toHaveBeenCalledWith({ id: id });
+        expect(findOneMock).toHaveBeenCalledWith({
+          where: { id: id },
+          select: ['cardUrl', 'message'],
+        });
       });
     });
   });
