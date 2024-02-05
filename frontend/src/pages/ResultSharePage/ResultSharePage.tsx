@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react';
 
-import Header from '@components/Header';
+import { Header } from '@components/common';
 
-import { getResultShareQuery } from '@stores/queries/getResultShareQuery';
+import { getResultShareQuery } from '@stores/queries';
 
 import { ResultImage } from './ResultImage';
 import { ResultTextBox } from './ResultTextBox';
@@ -12,7 +12,7 @@ interface ResultSharePageProps {}
 
 const flipSound = new Audio('/flipCard.mp3');
 
-function ResultSharePage({}: ResultSharePageProps) {
+export function ResultSharePage({}: ResultSharePageProps) {
   const [flipped, setFlipped] = useState<boolean>(false);
   const {
     data: { cardUrl, message },
@@ -67,5 +67,3 @@ function ResultSharePage({}: ResultSharePageProps) {
     </>
   );
 }
-
-export default ResultSharePage;

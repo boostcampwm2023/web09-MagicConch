@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 
-import { useKakaoOAuthRedirect } from '@business/hooks/useAuth';
+import { useKakaoOAuthRedirect } from '@business/hooks/auth';
 
-function OAuthRedirectHandlePage() {
+export function OAuthRedirectHandlePage() {
   const { login } = useKakaoOAuthRedirect();
 
   useEffect(() => {
@@ -15,5 +15,3 @@ function OAuthRedirectHandlePage() {
     </div>
   );
 }
-
-export default OAuthRedirectHandlePage;

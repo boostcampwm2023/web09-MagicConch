@@ -1,19 +1,17 @@
 import { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
-import Background from '@components/Background';
-import ChatContainer from '@components/ChatContainer';
-import Header from '@components/Header';
-import { ContentAreaWithSideBar, SideBarButton } from '@components/SideBar';
+import { Background, ChatContainer, Header } from '@components/common';
+import { ContentAreaWithSideBar, SideBarButton } from '@components/common/SideBar';
 
+import { useHumanChatMessage } from '@business/hooks/chatMessage';
+import { useHumanTarotSpread } from '@business/hooks/tarotSpread';
 import { useBlocker } from '@business/hooks/useBlocker';
-import { useHumanChatMessage } from '@business/hooks/useChatMessage';
-import { useHumanTarotSpread } from '@business/hooks/useTarotSpread';
-import { useWebRTC } from '@business/hooks/useWebRTC';
+import { useWebRTC } from '@business/hooks/webRTC';
 
-import { useHumanChatPageCreateRoomEvent } from './useHumanChatPageCreateRoomEvent';
-import { useHumanChatPageState } from './useHumanChatPageState';
-import { useHumanChatPageWrongURL } from './useHumanChatPageWrongURL';
+import { useCreateRoomEvent } from './hooks/useCreateRoomEvent';
+import { useHumanChatPageState } from './hooks/useHumanChatPageState';
+import { usePageWrongURL } from './hooks/usePageWrongURL';
 
 type HumanChatPageState = ReturnType<typeof useHumanChatPageState>;
 
@@ -26,9 +24,10 @@ export interface OutletContext extends HumanChatPageState {
 }
 
 export function HumanChatPage() {
-  useHumanChatPageWrongURL();
   const humanChatPageState = useHumanChatPageState();
-  useHumanChatPageCreateRoomEvent({ ...humanChatPageState });
+
+  usePageWrongURL();
+  useCreateRoomEvent({ ...humanChatPageState });
 
   const navigate = useNavigate();
   const { endWebRTC } = useWebRTC();

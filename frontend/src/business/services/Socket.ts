@@ -1,4 +1,4 @@
-import WebRTC from '@business/services/WebRTC';
+import { WebRTC } from '.';
 
 import { ERROR_MESSAGE } from '@constants/messages';
 

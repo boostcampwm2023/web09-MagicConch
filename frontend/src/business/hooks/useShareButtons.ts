@@ -1,9 +1,8 @@
 import { RefObject } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { Kakao } from '@business/services/Kakao';
+import { Kakao } from '@business/services';
 
-//import { downloadImage } from '@utils/downloadImage';
 import { IconColor } from '@constants/colors';
 
 type ShareButton = {

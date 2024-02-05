@@ -1,10 +1,14 @@
 import { Route, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
 
-import AIChatPage from '@pages/AIChatPage';
-import HomePage from '@pages/HomePage';
-import { ChattingPage, HumanChatPage, SettingPage } from '@pages/HumanChatPage';
-import OAuthRedirectHandlePage from '@pages/OAuth2RedirectHandlePage';
-import ResultSharePage from '@pages/ResultSharePage';
+import {
+  AIChatPage,
+  ChattingPage,
+  HomePage,
+  HumanChatPage,
+  OAuthRedirectHandlePage,
+  ResultSharePage,
+  SettingPage,
+} from './pages';
 
 export const rootRouter = createBrowserRouter(
   createRoutesFromElements(
