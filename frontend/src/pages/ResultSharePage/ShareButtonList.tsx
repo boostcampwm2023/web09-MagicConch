@@ -1,8 +1,8 @@
 import { RefObject } from 'react';
 
-import { IconButton } from '@components/Buttons';
+import { IconButton } from '@components/common/Buttons';
 
-import { useShareButtons } from '@business/hooks/useShareButtons';
+import { useShareButtons } from '@business/hooks';
 
 interface ShareButtonListProps {
   isMobile: boolean;

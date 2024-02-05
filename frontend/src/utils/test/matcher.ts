@@ -1,4 +1,4 @@
-import animationNames from '@constants/animation';
+import { animationNames } from '@constants/animation';
 
 type MatcherResult = {
   message: () => string;

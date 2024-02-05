@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Location, useBlocker as reactRouterUserBlocker } from 'react-router-dom';
 
-import { useExitPopup } from './usePopup/useExitPopup';
+import { useExitPopup } from './popup';
 
 type useBlockerParams = {
   when: (args: { currentLocation: Location<any>; nextLocation: Location<any> }) => boolean;
