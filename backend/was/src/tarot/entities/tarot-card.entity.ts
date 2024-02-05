@@ -26,7 +26,7 @@ export class TarotCard {
   @UpdateDateColumn()
   updatedAt?: Date;
 
-  @DeleteDateColumn({ name: 'deletedAt', nullable: true })
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
   deletedAt?: Date;
 
   @ManyToOne(() => TarotCardPack, (tarotCardPack) => tarotCardPack.tarotCards)

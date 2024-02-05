@@ -25,7 +25,7 @@ export class ChattingRoom {
   @UpdateDateColumn()
   updatedAt?: Date;
 
-  @DeleteDateColumn({ name: 'deletedAt', nullable: true })
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
   deletedAt?: Date;
 
   @OneToMany(() => ChattingMessage, (chattingMessage) => chattingMessage.id)

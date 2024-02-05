@@ -34,7 +34,7 @@ export class Member {
   @UpdateDateColumn()
   updatedAt?: Date;
 
-  @DeleteDateColumn({ name: 'deletedAt', nullable: true })
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
   deletedAt?: Date;
 
   @OneToMany(() => ChattingRoom, (chattingRoom) => chattingRoom.participant)
