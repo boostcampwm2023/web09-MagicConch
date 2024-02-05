@@ -67,8 +67,11 @@ export class ChatService {
         email,
         providerId,
       );
-      const rooms: ChattingRoom[] = await this.chattingRoomRepository.findBy({
-        participant: { id: memberId },
+      const rooms: ChattingRoom[] = await this.chattingRoomRepository.find({
+        where: {
+          participant: { id: memberId },
+        },
+        select: ['id', 'title'],
       });
       return rooms.map((room: ChattingRoom) =>
         ChattingRoomDto.fromEntity(room),
@@ -90,7 +93,10 @@ export class ChatService {
       );
       await this.findRoom(id, memberId);
       const messages: ChattingMessage[] =
-        await this.chattingMessageRepository.findBy({ room: { id: id } });
+        await this.chattingMessageRepository.find({
+          where: { room: { id: id } },
+          select: ['isHost', 'message'],
+        });
       return messages.map((message: ChattingMessage) =>
         ChattingMessageDto.fromEntity(message),
       );
@@ -142,9 +148,12 @@ export class ChatService {
     providerId: number,
   ): Promise<ChattingInfo> {
     try {
-      const member: Member | null = await this.membersRepository.findOneBy({
-        email: email,
-        providerId: providerId,
+      const member: Member | null = await this.membersRepository.findOne({
+        where: {
+          email: email,
+          providerId: providerId,
+        },
+        select: ['id'],
       });
       if (!member) {
         throw new BadRequestException();
@@ -171,8 +180,12 @@ export class ChatService {
   }
 
   private async findRoom(id: string, memberId: string): Promise<ChattingRoom> {
-    const room: ChattingRoom | null =
-      await this.chattingRoomRepository.findOneBy({ id: id });
+    const room: ChattingRoom | null = await this.chattingRoomRepository.findOne(
+      {
+        where: { id: id },
+        select: ['id', 'participant'],
+      },
+    );
     if (!room) {
       throw new NotFoundException(ERR_MSG.CHATTING_ROOM_NOT_FOUND);
     }
@@ -186,9 +199,12 @@ export class ChatService {
     email: string,
     providerId: number,
   ): Promise<string> {
-    const member: Member | null = await this.membersRepository.findOneBy({
-      email: email,
-      providerId: providerId,
+    const member: Member | null = await this.membersRepository.findOne({
+      where: {
+        email: email,
+        providerId: providerId,
+      },
+      select: ['id'],
     });
     if (!member) {
       throw new BadRequestException();
