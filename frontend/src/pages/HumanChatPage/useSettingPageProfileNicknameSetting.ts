@@ -1,18 +1,17 @@
+import { OutletContext } from '.';
 import { ChangeEvent } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
-import WebRTC from '@business/services/WebRTC';
+import { useDataChannel } from '@business/hooks/useWebRTC';
 
 import { useProfileInfo } from '@stores/zustandStores/useProfileInfo';
 
 import { arrayBuffer2Array } from '@utils/array';
 
-import { OutletContext } from './HumanChatPage';
-
 export function useSettingPageProfileNicknameSetting() {
-  const { setChatPageState }: OutletContext = useOutletContext();
+  const { joinRoom } = useOutletContext<OutletContext>();
 
-  const { dataChannels } = WebRTC.getInstace();
+  const { dataChannels } = useDataChannel();
   const profileChannel = dataChannels.get('profileChannel');
   const nicknameChannel = dataChannels.get('nicknameChannel');
 
@@ -49,8 +48,8 @@ export function useSettingPageProfileNicknameSetting() {
     if (nicknameChannel?.readyState === 'open' && myNickname) {
       nicknameChannel?.send?.(myNickname);
     }
-
-    setChatPageState(prev => ({ ...prev, joined: true }));
+    //TODO: 얘가 여기있는거 맞는지
+    joinRoom();
   };
 
   return { setLocalProfileImage, setLocalNickname, sendProfileInfo };

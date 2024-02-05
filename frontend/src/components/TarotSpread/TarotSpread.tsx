@@ -14,7 +14,7 @@ const __iOS__ = browser?.os?.includes('iOS');
 
 interface TarotSpreadProps {
   opened: boolean;
-  close: () => void;
+  closeSpread: () => void;
   pickCard: (idx: number) => void;
 }
 
@@ -26,7 +26,7 @@ interface PageOffset {
 const spreadSound = new Audio('/spreadCards.mp3');
 const flipSound = new Audio('/flipCard.mp3');
 
-export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProps) {
+export default function TarotSpread({ opened, closeSpread, pickCard }: TarotSpreadProps) {
   const [closing, setClosing] = useState<boolean>(!opened);
   const [dragging, setDragging] = useState<boolean>(false);
   const [pickedId, setPickedId] = useState<number>(0);
@@ -45,7 +45,7 @@ export default function TarotSpread({ opened, close, pickCard }: TarotSpreadProp
 
   useEffect(() => {
     setPickedId(Math.floor(Math.random() * TAROT_CARDS_LENGTH));
-    const closeWithFadeOut = ({ animationName }: AnimationEvent) => animationName == 'fadeOut' && close();
+    const closeWithFadeOut = ({ animationName }: AnimationEvent) => animationName == 'fadeOut' && closeSpread();
 
     addEventListener('animationend', closeWithFadeOut);
     setTimeout(spreadTarotCards, 10);

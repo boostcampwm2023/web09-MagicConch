@@ -4,52 +4,47 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 import { IconButton } from '@components/Buttons';
 import CamContainer from '@components/CamContainer';
 
-import { useControllMedia } from '@business/hooks/useWebRTC/useControllMedia';
-import { useStreamVideoRef } from '@business/hooks/useWebRTC/useStreamVideoRef';
+import { useControllMedia, useStreamVideoRef } from '@business/hooks/useWebRTC';
 
 import type { OutletContext } from './HumanChatPage';
 import { useChattingPageCreateJoinRoomPasswordPopup } from './useChattingPageCreateJoinRoomPopup';
 
-export default function ChattingPage() {
-  const {
-    tarotButtonDisabled,
-    tarotButtonClick,
-    enableSideBar,
-    chatPageState: { joined },
-    unblockGoBack,
-  }: OutletContext = useOutletContext();
+export function ChattingPage() {
+  const { tarotButtonDisabled, tarotButtonClick, unblockGoBack, joinedRoom } = useOutletContext<OutletContext>();
 
-  useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack, enableSideBar });
+  useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack });
   const { localVideoRef, remoteVideoRef } = useStreamVideoRef();
   const { toggleAudio, toggleVideo, changeMyVideoTrack } = useControllMedia({ localVideoRef });
 
   useEffect(() => {
-    if (joined) {
+    if (joinedRoom) {
       changeMyVideoTrack();
     }
-  }, [joined]);
+  }, [joinedRoom]);
 
   const navigate = useNavigate();
   const goSettingPage = () => navigate('setting');
 
   return (
-    <div className={`${joined ? '' : 'hidden'}`}>
-      <CamContainer
-        localVideoRef={localVideoRef}
-        remoteVideoRef={remoteVideoRef}
-        toggleVideo={toggleVideo}
-        toggleAudio={toggleAudio}
-        tarotButtonClick={tarotButtonClick}
-        tarotButtonDisabled={tarotButtonDisabled}
-      />
-      <div className="absolute top-[10%] right-90">
-        <IconButton
-          icon="uil:setting"
-          iconColor="textWhite"
-          buttonColor="cancel"
-          onClick={goSettingPage}
+    joinedRoom && (
+      <div className={`flex-with-center`}>
+        <CamContainer
+          localVideoRef={localVideoRef}
+          remoteVideoRef={remoteVideoRef}
+          toggleVideo={toggleVideo}
+          toggleAudio={toggleAudio}
+          tarotButtonClick={tarotButtonClick}
+          tarotButtonDisabled={tarotButtonDisabled}
         />
+        <div className="absolute z-10 top-[10vh] right-90">
+          <IconButton
+            icon="uil:setting"
+            iconColor="textWhite"
+            buttonColor="cancel"
+            onClick={goSettingPage}
+          />
+        </div>
       </div>
-    </div>
+    )
   );
 }

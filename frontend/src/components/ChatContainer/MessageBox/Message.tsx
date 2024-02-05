@@ -26,7 +26,9 @@ function Message({ type, message, profile }: MessageProps) {
             />
           </div>
         </div>
-        <div className={`chat-bubble max-w-none shadow-white ${chatStyle.bubble}`}>
+        <div
+          className={`chat-bubble max-w-none shadow-white ${chatStyle.bubble} ${type == 'right' && 'text-white-alt'}`}
+        >
           {message.length ? message : <span className="loading loading-dots loading-md"></span>}
         </div>
       </div>

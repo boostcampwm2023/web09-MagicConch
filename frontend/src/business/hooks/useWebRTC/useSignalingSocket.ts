@@ -1,27 +1,26 @@
+import type { InitSocketEvents } from '@components/Popup/PasswordPopup';
+
 import { usePasswordPopup } from '@business/hooks/usePopup';
 import { HumanSocketManager } from '@business/services/SocketManager';
 
 export function useSignalingSocket() {
-  const socketManager = HumanSocketManager.getInstance();
   const { openPasswordPopup } = usePasswordPopup();
+  const socketManager = HumanSocketManager.getInstance();
 
   const createRoom = ({
     roomName,
     onSuccess,
-    onClose,
+    onCancel,
   }: {
     roomName: string;
-    onSuccess?: ({ password, close }: { password: string } & CloseFunc) => void;
-    onClose?: ({ close }: { close: () => void }) => void;
+    onSuccess?: InitSocketEvents;
+    onCancel?: VoidFunction;
   }) => {
     openPasswordPopup({
       host: true,
-      onClose: () => onClose?.({ close }),
-      onSubmit: ({ password, close }) => {
-        socketManager.emit('createRoom', roomName, password);
-
-        socketManager.on('roomCreated', () => onSuccess?.({ password, close }));
-      },
+      onCancel,
+      onSubmit: ({ password }) => socketManager.emit('createRoom', roomName, password),
+      initSocketEvents: ({ password, closePopup }) => initHostSocketEvents({ password, closePopup, onSuccess }),
     });
   };
 
@@ -33,27 +32,17 @@ export function useSignalingSocket() {
     onHostExit,
   }: {
     roomName: string;
-    onFull?: () => void;
-    onFail?: () => void;
-    onSuccess?: ({ close }: CloseFunc) => void;
-    onHostExit?: () => void;
+    onFull?: VoidFunction;
+    onFail?: VoidFunction;
+    onSuccess?: InitSocketEvents;
+    onHostExit?: VoidFunction;
   }) => {
+    const socketManager = HumanSocketManager.getInstance();
+
     openPasswordPopup({
-      onSubmit: ({ password, close }) => {
-        socketManager.emit('joinRoom', roomName, password);
-
-        if (onFail) {
-          socketManager.on('joinRoomFailed', onFail);
-        }
-        if (onFull) {
-          socketManager.on('roomFull', onFull);
-        }
-        socketManager.on('joinRoomSuccess', () => onSuccess?.({ close }));
-
-        if (onHostExit) {
-          socketManager.on('hostExit', onHostExit);
-        }
-      },
+      onSubmit: ({ password }) => socketManager.emit('joinRoom', roomName, password),
+      initSocketEvents: ({ closePopup }) =>
+        initGuestSocketEvents({ closePopup, onSuccess, onHostExit, onFail, onFull }),
     });
   };
 
@@ -68,12 +57,8 @@ export function useSignalingSocket() {
   }) => {
     socketManager.emit('checkRoomExist', roomName);
 
-    if (onRoomNotExist) {
-      socketManager.on('roomNotExist', onRoomNotExist);
-    }
-    if (onExistRoom) {
-      socketManager.on('roomExist', onExistRoom);
-    }
+    onRoomNotExist && socketManager.on('roomNotExist', onRoomNotExist);
+    onExistRoom && socketManager.on('roomExist', onExistRoom);
   };
 
   return {
@@ -81,4 +66,39 @@ export function useSignalingSocket() {
     joinRoom,
     checkRoomExist,
   };
+}
+
+export function initHostSocketEvents({
+  password,
+  closePopup,
+  onSuccess,
+}: {
+  password?: string;
+  closePopup: VoidFunction;
+  onSuccess?: InitSocketEvents;
+}) {
+  const socketManager = HumanSocketManager.getInstance();
+
+  onSuccess && socketManager.on('roomCreated', () => onSuccess({ password, closePopup }));
+}
+
+export function initGuestSocketEvents({
+  closePopup,
+  onSuccess,
+  onHostExit,
+  onFail,
+  onFull,
+}: {
+  closePopup: VoidFunction;
+  onSuccess?: InitSocketEvents;
+  onHostExit?: VoidFunction;
+  onFail?: VoidFunction;
+  onFull?: VoidFunction;
+}) {
+  const socketManager = HumanSocketManager.getInstance();
+
+  onFail && socketManager.on('joinRoomFailed', onFail);
+  onFull && socketManager.on('roomFull', onFull);
+  onSuccess && socketManager.on('joinRoomSuccess', () => onSuccess({ closePopup }));
+  onHostExit && socketManager.on('hostExit', onHostExit);
 }

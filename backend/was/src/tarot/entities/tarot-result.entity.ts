@@ -5,7 +5,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { CreateTarotResultDto } from '../dto/create-tarot-result.dto';
+import { CreateTarotResultDto } from '../dto';
 
 @Entity()
 export class TarotResult {
@@ -19,10 +19,10 @@ export class TarotResult {
   message: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt?: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt?: Date;
 
   static fromDto(dto: CreateTarotResultDto): TarotResult {
     const result: TarotResult = new TarotResult();

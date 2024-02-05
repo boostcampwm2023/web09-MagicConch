@@ -1,21 +1,29 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import Popup from './Popup';
 
+export type InitSocketEvents = ({ password, closePopup }: { password?: string } & ClosePopupFunc) => void;
+
 interface PasswordPopupProps {
+  closePopup: () => void;
   onCancel?: () => void;
   defaultValue?: string;
   onSubmit: (password: string) => void;
+  initSocketEvents?: InitSocketEvents;
 }
 
-export default function PasswordPopup({ onCancel, defaultValue, onSubmit }: PasswordPopupProps) {
+export default function PasswordPopup({
+  closePopup,
+  onCancel,
+  defaultValue,
+  onSubmit,
+  initSocketEvents,
+}: PasswordPopupProps) {
   const passwordInput = useRef<HTMLInputElement>(null);
 
   const passwordSubmit = () => {
     const password = passwordInput.current?.value;
-    if (password) {
-      onSubmit(password || '');
-    }
+    onSubmit(password ?? '');
   };
 
   const formSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -23,8 +31,13 @@ export default function PasswordPopup({ onCancel, defaultValue, onSubmit }: Pass
     passwordSubmit();
   };
 
+  useEffect(() => {
+    initSocketEvents?.({ closePopup, password: passwordInput.current?.value ?? '' });
+  }, []);
+
   return (
     <Popup
+      closePopup={closePopup}
       onCancel={onCancel}
       onConfirm={passwordSubmit}
     >

@@ -1,21 +1,24 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ERR_MSG } from 'src/common/constants/errors';
-import { Member } from 'src/members/entities/member.entity';
+import { UserInfo } from 'src/common/types/socket';
+import { Member } from 'src/members/entities';
 import { Repository } from 'typeorm';
-import { ChattingMessageResponseDto } from './dto/chatting-message-response.dto';
-import { ChattingRoomResponseDto } from './dto/chatting-room-response.dto';
-import { CreateChattingMessageDto } from './dto/create-chatting-message.dto';
-import { UpdateChattingRoomDto } from './dto/update-chatting-room.dto';
-import { ChattingMessage } from './entities/chatting-message.entity';
-import { ChattingRoom } from './entities/chatting-room.entity';
+import {
+  ChattingMessageDto,
+  ChattingRoomDto,
+  CreateChattingMessageDto,
+  UpdateChattingRoomDto,
+} from './dto';
+import { ChattingMessage, ChattingRoom } from './entities';
 
 export interface ChattingInfo {
-  memeberId: string;
+  memberId: string;
   roomId: string;
 }
 
@@ -30,89 +33,86 @@ export class ChatService {
     private readonly membersRepository: Repository<Member>,
   ) {}
 
-  async createRoom(memberId: string): Promise<ChattingInfo> {
-    /**
-     * 임시로 쿠키 대신 사용
-     */
-    const member: Member = new Member();
-    const savedMember: Member = await this.membersRepository.save(member);
+  async createRoom(userInfo?: UserInfo): Promise<ChattingInfo> {
+    return userInfo
+      ? this.createRoomForMember(userInfo.email, userInfo.providerId)
+      : this.createRoomForNonMember();
+  }
 
-    // const member: Member | null = await this.membersRepository.findOneBy({
-    //   id: memberId,
-    // });
-    // if (!member) {
-    //   throw new NotFoundException();
-    // }
-
-    const room: ChattingRoom = ChattingRoom.fromMember(savedMember);
+  async createMessages(
+    id: string,
+    memberId: string,
+    createMessageDtos: CreateChattingMessageDto[],
+  ): Promise<void> {
     try {
-      const savedRoom: ChattingRoom =
-        await this.chattingRoomRepository.save(room);
-      return { memeberId: savedMember.id, roomId: savedRoom.id };
+      const room: ChattingRoom = await this.findRoom(id, memberId);
+      for (const createMessageDto of createMessageDtos) {
+        const message: ChattingMessage = ChattingMessage.fromDto(
+          createMessageDto,
+          room,
+        );
+        await this.chattingMessageRepository.save(message);
+      }
     } catch (err: unknown) {
       throw err;
     }
   }
 
-  async createMessage(
-    roomId: string,
-    createChattingMessageDto: CreateChattingMessageDto[],
-  ): Promise<void> {
-    const room: ChattingRoom | null =
-      await this.chattingRoomRepository.findOneBy({
-        id: roomId,
-      });
-    if (!room) {
-      throw new NotFoundException(ERR_MSG.CHATTING_ROOM_NOT_FOUND);
-    }
+  async findRoomsByEmail(
+    email: string,
+    providerId: number,
+  ): Promise<ChattingRoomDto[]> {
     try {
-      createChattingMessageDto.forEach(
-        async (messageDto: CreateChattingMessageDto) => {
-          const message: ChattingMessage = ChattingMessage.fromDto(
-            messageDto,
-            room,
-          );
-          await this.chattingMessageRepository.save(message);
-        },
+      const memberId: string = await this.findMemberIdByEmail(
+        email,
+        providerId,
+      );
+      const rooms: ChattingRoom[] = await this.chattingRoomRepository.findBy({
+        participant: { id: memberId },
+      });
+      return rooms.map((room: ChattingRoom) =>
+        ChattingRoomDto.fromEntity(room),
       );
     } catch (err: unknown) {
       throw err;
     }
   }
 
-  async findRoomsById(id: string): Promise<ChattingRoomResponseDto[]> {
-    const rooms: ChattingRoom[] = await this.chattingRoomRepository.findBy({
-      id,
-    });
-    return rooms.map((room: ChattingRoom) =>
-      ChattingRoomResponseDto.fromEntity(room),
-    );
-  }
-
-  async findMessagesById(id: string): Promise<ChattingMessageResponseDto[]> {
-    const messages: ChattingMessage[] =
-      await this.chattingMessageRepository.findBy({ id });
-    return messages.map((message: ChattingMessage) =>
-      ChattingMessageResponseDto.fromEntity(message),
-    );
+  async findMessagesById(
+    id: string,
+    email: string,
+    providerId: number,
+  ): Promise<ChattingMessageDto[]> {
+    try {
+      const memberId: string = await this.findMemberIdByEmail(
+        email,
+        providerId,
+      );
+      await this.findRoom(id, memberId);
+      const messages: ChattingMessage[] =
+        await this.chattingMessageRepository.findBy({ room: { id: id } });
+      return messages.map((message: ChattingMessage) =>
+        ChattingMessageDto.fromEntity(message),
+      );
+    } catch (err: unknown) {
+      throw err;
+    }
   }
 
   async updateRoom(
     id: string,
-    memberId: string,
+    email: string,
+    providerId: number,
     updateChattingRoomDto: UpdateChattingRoomDto,
   ): Promise<void> {
-    const room: ChattingRoom | null =
-      await this.chattingRoomRepository.findOneBy({ id });
-    if (!room) {
-      throw new NotFoundException(ERR_MSG.CHATTING_ROOM_NOT_FOUND);
-    }
-    if (room.participant.id !== memberId) {
-      throw new ForbiddenException(ERR_MSG.UPDATE_CHATTING_ROOM_FORBIDDEN);
-    }
     try {
+      const memberId: string = await this.findMemberIdByEmail(
+        email,
+        providerId,
+      );
+      await this.findRoom(id, memberId);
       await this.chattingRoomRepository.update(
-        { id },
+        { id: id },
         { title: updateChattingRoomDto.title },
       );
     } catch (err: unknown) {
@@ -120,19 +120,79 @@ export class ChatService {
     }
   }
 
-  async removeRoom(id: string, memberId: string): Promise<void> {
+  async removeRoom(
+    id: string,
+    email: string,
+    providerId: number,
+  ): Promise<void> {
+    try {
+      const memberId: string = await this.findMemberIdByEmail(
+        email,
+        providerId,
+      );
+      await this.findRoom(id, memberId);
+      await this.chattingRoomRepository.softDelete({ id: id });
+    } catch (err: unknown) {
+      throw err;
+    }
+  }
+
+  private async createRoomForMember(
+    email: string,
+    providerId: number,
+  ): Promise<ChattingInfo> {
+    try {
+      const member: Member | null = await this.membersRepository.findOneBy({
+        email: email,
+        providerId: providerId,
+      });
+      if (!member) {
+        throw new BadRequestException();
+      }
+      const room: ChattingRoom = await this.chattingRoomRepository.save(
+        ChattingRoom.fromMember(member),
+      );
+      return { memberId: member.id, roomId: room.id };
+    } catch (err: unknown) {
+      throw err;
+    }
+  }
+
+  private async createRoomForNonMember(): Promise<ChattingInfo> {
+    try {
+      const member: Member = await this.membersRepository.save(new Member());
+      const room: ChattingRoom = await this.chattingRoomRepository.save(
+        ChattingRoom.fromMember(member),
+      );
+      return { memberId: member.id, roomId: room.id };
+    } catch (err: unknown) {
+      throw err;
+    }
+  }
+
+  private async findRoom(id: string, memberId: string): Promise<ChattingRoom> {
     const room: ChattingRoom | null =
-      await this.chattingRoomRepository.findOneBy({ id });
+      await this.chattingRoomRepository.findOneBy({ id: id });
     if (!room) {
       throw new NotFoundException(ERR_MSG.CHATTING_ROOM_NOT_FOUND);
     }
     if (room.participant.id !== memberId) {
-      throw new ForbiddenException(ERR_MSG.DELETE_CHATTING_ROOM_FORBIDDEN);
+      throw new ForbiddenException(ERR_MSG.UPDATE_CHATTING_ROOM_FORBIDDEN);
     }
-    try {
-      await this.chattingRoomRepository.softDelete({ id });
-    } catch (err: unknown) {
-      throw err;
+    return room;
+  }
+
+  private async findMemberIdByEmail(
+    email: string,
+    providerId: number,
+  ): Promise<string> {
+    const member: Member | null = await this.membersRepository.findOneBy({
+      email: email,
+      providerId: providerId,
+    });
+    if (!member) {
+      throw new BadRequestException();
     }
+    return member.id;
   }
 }

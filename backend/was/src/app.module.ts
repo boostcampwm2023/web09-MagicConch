@@ -1,28 +1,30 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
+import { AuthModule } from './auth/auth.module';
 import { ChatModule } from './chat/chat.module';
-import { DatabaseModule } from './common/config/database/database.module';
+import { ChatbotModule } from './chatbot/chatbot.module';
+import { RedisCacheModule } from './common/config/cache/redis-cache.module';
+import { MysqlModule } from './common/config/database/mysql.module';
+import { JwtConfigModule } from './common/config/jwt/jwt.module';
 import { ErrorsInterceptor } from './common/interceptors/errors.interceptor';
-import { EventsModule } from './events/events.module';
 import { LoggerModule } from './logger/logger.module';
-import { Member } from './members/entities/member.entity';
 import { MembersModule } from './members/members.module';
-import { MembersService } from './members/members.service';
+import { SocketModule } from './socket/socket.module';
 import { TarotModule } from './tarot/tarot.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    RedisCacheModule.register(),
+    JwtConfigModule.register(),
     MembersModule,
-    DatabaseModule,
+    MysqlModule,
     ChatModule,
     TarotModule,
-    TypeOrmModule.forFeature([Member]),
-    EventsModule,
+    ChatbotModule,
+    SocketModule,
     LoggerModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [
@@ -30,7 +32,6 @@ import { TarotModule } from './tarot/tarot.module';
       provide: APP_INTERCEPTOR,
       useClass: ErrorsInterceptor,
     },
-    MembersService,
   ],
 })
 export class AppModule {}

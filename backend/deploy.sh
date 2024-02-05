@@ -1,63 +1,12 @@
 #!/bin/bash
 
-MAIN_SCRIPT="src/main.ts"
-DEBUG_LOG="debug.log"
-NPM_PROD="npm run start:prod"
+set -e
 
-run_docker() {
-  local RUN_TARGET="$1"
+ERR_MSG=''
 
-  DOCKER_COMPOSE_FILE="docker-compose.$RUN_TARGET.yml"
+trap 'echo "Error occured: $ERR_MSG. Exiting deploy script."; exit 1' ERR
 
-  echo "<<< Run docker compose : $DOCKER_COMPOSE_FILE" > $DEBUG_LOG
-
-  docker-compose -f "$DOCKER_COMPOSE_FILE" pull
-  docker-compose -f "$DOCKER_COMPOSE_FILE" up -d
-
-  echo ">>> Run complete" >> $DEBUG_LOG
-}
-
-reload_nginx() {
-  local RUN_TARGET="$1"
-  local STOP_TARGET="$2"
-  local WAS_RUN_PORT="$3"
-  local WAS_STOP_PORT="$4"
-
-  echo "<<< Reload nginx" >> $DEBUG_LOG
-
-  NGINX_ID=$(docker ps --filter "name=nginx" -q)
-  NGINX_CONFIG="/etc/nginx/conf.d/default.conf"
-
-  docker exec $NGINX_ID /bin/bash -c "sed -i 's/was-$STOP_TARGET:$WAS_STOP_PORT/was-$RUN_TARGET:$WAS_RUN_PORT/' $NGINX_CONFIG"
-  docker exec $NGINX_ID /bin/bash -c "sed -i 's/signal-$STOP_TARGET:$((WAS_STOP_PORT + 1))/signal-$RUN_TARGET:$((WAS_RUN_PORT + 1))/' $NGINX_CONFIG"
-  docker exec $NGINX_ID /bin/bash -c "nginx -s reload"
-
-  echo ">>> Reload complete" >> $DEBUG_LOG
-}
-
-blue_green() {
-  local RUN_TARGET="$1"
-  local STOP_TARGET="$2"
-  local WAS_RUN_PORT="$3"
-  local WAS_STOP_PORT="$4"
-  
-  run_docker "$RUN_TARGET"
-
-  sleep 30
-  
-  reload_nginx "$RUN_TARGET" "$STOP_TARGET" $WAS_RUN_PORT $WAS_STOP_PORT
-
-  echo "* Delete .env file" >> $DEBUG_LOG
-  rm .env
-
-  echo "* Down old version" >> $DEBUG_LOG
-  STOP_CONTAINER_ID=$(docker ps --filter "name=$STOP_TARGET" --quiet)
-  if [ -n "$STOP_CONTAINER_ID" ]; then
-    docker rm -f $STOP_CONTAINER_ID
-  fi
-}
-
-if docker ps --filter "name=blue" --format '{{.ID}}' | grep -E .; then
+if sudo docker ps --filter "name=blue" --format '{{.ID}}' | grep -E .; then
   RUN_TARGET="green"
   STOP_TARGET="blue"
   WAS_RUN_PORT=3002
@@ -69,4 +18,51 @@ else
   WAS_STOP_PORT=3002
 fi
 
-blue_green "$RUN_TARGET" "$STOP_TARGET" $WAS_RUN_PORT $WAS_STOP_PORT
+echo "The $STOP_TARGET version is currently running on the server. Starting the $RUN_TARGET version."
+
+DOCKER_COMPOSE_FILE="compose.$RUN_TARGET-deploy.yml"
+sudo docker-compose -f "$DOCKER_COMPOSE_FILE" pull || { ERR_MSG='Failed to pull docker image'; exit 1; }
+sudo docker-compose -f "$DOCKER_COMPOSE_FILE" up -d || { ERR_MSG='Failed to start docker image'; exit 1; }
+sleep 50
+
+echo "Starting health check for the new version of the application."
+
+HEALTH_CHECK_PASSED=true
+RUN_CONTAINER_IDS=$(sudo docker ps --filter "name=$RUN_TARGET" --quiet --all)
+
+for CONTAINER_ID in $RUN_CONTAINER_IDS; do
+  HEALTH_STATUS=$(sudo docker inspect --format "{{.State.Health.Status}}" $CONTAINER_ID)
+  if [ "$HEALTH_STATUS" != "healthy" ]; then
+    HEALTH_CHECK_PASSED=false
+    break
+  fi
+done
+
+if [ "$HEALTH_CHECK_PASSED" = false ]; then
+  sudo docker image prune -af
+  ERR_MSG="Health check failed."
+  exit 1
+fi
+
+echo "Health check passed. Reloading nginx to transfer traffic from $STOP_TARGET to $RUN_TARGET."
+  
+NGINX_ID=$(sudo docker ps --filter "name=nginx" --quiet)
+NGINX_CONFIG="/etc/nginx/conf.d/default.conf"
+
+sudo docker exec $NGINX_ID /bin/bash -c "sed -i 's/was-$STOP_TARGET:$WAS_STOP_PORT/was-$RUN_TARGET:$WAS_RUN_PORT/' $NGINX_CONFIG"
+sudo docker exec $NGINX_ID /bin/bash -c "sed -i 's/signal-$STOP_TARGET:$((WAS_STOP_PORT + 1))/signal-$RUN_TARGET:$((WAS_RUN_PORT + 1))/' $NGINX_CONFIG"
+sudo docker exec $NGINX_ID /bin/bash -c "nginx -s reload" || { ERR_MSG='Failed to reload nginx'; exit 1; }
+
+echo "Terminating the $STOP_TARGET applications."
+
+STOP_CONTAINER_ID=$(sudo docker ps --filter "name=$STOP_TARGET" --quiet)
+if [ -n "$STOP_CONTAINER_ID" ]; then
+  sudo docker stop $STOP_CONTAINER_ID
+  sudo docker rm $STOP_CONTAINER_ID
+  sudo docker image prune -af
+fi
+
+rm .env
+
+echo "Deployment success."
+exit 0

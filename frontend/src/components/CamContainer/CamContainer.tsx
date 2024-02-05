@@ -1,9 +1,14 @@
+import { useOutletContext } from 'react-router-dom';
+
+import { OutletContext } from '@pages/HumanChatPage';
+
 import { IconButton, IconToggleButton } from '@components/Buttons';
 import CamBox from '@components/CamBox';
 
-import { useHost } from '@stores/zustandStores/useHost';
 import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
 import { useProfileInfo } from '@stores/zustandStores/useProfileInfo';
+
+import { DEFAULT_NICKNAME } from '@constants/nickname';
 
 interface CamContainerProps {
   localVideoRef: React.RefObject<HTMLVideoElement>;
@@ -22,6 +27,8 @@ export default function CamContainer({
   tarotButtonClick,
   tarotButtonDisabled,
 }: CamContainerProps) {
+  const { host } = useOutletContext<OutletContext>();
+
   const { myNickname, myProfile, remoteNickname, remoteProfile } = useProfileInfo(state => ({
     myNickname: state.myNickname,
     myProfile: state.myProfile,
@@ -38,8 +45,6 @@ export default function CamContainer({
     setRemoteVideoOn: state.setRemoteVideoOn,
   }));
 
-  const { host } = useHost(state => ({ host: state.host }));
-
   return (
     <div className="flex-with-center flex-col gap-80 pt-80 sm:gap-20">
       <div className="flex justify-center gap-64 sm:flex-col sm:gap-20">
@@ -50,7 +55,7 @@ export default function CamContainer({
           defaultImage="bg-ddung"
           profileInfo={myProfile}
           nickname={myNickname}
-          defaultNickname="나"
+          defaultNickname={DEFAULT_NICKNAME.ME}
         />
         <CamBox
           videoRef={remoteVideoRef}
@@ -59,7 +64,7 @@ export default function CamContainer({
           defaultImage="bg-sponge"
           profileInfo={remoteProfile}
           nickname={remoteNickname}
-          defaultNickname="상대방"
+          defaultNickname={DEFAULT_NICKNAME.OTHER}
         />
       </div>
       <div className="flex-with-center flex-col gap-30 z-10">

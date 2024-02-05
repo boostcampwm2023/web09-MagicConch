@@ -2,11 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ERR_MSG } from 'src/common/constants/errors';
 import { Repository } from 'typeorm';
-import { CreateTarotResultDto } from './dto/create-tarot-result.dto';
-import { TarotCardResponseDto } from './dto/tarot-card-response.dto';
-import { TarotResultResponseDto } from './dto/tarot-result-response.dto';
-import { TarotCard } from './entities/tarot-card.entity';
-import { TarotResult } from './entities/tarot-result.entity';
+import { CreateTarotResultDto, TarotCardDto, TarotResultDto } from './dto';
+import { TarotCard, TarotResult } from './entities';
 
 @Injectable()
 export class TarotService {
@@ -33,24 +30,32 @@ export class TarotService {
   /**
    * TODO : 추후 타로 카드팩이 커스텀이 가능한 경우, 전체적인 로직 수정 필요
    */
-  async findTarotCardById(id: number): Promise<TarotCardResponseDto> {
-    const tarotCard: TarotCard | null =
-      await this.tarotCardRepository.findOneBy({
-        cardNo: id,
-        cardPack: undefined,
-      });
-    if (!tarotCard) {
-      throw new NotFoundException(ERR_MSG.TAROT_CARD_NOT_FOUND);
+  async findTarotCardByCardNo(cardNo: number): Promise<TarotCardDto> {
+    try {
+      const tarotCard: TarotCard | null =
+        await this.tarotCardRepository.findOneBy({
+          cardNo: cardNo,
+          cardPack: undefined,
+        });
+      if (!tarotCard) {
+        throw new NotFoundException(ERR_MSG.TAROT_CARD_NOT_FOUND);
+      }
+      return TarotCardDto.fromEntity(tarotCard);
+    } catch (err: unknown) {
+      throw err;
     }
-    return TarotCardResponseDto.fromEntity(tarotCard);
   }
 
-  async findTarotResultById(id: string): Promise<TarotResultResponseDto> {
-    const tarotResult: TarotResult | null =
-      await this.tarotResultRepository.findOneBy({ id });
-    if (!tarotResult) {
-      throw new NotFoundException(ERR_MSG.TAROT_RESULT_NOT_FOUND);
+  async findTarotResultById(id: string): Promise<TarotResultDto> {
+    try {
+      const tarotResult: TarotResult | null =
+        await this.tarotResultRepository.findOneBy({ id: id });
+      if (!tarotResult) {
+        throw new NotFoundException(ERR_MSG.TAROT_RESULT_NOT_FOUND);
+      }
+      return TarotResultDto.fromEntity(tarotResult);
+    } catch (err: unknown) {
+      throw err;
     }
-    return TarotResultResponseDto.fromEntity(tarotResult);
   }
 }

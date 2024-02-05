@@ -1,28 +1,32 @@
 import { PasswordPopup } from '@components/Popup';
+import type { InitSocketEvents } from '@components/Popup/PasswordPopup';
 
 import useOverlay from '@business/hooks/useOverlay';
 
-import { randomString } from '@utils/ramdom';
+import { randomString } from '@utils/random';
 
 type openPasswordPopupParams = {
   host?: boolean;
-  onSubmit?: ({ password, close }: { password: string; close: () => void }) => void;
-  onClose?: ({ close }: { close: () => void }) => void;
+  onSubmit?: ({ password, closePopup }: { password: string } & ClosePopupFunc) => void;
+  onCancel?: () => void;
+  initSocketEvents?: InitSocketEvents;
 };
 
 export function usePasswordPopup() {
-  const { open } = useOverlay();
+  const { openOverlay } = useOverlay();
 
-  const openPasswordPopup = ({ host, onSubmit, onClose }: openPasswordPopupParams) => {
+  const openPasswordPopup = ({ host, onSubmit, onCancel, initSocketEvents }: openPasswordPopupParams) => {
     const defaultValue = host ? randomString() : '';
 
-    open(({ close }) => (
+    openOverlay(({ closeOverlay: closePopup }) => (
       <PasswordPopup
-        onCancel={() => onClose?.({ close })}
+        closePopup={closePopup}
+        onCancel={onCancel}
         onSubmit={password => {
-          onSubmit?.({ password, close });
+          onSubmit?.({ password, closePopup });
         }}
         defaultValue={defaultValue}
+        initSocketEvents={initSocketEvents}
       />
     ));
   };

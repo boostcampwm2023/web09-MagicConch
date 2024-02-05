@@ -3,11 +3,11 @@ import useOverlay from '@business/hooks/useOverlay';
 import { getTarotImageQuery } from '@stores/queries/getTarotImageQuery';
 
 export default function useDisplayTarotCard() {
-  const { open } = useOverlay();
+  const { openOverlay } = useOverlay();
 
   const displayTarotCard = (tarotId: number) => {
-    open(({ close }) => {
-      setTimeout(close, 5000);
+    openOverlay(({ closeOverlay }) => {
+      setTimeout(closeOverlay, 5000);
 
       return (
         <div className="animate-shining">

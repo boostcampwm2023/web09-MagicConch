@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { CreateChattingMessageDto } from '../dto/create-chatting-message.dto';
+import { CreateChattingMessageDto } from '../dto';
 import { ChattingRoom } from './chatting-room.entity';
 
 @Entity()
@@ -21,10 +21,10 @@ export class ChattingMessage {
   message: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt?: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt?: Date;
 
   @ManyToOne(
     () => ChattingRoom,

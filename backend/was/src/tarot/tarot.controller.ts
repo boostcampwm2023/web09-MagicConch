@@ -6,12 +6,11 @@ import {
   ParseUUIDPipe,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { TarotCardDto, TarotResultDto } from './dto';
 import {
   FindTarotCardDecorator,
   FindTarotResultDecorator,
-} from 'src/common/decorators/swagger/tarot.decorator';
-import { TarotCardResponseDto } from './dto/tarot-card-response.dto';
-import { TarotResultResponseDto } from './dto/tarot-result-response.dto';
+} from './tarot.decorators';
 import { TarotService } from './tarot.service';
 
 @Controller('tarot')
@@ -19,27 +18,27 @@ import { TarotService } from './tarot.service';
 export class TarotController {
   constructor(private readonly tarotService: TarotService) {}
 
-  @Get('card/:id')
+  @Get('card/:cardNo')
   @FindTarotCardDecorator(
     '타로 카드 이미지',
-    { type: 'integer', name: 'id' },
-    TarotCardResponseDto,
+    { type: 'integer', name: 'cardNo' },
+    TarotCardDto,
   )
-  async findTarotCardById(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<TarotCardResponseDto> {
-    return await this.tarotService.findTarotCardById(id);
+  async findTarotCardByCardNo(
+    @Param('cardNo', ParseIntPipe) cardNo: number,
+  ): Promise<TarotCardDto> {
+    return await this.tarotService.findTarotCardByCardNo(cardNo);
   }
 
   @Get('result/:id')
   @FindTarotResultDecorator(
     '타로 결과',
     { type: 'uuid', name: 'id' },
-    TarotResultResponseDto,
+    TarotResultDto,
   )
   async findTarotResultById(
     @Param('id', ParseUUIDPipe) id: string,
-  ): Promise<TarotResultResponseDto> {
+  ): Promise<TarotResultDto> {
     return await this.tarotService.findTarotResultById(id);
   }
 }

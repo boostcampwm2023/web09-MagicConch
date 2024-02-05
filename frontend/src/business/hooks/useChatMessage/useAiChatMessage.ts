@@ -43,6 +43,8 @@ export function useAiChatMessage() {
       const shareLinkId: string = id;
       updateMessage(message => ({ ...message, shareLinkId }));
     });
+
+    return () => socketManager.disconnect();
   }, []);
 
   const addPickCardMessage = (tarotId: number) => {

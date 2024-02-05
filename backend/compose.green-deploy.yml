@@ -1,0 +1,70 @@
+version: "3.3"
+
+services:
+  was-green:
+    image: "${DOCKER_USERNAME}/magicconch:was-green-${GITHUB_SHA}"
+    container_name: "was-green"
+    env_file: .env
+    environment:
+      - PORT=3002
+    expose:
+      - "3002"
+    volumes:
+      - /var/log/was:/app/was/logs
+      - /var/log/ormlogs.log:/app/was/ormlogs.log
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3002/health-check"]
+      interval: 10s
+      timeout: 10s
+      start_period: 20s
+      retries: 3
+
+  signal-green:
+    image: "${DOCKER_USERNAME}/magicconch:signal-green-${GITHUB_SHA}"
+    container_name: "signal-green"
+    env_file: .env
+    environment:
+      - PORT=3003
+    expose:
+      - "3003"
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3003/health-check"]
+      interval: 10s
+      timeout: 10s
+      start_period: 10s
+      retries: 3
+
+  nginx:
+    container_name: "nginx"
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - was-green
+      - signal-green
+      - certbot
+    volumes:
+      - /var/log/nginx:/var/log/nginx
+    networks:
+      - backend
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - /etc/letsencrypt
+      - /var/www/html:/var/www/html
+    networks:
+      - backend
+    command: certonly --webroot --webroot-path=/var/www/html -d was.tarotmilktea.com
+
+networks:
+  backend:
+    external: true
+    name: backend

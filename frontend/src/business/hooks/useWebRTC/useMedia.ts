@@ -16,15 +16,15 @@ export function useMedia() {
 
     const audioOptions = {
       withAudioID: { deviceId: nowSelectedAudioID },
-      withoutAudioID: true,
+      default: true,
     };
     const videoOptions = {
       withCameraID: { deviceId: nowSelectedCameraID, width: 320, height: 320 },
-      withoutCameraID: { facingMode: 'user', width: 320, height: 320 },
+      default: { facingMode: 'user', width: 320, height: 320 },
     };
 
-    const audio = nowSelectedAudioID ? audioOptions.withAudioID : audioOptions.withoutAudioID;
-    const video = nowSelectedCameraID ? videoOptions.withCameraID : videoOptions.withoutCameraID;
+    const audio = nowSelectedAudioID ? audioOptions.withAudioID : audioOptions.default;
+    const video = nowSelectedCameraID ? videoOptions.withCameraID : videoOptions.default;
 
     const stream = await getUserMediaStream({ audio, video });
 
@@ -34,7 +34,6 @@ export function useMedia() {
     if (!myMicOn) {
       stream.getAudioTracks().forEach(track => (track.enabled = false));
     }
-
     return stream;
   };
 

@@ -1,29 +1,24 @@
+import { OutletContext } from '.';
 import { useEffect } from 'react';
 import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 
-import useWebRTC from '@business/hooks/useWebRTC';
-import { useSignalingSocket } from '@business/hooks/useWebRTC/useSignalingSocket';
+import { useSignalingSocket, useWebRTC } from '@business/hooks/useWebRTC';
 import { HumanSocketManager } from '@business/services/SocketManager';
+
+import { useSideBarStore } from '@stores/zustandStores/useSideBarStore';
 
 import { ERROR_MESSAGE } from '@constants/messages';
 
-import { OutletContext } from './HumanChatPage';
-
 interface useChattingPageCreateJoinRoomParams {
   unblockGoBack: (cb: () => void) => void;
-  enableSideBar: () => void;
 }
-export function useChattingPageCreateJoinRoomPasswordPopup({
-  unblockGoBack,
-  enableSideBar,
-}: useChattingPageCreateJoinRoomParams) {
-  const {
-    chatPageState: { host, joined },
-  }: OutletContext = useOutletContext();
-
+export function useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack }: useChattingPageCreateJoinRoomParams) {
   const humanSocket = HumanSocketManager.getInstance();
+  const { host, joinedRoom } = useOutletContext<OutletContext>();
+
   const { createRoom, joinRoom, checkRoomExist } = useSignalingSocket();
   const { startWebRTC } = useWebRTC();
+  const { enableSideBarButton } = useSideBarStore();
 
   const { roomName } = useParams();
   const navigate = useNavigate();
@@ -31,10 +26,10 @@ export function useChattingPageCreateJoinRoomPasswordPopup({
   const _joinRoom = () => {
     joinRoom({
       roomName: roomName as string,
-      onSuccess: ({ close }) => {
+      onSuccess: ({ closePopup }) => {
         navigate('setting');
-        close();
-        enableSideBar();
+        closePopup();
+        enableSideBarButton();
       },
       onFull: () => {
         unblockGoBack(() => {
@@ -57,14 +52,15 @@ export function useChattingPageCreateJoinRoomPasswordPopup({
   const _createRoom = () => {
     createRoom({
       roomName: roomName as string,
-      onSuccess: ({ close }) => {
+      onSuccess: ({ closePopup }) => {
         navigate('setting');
-        close();
-        enableSideBar();
+        closePopup();
+        enableSideBarButton();
       },
-      onClose: ({ close }) => {
-        close();
-        navigate('/');
+      onCancel: () => {
+        unblockGoBack(() => {
+          navigate('/');
+        });
       },
     });
   };
@@ -77,7 +73,7 @@ export function useChattingPageCreateJoinRoomPasswordPopup({
   };
 
   useEffect(() => {
-    if (joined) {
+    if (joinedRoom) {
       return;
     }
 

@@ -25,19 +25,19 @@ export default function useOverlay() {
 
   return useMemo(
     () => ({
-      open: (OverlayElement: CreateOverlayElement) => {
+      openOverlay: (OverlayElement: CreateOverlayElement) => {
         mount(
           id,
           <div className="fixed top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] z-10">
             <OverlayElement
               key={String(new Date())}
               opened={opened}
-              close={() => unmount(id)}
+              closeOverlay={() => unmount(id)}
             />
           </div>,
         );
       },
-      close: () => {
+      closeOverlay: () => {
         unmount(id);
       },
     }),

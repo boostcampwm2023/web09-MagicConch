@@ -1,12 +1,17 @@
 import { Button } from '@components/Buttons';
 
 interface PopupProps {
+  closePopup: () => void;
   onCancel?: () => void;
   onConfirm?: () => void;
   children: React.ReactNode;
 }
 
-export default function Popup({ onCancel, onConfirm, children }: PopupProps) {
+export default function Popup({ closePopup, onCancel, onConfirm, children }: PopupProps) {
+  const closeWithCancel = () => {
+    onCancel?.();
+    closePopup();
+  };
   return (
     <div className="w-[100vw] h-[100vh] flex-with-center">
       <div className="surface-content rounded p-16 gap-16 shadow-popup">
@@ -15,7 +20,7 @@ export default function Popup({ onCancel, onConfirm, children }: PopupProps) {
           <Button
             size="m"
             color="dark"
-            onClick={onCancel}
+            onClick={closeWithCancel}
           >
             취소하기
           </Button>

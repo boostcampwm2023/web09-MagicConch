@@ -1,50 +1,24 @@
 import WebRTC from '@business/services/WebRTC';
 
-import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
-import { useProfileInfo } from '@stores/zustandStores/useProfileInfo';
-
-import { array2ArrayBuffer } from '@utils/array';
+import { useDataChannelEventListener } from './useDataChannelEventListener';
 
 export function useDataChannel() {
-  const { setRemoteMicOn, setRemoteVideoOn } = useMediaInfo(state => ({
-    setRemoteMicOn: state.setRemoteMicOn,
-    setRemoteVideoOn: state.setRemoteVideoOn,
-  }));
-  const { myNickname, myProfile, setRemoteNickname, setRemoteProfileImage } = useProfileInfo(state => ({
-    setRemoteNickname: state.setRemoteNickname,
-    setRemoteProfileImage: state.setRemoteProfile,
-    myNickname: state.myNickname,
-    myProfile: state.myProfile,
-  }));
-
-  const webRTC = WebRTC.getInstace();
+  const webRTC = WebRTC.getInstance();
+  const {
+    sendMyNickname,
+    sendMyProfileImage,
+    sendNowMediaStates,
+    setMediaStates,
+    setRemoteNicknameState,
+    setRemoteProfileImageState,
+  } = useDataChannelEventListener();
 
   const initMediaInfoChannel = () => {
     const mediaInfoChannel = webRTC.addDataChannel('mediaInfoChannel');
 
-    mediaInfoChannel?.addEventListener('message', ({ data }) => {
-      const mediaInfoArray = JSON.parse(data);
+    mediaInfoChannel?.addEventListener('message', ev => setMediaStates({ ev }));
 
-      mediaInfoArray.forEach(({ type, onOrOff }: { type: string; onOrOff: boolean }) => {
-        if (type === 'audio') {
-          setRemoteMicOn(onOrOff);
-        } else if (type === 'video') {
-          setRemoteVideoOn(onOrOff);
-        }
-      });
-    });
-
-    mediaInfoChannel?.addEventListener('open', function () {
-      const audioTrack = webRTC.localStream?.getAudioTracks()[0];
-      const videoTrack = webRTC.localStream?.getVideoTracks()[0];
-
-      mediaInfoChannel?.send(
-        JSON.stringify([
-          { type: 'audio', onOrOff: audioTrack?.enabled },
-          { type: 'video', onOrOff: videoTrack?.enabled },
-        ]),
-      );
-    });
+    mediaInfoChannel?.addEventListener('open', sendNowMediaStates);
   };
 
   const initChatChannel = () => {
@@ -54,34 +28,17 @@ export function useDataChannel() {
   const initProfileChannel = () => {
     const profileChannel = webRTC.addDataChannel('profileChannel');
 
-    profileChannel?.addEventListener('message', ({ data }) => {
-      const receivedData = JSON.parse(data);
+    profileChannel?.addEventListener('message', ev => setRemoteProfileImageState({ ev }));
 
-      const { type, arrayBuffer: array } = receivedData;
-
-      const arrayBuffer = array2ArrayBuffer(array);
-
-      setRemoteProfileImage({ arrayBuffer, type });
-    });
-
-    profileChannel?.addEventListener('open', function () {
-      this.send(JSON.stringify({ myProfile }));
-    });
+    profileChannel?.addEventListener('open', sendMyProfileImage.bind(profileChannel));
   };
 
   const initNicknameChannel = () => {
     const nicknameChannel = webRTC.addDataChannel('nicknameChannel');
 
-    nicknameChannel?.addEventListener('message', ({ data }) => {
-      setRemoteNickname(data);
-    });
+    nicknameChannel?.addEventListener('message', ev => setRemoteNicknameState({ ev }));
 
-    nicknameChannel?.addEventListener('open', function () {
-      if (!myNickname) {
-        return;
-      }
-      this.send(myNickname);
-    });
+    nicknameChannel?.addEventListener('open', sendMyNickname.bind(nicknameChannel));
   };
 
   const initDataChannels = () => {
@@ -91,5 +48,5 @@ export function useDataChannel() {
     initNicknameChannel();
   };
 
-  return { initDataChannels };
+  return { initDataChannels, dataChannels: webRTC.getDataChannels() };
 }

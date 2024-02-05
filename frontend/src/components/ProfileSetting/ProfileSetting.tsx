@@ -6,6 +6,8 @@ import { SelectOptions } from '@components/Select';
 import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
 import { useProfileInfo } from '@stores/zustandStores/useProfileInfo';
 
+import { DEFAULT_NICKNAME } from '@constants/nickname';
+
 import DeviceSelect from './DeviceSelect';
 import DeviceToggleButtons from './DeviceToggleButtons';
 
@@ -57,7 +59,7 @@ export default function ProfileSetting({
             defaultImage="bg-ddung"
             profileInfo={myProfile}
             nickname={myNickname}
-            defaultNickname="나"
+            defaultNickname={DEFAULT_NICKNAME.ME}
           />
           <div className="flex flex-col gap-24 sm:gap-10 sm:w-[80vw] sm:scale-90">
             <div className="flex justify-between gap-12">

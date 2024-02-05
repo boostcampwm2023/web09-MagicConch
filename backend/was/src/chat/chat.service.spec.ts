@@ -1,57 +1,28 @@
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Message } from 'src/events/type';
-import { Member } from 'src/members/entities/member.entity';
+import { PROVIDER_ID } from 'src/common/constants/etc';
+import { ChatLog } from 'src/common/types/chatbot';
+import { UserInfo } from 'src/common/types/socket';
+import { Member } from 'src/members/entities';
 import { Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
-import { ChatService } from './chat.service';
-import { CreateChattingMessageDto } from './dto/create-chatting-message.dto';
-import { UpdateChattingRoomDto } from './dto/update-chatting-room.dto';
-import { ChattingMessage } from './entities/chatting-message.entity';
-import { ChattingRoom } from './entities/chatting-room.entity';
+import { ChatService, ChattingInfo } from './chat.service';
+import {
+  ChattingMessageDto,
+  ChattingRoomDto,
+  CreateChattingMessageDto,
+  UpdateChattingRoomDto,
+} from './dto';
+import { ChattingMessage, ChattingRoom } from './entities';
 
 describe('ChatService', () => {
-  let service: ChatService;
+  let chatService: ChatService;
   let chattingRoomRepository: Repository<ChattingRoom>;
   let chattingMessageRepository: Repository<ChattingMessage>;
   let membersRepository: Repository<Member>;
 
-  /**
-   * mock data
-   */
-  const memberId: string = uuidv4();
-  const roomId: string = uuidv4();
-  const messageId: string = uuidv4();
-
-  const nonMemberId: string = uuidv4();
-  const diffMemberId: string = uuidv4();
-  const nonRoomId: string = uuidv4();
-
-  const memberMock: Member = new Member();
-  memberMock.id = memberId;
-
-  const roomMock: ChattingRoom = new ChattingRoom();
-  roomMock.id = roomId;
-  roomMock.title = 'chatting room title';
-  roomMock.participant = memberMock;
-
-  const message: Message = {
-    roomId: messageId,
-    chat: {
-      role: 'user',
-      content: 'chatting message content',
-    },
-  };
-
-  const messageMock: ChattingMessage = new ChattingMessage();
-  messageMock.id = messageId;
-  messageMock.isHost = message.chat.role === 'assistant';
-  messageMock.message = message.chat.content;
-  messageMock.room = roomMock;
-
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+  beforeAll(async () => {
+    const moduleRef: TestingModule = await Test.createTestingModule({
       providers: [
         ChatService,
         {
@@ -69,222 +40,551 @@ describe('ChatService', () => {
       ],
     }).compile();
 
-    service = module.get<ChatService>(ChatService);
-    chattingRoomRepository = module.get<Repository<ChattingRoom>>(
+    chatService = moduleRef.get<ChatService>(ChatService);
+    chattingRoomRepository = moduleRef.get<Repository<ChattingRoom>>(
       getRepositoryToken(ChattingRoom),
     );
-    chattingMessageRepository = module.get<Repository<ChattingMessage>>(
+    chattingMessageRepository = moduleRef.get<Repository<ChattingMessage>>(
       getRepositoryToken(ChattingMessage),
     );
-    membersRepository = module.get<Repository<Member>>(
+    membersRepository = moduleRef.get<Repository<Member>>(
       getRepositoryToken(Member),
     );
   });
 
+  afterAll(() => {
+    jest.clearAllMocks();
+  });
+
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(chatService).toBeDefined();
   });
 
   describe('createRoom', () => {
-    it('should create a room', async () => {
-      // const findOneByMock = jest
-      //   .spyOn(membersRepository, 'findOneBy')
-      //   .mockResolvedValueOnce(memberMock);
-      const saveMemberMock = jest
-        .spyOn(membersRepository, 'save')
-        .mockResolvedValueOnce(memberMock);
+    describe('사용자는 채팅방을 생성할 수 있다.', () => {
+      it('로그인 하지 않은 사용자는 채팅방을 생성할 수 있다.', async () => {
+        [
+          {
+            memberId: '12345678-1234-5678-1234-567812345670',
+            roomId: '12345678-1234-5678-1234-567812345672',
+          },
+          {
+            memberId: '12345678-1234-5678-1234-567812345671',
+            roomId: '12345678-1234-5678-1234-567812345673',
+          },
+        ].forEach(async ({ memberId, roomId }) => {
+          const member: Member = { id: memberId };
+          const room: ChattingRoom = {
+            id: roomId,
+            participant: member,
+          };
 
-      const saveMock = jest
-        .spyOn(chattingRoomRepository, 'save')
-        .mockResolvedValueOnce(roomMock);
+          const memberSaveMock = jest
+            .spyOn(membersRepository, 'save')
+            .mockResolvedValueOnce(member);
+          const roomSaveMock = jest
+            .spyOn(chattingRoomRepository, 'save')
+            .mockResolvedValueOnce(room);
 
-      await service.createRoom(memberId);
+          await expect(chatService.createRoom()).resolves.not.toThrow();
+          expect(memberSaveMock).toHaveBeenCalled();
+          expect(roomSaveMock).toHaveBeenCalledWith({ participant: member });
+        });
+      });
 
-      // expect(findOneByMock).toHaveBeenCalledWith({ id: memberId });
-      expect(saveMemberMock).toHaveBeenCalledWith({});
-      expect(saveMock).toHaveBeenCalledWith({ participant: memberMock });
+      it('로그인한 사용자는 채팅방을 생성할 수 있다.', async () => {
+        [
+          {
+            memberId: '12345678-1234-5678-1234-567812345670',
+            email: 'tarotmilktea@kakao.com',
+            providerId: PROVIDER_ID.KAKAO,
+            roomId: '12345678-1234-5678-1234-567812345672',
+          },
+          {
+            memberId: '12345678-1234-5678-1234-567812345671',
+            email: 'tarotmilktea2@kakao.com',
+            providerId: PROVIDER_ID.KAKAO,
+            roomId: '12345678-1234-5678-1234-567812345673',
+          },
+        ].forEach(async ({ memberId, email, providerId, roomId }) => {
+          const member: Member = {
+            id: memberId,
+            email: email,
+            providerId: providerId,
+          };
+          const room: ChattingRoom = {
+            id: roomId,
+            participant: member,
+          };
+          const userInfo: UserInfo = {
+            email: email ?? '',
+            providerId: providerId ?? 0,
+          };
+
+          const memberFindOneByMock = jest
+            .spyOn(membersRepository, 'findOneBy')
+            .mockResolvedValueOnce(member);
+          const roomSaveMock = jest
+            .spyOn(chattingRoomRepository, 'save')
+            .mockResolvedValueOnce(room);
+
+          const expectation: ChattingInfo =
+            await chatService.createRoom(userInfo);
+          expect(expectation).toEqual({
+            memberId: memberId,
+            roomId: roomId,
+          });
+          expect(memberFindOneByMock).toHaveBeenCalledWith({
+            email: userInfo.email,
+            providerId: userInfo.providerId,
+          });
+          expect(roomSaveMock).toHaveBeenCalledWith({ participant: member });
+        });
+      });
     });
-
-    // it('should throw NotFoundException when member is not found', async () => {
-    //   const findOneByMock = jest
-    //     .spyOn(membersRepository, 'findOneBy')
-    //     .mockResolvedValueOnce(null);
-
-    //   await expect(service.createRoom(nonMemberId)).rejects.toThrow(
-    //     NotFoundException,
-    //   );
-
-    //   expect(findOneByMock).toHaveBeenCalledWith({ id: nonMemberId });
-    // });
   });
 
-  describe('createMessage', () => {
-    it('should create messages', async () => {
-      const findOneByMock = jest
-        .spyOn(chattingRoomRepository, 'findOneBy')
-        .mockResolvedValueOnce(roomMock);
+  describe('createMessages', () => {
+    it('사용자는 특정 채팅방에 메시지를 생성할 수 있다.', () => {
+      [
+        {
+          roomId: '12345678-1234-5678-1234-567812345670',
+          memberId: '12345678-1234-5678-1234-567812345671',
+          messages: {
+            id: '12345678-1234-5678-1234-567812345672',
+            role: 'assistant',
+            message: '어떤 내용을 상담하고 싶어?',
+          },
+        },
+      ].forEach(async ({ roomId, memberId, messages }) => {
+        const member: Member = {
+          id: memberId,
+        };
+        const room: ChattingRoom = {
+          id: roomId,
+          participant: member,
+        };
+        const chatLog: ChatLog = {
+          isHost: messages.role === 'assistant',
+          message: messages.message,
+        };
+        const createMessageDto: CreateChattingMessageDto =
+          CreateChattingMessageDto.fromChatLog(room.id, chatLog);
+        const message: ChattingMessage = ChattingMessage.fromDto(
+          createMessageDto,
+          room,
+        );
 
-      const saveMock = jest
-        .spyOn(chattingMessageRepository, 'save')
-        .mockResolvedValueOnce(messageMock);
+        const roomFindOneByMock = jest
+          .spyOn(chattingRoomRepository, 'findOneBy')
+          .mockResolvedValueOnce(room);
+        const messageSaveMock = jest
+          .spyOn(chattingMessageRepository, 'save')
+          .mockResolvedValueOnce(message);
 
-      const createChattingMessageDto: CreateChattingMessageDto =
-        CreateChattingMessageDto.fromMessage(message);
-
-      await service.createMessage(roomId, [createChattingMessageDto]);
-
-      expect(findOneByMock).toHaveBeenCalledWith({ id: roomId });
-      expect(saveMock).toHaveBeenCalledWith({
-        room: expect.any(ChattingRoom),
-        isHost: createChattingMessageDto.isHost,
-        message: createChattingMessageDto.message,
+        await expect(
+          chatService.createMessages(roomId, memberId, [createMessageDto]),
+        ).resolves.not.toThrow();
+        expect(roomFindOneByMock).toHaveBeenCalledWith({
+          id: room.id,
+        });
+        expect(messageSaveMock).toHaveBeenCalledWith(message);
       });
     });
 
-    it('should throw NotFoundException when room is not found', async () => {
-      const findOneByMock = jest
-        .spyOn(chattingRoomRepository, 'findOneBy')
-        .mockResolvedValueOnce(null);
+    it('해당 아이디의 채팅방이 존재하지 않아 NotFoundException을 반환한다.', async () => {
+      [
+        {
+          roomId: '12345678-1234-5678-1234-567812345670',
+          memberId: '12345678-1234-5678-1234-567812345672',
+        },
+        {
+          roomId: '12345678-1234-5678-1234-567812345671',
+          memberId: '12345678-1234-5678-1234-567812345673',
+        },
+      ].forEach(async ({ roomId, memberId }) => {
+        const findOneByMock = jest
+          .spyOn(chattingRoomRepository, 'findOneBy')
+          .mockResolvedValueOnce(null);
 
-      await expect(service.createMessage(nonRoomId, [])).rejects.toThrow(
-        NotFoundException,
-      );
-
-      expect(findOneByMock).toHaveBeenCalledWith({ id: nonRoomId });
+        await expect(
+          chatService.createMessages(roomId, memberId, []),
+        ).rejects.toThrow(NotFoundException);
+        expect(findOneByMock).toHaveBeenCalledWith({ id: roomId });
+      });
     });
   });
 
-  describe('findRoomsById', () => {
-    it('should find rooms', async () => {
-      const roomMocks: ChattingRoom[] = [roomMock];
+  describe('findRoomsByEmail', () => {
+    it('사용자는 자신의 채팅방 목록을 조회할 수 있다.', async () => {
+      const member: Member = {
+        id: '12345678-1234-5678-1234-567812345670',
+        email: 'tarotmilktea@kakao.com',
+        providerId: PROVIDER_ID.KAKAO,
+      };
+      const rooms: ChattingRoom[] = [
+        {
+          id: '12345678-1234-5678-1234-567812345671',
+          title: '오늘의 운세 채팅방',
+          participant: member,
+        },
+        {
+          id: '12345678-1234-5678-1234-567812345672',
+          title: '내일의 운세 채팅방',
+          participant: member,
+        },
+      ];
 
-      const findByMock = jest
+      const memberFindOneByMock = jest
+        .spyOn(membersRepository, 'findOneBy')
+        .mockResolvedValueOnce(member);
+      const roomFindByMock = jest
         .spyOn(chattingRoomRepository, 'findBy')
-        .mockResolvedValueOnce(roomMocks);
+        .mockResolvedValueOnce(rooms);
 
-      const result = await service.findRoomsById(roomId);
-
-      expect(result).toEqual(
-        roomMocks.map((room) =>
-          expect.objectContaining({ id: room.id, title: room.title }),
-        ),
+      const expectation: ChattingRoomDto[] = await chatService.findRoomsByEmail(
+        member.email ?? '',
+        member.providerId ?? 0,
       );
-
-      expect(findByMock).toHaveBeenCalledWith({ id: roomId });
+      expect(expectation).toEqual(
+        rooms.map((room: ChattingRoom) => ({
+          id: room.id,
+          title: room.title,
+        })),
+      );
+      expect(memberFindOneByMock).toHaveBeenCalledWith({
+        email: member.email,
+        providerId: member.providerId,
+      });
+      expect(roomFindByMock).toHaveBeenCalledWith({
+        participant: { id: member.id },
+      });
     });
   });
 
   describe('findMessagesById', () => {
-    it('should find messages', async () => {
-      const messageMocks: ChattingMessage[] = [messageMock];
+    let member: Member;
+    let room: ChattingRoom;
+    let messages: ChattingMessage[];
 
-      const findByMock = jest
+    beforeEach(() => {
+      member = {
+        id: '12345678-1234-5678-1234-567812345670',
+        email: 'tarotmilktea@kakao.com',
+        providerId: PROVIDER_ID.KAKAO,
+      };
+
+      room = {
+        id: '12345678-1234-5678-1234-567812345671',
+        participant: member,
+      };
+
+      messages = [
+        {
+          id: '12345678-1234-5678-1234-567812345672',
+          isHost: true,
+          message: '어떤 고민이 있어?',
+          room: room,
+        },
+        {
+          id: '12345678-1234-5678-1234-567812345673',
+          isHost: false,
+          message: '오늘 운세를 알고 싶어',
+          room: room,
+        },
+      ];
+    });
+
+    it('해당 아이디의 채팅방에 오고 간 채팅 메시지를 조회할 수 있다.', async () => {
+      const memberFindOneByMock = jest
+        .spyOn(membersRepository, 'findOneBy')
+        .mockResolvedValueOnce(member);
+      const roomFindOneByMock = jest
+        .spyOn(chattingRoomRepository, 'findOneBy')
+        .mockResolvedValueOnce(room);
+      const messageFindByMock = jest
         .spyOn(chattingMessageRepository, 'findBy')
-        .mockResolvedValueOnce(messageMocks);
+        .mockResolvedValueOnce(messages);
 
-      const result = await service.findMessagesById(roomId);
-
-      expect(result).toEqual(
-        messageMocks.map((message) =>
-          expect.objectContaining({
-            id: message.id,
-            isHost: message.isHost,
-            message: message.message,
-          }),
+      const expectation: ChattingMessageDto[] =
+        await chatService.findMessagesById(
+          room.id,
+          member.email ?? '',
+          member.providerId ?? 0,
+        );
+      expect(expectation).toEqual(
+        messages.map((message: ChattingMessage) =>
+          ChattingMessageDto.fromEntity(message),
         ),
       );
+      expect(memberFindOneByMock).toHaveBeenCalledWith({
+        email: member.email,
+        providerId: member.providerId,
+      });
+      expect(roomFindOneByMock).toHaveBeenCalledWith({ id: room.id });
+      expect(messageFindByMock).toHaveBeenCalledWith({
+        room: { id: room.id },
+      });
+    });
 
-      expect(findByMock).toHaveBeenCalledWith({ id: roomId });
+    describe('잘못된 파라미터를 받으면 에러를 던진다.', () => {
+      it('해당 아이디의 채팅방이 존재하지 않아 NotFoundException을 반환한다.', async () => {
+        const wrongRoomId: string = '12345678-1234-0000-1234-567812345679';
+
+        const memberFindOneByMock = jest
+          .spyOn(membersRepository, 'findOneBy')
+          .mockResolvedValueOnce(member);
+        const roomFindOneByMock = jest
+          .spyOn(chattingRoomRepository, 'findOneBy')
+          .mockResolvedValueOnce(null);
+
+        await expect(
+          chatService.findMessagesById(
+            wrongRoomId,
+            member.email ?? '',
+            member.providerId ?? 0,
+          ),
+        ).rejects.toThrow(NotFoundException);
+        expect(memberFindOneByMock).toHaveBeenCalledWith({
+          email: member.email,
+          providerId: member.providerId,
+        });
+        expect(roomFindOneByMock).toHaveBeenCalledWith({ id: wrongRoomId });
+      });
+
+      it('해당 아이디의 채팅방을 조회할 수 있는 권한이 없어 ForbiddenException을 반환한다.', async () => {
+        const forbiddenMember: Member = {
+          id: '12345678-0000-0000-1234-567812345678',
+          email: 'tarotmilktea2@kakao.com',
+          providerId: PROVIDER_ID.KAKAO,
+        };
+
+        const memberFindOneByMock = jest
+          .spyOn(membersRepository, 'findOneBy')
+          .mockResolvedValueOnce(forbiddenMember);
+        const roomFindOneByMock = jest
+          .spyOn(chattingRoomRepository, 'findOneBy')
+          .mockResolvedValueOnce(room);
+
+        await expect(
+          chatService.findMessagesById(
+            room.id,
+            forbiddenMember.email ?? '',
+            forbiddenMember.providerId ?? 0,
+          ),
+        ).rejects.toThrow(ForbiddenException);
+        expect(memberFindOneByMock).toHaveBeenCalledWith({
+          email: forbiddenMember.email,
+          providerId: forbiddenMember.providerId,
+        });
+        expect(roomFindOneByMock).toHaveBeenCalledWith({ id: room.id });
+      });
     });
   });
 
   describe('updateRoom', () => {
-    const updateChattingRoomDto = new UpdateChattingRoomDto();
-    updateChattingRoomDto.title = 'revised title';
+    let member: Member;
+    let room: ChattingRoom;
+    let updateRoomDto: UpdateChattingRoomDto;
 
-    it('should update specific room', async () => {
-      const findOneByMock = jest
+    beforeEach(() => {
+      member = {
+        id: '12345678-1234-5678-1234-567812345670',
+        email: 'tarotmilktea@kakao.com',
+        providerId: PROVIDER_ID.KAKAO,
+      };
+
+      room = {
+        id: '12345678-1234-5678-1234-567812345671',
+        participant: member,
+      };
+
+      updateRoomDto = {
+        title: '수정된 채팅방 제목',
+      };
+    });
+
+    it('해당 아이디의 채팅방 제목을 수정할 수 있다.', async () => {
+      const memberFindOneByMock = jest
+        .spyOn(membersRepository, 'findOneBy')
+        .mockResolvedValueOnce(member);
+      const roomFindOneByMock = jest
         .spyOn(chattingRoomRepository, 'findOneBy')
-        .mockResolvedValueOnce(roomMock);
-
-      const updateMock = jest.spyOn(chattingRoomRepository, 'update');
-      updateMock.mockResolvedValueOnce({ affected: 1 } as any);
+        .mockResolvedValueOnce(room);
+      const roomUpdateMock = jest
+        .spyOn(chattingRoomRepository, 'update')
+        .mockResolvedValueOnce({ affected: 1 } as any);
 
       await expect(
-        service.updateRoom(roomId, memberId, updateChattingRoomDto),
+        chatService.updateRoom(
+          room.id,
+          member.email ?? '',
+          member.providerId ?? 0,
+          updateRoomDto,
+        ),
       ).resolves.not.toThrow();
-
-      expect(findOneByMock).toHaveBeenCalledWith({ id: roomId });
-
-      expect(updateMock).toHaveBeenCalledWith(
-        { id: roomId },
-        { title: updateChattingRoomDto.title },
+      expect(memberFindOneByMock).toHaveBeenCalledWith({
+        email: member.email,
+        providerId: member.providerId,
+      });
+      expect(roomFindOneByMock).toHaveBeenCalledWith({ id: room.id });
+      expect(roomUpdateMock).toHaveBeenCalledWith(
+        { id: room.id },
+        { title: updateRoomDto.title },
       );
     });
 
-    it('should throw NotFoundException when room is not found', async () => {
-      const findOneByMock = jest
-        .spyOn(chattingRoomRepository, 'findOneBy')
-        .mockResolvedValueOnce(null);
+    describe('잘못된 파라미터를 받으면 에러를 던진다.', () => {
+      it('해당 아이디의 채팅방이 존재하지 않아 NotFoundException을 반환한다.', async () => {
+        const wrongRoomId: string = '12345678-0000-0000-1234-567812345678';
+        const memberFindOneByMock = jest
+          .spyOn(membersRepository, 'findOneBy')
+          .mockResolvedValueOnce(member);
+        const roomFindOneByMock = jest
+          .spyOn(chattingRoomRepository, 'findOneBy')
+          .mockResolvedValueOnce(null);
 
-      await expect(
-        service.updateRoom(roomId, memberId, updateChattingRoomDto),
-      ).rejects.toThrow(NotFoundException);
+        await expect(
+          chatService.updateRoom(
+            wrongRoomId,
+            member.email ?? '',
+            member.providerId ?? 0,
+            updateRoomDto,
+          ),
+        ).rejects.toThrow(NotFoundException);
+        expect(memberFindOneByMock).toHaveBeenCalledWith({
+          email: member.email,
+          providerId: member.providerId,
+        });
+        expect(roomFindOneByMock).toHaveBeenCalledWith({ id: wrongRoomId });
+      });
 
-      expect(findOneByMock).toHaveBeenCalledWith({ id: roomId });
-    });
+      it('해당 아이디의 채팅방을 수정할 수 있는 권한이 없어 ForbiddenException을 반환한다.', async () => {
+        const forbiddenMember: Member = {
+          id: '12345678-0000-0000-1234-567812345678',
+          email: 'tarotmilktea2@kakao.com',
+          providerId: PROVIDER_ID.KAKAO,
+        };
 
-    it('should throw ForbiddenException when memberId does not match', async () => {
-      const findOneByMock = jest
-        .spyOn(chattingRoomRepository, 'findOneBy')
-        .mockResolvedValueOnce(roomMock);
+        const memberFindOneByMock = jest
+          .spyOn(membersRepository, 'findOneBy')
+          .mockResolvedValueOnce(forbiddenMember);
+        const roomFindOneByMock = jest
+          .spyOn(chattingRoomRepository, 'findOneBy')
+          .mockResolvedValueOnce(room);
 
-      await expect(
-        service.updateRoom(roomId, diffMemberId, updateChattingRoomDto),
-      ).rejects.toThrow(ForbiddenException);
-
-      expect(findOneByMock).toHaveBeenCalledWith({ id: roomId });
+        await expect(
+          chatService.updateRoom(
+            room.id,
+            forbiddenMember.email ?? '',
+            forbiddenMember.providerId ?? 0,
+            updateRoomDto,
+          ),
+        ).rejects.toThrow(ForbiddenException);
+        expect(memberFindOneByMock).toHaveBeenCalledWith({
+          email: forbiddenMember.email,
+          providerId: forbiddenMember.providerId,
+        });
+        expect(roomFindOneByMock).toHaveBeenCalledWith({ id: room.id });
+      });
     });
   });
 
   describe('removeRoom', () => {
-    it('should remove specific room', async () => {
-      const findOneByMock = jest
-        .spyOn(chattingRoomRepository, 'findOneBy')
-        .mockResolvedValueOnce(roomMock);
+    let member: Member;
+    let room: ChattingRoom;
 
-      const softDeleteMock = jest.spyOn(chattingRoomRepository, 'softDelete');
-      softDeleteMock.mockResolvedValueOnce({ affected: 1 } as any);
+    beforeEach(() => {
+      member = {
+        id: '12345678-1234-5678-1234-567812345670',
+        email: 'tarotmilktea@kakao.com',
+        providerId: PROVIDER_ID.KAKAO,
+      };
 
-      await expect(service.removeRoom(roomId, memberId)).resolves.not.toThrow();
-
-      expect(findOneByMock).toHaveBeenCalledWith({ id: roomId });
-
-      expect(softDeleteMock).toHaveBeenCalledWith({ id: roomId });
+      room = {
+        id: '12345678-1234-5678-1234-567812345671',
+        participant: member,
+      };
     });
 
-    it('should throw NotFoundException when room is not found', async () => {
-      const findOneByMock = jest
+    it('해당 아이디의 채팅방을 삭제할 수 있다.', async () => {
+      const memberFindOneByMock = jest
+        .spyOn(membersRepository, 'findOneBy')
+        .mockResolvedValueOnce(member);
+      const roomFindOneByMock = jest
         .spyOn(chattingRoomRepository, 'findOneBy')
-        .mockResolvedValueOnce(null);
+        .mockResolvedValueOnce(room);
+      const roomSoftDeleteMock = jest
+        .spyOn(chattingRoomRepository, 'softDelete')
+        .mockResolvedValueOnce({ affected: 1 } as any);
 
-      await expect(service.removeRoom(roomId, memberId)).rejects.toThrow(
-        NotFoundException,
-      );
-
-      expect(findOneByMock).toHaveBeenCalledWith({ id: roomId });
+      await expect(
+        chatService.removeRoom(
+          room.id,
+          member.email ?? '',
+          member.providerId ?? 0,
+        ),
+      ).resolves.not.toThrow();
+      expect(memberFindOneByMock).toHaveBeenCalledWith({
+        email: member.email,
+        providerId: member.providerId,
+      });
+      expect(roomFindOneByMock).toHaveBeenCalledWith({ id: room.id });
+      expect(roomSoftDeleteMock).toHaveBeenCalledWith({ id: room.id });
     });
 
-    it('should throw ForbiddenException when memberId does not match', async () => {
-      const findOneByMock = jest
-        .spyOn(chattingRoomRepository, 'findOneBy')
-        .mockResolvedValueOnce(roomMock);
+    describe('잘못된 파라미터를 받으면 에러를 던진다.', () => {
+      it('해당 아아디의 채팅방이 존재하지 않아 NotFoundException을 반환한다.', async () => {
+        const wrongRoomId: string = '12345678-0000-0000-1234-567812345678';
 
-      await expect(service.removeRoom(roomId, diffMemberId)).rejects.toThrow(
-        ForbiddenException,
-      );
+        const memberFindOneByMock = jest
+          .spyOn(membersRepository, 'findOneBy')
+          .mockResolvedValueOnce(member);
+        const roomFindOneByMock = jest
+          .spyOn(chattingRoomRepository, 'findOneBy')
+          .mockResolvedValueOnce(null);
 
-      expect(findOneByMock).toHaveBeenCalledWith({ id: roomId });
+        await expect(
+          chatService.removeRoom(
+            wrongRoomId,
+            member.email ?? '',
+            member.providerId ?? 0,
+          ),
+        ).rejects.toThrow(NotFoundException);
+        expect(memberFindOneByMock).toHaveBeenCalledWith({
+          email: member.email,
+          providerId: member.providerId,
+        });
+        expect(roomFindOneByMock).toHaveBeenCalledWith({ id: wrongRoomId });
+      });
+
+      it('해당 아이디의 채팅방을 삭제할 수 있는 권한이 없어 ForbiddenException을 반환한다.', async () => {
+        const forbiddenMember: Member = {
+          id: '12345678-0000-0000-1234-567812345678',
+          email: 'tarotmilktea2@kakao.com',
+          providerId: PROVIDER_ID.KAKAO,
+        };
+
+        const memberFindOneByMock = jest
+          .spyOn(membersRepository, 'findOneBy')
+          .mockResolvedValueOnce(forbiddenMember);
+        const roomFindOneByMock = jest
+          .spyOn(chattingRoomRepository, 'findOneBy')
+          .mockResolvedValueOnce(room);
+
+        await expect(
+          chatService.removeRoom(
+            room.id,
+            forbiddenMember.email ?? '',
+            forbiddenMember.providerId ?? 0,
+          ),
+        ).rejects.toThrow(ForbiddenException);
+        expect(memberFindOneByMock).toHaveBeenCalledWith({
+          email: forbiddenMember.email,
+          providerId: forbiddenMember.providerId,
+        });
+        expect(roomFindOneByMock).toHaveBeenCalledWith({ id: room.id });
+      });
     });
   });
 });
