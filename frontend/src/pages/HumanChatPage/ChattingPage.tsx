@@ -22,6 +22,13 @@ export function ChattingPage() {
     }
   }, [joinedRoom]);
 
+  useEffect(() => {
+    if (!localVideoRef.current) {
+      return;
+    }
+    localVideoRef.current.volume = 0;
+  }, []);
+
   const navigate = useNavigate();
   const goSettingPage = () => navigate('setting');
 
