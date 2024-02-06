@@ -34,17 +34,15 @@ export function ChattingPage() {
 
   return (
     joinedRoom && (
-      <>
-        <div className={`flex-with-center w-h-full`}>
-          <CamContainer
-            localVideoRef={localVideoRef}
-            remoteVideoRef={remoteVideoRef}
-            toggleVideo={toggleVideo}
-            toggleAudio={toggleAudio}
-            tarotButtonClick={tarotButtonClick}
-            tarotButtonDisabled={tarotButtonDisabled}
-          />
-        </div>
+      <div className={`flex-with-center w-h-full`}>
+        <CamContainer
+          localVideoRef={localVideoRef}
+          remoteVideoRef={remoteVideoRef}
+          toggleVideo={toggleVideo}
+          toggleAudio={toggleAudio}
+          tarotButtonClick={tarotButtonClick}
+          tarotButtonDisabled={tarotButtonDisabled}
+        />
         <div className="fixed z-30 top-[10vh] right-90">
           <IconButton
             icon="uil:setting"
@@ -53,7 +51,7 @@ export function ChattingPage() {
             onClick={goSettingPage}
           />
         </div>
-      </>
+      </div>
     )
   );
 }
