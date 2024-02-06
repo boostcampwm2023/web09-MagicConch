@@ -35,7 +35,7 @@ export function Background({ children, type = 'default' }: BackgroundProps) {
   };
 
   return (
-    <div className={`w-h-screen flex flex-with-center  ${fadeInIfOpen} ${fadeOutIfClose}`}>
+    <div className={`w-h-screen flex-with-center ${fadeInIfOpen} ${fadeOutIfClose}`}>
       <div className="w-h-screen absolute flex flex-col flex-with-center">
         <img
           className={`absolute w-h-screen object-cover

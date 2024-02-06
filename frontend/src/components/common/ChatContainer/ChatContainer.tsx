@@ -1,3 +1,5 @@
+import { type ForwardedRef, forwardRef } from 'react';
+
 import type { Message } from '@components/common/ChatContainer';
 
 import { ChatInput } from './ChatInput';
@@ -10,10 +12,15 @@ interface ChatContainerProps {
   inputDisabled: boolean;
   onSubmitMessage: (message: string) => void;
 }
-
-export function ChatContainer({ width, height, messages, inputDisabled, onSubmitMessage }: ChatContainerProps) {
+function ChatContainerComponent(
+  { width, height, messages, inputDisabled, onSubmitMessage }: ChatContainerProps,
+  ref: ForwardedRef<HTMLDivElement>,
+) {
   return (
-    <div className={`${width} ${height} flex-with-center flex-col`}>
+    <div
+      ref={ref}
+      className={`${width} ${height} flex-with-center flex-col absolute`}
+    >
       <ChatList messages={messages} />
       <ChatInput
         disabled={inputDisabled}
@@ -22,3 +29,5 @@ export function ChatContainer({ width, height, messages, inputDisabled, onSubmit
     </div>
   );
 }
+
+export const ChatContainer = forwardRef(ChatContainerComponent);

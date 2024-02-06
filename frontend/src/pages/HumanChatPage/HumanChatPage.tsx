@@ -2,9 +2,10 @@ import { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
 import { Background, ChatContainer, Header } from '@components/common';
-import { ContentAreaWithSideBar, SideBarButton } from '@components/common/SideBar';
+import { SideBar, SideBarButton } from '@components/common/SideBar';
 
 import { useHumanChatMessage } from '@business/hooks/chatMessage';
+import { useSidebar } from '@business/hooks/sidebar';
 import { useHumanTarotSpread } from '@business/hooks/tarotSpread';
 import { useBlocker } from '@business/hooks/useBlocker';
 import { useWebRTC } from '@business/hooks/webRTC';
@@ -40,6 +41,8 @@ export function HumanChatPage() {
     onConfirm: () => navigate('/'),
   });
 
+  const { mainRef, sidebarRef, toggleSidebar, sidebarOpened } = useSidebar();
+
   useEffect(() => {
     return () => {
       endWebRTC();
@@ -51,21 +54,23 @@ export function HumanChatPage() {
       <Header
         rightItems={[
           <SideBarButton
-            activeIcon="mdi:message"
-            inactiveIcon="mdi:message-off"
+            onClick={toggleSidebar}
+            sideBarOpened={sidebarOpened}
           />,
         ]}
       />
-      <ContentAreaWithSideBar
-        sideBar={
-          <ChatContainer
-            width="w-400"
-            height="h-full"
-            messages={messages}
-            onSubmitMessage={onSubmitMessage}
-            inputDisabled={inputDisabled}
-          />
-        }
+      <SideBar ref={sidebarRef}>
+        <ChatContainer
+          width="w-[80vw] max-w-700"
+          height="h-full"
+          messages={messages}
+          inputDisabled={inputDisabled}
+          onSubmitMessage={onSubmitMessage}
+        />
+      </SideBar>
+      <div
+        ref={mainRef}
+        className="w-h-full"
       >
         <Outlet
           context={{
@@ -75,7 +80,7 @@ export function HumanChatPage() {
             ...humanChatPageState,
           }}
         />
-      </ContentAreaWithSideBar>
+      </div>
     </Background>
   );
 }

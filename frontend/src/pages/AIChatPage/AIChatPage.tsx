@@ -1,13 +1,16 @@
 import { ChatLogContainer } from '@components/aiChatPage';
 import { Background, ChatContainer, Header } from '@components/common';
-import { ContentAreaWithSideBar, SideBarButton } from '@components/common/SideBar';
+import { SideBar, SideBarButton } from '@components/common/SideBar';
 
 import { useAiChatMessage } from '@business/hooks/chatMessage';
+import { useSidebar } from '@business/hooks/sidebar';
 import { useAiTarotSpread } from '@business/hooks/tarotSpread';
 
 interface AIChatPageProps {}
 
 export function AIChatPage({}: AIChatPageProps) {
+  const { toggleSidebar, mainRef, sidebarRef, sidebarOpened } = useSidebar();
+
   const { messages, inputDisabled, onSubmitMessage, addPickCardMessage } = useAiChatMessage();
   useAiTarotSpread(addPickCardMessage);
 
@@ -16,22 +19,22 @@ export function AIChatPage({}: AIChatPageProps) {
       <Header
         rightItems={[
           <SideBarButton
-            activeIcon="mdi:message"
-            inactiveIcon="mdi:message-off"
+            onClick={toggleSidebar}
+            sideBarOpened={sidebarOpened}
           />,
         ]}
       />
-      <ContentAreaWithSideBar sideBar={<ChatLogContainer />}>
-        <div className="w-full h-full flex-with-center">
-          <ChatContainer
-            width="w-[80vw] max-w-700"
-            height="h-full"
-            messages={messages}
-            inputDisabled={inputDisabled}
-            onSubmitMessage={onSubmitMessage}
-          />
-        </div>
-      </ContentAreaWithSideBar>
+      <ChatContainer
+        ref={mainRef}
+        width="w-[80vw] max-w-700"
+        height="h-full"
+        messages={messages}
+        inputDisabled={inputDisabled}
+        onSubmitMessage={onSubmitMessage}
+      />
+      <SideBar ref={sidebarRef}>
+        <ChatLogContainer />
+      </SideBar>
     </Background>
   );
 }
