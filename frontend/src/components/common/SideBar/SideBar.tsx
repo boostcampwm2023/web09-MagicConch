@@ -4,7 +4,7 @@ function SideBarComponent({ children }: PropsWithChildren, ref: ForwardedRef<HTM
   return (
     <aside
       ref={ref}
-      className={`absolute left-[100%] w-screen md:w-240 lg:w-240 h-full pl-30 pr-30 surface-alt z-30`}
+      className={`absolute left-[100%] w-screen lg:w-240  h-full pl-30 pr-30 surface-alt z-30`}
     >
       {children}
     </aside>
