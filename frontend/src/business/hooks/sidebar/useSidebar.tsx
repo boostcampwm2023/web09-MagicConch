@@ -8,7 +8,7 @@ export function useSidebar() {
 
   const sideBarWidth = useMemo(() => sidebarRef.current?.clientWidth, [sidebarRef.current?.clientWidth]);
 
-  const changeTransform = (width: number = 0) => {
+  const translateX = (width: number = 0) => {
     if (!mainRef.current || !sidebarRef.current) return;
 
     mainRef.current.style.transform = `translateX(-${width}px)`;
@@ -17,14 +17,14 @@ export function useSidebar() {
 
   const showSidebar = () => {
     requestAnimationFrame(() => {
-      changeTransform(sideBarWidth);
+      translateX(sideBarWidth);
       setSidebarOpened(true);
     });
   };
 
   const hideSidebar = () => {
     requestAnimationFrame(() => {
-      changeTransform(0);
+      translateX(0);
       setSidebarOpened(false);
     });
   };
