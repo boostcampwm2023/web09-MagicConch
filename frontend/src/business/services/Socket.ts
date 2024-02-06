@@ -4,15 +4,15 @@ import { ERROR_MESSAGE } from '@constants/messages';
 
 import { HumanSocketManager } from './SocketManager';
 
-const webRTC = WebRTC.getInstance(HumanSocketManager.getInstance());
-const socketManager = HumanSocketManager.getInstance();
-
 interface initSignalingSocketParams {
   roomName: string;
   onExitUser: () => void;
 }
 
 export const initSignalingSocket = ({ roomName, onExitUser }: initSignalingSocketParams) => {
+  const webRTC = WebRTC.getInstance(HumanSocketManager.getInstance());
+  const socketManager = HumanSocketManager.getInstance();
+
   socketManager.on('welcome', async (users: { id: string }[]) => {
     await sendCreatedOffer(users, roomName);
   });
@@ -42,6 +42,9 @@ export async function sendCreatedOffer(users: { id: string }[], roomName: string
   if (users.length === 0) {
     return;
   }
+  const webRTC = WebRTC.getInstance();
+  const socketManager = HumanSocketManager.getInstance();
+
   const sdp = await webRTC.createOffer();
 
   await webRTC.setLocalDescription(sdp);
@@ -50,6 +53,9 @@ export async function sendCreatedOffer(users: { id: string }[], roomName: string
 }
 
 export async function sendCreatedAnswer(sdp: RTCSessionDescription, roomName: string) {
+  const webRTC = WebRTC.getInstance();
+  const socketManager = HumanSocketManager.getInstance();
+
   await webRTC.setRemoteDescription(sdp);
 
   const answerSdp = await webRTC.createAnswer();
