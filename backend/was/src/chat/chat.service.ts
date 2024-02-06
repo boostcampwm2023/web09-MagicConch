@@ -43,7 +43,7 @@ export class ChatService {
           (createMessageDto: CreateChattingMessageDto): ChattingMessage =>
             ChattingMessage.fromDto(createMessageDto, room),
         );
-        await manager.save(ChattingMessage, messages);
+        await manager.insert(ChattingMessage, messages);
       });
     } catch (err: unknown) {
       throw err;
