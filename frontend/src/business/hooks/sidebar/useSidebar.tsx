@@ -12,8 +12,6 @@ export function useSidebar() {
     requestAnimationFrame(() => {
       if (!mainRef.current || !sidebarRef.current) return;
 
-      // mainRef.current.style.transition = `transform 0.5s ease-in-out`;
-      // sidebarRef.current.style.transition = `transform 0.5s ease-in-out`;
       mainRef.current.style.transform = `translateX(-${sideBarWidth}px)`;
       sidebarRef.current.style.transform = `translateX(-${sideBarWidth}px)`;
       setSidebarOpened(true);
@@ -24,8 +22,6 @@ export function useSidebar() {
     requestAnimationFrame(() => {
       if (!mainRef.current || !sidebarRef.current) return;
 
-      // mainRef.current.style.transition = ``;
-      // sidebarRef.current.style.transition = ``;
       mainRef.current.style.transform = ``;
       sidebarRef.current.style.transform = ``;
       setSidebarOpened(false);
@@ -45,10 +41,6 @@ export function useSidebar() {
 
     mainRef.current.style.transition = `transform 0.5s ease-in-out`;
     sidebarRef.current.style.transition = `transform 0.5s ease-in-out`;
-
-    mainRef.current.ontransitionend = () => {
-      console.log('end');
-    };
   }, []);
 
   return { mainRef, sidebarRef, toggleSidebar, sidebarOpened };
