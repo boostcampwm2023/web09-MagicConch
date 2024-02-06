@@ -8,22 +8,23 @@ export function useSidebar() {
 
   const sideBarWidth = useMemo(() => sidebarRef.current?.clientWidth, [sidebarRef.current?.clientWidth]);
 
+  const changeTransform = (width: number = 0) => {
+    if (!mainRef.current || !sidebarRef.current) return;
+
+    mainRef.current.style.transform = `translateX(-${width}px)`;
+    sidebarRef.current.style.transform = `translateX(-${width}px)`;
+  };
+
   const showSidebar = () => {
     requestAnimationFrame(() => {
-      if (!mainRef.current || !sidebarRef.current) return;
-
-      mainRef.current.style.transform = `translateX(-${sideBarWidth}px)`;
-      sidebarRef.current.style.transform = `translateX(-${sideBarWidth}px)`;
+      changeTransform(sideBarWidth);
       setSidebarOpened(true);
     });
   };
 
   const hideSidebar = () => {
     requestAnimationFrame(() => {
-      if (!mainRef.current || !sidebarRef.current) return;
-
-      mainRef.current.style.transform = ``;
-      sidebarRef.current.style.transform = ``;
+      changeTransform(0);
       setSidebarOpened(false);
     });
   };
