@@ -1,15 +1,13 @@
-import Background from '@components/Background';
-import ChatContainer from '@components/ChatContainer';
-import ChatLogContainer from '@components/ChatLogContainer';
-import Header from '@components/Header';
-import { ContentAreaWithSideBar, SideBarButton } from '@components/SideBar';
+import { ChatLogContainer } from '@components/aiChatPage';
+import { Background, ChatContainer, Header } from '@components/common';
+import { ContentAreaWithSideBar, SideBarButton } from '@components/common/SideBar';
 
-import { useAiChatMessage } from '@business/hooks/useChatMessage';
-import { useAiTarotSpread } from '@business/hooks/useTarotSpread';
+import { useAiChatMessage } from '@business/hooks/chatMessage';
+import { useAiTarotSpread } from '@business/hooks/tarotSpread';
 
 interface AIChatPageProps {}
 
-function AIChatPage({}: AIChatPageProps) {
+export function AIChatPage({}: AIChatPageProps) {
   const { messages, inputDisabled, onSubmitMessage, addPickCardMessage } = useAiChatMessage();
   useAiTarotSpread(addPickCardMessage);
 
@@ -37,5 +35,3 @@ function AIChatPage({}: AIChatPageProps) {
     </Background>
   );
 }
-
-export default AIChatPage;

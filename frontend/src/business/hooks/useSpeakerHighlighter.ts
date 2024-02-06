@@ -9,7 +9,7 @@ const MAX_SHADOW_LENGTH = 70;
 const THRESHOLD = 60;
 const MAX_VOLUME = 255;
 
-export default function useSpeakerHighlighter(videoRef: React.RefObject<HTMLVideoElement>) {
+export function useSpeakerHighlighter(videoRef: React.RefObject<HTMLVideoElement>) {
   const interval = useRef<NodeJS.Timeout>();
 
   const deleteInterval = () => {

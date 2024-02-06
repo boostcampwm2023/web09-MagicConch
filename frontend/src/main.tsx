@@ -1,10 +1,10 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { App } from 'App';
 import ReactDOM from 'react-dom/client';
 
-import { OverlayProvider } from './business/hooks/useOverlay/OverlayProvider';
+import { OverlayProvider } from './business/hooks/overlay';
 
-import App from './App';
 import './tailwind.css';
 
 if (import.meta.env.MODE === 'development') {

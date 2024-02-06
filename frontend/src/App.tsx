@@ -1,10 +1,9 @@
 import { RouterProvider } from 'react-router-dom';
 import { rootRouter } from 'rootRouter';
 
-import BackgroundMusic from './components/BackgroundMusic';
-import Cursor from '@components/Cursor';
+import { BackgroundMusic, Cursor } from '@components/common';
 
-function App() {
+export function App() {
   return (
     <>
       <Cursor />
@@ -13,5 +12,3 @@ function App() {
     </>
   );
 }
-
-export default App;

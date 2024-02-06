@@ -1,15 +1,15 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import ProfileSetting from '@components/ProfileSetting';
+import { ProfileSetting } from '@components/humanChatPage';
 
-import { useControllMedia, useStreamVideoRef } from '@business/hooks/useWebRTC/';
+import { useControllMedia, useStreamVideoRef } from '@business/hooks/webRTC';
 import { HumanSocketManager } from '@business/services/SocketManager';
 
-import { useSideBarStore } from '@stores/zustandStores/useSideBarStore';
+import { useSideBarStore } from '@stores/zustandStores';
 
-import { useSettingPageMediaOptinos } from './useSettingPageMediaOptions';
-import { useSettingPageProfileNicknameSetting } from './useSettingPageProfileNicknameSetting';
+import { useMediaOptinos } from './hooks';
+import { useProfileNicknameSetting } from './hooks';
 
 export function SettingPage() {
   const socketManager = HumanSocketManager.getInstance();
@@ -31,9 +31,9 @@ export function SettingPage() {
     changeMyVideoTrack();
   }, []);
 
-  const { setLocalNickname, setLocalProfileImage, sendProfileInfo } = useSettingPageProfileNicknameSetting();
+  const { setLocalNickname, setLocalProfileImage, sendProfileInfo } = useProfileNicknameSetting();
 
-  const { mediaOptions } = useSettingPageMediaOptinos();
+  const { mediaOptions } = useMediaOptinos();
 
   return (
     <ProfileSetting
