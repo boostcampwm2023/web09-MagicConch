@@ -32,8 +32,8 @@ export class ChatService {
     memberId: string,
     createMessageDtos: CreateChattingMessageDto[],
   ): Promise<void> {
-    try {
-      return this.entityManager.transaction(async (manager: EntityManager) => {
+    return this.entityManager.transaction(async (manager: EntityManager) => {
+      try {
         const room: ChattingRoom = await this.findRoomById(
           manager,
           id,
@@ -44,18 +44,18 @@ export class ChatService {
             ChattingMessage.fromDto(createMessageDto, room),
         );
         await manager.insert(ChattingMessage, messages);
-      });
-    } catch (err: unknown) {
-      throw err;
-    }
+      } catch (err: unknown) {
+        throw err;
+      }
+    });
   }
 
   async findRoomsByEmail(
     email: string,
     providerId: number,
   ): Promise<ChattingRoomDto[]> {
-    try {
-      return this.entityManager.transaction(async (manager: EntityManager) => {
+    return this.entityManager.transaction(async (manager: EntityManager) => {
+      try {
         const member: Member = await this.findMemberByEmail(
           manager,
           email,
@@ -71,10 +71,10 @@ export class ChatService {
           (room: ChattingRoom): ChattingRoomDto =>
             ChattingRoomDto.fromEntity(room),
         );
-      });
-    } catch (err: unknown) {
-      throw err;
-    }
+      } catch (err: unknown) {
+        throw err;
+      }
+    });
   }
 
   async findMessagesById(
@@ -82,8 +82,8 @@ export class ChatService {
     email: string,
     providerId: number,
   ): Promise<ChattingMessageDto[]> {
-    try {
-      return this.entityManager.transaction(async (manager: EntityManager) => {
+    return this.entityManager.transaction(async (manager: EntityManager) => {
+      try {
         const member: Member = await this.findMemberByEmail(
           manager,
           email,
@@ -101,10 +101,10 @@ export class ChatService {
           (message: ChattingMessage): ChattingMessageDto =>
             ChattingMessageDto.fromEntity(message),
         );
-      });
-    } catch (err: unknown) {
-      throw err;
-    }
+      } catch (err: unknown) {
+        throw err;
+      }
+    });
   }
 
   async updateRoom(
@@ -113,8 +113,8 @@ export class ChatService {
     providerId: number,
     updateChattingRoomDto: UpdateChattingRoomDto,
   ): Promise<void> {
-    try {
-      return this.entityManager.transaction(async (manager: EntityManager) => {
+    return this.entityManager.transaction(async (manager: EntityManager) => {
+      try {
         const member: Member = await this.findMemberByEmail(
           manager,
           email,
@@ -126,10 +126,10 @@ export class ChatService {
           { id: id },
           { title: updateChattingRoomDto.title },
         );
-      });
-    } catch (err: unknown) {
-      throw err;
-    }
+      } catch (err: unknown) {
+        throw err;
+      }
+    });
   }
 
   async removeRoom(
@@ -137,8 +137,8 @@ export class ChatService {
     email: string,
     providerId: number,
   ): Promise<void> {
-    try {
-      return this.entityManager.transaction(async (manager: EntityManager) => {
+    return this.entityManager.transaction(async (manager: EntityManager) => {
+      try {
         const member: Member = await this.findMemberByEmail(
           manager,
           email,
@@ -146,18 +146,18 @@ export class ChatService {
         );
         await this.findRoomById(manager, id, member.id);
         await manager.softDelete(ChattingRoom, { id: id });
-      });
-    } catch (err: unknown) {
-      throw err;
-    }
+      } catch (err: unknown) {
+        throw err;
+      }
+    });
   }
 
   private async createRoomForMember(
     email: string,
     providerId: number,
   ): Promise<ChattingInfo> {
-    try {
-      return this.entityManager.transaction(async (manager: EntityManager) => {
+    return this.entityManager.transaction(async (manager: EntityManager) => {
+      try {
         const member: Member = await this.findMemberByEmail(
           manager,
           email,
@@ -168,25 +168,25 @@ export class ChatService {
           ChattingRoom.fromMember(member),
         );
         return { memberId: member.id, roomId: room.id };
-      });
-    } catch (err: unknown) {
-      throw err;
-    }
+      } catch (err: unknown) {
+        throw err;
+      }
+    });
   }
 
   private async createRoomForNonMember(): Promise<ChattingInfo> {
-    try {
-      return this.entityManager.transaction(async (manager: EntityManager) => {
+    return this.entityManager.transaction(async (manager: EntityManager) => {
+      try {
         const member: Member = await manager.save(Member, new Member());
         const room = await manager.save(
           ChattingRoom,
           ChattingRoom.fromMember(member),
         );
         return { memberId: member.id, roomId: room.id };
-      });
-    } catch (err: unknown) {
-      throw err;
-    }
+      } catch (err: unknown) {
+        throw err;
+      }
+    });
   }
 
   private async findRoomById(
