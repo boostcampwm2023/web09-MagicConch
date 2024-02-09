@@ -35,16 +35,16 @@ export function Background({ children, type = 'default' }: BackgroundProps) {
   };
 
   return (
-    <div className={`w-h-screen flex flex-with-center  ${fadeInIfOpen} ${fadeOutIfClose}`}>
-      <div className="w-h-screen absolute flex flex-col flex-with-center">
+    <div className={`flex-with-center w-screen h-dvh  ${fadeInIfOpen} ${fadeOutIfClose}`}>
+      <div className="w-screen h-dvh absolute flex-col flex-with-center">
         <img
-          className={`absolute w-h-screen object-cover
+          className={`absolute w-screen h-dvh object-cover
           ${!initMode && (darkMode ? 'animate-fadeOut' : 'animate-fadeIn')}`}
           src="/bg-light.png"
           alt="낮하늘 배경 이미지"
         />
         <img
-          className={`absolute w-h-screen object-cover ${initMode && !darkMode && 'hidden'} 
+          className={`absolute w-screen h-dvh object-cover ${initMode && !darkMode && 'hidden'} 
           ${!initMode && (darkMode ? 'animate-fadeIn' : 'animate-fadeOut')}`}
           src="/bg-night.png"
           alt="밤하늘 배경 이미지"
@@ -62,7 +62,9 @@ export function Background({ children, type = 'default' }: BackgroundProps) {
           />
         </button>
         {type != 'default' && (
-          <div className={`absolute w-h-screen ${darkMode ? 'bg-black/75' : 'bg-neutral-500/60'} ${fadeInIfDynamic}`} />
+          <div
+            className={`absolute w-screen h-dvh ${darkMode ? 'bg-black/75' : 'bg-neutral-500/60'} ${fadeInIfDynamic}`}
+          />
         )}
       </div>
       {children}

@@ -22,7 +22,7 @@ export function AIChatPage({}: AIChatPageProps) {
         ]}
       />
       <ContentAreaWithSideBar sideBar={<ChatLogContainer />}>
-        <div className="w-full h-full flex-with-center">
+        <div className="w-full  flex-with-center">
           <ChatContainer
             width="w-[80vw] max-w-700"
             height="h-full"
