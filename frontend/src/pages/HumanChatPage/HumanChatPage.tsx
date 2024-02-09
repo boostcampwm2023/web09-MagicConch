@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
 import { Background, ChatContainer, Header } from '@components/common';
-import { SideBar, SideBarButton } from '@components/common/SideBar';
+import { SideBarButton } from '@components/common/SideBar';
 
 import { useHumanChatMessage } from '@business/hooks/chatMessage';
 import { useSidebar } from '@business/hooks/sidebar';
@@ -41,7 +41,7 @@ export function HumanChatPage() {
     onConfirm: () => navigate('/'),
   });
 
-  const { mainRef, sidebarRef, toggleSidebar, sidebarOpened } = useSidebar();
+  const { toggleSidebar, sidebarOpened, Sidebar, SlideableContent } = useSidebar();
 
   useEffect(() => {
     return () => {
@@ -59,17 +59,14 @@ export function HumanChatPage() {
           />,
         ]}
       />
-      <SideBar ref={sidebarRef}>
+      <Sidebar>
         <ChatContainer
           messages={messages}
           inputDisabled={inputDisabled}
           onSubmitMessage={onSubmitMessage}
         />
-      </SideBar>
-      <div
-        ref={mainRef}
-        className="w-h-full"
-      >
+      </Sidebar>
+      <SlideableContent>
         <Outlet
           context={{
             tarotButtonClick,
@@ -78,7 +75,7 @@ export function HumanChatPage() {
             ...humanChatPageState,
           }}
         />
-      </div>
+      </SlideableContent>
     </Background>
   );
 }
