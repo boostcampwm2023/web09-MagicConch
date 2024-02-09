@@ -51,12 +51,12 @@ export default {
           '100%': { transform: 'translateY(-1000px)' },
         },
         showSidebar: {
-          '0%': { marginRight: '-100%' },
-          '100%': { marginRight: '0%' },
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-100%)' },
         },
         hideSidebar: {
-          '0%': { marginRight: '0%' },
-          '100%': { marginRight: '-100%' },
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(0)' },
         },
         flappingCard: {
           '0%': { transform: 'rotateY(0deg)' },

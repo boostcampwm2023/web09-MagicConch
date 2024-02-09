@@ -6,8 +6,6 @@ import { ProfileSetting } from '@components/humanChatPage';
 import { useControllMedia, useStreamVideoRef } from '@business/hooks/webRTC';
 import { HumanSocketManager } from '@business/services/SocketManager';
 
-import { useSideBarStore } from '@stores/zustandStores';
-
 import { useMediaOptinos } from './hooks';
 import { useProfileNicknameSetting } from './hooks';
 
@@ -20,10 +18,7 @@ export function SettingPage() {
 
   const { changeMyAudioTrack, changeMyVideoTrack, toggleAudio, toggleVideo } = useControllMedia({ localVideoRef });
 
-  const { enableSideBarButton, disableSideBarButton } = useSideBarStore();
-
   useEffect(() => {
-    disableSideBarButton();
     if (!socketManager.connected) {
       navigate('..');
     }
@@ -46,7 +41,6 @@ export function SettingPage() {
       videoRef={localVideoRef}
       onConfirm={() => {
         sendProfileInfo();
-        enableSideBarButton();
         navigate('..');
       }}
       onChangeProfileImage={setLocalProfileImage}

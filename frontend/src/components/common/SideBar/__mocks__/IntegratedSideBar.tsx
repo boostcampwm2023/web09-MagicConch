@@ -1,6 +1,5 @@
+import { SideBarButton } from '.';
 import { ContentAreaWithSideBar } from '..';
-
-import { SideBarButton } from './';
 
 export default function IntegratedSideBar() {
   return (

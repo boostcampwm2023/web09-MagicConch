@@ -1,27 +1,21 @@
 import { IconButton } from '@components/common/Buttons';
 
-import { useSideBarButton } from '@business/hooks/sidbar';
-
 interface SideBarButtonProps {
-  activeIcon: string;
-  inactiveIcon: string;
+  onClick?: () => void;
+  sideBarOpened: boolean;
 }
 
-export function SideBarButton({ activeIcon, inactiveIcon }: SideBarButtonProps) {
-  const { sideBarState, handleClick, buttonDisabled } = useSideBarButton();
-
-  if (buttonDisabled) {
-    return undefined;
-  }
-
-  const icon = sideBarState ? inactiveIcon : activeIcon;
+export function SideBarButton({ onClick, sideBarOpened }: SideBarButtonProps) {
+  const toggleSideBar = () => {
+    onClick?.();
+  };
 
   return (
     <IconButton
-      icon={icon}
+      icon={sideBarOpened ? 'mdi:message' : 'mdi:message-off'}
       iconColor="textWeak"
       buttonColor="transparent"
-      onClick={handleClick}
+      onClick={toggleSideBar}
     />
   );
 }

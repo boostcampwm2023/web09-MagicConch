@@ -1,11 +1,14 @@
-import { useSideBarAnimation } from '@business/hooks/sidbar';
+import { type ForwardedRef, type PropsWithChildren, forwardRef } from 'react';
 
-interface SideBarProps {
-  children: React.ReactNode;
+function SideBarComponent({ children }: PropsWithChildren, ref: ForwardedRef<HTMLDivElement>) {
+  return (
+    <aside
+      ref={ref}
+      className={`absolute left-[100%] w-screen lg:w-240  h-full pl-30 pr-30 surface-alt z-30`}
+    >
+      {children}
+    </aside>
+  );
 }
 
-export function SideBar({ children }: SideBarProps) {
-  const { animation } = useSideBarAnimation();
-
-  return <aside className={`w-fit h-full pl-30 pr-30 ${animation} surface-alt relative z-30`}>{children}</aside>;
-}
+export const SideBar = forwardRef(SideBarComponent);
