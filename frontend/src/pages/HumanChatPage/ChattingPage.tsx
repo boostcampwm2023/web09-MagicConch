@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import { IconButton } from '@components/common/Buttons';
+import { DocumentBodyPortal } from '@components/common/Portals';
 import { CamContainer } from '@components/humanChatPage';
 
 import { useControllMedia, useStreamVideoRef } from '@business/hooks/webRTC';
@@ -34,24 +35,28 @@ export function ChattingPage() {
 
   return (
     joinedRoom && (
-      <div className={`flex-with-center w-h-full`}>
-        <CamContainer
-          localVideoRef={localVideoRef}
-          remoteVideoRef={remoteVideoRef}
-          toggleVideo={toggleVideo}
-          toggleAudio={toggleAudio}
-          tarotButtonClick={tarotButtonClick}
-          tarotButtonDisabled={tarotButtonDisabled}
-        />
-        <div className="fixed z-30 top-[10vh] right-90">
-          <IconButton
-            icon="uil:setting"
-            iconColor="textWhite"
-            buttonColor="cancel"
-            onClick={goSettingPage}
+      <>
+        <div className={`flex-with-center w-h-full`}>
+          <CamContainer
+            localVideoRef={localVideoRef}
+            remoteVideoRef={remoteVideoRef}
+            toggleVideo={toggleVideo}
+            toggleAudio={toggleAudio}
+            tarotButtonClick={tarotButtonClick}
+            tarotButtonDisabled={tarotButtonDisabled}
           />
         </div>
-      </div>
+        <DocumentBodyPortal>
+          <div className="fixed top-[10vh] right-90">
+            <IconButton
+              icon="uil:setting"
+              iconColor="textWhite"
+              buttonColor="cancel"
+              onClick={goSettingPage}
+            />
+          </div>
+        </DocumentBodyPortal>
+      </>
     )
   );
 }
