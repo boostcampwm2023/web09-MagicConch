@@ -61,8 +61,6 @@ export function HumanChatPage() {
       />
       <SideBar ref={sidebarRef}>
         <ChatContainer
-          width="w-[80vw] max-w-700"
-          height="h-full"
           messages={messages}
           inputDisabled={inputDisabled}
           onSubmitMessage={onSubmitMessage}

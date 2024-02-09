@@ -17,7 +17,7 @@ export function Message({ type, message, profile }: MessageProps) {
 
   return (
     <>
-      <div className={`chat ${chatStyle.box}`}>
+      <div className={`chat ${chatStyle.box} `}>
         <div className="chat-image avatar">
           <div className="w-60 rounded-full">
             <img
@@ -27,7 +27,9 @@ export function Message({ type, message, profile }: MessageProps) {
           </div>
         </div>
         <div
-          className={`chat-bubble max-w-none shadow-white ${chatStyle.bubble} ${type == 'right' && 'text-white-alt'}`}
+          className={`chat-bubble max-w[70%] sm:max-w-[85%] shadow-white ${chatStyle.bubble} ${
+            type == 'right' && 'text-white-alt'
+          }`}
         >
           {message.length ? message : <span className="loading loading-dots loading-md"></span>}
         </div>

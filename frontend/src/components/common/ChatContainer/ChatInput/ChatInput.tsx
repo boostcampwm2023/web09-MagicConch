@@ -39,7 +39,7 @@ export function ChatInput({ disabled, sendChatMessage }: ChatInputProps) {
   }, [disabled]);
 
   return (
-    <div className={`form-control flex flex-row w-[102%]`}>
+    <div className={`form-control flex-row w-full`}>
       <input
         ref={inputRef}
         onKeyUp={detectEnter}

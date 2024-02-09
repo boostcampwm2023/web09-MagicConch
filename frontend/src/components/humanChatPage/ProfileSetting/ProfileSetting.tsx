@@ -50,8 +50,8 @@ export function ProfileSetting({
   }));
 
   return (
-    <div className="relative w-[100vw] h-[100vh] flex-with-center z-10 lg:top-24">
-      <div className="flex gap-24 sm:gap-0 flex-col rounded-lg p-32 surface-box sm:w-[100vw] sm:h-[100vh] sm:rounded-none sm:pt-[10vh]">
+    <div className="relative w-h-full flex-with-center z-10 lg:top-24">
+      <div className="flex gap-24 sm:gap-0 flex-col rounded-lg p-32 surface-box sm:w-full sm:h-full sm:rounded-none sm:pt-[10vh]">
         <div className="flex-with-center flex-row sm:flex-col gap-48 sm:gap-12 z-10">
           <CamBox
             videoRef={videoRef}

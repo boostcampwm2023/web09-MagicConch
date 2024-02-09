@@ -17,13 +17,13 @@ export function ChatList({ messages }: ChatListProps) {
   return (
     <ul
       ref={messagesRef}
-      className={`w-[90%] h-[80%] pt-50 mb-20 overflow-auto sm:text-12`}
+      className={`w-h-full overflow-auto sm:text-12 justify-center items-center`}
     >
       {messages.map(({ type, message, profile, tarotId, button, shareLinkId }, index) => {
         return (
           <li
             key={new Date().getTime() + index}
-            className={`flex ${message && 'mb-40'} ${type == 'right' && 'justify-end'}`}
+            className={`flex ${message && 'mb-20'} ${type == 'right' && 'justify-end'}`}
           >
             <MessageBox
               tarotId={tarotId}

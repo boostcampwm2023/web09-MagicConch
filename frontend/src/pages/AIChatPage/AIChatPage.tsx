@@ -24,14 +24,14 @@ export function AIChatPage({}: AIChatPageProps) {
           />,
         ]}
       />
-      <ChatContainer
-        ref={mainRef}
-        width="w-[80vw] max-w-700"
-        height="h-full"
-        messages={messages}
-        inputDisabled={inputDisabled}
-        onSubmitMessage={onSubmitMessage}
-      />
+      <div className="w-h-full p-[5%] lg:pl-[25%] lg:pr-[25%]">
+        <ChatContainer
+          ref={mainRef}
+          messages={messages}
+          inputDisabled={inputDisabled}
+          onSubmitMessage={onSubmitMessage}
+        />
+      </div>
       <SideBar ref={sidebarRef}>
         <ChatLogContainer />
       </SideBar>

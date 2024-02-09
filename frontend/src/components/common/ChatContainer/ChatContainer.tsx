@@ -6,20 +6,18 @@ import { ChatInput } from './ChatInput';
 import { ChatList } from './ChatList';
 
 interface ChatContainerProps {
-  width: string;
-  height: string;
   messages: Message[];
   inputDisabled: boolean;
   onSubmitMessage: (message: string) => void;
 }
 function ChatContainerComponent(
-  { width, height, messages, inputDisabled, onSubmitMessage }: ChatContainerProps,
+  { messages, inputDisabled, onSubmitMessage }: ChatContainerProps,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
   return (
     <div
       ref={ref}
-      className={`${width} ${height} flex-with-center flex-col absolute`}
+      className={`relative w-h-full flex-with-center flex-col`}
     >
       <ChatList messages={messages} />
       <ChatInput
