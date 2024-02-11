@@ -9,7 +9,7 @@ env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
 
 jobs:
-  backend-build:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -32,12 +32,12 @@ jobs:
         with:
           version: "2.24.5"
 
-      - name: Install buildx
+      - name: Create a Builder Instance
         run: |
           docker buildx create --name buildx
           docker buildx use buildx
 
-      - name: Build & Push Docker Images
+      - name: Build & Push Docker Cache
         run: |
           cd backend
           docker-compose -f compose.cache-export.yml build --builder buildx --build-arg BUILDKIT_INLINE_CACHE=1
