@@ -10,7 +10,7 @@ env:
   GITHUB_SHA: ${{ github.sha }}
 
 jobs:
-  backend-build:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -56,7 +56,7 @@ jobs:
         with:
           version: "2.24.5"
 
-      - name: Install buildx
+      - name: Create a Builder Instance
         run: |
           docker buildx create --name buildx
           docker buildx use buildx
@@ -69,8 +69,8 @@ jobs:
           docker-compose -f compose.blue-build.yml push
           docker-compose -f compose.green-build.yml push
 
-  backend-deploy:
-    needs: backend-build
+  deploy:
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
