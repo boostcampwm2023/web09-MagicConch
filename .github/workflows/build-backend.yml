@@ -40,5 +40,5 @@ jobs:
       - name: Build & Push Docker Images
         run: |
           cd backend
-          docker-compose -f compose.export-build-cache.yml build --builder buildx --build-arg BUILDKIT_INLINE_CACHE=1
-          docker-compose -f compose.export-build-cache.yml push
+          docker-compose -f compose.cache-export.yml build --builder buildx --build-arg BUILDKIT_INLINE_CACHE=1
+          docker-compose -f compose.cache-export.yml push
