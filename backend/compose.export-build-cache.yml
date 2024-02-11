@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  was:
+    build:
+      context: .
+      cache_to:
+        - ${DOCKER_USERNAME}/magicconch:was-latest
+      dockerfile: Dockerfile.was
+
+  signal:
+    build:
+      context: .
+      cache_to:
+        - ${DOCKER_USERNAME}/magicconch:signal-latest
+      dockerfile: Dockerfile.signal
