@@ -1,9 +1,9 @@
 name: Backend Build
 
 on:
-  push:
+  pull_request:
+    types: [opened, edited]
     paths: ["backend/**"]
-    branches: ["*"]
 
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -11,6 +11,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.base.ref == 'dev'
 
     steps:
       - name: Checkout code
