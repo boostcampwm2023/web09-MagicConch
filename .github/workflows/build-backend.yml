@@ -1,0 +1,44 @@
+name: Backend Build
+
+on:
+  push:
+    paths: ["backend/**"]
+    branches: ["*"]
+
+env:
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+
+jobs:
+  backend-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate .env file
+        run: |
+          cd backend
+          echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+
+      - name: Setup docker-compose
+        uses: KengoTODA/actions-setup-docker-compose@v1.2.1
+        with:
+          version: "2.24.5"
+
+      - name: Install buildx
+        run: |
+          docker buildx create --name buildx
+          docker buildx use buildx
+
+      - name: Build & Push Docker Images
+        run: |
+          cd backend
+          docker-compose -f compose.export-build-cache.yml build --builder buildx --build-arg BUILDKIT_INLINE_CACHE=1
+          docker-compose -f compose.export-build-cache.yml push
