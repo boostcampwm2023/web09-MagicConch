@@ -1,4 +1,5 @@
 import { ChattingRoom } from 'src/chat/entities';
+import { ProviderIdEnum } from 'src/common/constants/etc';
 import { TarotCardPack } from 'src/tarot/entities';
 import {
   Column,
@@ -20,7 +21,7 @@ export class Member {
   email?: string;
 
   @Column({ type: 'tinyint', nullable: true })
-  providerId?: number;
+  providerId?: ProviderIdEnum;
 
   @Column({ length: 30, nullable: true })
   nickname?: string;

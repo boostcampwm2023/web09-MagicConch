@@ -1,3 +1,4 @@
+import { ExtEnum } from 'src/common/constants/etc';
 import {
   Column,
   CreateDateColumn,
@@ -17,8 +18,8 @@ export class TarotCard {
   @Column('tinyint')
   cardNo: number;
 
-  @Column({ length: 10 })
-  ext: string;
+  @Column({ type: 'tinyint' })
+  ext: ExtEnum;
 
   @CreateDateColumn()
   createdAt?: Date;
