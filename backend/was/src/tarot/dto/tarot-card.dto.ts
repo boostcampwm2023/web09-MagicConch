@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsUrl } from 'class-validator';
-import { BUCKET_URL } from 'src/common/constants/etc';
+import { BUCKET_URL, ExtArray } from 'src/common/constants/etc';
 import { TarotCard } from '../entities';
 
 export class TarotCardDto {
@@ -9,6 +9,9 @@ export class TarotCardDto {
   readonly cardUrl: string;
 
   static fromEntity(entity: TarotCard): TarotCardDto {
-    return { cardUrl: `${BUCKET_URL}/basic/${entity.cardNo}${entity.ext}` };
+    const extStr: string = ExtArray[entity.ext] as string;
+    return {
+      cardUrl: `${BUCKET_URL}/basic/${entity.cardNo}.${extStr.toLowerCase()}`,
+    };
   }
 }
