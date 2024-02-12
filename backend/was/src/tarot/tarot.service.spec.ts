@@ -1,7 +1,7 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { BUCKET_URL } from 'src/common/constants/etc';
+import { BUCKET_URL, ExtEnum } from 'src/common/constants/etc';
 import { Repository } from 'typeorm';
 import { CreateTarotResultDto, TarotCardDto, TarotResultDto } from './dto';
 import { TarotCard, TarotResult } from './entities';
@@ -95,17 +95,17 @@ describe('TarotService', () => {
         {
           id: '12345678-1234-5678-1234-567812345670',
           cardNo: 0,
-          ext: '.jpg',
+          ext: ExtEnum.JPG,
         },
         {
           id: '12345678-1234-5678-1234-567812345671',
           cardNo: 1,
-          ext: '.jpg',
+          ext: ExtEnum.JPG,
         },
         {
           id: '12345678-1234-5678-1234-567812345672',
           cardNo: 2,
-          ext: '.jpg',
+          ext: ExtEnum.JPG,
         },
       ].forEach(async ({ id, cardNo, ext }) => {
         const tarotCard: TarotCard = {

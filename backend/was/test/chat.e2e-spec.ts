@@ -8,7 +8,7 @@ import { ChatController } from 'src/chat/chat.controller';
 import { ChatService } from 'src/chat/chat.service';
 import { ChattingMessageDto, UpdateChattingRoomDto } from 'src/chat/dto';
 import { ChattingMessage, ChattingRoom } from 'src/chat/entities';
-import { PROVIDER_ID } from 'src/common/constants/etc';
+import { ProviderIdEnum } from 'src/common/constants/etc';
 import { Member } from 'src/members/entities';
 import * as request from 'supertest';
 import { EntityManager } from 'typeorm';
@@ -40,12 +40,12 @@ describe('Chat', () => {
 
     const member: Member = new Member();
     member.email = 'tarotmilktea@kakao.com';
-    member.providerId = PROVIDER_ID.KAKAO;
+    member.providerId = ProviderIdEnum.KAKAO;
     await entityManager.save(member);
 
     const diffMember: Member = new Member();
     diffMember.email = 'tarotmilktea2@kakako.com';
-    diffMember.providerId = PROVIDER_ID.KAKAO;
+    diffMember.providerId = ProviderIdEnum.KAKAO;
     await entityManager.save(diffMember);
 
     const room: ChattingRoom = new ChattingRoom();

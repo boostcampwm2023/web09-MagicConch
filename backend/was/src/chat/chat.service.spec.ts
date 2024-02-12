@@ -1,6 +1,6 @@
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { PROVIDER_ID } from 'src/common/constants/etc';
+import { ProviderIdEnum } from 'src/common/constants/etc';
 import { ChatLog } from 'src/common/types/chatbot';
 import { UserInfo } from 'src/common/types/socket';
 import { Member } from 'src/members/entities';
@@ -82,13 +82,13 @@ describe('ChatService', () => {
           {
             memberId: '12345678-1234-5678-1234-567812345670',
             email: 'tarotmilktea@kakao.com',
-            providerId: PROVIDER_ID.KAKAO,
+            providerId: ProviderIdEnum.KAKAO,
             roomId: '12345678-1234-5678-1234-567812345672',
           },
           {
             memberId: '12345678-1234-5678-1234-567812345671',
             email: 'tarotmilktea2@kakao.com',
-            providerId: PROVIDER_ID.KAKAO,
+            providerId: ProviderIdEnum.KAKAO,
             roomId: '12345678-1234-5678-1234-567812345673',
           },
         ];
@@ -196,7 +196,7 @@ describe('ChatService', () => {
       const member: Member = {
         id: '12345678-1234-5678-1234-567812345670',
         email: 'tarotmilktea@kakao.com',
-        providerId: PROVIDER_ID.KAKAO,
+        providerId: ProviderIdEnum.KAKAO,
       };
       const rooms: ChattingRoom[] = [
         {
@@ -246,7 +246,7 @@ describe('ChatService', () => {
       member = {
         id: '12345678-1234-5678-1234-567812345670',
         email: 'tarotmilktea@kakao.com',
-        providerId: PROVIDER_ID.KAKAO,
+        providerId: ProviderIdEnum.KAKAO,
       };
 
       room = {
@@ -321,7 +321,7 @@ describe('ChatService', () => {
         const forbiddenMember: Member = {
           id: '12345678-0000-0000-1234-567812345678',
           email: 'tarotmilktea2@kakao.com',
-          providerId: PROVIDER_ID.KAKAO,
+          providerId: ProviderIdEnum.KAKAO,
         };
 
         const transactionMock = jest
@@ -351,7 +351,7 @@ describe('ChatService', () => {
       member = {
         id: '12345678-1234-5678-1234-567812345670',
         email: 'tarotmilktea@kakao.com',
-        providerId: PROVIDER_ID.KAKAO,
+        providerId: ProviderIdEnum.KAKAO,
       };
 
       room = {
@@ -405,7 +405,7 @@ describe('ChatService', () => {
         const forbiddenMember: Member = {
           id: '12345678-0000-0000-1234-567812345678',
           email: 'tarotmilktea2@kakao.com',
-          providerId: PROVIDER_ID.KAKAO,
+          providerId: ProviderIdEnum.KAKAO,
         };
 
         const transactionMock = jest
@@ -435,7 +435,7 @@ describe('ChatService', () => {
       member = {
         id: '12345678-1234-5678-1234-567812345670',
         email: 'tarotmilktea@kakao.com',
-        providerId: PROVIDER_ID.KAKAO,
+        providerId: ProviderIdEnum.KAKAO,
       };
 
       room = {
@@ -483,7 +483,7 @@ describe('ChatService', () => {
         const forbiddenMember: Member = {
           id: '12345678-0000-0000-1234-567812345678',
           email: 'tarotmilktea2@kakao.com',
-          providerId: PROVIDER_ID.KAKAO,
+          providerId: ProviderIdEnum.KAKAO,
         };
 
         const transactionMock = jest

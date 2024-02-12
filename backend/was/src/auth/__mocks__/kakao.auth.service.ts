@@ -8,7 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Cache } from 'cache-manager';
 import { ERR_MSG } from 'src/common/constants/errors';
-import { PROVIDER_ID, PROVIDER_NAME } from 'src/common/constants/etc';
+import { ProviderIdEnum, ProviderName } from 'src/common/constants/etc';
 import { Member } from 'src/members/entities';
 import { Repository } from 'typeorm';
 import { JwtPayloadDto, OAuthTokenDto, ProfileDto } from '../dto';
@@ -59,7 +59,7 @@ export class MockedKakaoAuthService extends AuthService {
     readonly cacheManager: Cache,
   ) {
     super(jwtService, membersRepository, cacheManager);
-    this.init(PROVIDER_NAME.KAKAO);
+    this.init(ProviderName.KAKAO);
   }
 
   async loginOAuth(code: string): Promise<string> {
@@ -67,18 +67,18 @@ export class MockedKakaoAuthService extends AuthService {
     const profile: ProfileDto = this.getUser(token.access_token ?? '');
     const member: Member | null = await this.findMemberByEmail(
       profile.email,
-      PROVIDER_ID.KAKAO,
+      ProviderIdEnum.KAKAO,
     );
     if (member) {
       return this.login(
         member.id,
-        PROVIDER_ID.KAKAO,
+        ProviderIdEnum.KAKAO,
         profile,
         OAuthTokenDto.fromKakao(token),
       );
     }
     return this.signup(
-      PROVIDER_ID.KAKAO,
+      ProviderIdEnum.KAKAO,
       profile,
       OAuthTokenDto.fromKakao(token),
     );
