@@ -19,7 +19,7 @@ export class Member {
   @Column({ length: 320, nullable: true })
   email?: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'tinyint', nullable: true })
   providerId?: number;
 
   @Column({ length: 30, nullable: true })

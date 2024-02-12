@@ -14,7 +14,7 @@ export class TarotCard {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('int')
+  @Column('tinyint')
   cardNo: number;
 
   @Column({ length: 10 })

@@ -16,7 +16,7 @@ export class ChattingRoom {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ nullable: true })
+  @Column({ length: 30, nullable: true })
   title?: string;
 
   @CreateDateColumn()
