@@ -1,4 +1,4 @@
-name: Blue/Green CD
+name: Blue/Green CD for Backend
 
 on:
   push:
@@ -10,7 +10,7 @@ env:
   GITHUB_SHA: ${{ github.sha }}
 
 jobs:
-  backend-build:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -51,16 +51,26 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
+      - name: Setup docker-compose
+        uses: KengoTODA/actions-setup-docker-compose@v1.2.1
+        with:
+          version: "2.24.5"
+
+      - name: Create a Builder Instance
+        run: |
+          docker buildx create --name buildx
+          docker buildx use buildx
+
       - name: Build & Push Docker Images (Blue & Green)
         run: |
           cd backend
-          docker-compose -f compose.blue-build.yml build
-          docker-compose -f compose.green-build.yml build
+          docker-compose -f compose.blue-build.yml build --builder buildx --build-arg BUILDKIT_INLINE_CACHE=1
+          docker-compose -f compose.green-build.yml build --builder buildx --build-arg BUILDKIT_INLINE_CACHE=1
           docker-compose -f compose.blue-build.yml push
           docker-compose -f compose.green-build.yml push
 
-  backend-deploy:
-    needs: backend-build
+  deploy:
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
