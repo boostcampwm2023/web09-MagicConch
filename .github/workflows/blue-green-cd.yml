@@ -12,6 +12,9 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
 
     steps:
       - name: Checkout code
@@ -19,7 +22,6 @@ jobs:
 
       - name: Generate .env file and SSL files
         run: |
-          cd backend
           echo "${{ secrets.ENV_FILE }}" > .env
           echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
           echo "GITHUB_SHA=${{ github.sha }}" >> .env
@@ -63,7 +65,6 @@ jobs:
 
       - name: Build & Push Docker Images (Blue & Green)
         run: |
-          cd backend
           docker-compose -f compose.blue-build.yml build --builder buildx --build-arg BUILDKIT_INLINE_CACHE=1
           docker-compose -f compose.green-build.yml build --builder buildx --build-arg BUILDKIT_INLINE_CACHE=1
           docker-compose -f compose.blue-build.yml push
