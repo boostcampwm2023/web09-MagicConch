@@ -14,7 +14,7 @@ export function MessageBox({ tarotId, type, message, profile, button, shareLinkI
   const cardUrl = tarotId ? getTarotImageQuery(tarotId).data.cardUrl : '';
 
   return (
-    <div className="relative w-h-full">
+    <div className="relative w-full">
       <div className={`relative ${type === 'left' ? 'left-75' : 'right-75'}`}>
         {tarotId && (
           <img

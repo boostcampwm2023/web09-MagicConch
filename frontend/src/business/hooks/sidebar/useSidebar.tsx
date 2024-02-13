@@ -57,7 +57,7 @@ export function useSidebar() {
         (
           <div
             ref={mainRef}
-            className="w-h-full "
+            className="w-h-full"
           >
             {children}
           </div>
