@@ -48,23 +48,21 @@ jobs:
             });
             const columnId = columns ? columns.filter((col) => col.name === 'In progress')[0].id : null;
 
-            if(issueNumbers) {
-              issueNumbers.forEach((num) => {
-                github.rest.issues.update({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: num.replace('#', ''),
-                  state: 'open',
-                });
-                if(columnId) {
-                    github.rest.projects.moveCard({
-                    card_id: num.replace('#', ''),
-                    position: 'top',
-                    column_id: columnId
-                  });
-                }
+            issueNumbers?.forEach((num) => {
+              github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: num.replace('#', ''),
+                state: 'open',
               });
-            }
+              if(columnId) {
+                  github.rest.projects.moveCard({
+                  card_id: num.replace('#', ''),
+                  position: 'top',
+                  column_id: columnId
+                });
+              }
+            });
 
   set-assignee:
     name: Set Assignee to PR
