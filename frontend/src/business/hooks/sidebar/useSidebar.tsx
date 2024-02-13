@@ -1,12 +1,10 @@
-import { type PropsWithChildren, useEffect, useMemo, useRef, useState } from 'react';
+import { type PropsWithChildren, useMemo, useRef, useState } from 'react';
 
 export function useSidebar() {
   const [sidebarOpened, setSidebarOpened] = useState(false);
 
   const mainRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
-
-  const sideBarWidth = useMemo(() => sidebarRef.current?.clientWidth, [sidebarRef.current?.clientWidth]);
 
   const translateX = (width: number = 0) => {
     if (!mainRef.current || !sidebarRef.current) return;
@@ -17,24 +15,20 @@ export function useSidebar() {
 
   const showSidebar = () => {
     requestAnimationFrame(() => {
-      translateX(sideBarWidth);
       setSidebarOpened(true);
+      translateX(sidebarRef.current?.clientWidth);
     });
   };
 
   const hideSidebar = () => {
     requestAnimationFrame(() => {
-      translateX(0);
       setSidebarOpened(false);
+      translateX(0);
     });
   };
 
   const toggleSidebar = () => {
-    if (sidebarOpened) {
-      hideSidebar();
-    } else {
-      showSidebar();
-    }
+    sidebarOpened ? hideSidebar() : showSidebar();
   };
 
   const Sidebar = useMemo(
@@ -43,7 +37,7 @@ export function useSidebar() {
         (
           <aside
             ref={sidebarRef}
-            className={`absolute left-[100%] w-screen lg:w-240  h-full pl-30 pr-30 surface-alt z-10`}
+            className={`absolute left-[100%] w-screen lg:w-240  h-full pl-30 pr-30 surface-alt z-10 transition-transform ease-in-out duration-500`}
           >
             {children}
           </aside>
@@ -57,20 +51,13 @@ export function useSidebar() {
         (
           <div
             ref={mainRef}
-            className="w-h-full"
+            className="w-h-full transition-transform ease-in-out duration-500"
           >
             {children}
           </div>
         ),
     [],
   );
-
-  useEffect(() => {
-    if (!sidebarRef.current || !mainRef.current) return;
-
-    mainRef.current.style.transition = `transform 0.5s ease-in-out`;
-    sidebarRef.current.style.transition = `transform 0.5s ease-in-out`;
-  }, []);
 
   return { toggleSidebar, sidebarOpened, Sidebar, SlideableContent };
 }
