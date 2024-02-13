@@ -5,6 +5,9 @@ on:
     types:
       - opened
 
+env:
+  PROJECT_ID: 19
+
 jobs:
   set-label:
     name: Set Labels to PR
@@ -27,10 +30,11 @@ jobs:
       - uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
+          PROJECT_ID: ${{ env.PROJECT_ID }}
           script: |
             const prTitle = context.payload.pull_request.title;
             const issueNumbers = prTitle.match(/#(\d+)/g);
-            const prefix = issueNumbers ? issueNumbers.reduce((acc, curr) => acc + curr, "closed ") : '';
+            const prefix = issueNumbers ? issueNumbers.reduce((acc, curr) => acc + curr, "resolved ") : '';
 
             github.rest.pulls.update({
               owner: context.repo.owner,
@@ -38,6 +42,11 @@ jobs:
               pull_number: context.payload.number,
               body: `${prefix}\n${context.payload.pull_request.body}`,
             });
+
+            const columns = await github.rest.projects.listColumns({
+              project_id: parseInt(process.env.PROJECT_ID),
+            });
+            const columnId = columns ? columns.filter((col) => col.name === 'In progress')[0].id : null;
 
             if(issueNumbers) {
               issueNumbers.forEach((num) => {
@@ -47,6 +56,13 @@ jobs:
                   issue_number: num.replace('#', ''),
                   state: 'open',
                 });
+                if(columnId) {
+                    github.rest.projects.moveCard({
+                    card_id: num.replace('#', ''),
+                    position: 'top',
+                    column_id: columnId
+                  });
+                }
               });
             }
 
