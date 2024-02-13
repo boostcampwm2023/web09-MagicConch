@@ -17,13 +17,23 @@ jobs:
             const branchName = context.payload.pull_request.head.ref;
             const issueNumbers = branchName.match(/#(\d+)/g);
 
-            if(issueNumbers) {
-              issueNumbers.forEach((num) => {
-                github.rest.issues.update({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: num.replace('#', ''),
-                  state: 'closed',
-                });
+            for(const num of issueNumbers) {
+              const issueNumber = num.replace('#', '');
+              const res = await github.rest.issues.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
               });
+              const subIssues = res?.data.body
+                ?.match(/#(\d+)/g)
+                ?.forEach((issue) => issueNumbers.push(issue.replace('#', '')));
             }
+
+            issueNumbers?.forEach((num) => {
+              github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: num.replace('#', ''),
+                state: 'closed',
+              });
+            });
