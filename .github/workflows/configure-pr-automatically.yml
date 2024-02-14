@@ -8,9 +8,6 @@ on:
 permissions:
   contents: read
 
-env:
-  PROJECT_ID: 19
-
 jobs:
   set-label:
     name: Set Labels to PR
@@ -20,9 +17,6 @@ jobs:
       pull-requests: write
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      
       - uses: TimonVS/pr-labeler-action@v5
         with:
           github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
@@ -33,29 +27,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-  
       - uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
-          PROJECT_ID: ${{ env.PROJECT_ID }}
           script: |
             const prTitle = context.payload.pull_request.title;
             const issueNumbers = prTitle.match(/#(\d+)/g);
             const prefix = issueNumbers ? issueNumbers.reduce((acc, curr) => `${acc} ${curr}`, "resolved") : '';
+            const body = context.payload.pull_request.body.replace(/🔮 resolved #(\d+)( #(\d+))*/g);
 
             github.rest.pulls.update({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: context.payload.number,
-              body: `${prefix}\n${context.payload.pull_request.body}`,
+              body: `🔮 ${prefix}\n${body}`,
             });
-
-            const columns = await github.rest.projects.listColumns({
-              project_id: parseInt(process.env.PROJECT_ID),
-            });
-            const columnId = columns ? columns.filter((col) => col.name === 'In progress')[0].id : null;
 
             issueNumbers?.forEach((num) => {
               github.rest.issues.update({
@@ -64,13 +50,6 @@ jobs:
                 issue_number: num.replace('#', ''),
                 state: 'open',
               });
-              if(columnId) {
-                  github.rest.projects.moveCard({
-                  card_id: num.replace('#', ''),
-                  position: 'top',
-                  column_id: columnId
-                });
-              }
             });
 
   set-assignee:
@@ -84,7 +63,7 @@ jobs:
           script: |
             const sender = context.payload.sender.login;
             const assignees = context.payload.pull_request.assignees;
-            const newAssignees = assignees ? assignees.filter((assignee) => assignee.login != sender) : [];
+            const newAssignees = assignees ?? [];
             newAssignees.push(sender);
 
             github.rest.issues.addAssignees({

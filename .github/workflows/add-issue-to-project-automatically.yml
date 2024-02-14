@@ -6,7 +6,7 @@ on:
       - opened
 
 env:
-  PROJECT_ID: 19
+  PROJECT_NUMBER: 19
 
 jobs:
   add-labels-to-issue:
@@ -48,5 +48,5 @@ jobs:
     steps:
       - uses: actions/add-to-project@v0.5.0
         with:
-          project-url: https://github.com/orgs/boostcampwm2023/projects/${{ env.PROJECT_ID }}
+          project-url: https://github.com/orgs/boostcampwm2023/projects/${{ env.PROJECT_NUMBER }}
           github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
