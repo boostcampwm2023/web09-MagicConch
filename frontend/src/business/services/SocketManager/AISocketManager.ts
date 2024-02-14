@@ -15,6 +15,10 @@ export class AISocketManager extends SocketManager {
     return this.instance;
   }
 
+  connect() {
+    super.connect({ withCredentials: true });
+  }
+
   on<U>(eventName: AIServerEvent, eventListener: (args: U) => void) {
     super.on(eventName, eventListener);
   }
