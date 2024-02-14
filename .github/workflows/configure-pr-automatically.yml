@@ -2,8 +2,8 @@ name: Configure PR When PR Opened
 
 on:
   pull_request:
-    types:
-      - opened
+    # types:
+    #   - opened
 
 permissions:
   contents: read
@@ -34,12 +34,13 @@ jobs:
             const prTitle = context.payload.pull_request.title;
             const issueNumbers = prTitle.match(/#(\d+)/g);
             const prefix = issueNumbers ? issueNumbers.reduce((acc, curr) => `${acc} ${curr}`, "resolved") : '';
+            const body = context.payload.pull_request.body.replace(/resolved #(\d+)( #(\d+))*/g);
 
             github.rest.pulls.update({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: context.payload.number,
-              body: `${prefix}\n${context.payload.pull_request.body}`,
+              body: `${prefix}\n${body}`,
             });
 
             issueNumbers?.forEach((num) => {
