@@ -16,9 +16,9 @@ export function AIChatPage({}: AIChatPageProps) {
 
   const { toggleSidebar, sidebarOpened, Sidebar, SlideableContent } = useSidebar();
 
-  const { error, data, isLoading } = getAuthorizedQuery();
+  const { data } = getAuthorizedQuery();
 
-  if (isLoading || error || !data?.isAuthenticated) {
+  if (!data?.isAuthenticated) {
     return (
       <Background type="dynamic">
         <Header />
