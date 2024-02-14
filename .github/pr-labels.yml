@@ -1,6 +1,6 @@
-feature: */feature/*
-bug: */bugfix/*
-refactor: */refactor/*
-BE: Be/*
-FE: Fe/*
-DevOps: Devops/*
+feature: "*/feature/*"
+bug: "*/bugfix/*"
+refactor: "*/refactor/*"
+BE: "Be/*"
+FE: "Fe/*"
+DevOps: "Devops/*"
