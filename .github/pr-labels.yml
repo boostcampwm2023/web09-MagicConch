@@ -1,0 +1,6 @@
+feature: */feature/*
+bug: */bugfix/*
+refactor: */refactor/*
+BE: BE/*
+FE: FE/*
+DevOps: DEVOPS/*

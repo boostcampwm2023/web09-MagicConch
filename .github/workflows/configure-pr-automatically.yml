@@ -1,0 +1,89 @@
+name: Configure PR When PR Opened
+
+on:
+  pull_request:
+    types:
+      - opened
+
+permissions:
+  contents: read
+
+env:
+  PROJECT_ID: 19
+
+jobs:
+  set-label:
+    name: Set Labels to PR
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-request: write
+
+    steps:
+      - uses: TimonVS/pr-labeler-action@v5
+        with:
+          github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
+          configuration-path: .github/pr-labels.yml
+
+  set-issue:
+    name: Set Issue to PR
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
+          PROJECT_ID: ${{ env.PROJECT_ID }}
+          script: |
+            const prTitle = context.payload.pull_request.title;
+            const issueNumbers = prTitle.match(/#(\d+)/g);
+            const prefix = issueNumbers ? issueNumbers.reduce((acc, curr) => `${acc} ${curr}`, "resolved") : '';
+
+            github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.number,
+              body: `${prefix}\n${context.payload.pull_request.body}`,
+            });
+
+            const columns = await github.rest.projects.listColumns({
+              project_id: parseInt(process.env.PROJECT_ID),
+            });
+            const columnId = columns ? columns.filter((col) => col.name === 'In progress')[0].id : null;
+
+            issueNumbers?.forEach((num) => {
+              github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: num.replace('#', ''),
+                state: 'open',
+              });
+              if(columnId) {
+                  github.rest.projects.moveCard({
+                  card_id: num.replace('#', ''),
+                  position: 'top',
+                  column_id: columnId
+                });
+              }
+            });
+
+  set-assignee:
+    name: Set Assignee to PR
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
+          script: |
+            const sender = context.payload.sender.login;
+            const assignees = context.payload.pull_request.assignees;
+            const newAssignees = assignees ? assignees.filter((assignee) => assignee.login != sender) : [];
+            newAssignees.push(sender);
+
+            github.rest.issues.addAssignees({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.number,
+              assignees: newAssignees,
+            });
