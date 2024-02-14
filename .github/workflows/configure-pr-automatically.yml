@@ -76,9 +76,14 @@ jobs:
         with:
           github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
           script: |
+            const sender = context.payload.sender.login;
+            const assignees = context.payload.pull_request.assignees;
+            const newAssignees = assignees ? assignees.filter((assignee) => assignee.login != sender) : [];
+            newAssignees.push(sender);
+
             github.rest.issues.addAssignees({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.payload.number,
-              assignees: [context.payload.sender.login],
+              assignees: newAssignees,
             });
