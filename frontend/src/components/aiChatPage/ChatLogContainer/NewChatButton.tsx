@@ -1,6 +1,6 @@
 import { IconButton } from '@components/common/Buttons';
 
-export function NewChatLogButton() {
+export function NewChatButton() {
   return (
     <div className="w-200">
       <IconButton

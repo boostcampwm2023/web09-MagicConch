@@ -1,13 +1,18 @@
-import { ChatLogGroup } from '.';
-import { chatlogs } from '../__mocks__';
+import { ChatLogListResponse } from '@stores/queries/getChatLogListQuery';
 
-export function ChatLogList() {
+import { ChatLogItem } from './ChatLogItem';
+
+interface ChatLogListProps {
+  list: ChatLogListResponse;
+}
+
+export function ChatLogList({ list }: ChatLogListProps) {
   return (
     <div className="w-h-full flex flex-col gap-16">
-      {chatlogs.map(({ date, logs }) => (
-        <ChatLogGroup
-          date={date}
-          logs={logs}
+      {list.map(({ id, title }) => (
+        <ChatLogItem
+          key={id}
+          title={title}
         />
       ))}
     </div>
