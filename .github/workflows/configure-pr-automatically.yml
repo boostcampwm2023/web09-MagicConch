@@ -20,6 +20,9 @@ jobs:
       pull-requests: write
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
       - uses: TimonVS/pr-labeler-action@v5
         with:
           github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
@@ -30,6 +33,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+  
       - uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
