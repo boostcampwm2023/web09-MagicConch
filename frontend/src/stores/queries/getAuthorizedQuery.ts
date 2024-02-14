@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 export interface AuthorizedResponse {
@@ -6,9 +6,9 @@ export interface AuthorizedResponse {
 }
 
 export function getAuthorizedQuery() {
-  return useSuspenseQuery({
+  return useQuery({
     queryKey: [`authorizedQueryKey`],
     queryFn: async () =>
-      (await axios.get<AuthorizedResponse>(`${import.meta.env.VITE_WAS_URL}/oauth/authenticated`)).data,
+      (await axios.get<AuthorizedResponse>(`${import.meta.env.VITE_WAS_URL}/oauth/authenticate`)).data,
   });
 }
