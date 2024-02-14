@@ -8,6 +8,7 @@ export interface AuthorizedResponse {
 export function getAuthorizedQuery() {
   return useSuspenseQuery({
     queryKey: [`authorizedQueryKey`],
-    queryFn: async () => await axios.get<AuthorizedResponse>(`${import.meta.env.VITE_WAS_URL}/oauth/authenticated`),
+    queryFn: async () =>
+      (await axios.get<AuthorizedResponse>(`${import.meta.env.VITE_WAS_URL}/oauth/authenticated`)).data,
   });
 }
