@@ -7,14 +7,14 @@ import {
   IsUrl,
 } from 'class-validator';
 import { ProfileDto } from 'src/auth/dto';
-import { PROVIDER_ID } from 'src/common/constants/etc';
+import { ProviderIdEnum } from 'src/common/constants/etc';
 
 export class CreateMemberDto {
   @IsEmail()
   readonly email: string;
 
   @IsInt()
-  @IsIn(Object.values(PROVIDER_ID))
+  @IsIn(Object.values(ProviderIdEnum))
   readonly providerId: number;
 
   @IsString()

@@ -11,7 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Cache } from 'cache-manager';
 import { CONTENT_TYPE, METHODS, OAUTH_URL } from 'src/common/constants/apis';
 import { ERR_MSG } from 'src/common/constants/errors';
-import { PROVIDER_ID, PROVIDER_NAME } from 'src/common/constants/etc';
+import { ProviderIdEnum } from 'src/common/constants/etc';
 import { Member } from 'src/members/entities';
 import { Repository } from 'typeorm';
 import { JwtPayloadDto, OAuthTokenDto, ProfileDto } from '../dto';
@@ -30,7 +30,7 @@ export class KakaoAuthService extends AuthService {
     readonly cacheManager: Cache,
   ) {
     super(jwtService, membersRepository, cacheManager);
-    this.init(PROVIDER_NAME.KAKAO);
+    this.init('KAKAO');
   }
 
   async loginOAuth(code: string): Promise<string> {
@@ -38,18 +38,18 @@ export class KakaoAuthService extends AuthService {
     const profile: ProfileDto = await this.getUser(token.access_token ?? '');
     const member: Member | null = await this.findMemberByEmail(
       profile.email,
-      PROVIDER_ID.KAKAO,
+      ProviderIdEnum.KAKAO,
     );
     if (member) {
       return this.login(
         member.id,
-        PROVIDER_ID.KAKAO,
+        ProviderIdEnum.KAKAO,
         profile,
         OAuthTokenDto.fromKakao(token),
       );
     }
     return this.signup(
-      PROVIDER_ID.KAKAO,
+      ProviderIdEnum.KAKAO,
       profile,
       OAuthTokenDto.fromKakao(token),
     );

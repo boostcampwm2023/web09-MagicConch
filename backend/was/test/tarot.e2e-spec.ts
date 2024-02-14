@@ -1,7 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { BUCKET_URL } from 'src/common/constants/etc';
+import { BUCKET_URL, ExtEnum } from 'src/common/constants/etc';
 import { TarotCard, TarotCardPack, TarotResult } from 'src/tarot/entities';
 import { TarotController } from 'src/tarot/tarot.controller';
 import { TarotService } from 'src/tarot/tarot.service';
@@ -42,7 +42,7 @@ describe('Tarot', () => {
     beforeAll(async () => {
       const tarotCard: TarotCard = new TarotCard();
       tarotCard.cardNo = 0;
-      tarotCard.ext = '.jpg';
+      tarotCard.ext = ExtEnum.JPG;
       await entityManager.save(tarotCard);
     });
 

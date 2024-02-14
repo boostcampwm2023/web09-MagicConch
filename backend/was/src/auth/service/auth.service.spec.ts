@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
 import { RedisCacheModule } from 'src/common/config/cache/redis-cache.module';
-import { PROVIDER_ID } from 'src/common/constants/etc';
+import { ProviderIdEnum } from 'src/common/constants/etc';
 import { CreateMemberDto, UpdateMemberDto } from 'src/members/dto';
 import { Member } from 'src/members/entities';
 import { Repository } from 'typeorm';
@@ -67,17 +67,17 @@ describe('AuthService', () => {
     it('신규회원은 회원가입 할 수 있다.', async () => {
       [
         {
-          providerId: PROVIDER_ID.KAKAO,
+          providerId: ProviderIdEnum.KAKAO,
           profile: profileDto,
           token: oauthTokenDto,
         },
         {
-          providerId: PROVIDER_ID.NAVER,
+          providerId: ProviderIdEnum.NAVER,
           profile: profileDto,
           token: oauthTokenDto,
         },
         {
-          providerId: PROVIDER_ID.GOOGLE,
+          providerId: ProviderIdEnum.GOOGLE,
           profile: profileDto,
           token: oauthTokenDto,
         },
@@ -105,19 +105,19 @@ describe('AuthService', () => {
       [
         {
           id: 'id1',
-          providerId: PROVIDER_ID.KAKAO,
+          providerId: ProviderIdEnum.KAKAO,
           profile: profileDto,
           token: oauthTokenDto,
         },
         {
           id: 'id2',
-          providerId: PROVIDER_ID.NAVER,
+          providerId: ProviderIdEnum.NAVER,
           profile: profileDto,
           token: oauthTokenDto,
         },
         {
           id: 'id3',
-          providerId: PROVIDER_ID.GOOGLE,
+          providerId: ProviderIdEnum.GOOGLE,
           profile: profileDto,
           token: oauthTokenDto,
         },
