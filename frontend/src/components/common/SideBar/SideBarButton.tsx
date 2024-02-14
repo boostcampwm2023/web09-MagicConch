@@ -12,7 +12,7 @@ export function SideBarButton({ onClick, sideBarOpened }: SideBarButtonProps) {
 
   return (
     <IconButton
-      icon={sideBarOpened ? 'mdi:message' : 'mdi:message-off'}
+      icon={sideBarOpened ? 'mdi:message-off' : 'mdi:message'}
       iconColor="textWeak"
       buttonColor="transparent"
       onClick={toggleSideBar}
