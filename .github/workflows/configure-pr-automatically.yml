@@ -2,8 +2,8 @@ name: Configure PR When PR Opened
 
 on:
   pull_request:
-    types:
-      - opened
+    # types:
+    #   - opened
 
 permissions:
   contents: read
@@ -27,9 +27,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
       - uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
@@ -65,7 +62,7 @@ jobs:
           script: |
             const sender = context.payload.sender.login;
             const assignees = context.payload.pull_request.assignees;
-            const newAssignees = assignees ? assignees.filter((assignee) => assignee.login != sender) : [];
+            const newAssignees = assignees ?? [];
             newAssignees.push(sender);
 
             github.rest.issues.addAssignees({
