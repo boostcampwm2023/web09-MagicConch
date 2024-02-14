@@ -67,7 +67,7 @@ export class ChatService {
         email,
         providerId,
       );
-      const rooms = await this.chattingRoomRepository.findBy({
+      const rooms: ChattingRoom[] = await this.chattingRoomRepository.findBy({
         participant: { id: memberId },
       });
       return rooms.map((room: ChattingRoom) =>

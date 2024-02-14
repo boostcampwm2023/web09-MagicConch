@@ -1,36 +1,37 @@
-import { Dispatch, SetStateAction, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
-import Background from '@components/Background';
-import ChatContainer from '@components/ChatContainer';
-import Header from '@components/Header';
-import { ContentAreaWithSideBar, SideBarButton } from '@components/SideBar';
+import { Background, ChatContainer, Header } from '@components/common';
+import { SideBarButton } from '@components/common/SideBar';
 
+import { useHumanChatMessage } from '@business/hooks/chatMessage';
+import { useSidebar } from '@business/hooks/sidebar';
+import { useHumanTarotSpread } from '@business/hooks/tarotSpread';
 import { useBlocker } from '@business/hooks/useBlocker';
-import { useHumanChatMessage } from '@business/hooks/useChatMessage';
-import { useHumanTarotSpread } from '@business/hooks/useTarotSpread';
-import { useWebRTC } from '@business/hooks/useWebRTC';
+import { useWebRTC } from '@business/hooks/webRTC';
 
-import { ChatPageState, useHumanChatPageCreateRoomEvent } from './useHumanChatPageCreateRoomEvent';
-import { useHumanChatPageWrongURL } from './useHumanChatPageWrongURL';
+import { useCreateRoomEvent } from './hooks/useCreateRoomEvent';
+import { useHumanChatPageState } from './hooks/useHumanChatPageState';
+import { usePageWrongURL } from './hooks/usePageWrongURL';
 
-export interface OutletContext {
+type HumanChatPageState = ReturnType<typeof useHumanChatPageState>;
+
+export interface OutletContext extends HumanChatPageState {
   tarotButtonClick: () => void;
   tarotButtonDisabled: boolean;
-  chatPageState: ChatPageState;
-  setChatPageState: Dispatch<SetStateAction<ChatPageState>>;
   disableSideBar: () => void;
   enableSideBar: () => void;
   unblockGoBack: () => void;
 }
 
-export default function HumanChatPage() {
-  useHumanChatPageWrongURL();
+export function HumanChatPage() {
+  const humanChatPageState = useHumanChatPageState();
+
+  usePageWrongURL();
+  useCreateRoomEvent({ ...humanChatPageState });
 
   const navigate = useNavigate();
   const { endWebRTC } = useWebRTC();
-
-  const { chatPageState, setChatPageState } = useHumanChatPageCreateRoomEvent();
 
   const { messages, onSubmitMessage, inputDisabled, addPickCardMessage } = useHumanChatMessage();
   const { tarotButtonClick, tarotButtonDisabled } = useHumanTarotSpread(addPickCardMessage);
@@ -39,6 +40,8 @@ export default function HumanChatPage() {
     when: ({ nextLocation }) => nextLocation.pathname === '/' || nextLocation.pathname === '/chat/human',
     onConfirm: () => navigate('/'),
   });
+
+  const { toggleSidebar, sidebarOpened, Sidebar, SlideableContent } = useSidebar();
 
   useEffect(() => {
     return () => {
@@ -51,32 +54,28 @@ export default function HumanChatPage() {
       <Header
         rightItems={[
           <SideBarButton
-            activeIcon="mdi:message"
-            inactiveIcon="mdi:message-off"
+            onClick={toggleSidebar}
+            sideBarOpened={sidebarOpened}
           />,
         ]}
       />
-      <ContentAreaWithSideBar
-        sideBar={
-          <ChatContainer
-            width="w-400"
-            height="h-full"
-            messages={messages}
-            onSubmitMessage={onSubmitMessage}
-            inputDisabled={inputDisabled}
-          />
-        }
-      >
+      <Sidebar>
+        <ChatContainer
+          messages={messages}
+          inputDisabled={inputDisabled}
+          onSubmitMessage={onSubmitMessage}
+        />
+      </Sidebar>
+      <SlideableContent>
         <Outlet
           context={{
             tarotButtonClick,
             tarotButtonDisabled,
-            chatPageState,
-            setChatPageState,
             unblockGoBack,
+            ...humanChatPageState,
           }}
         />
-      </ContentAreaWithSideBar>
+      </SlideableContent>
     </Background>
   );
 }

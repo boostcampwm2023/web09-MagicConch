@@ -1,4 +1,32 @@
-export default {
+// export default {
+//   getInstance: vi.fn().mockReturnValue({
+//     getLocalStream: vi.fn(),
+//     getFirstVideoTrack: vi.fn(),
+//     getFirstAudioTrack: vi.fn(),
+//     getRemoteStream: vi.fn(),
+//     getPeerConnection: vi.fn(),
+//     getDataChannels: vi.fn(),
+//     getDataChannel: vi.fn(),
+//     resetForTesting: vi.fn(),
+//     setLocalStream: vi.fn(),
+//     setRemoteStream: vi.fn(),
+//     connectRTCPeerConnection: vi.fn(),
+//     createOffer: vi.fn().mockResolvedValue(Promise.resolve('offer')),
+//     createAnswer: vi.fn().mockResolvedValue(Promise.resolve('answer')),
+//     setRemoteDescription: vi.fn(),
+//     setLocalDescription: vi.fn(),
+//     addRTCPeerConnectionEventListener: vi.fn(),
+//     addIceCandidate: vi.fn(),
+//     closeRTCPeerConnection: vi.fn(),
+//     isConnectedPeerConnection: vi.fn(),
+//     addDataChannel: vi.fn(),
+//     closeDataChannels: vi.fn(),
+//     addTracks: vi.fn(),
+//     replacePeerconnectionVideoTrack2NowLocalStream: vi.fn(),
+//     replacePeerconnectionAudioTrack2NowLocalStream: vi.fn(),
+//   }),
+// };
+export const WebRTC = {
   getInstance: vi.fn().mockReturnValue({
     getLocalStream: vi.fn(),
     getFirstVideoTrack: vi.fn(),

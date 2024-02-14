@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 
-import Background from '@components/Background';
-import { Button } from '@components/Buttons';
+import { Background } from '@components/common';
+import { Button } from '@components/common/Buttons';
 
-import { useLoginPopup } from '@business/hooks/usePopup/useLoginPopup';
+import { useLoginPopup } from '@business/hooks/popup';
 
-function HomePage() {
+export function HomePage() {
   const navigate = useNavigate();
 
   const moveAiChat = () => navigate('/chat/ai');
@@ -30,5 +30,3 @@ function HomePage() {
     </Background>
   );
 }
-
-export default HomePage;

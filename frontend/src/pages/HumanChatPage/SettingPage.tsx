@@ -1,17 +1,15 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import ProfileSetting from '@components/ProfileSetting';
+import { ProfileSetting } from '@components/humanChatPage';
 
-import { useControllMedia, useStreamVideoRef } from '@business/hooks/useWebRTC/';
+import { useControllMedia, useStreamVideoRef } from '@business/hooks/webRTC';
 import { HumanSocketManager } from '@business/services/SocketManager';
 
-import { useSideBarStore } from '@stores/zustandStores/useSideBarStore';
+import { useMediaOptinos } from './hooks';
+import { useProfileNicknameSetting } from './hooks';
 
-import { useSettingPageMediaOptinos } from './useSettingPageMediaOptions';
-import { useSettingPageProfileNicknameSetting } from './useSettingPageProfileNicknameSetting';
-
-export default function SettingPage() {
+export function SettingPage() {
   const socketManager = HumanSocketManager.getInstance();
 
   const navigate = useNavigate();
@@ -20,10 +18,7 @@ export default function SettingPage() {
 
   const { changeMyAudioTrack, changeMyVideoTrack, toggleAudio, toggleVideo } = useControllMedia({ localVideoRef });
 
-  const { enableSideBarButton, disableSideBarButton } = useSideBarStore();
-
   useEffect(() => {
-    disableSideBarButton();
     if (!socketManager.connected) {
       navigate('..');
     }
@@ -31,9 +26,9 @@ export default function SettingPage() {
     changeMyVideoTrack();
   }, []);
 
-  const { setLocalNickname, setLocalProfileImage, sendProfileInfo } = useSettingPageProfileNicknameSetting();
+  const { setLocalNickname, setLocalProfileImage, sendProfileInfo } = useProfileNicknameSetting();
 
-  const { mediaOptions } = useSettingPageMediaOptinos();
+  const { mediaOptions } = useMediaOptinos();
 
   return (
     <ProfileSetting
@@ -46,7 +41,6 @@ export default function SettingPage() {
       videoRef={localVideoRef}
       onConfirm={() => {
         sendProfileInfo();
-        enableSideBarButton();
         navigate('..');
       }}
       onChangeProfileImage={setLocalProfileImage}

@@ -1,53 +1,62 @@
 import { useEffect } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
-import { IconButton } from '@components/Buttons';
-import CamContainer from '@components/CamContainer';
+import { IconButton } from '@components/common/Buttons';
+import { DocumentBodyPortal } from '@components/common/Portals';
+import { CamContainer } from '@components/humanChatPage';
 
-import { useControllMedia, useStreamVideoRef } from '@business/hooks/useWebRTC';
+import { useControllMedia, useStreamVideoRef } from '@business/hooks/webRTC';
 
 import type { OutletContext } from './HumanChatPage';
-import { useChattingPageCreateJoinRoomPasswordPopup } from './useChattingPageCreateJoinRoomPopup';
+import { useCreateJoinRoomPasswordPopup } from './hooks';
 
-export default function ChattingPage() {
-  const {
-    tarotButtonDisabled,
-    tarotButtonClick,
-    chatPageState: { joined },
-    unblockGoBack,
-  }: OutletContext = useOutletContext();
+export function ChattingPage() {
+  const { tarotButtonDisabled, tarotButtonClick, unblockGoBack, joinedRoom } = useOutletContext<OutletContext>();
 
-  useChattingPageCreateJoinRoomPasswordPopup({ unblockGoBack });
+  useCreateJoinRoomPasswordPopup({ unblockGoBack });
   const { localVideoRef, remoteVideoRef } = useStreamVideoRef();
   const { toggleAudio, toggleVideo, changeMyVideoTrack } = useControllMedia({ localVideoRef });
 
   useEffect(() => {
-    if (joined) {
+    if (joinedRoom) {
       changeMyVideoTrack();
     }
-  }, [joined]);
+  }, [joinedRoom]);
+
+  useEffect(() => {
+    if (!localVideoRef.current) {
+      return;
+    }
+    localVideoRef.current.volume = 0;
+  }, []);
 
   const navigate = useNavigate();
   const goSettingPage = () => navigate('setting');
 
   return (
-    <div className={`flex-with-center ${joined ? '' : 'hidden'}`}>
-      <CamContainer
-        localVideoRef={localVideoRef}
-        remoteVideoRef={remoteVideoRef}
-        toggleVideo={toggleVideo}
-        toggleAudio={toggleAudio}
-        tarotButtonClick={tarotButtonClick}
-        tarotButtonDisabled={tarotButtonDisabled}
-      />
-      <div className="absolute z-10 top-[10vh] right-90">
-        <IconButton
-          icon="uil:setting"
-          iconColor="textWhite"
-          buttonColor="cancel"
-          onClick={goSettingPage}
-        />
-      </div>
-    </div>
+    joinedRoom && (
+      <>
+        <div className={`flex-with-center w-h-full`}>
+          <CamContainer
+            localVideoRef={localVideoRef}
+            remoteVideoRef={remoteVideoRef}
+            toggleVideo={toggleVideo}
+            toggleAudio={toggleAudio}
+            tarotButtonClick={tarotButtonClick}
+            tarotButtonDisabled={tarotButtonDisabled}
+          />
+        </div>
+        <DocumentBodyPortal>
+          <div className="fixed top-[10vh] right-90">
+            <IconButton
+              icon="uil:setting"
+              iconColor="textWhite"
+              buttonColor="cancel"
+              onClick={goSettingPage}
+            />
+          </div>
+        </DocumentBodyPortal>
+      </>
+    )
   );
 }

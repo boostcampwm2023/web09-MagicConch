@@ -30,7 +30,9 @@ async function bootstrap() {
   app.useLogger(logger);
 
   setupSentry(app, dsn);
-  setupSwagger(app);
+  if (process.env.ENV === 'DEV') {
+    setupSwagger(app);
+  }
 
   const server: any = await app.listen(port);
 

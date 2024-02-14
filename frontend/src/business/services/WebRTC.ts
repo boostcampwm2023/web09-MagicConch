@@ -4,7 +4,7 @@ import { HumanSocketManager } from './SocketManager';
 
 type RTCDataChannelKey = 'mediaInfoChannel' | 'chatChannel' | 'profileChannel' | 'nicknameChannel';
 
-export default class WebRTC {
+export class WebRTC {
   private static instance: WebRTC;
   private socketManager: HumanSocketManager;
 

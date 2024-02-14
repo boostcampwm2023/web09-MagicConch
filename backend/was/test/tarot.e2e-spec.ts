@@ -46,26 +46,31 @@ describe('Tarot', () => {
       await entityManager.save(tarotCard);
     });
 
-    describe('성공', () => {
-      it('[올바른 카드 번호] GET /tarot/card/0', () => {
-        return request(app.getHttpServer())
-          .get('/tarot/card/0')
-          .expect(200)
-          .expect((res) =>
-            expect(res.body).toEqual({ cardUrl: `${BUCKET_URL}/basic/0.jpg` }),
-          );
-      });
+    it('올바른 카드 번호를 받으면 그에 해당하는 카드 이미지 URL을 반환한다.', () => {
+      return request(app.getHttpServer())
+        .get('/tarot/card/0')
+        .expect(200)
+        .expect((res) =>
+          expect(res.body).toEqual({ cardUrl: `${BUCKET_URL}/basic/0.jpg` }),
+        );
     });
 
-    describe('실패', () => {
-      it('[정수형이 아닌 카드 번호] GET /tarot/card/invalidCardNo', () => {
-        return request(app.getHttpServer())
-          .get('/tarot/card/invalidCardNo')
-          .expect(400);
-      });
-
-      it('[존재하지 않는 카드 번호] GET /tarot/card/-1', () => {
-        return request(app.getHttpServer()).get('/tarot/card/-1').expect(404);
+    describe('잘못된 카드 번호를 받으면 에러를 던진다.', () => {
+      [
+        {
+          scenario: '정수형이 아닌 카드 번호를 받으면 400번 에러를 반환한다.',
+          route: '/tarot/card/invalidCardNo',
+          status: 400,
+        },
+        {
+          scenario: '존재하지 않는 카드 번호를 받으면 404번 에러를 반환한다.',
+          route: '/tarot/card/-1',
+          status: 404,
+        },
+      ].forEach(({ scenario, route, status }) => {
+        it(scenario, () => {
+          return request(app.getHttpServer()).get(route).expect(status);
+        });
       });
     });
   });
@@ -79,31 +84,34 @@ describe('Tarot', () => {
       await entityManager.save(tarotResult);
     });
 
-    describe('성공', () => {
-      it(`[올바른 아이디] GET /tarot/result/${id}`, () => {
-        return request(app.getHttpServer())
-          .get(`/tarot/result/${id}`)
-          .expect(200)
-          .expect((res) =>
-            expect(res.body).toEqual({
-              cardUrl: `${BUCKET_URL}/basic/0.jpg`,
-              message: '0번 타로 카드에 대한 해설입니다',
-            }),
-          );
-      });
+    it('올바른 아이디를 받으면 그에 해당하는 타로 결과를 반환한다.', () => {
+      return request(app.getHttpServer())
+        .get(`/tarot/result/${id}`)
+        .expect(200)
+        .expect((res) =>
+          expect(res.body).toEqual({
+            cardUrl: `${BUCKET_URL}/basic/0.jpg`,
+            message: '0번 타로 카드에 대한 해설입니다',
+          }),
+        );
     });
 
-    describe('실패', () => {
-      it('[UUID 형식이 아닌 아이디] GET /tarot/result/invalidUUID', () => {
-        return request(app.getHttpServer())
-          .get('/tarot/result/invalidUUID')
-          .expect(400);
-      });
-
-      it(`[존재하지 않는 아이디] GET /tarot/result/${wrongId}`, () => {
-        return request(app.getHttpServer())
-          .get(`/tarot/result/${wrongId}`)
-          .expect(404);
+    describe('잘못된 아이디를 받으면 에러를 던진다.', () => {
+      [
+        {
+          scenario: 'UUID 형식이 아닌 아이디를 받으면 400번 에러를 반환한다.',
+          route: '/tarot/result/invalidUUID',
+          status: 400,
+        },
+        {
+          scenario: '존재하지 않는 아이디를 받으면 404번 에러를 반환한다.',
+          route: `/tarot/result/${wrongId}`,
+          status: 404,
+        },
+      ].forEach(({ scenario, route, status }) => {
+        it(scenario, () => {
+          return request(app.getHttpServer()).get(route).expect(status);
+        });
       });
     });
   });

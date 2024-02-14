@@ -64,93 +64,80 @@ describe('AuthService', () => {
   });
 
   describe('signup', () => {
-    describe('성공', () => {
-      it('회원가입 한다 (신규회원)', async () => {
-        [
-          {
-            providerId: PROVIDER_ID.KAKAO,
-            profile: profileDto,
-            token: oauthTokenDto,
-          },
-          {
-            providerId: PROVIDER_ID.NAVER,
-            profile: profileDto,
-            token: oauthTokenDto,
-          },
-          {
-            providerId: PROVIDER_ID.GOOGLE,
-            profile: profileDto,
-            token: oauthTokenDto,
-          },
-        ].forEach(async (scenario) => {
-          const createMemberDto: CreateMemberDto = CreateMemberDto.fromProfile(
-            scenario.providerId,
-            scenario.profile,
-          );
-          const member: Member = Member.fromDto(createMemberDto);
+    it('신규회원은 회원가입 할 수 있다.', async () => {
+      [
+        {
+          providerId: PROVIDER_ID.KAKAO,
+          profile: profileDto,
+          token: oauthTokenDto,
+        },
+        {
+          providerId: PROVIDER_ID.NAVER,
+          profile: profileDto,
+          token: oauthTokenDto,
+        },
+        {
+          providerId: PROVIDER_ID.GOOGLE,
+          profile: profileDto,
+          token: oauthTokenDto,
+        },
+      ].forEach(async ({ providerId, profile, token }) => {
+        const createMemberDto: CreateMemberDto = CreateMemberDto.fromProfile(
+          providerId,
+          profile,
+        );
+        const member: Member = Member.fromDto(createMemberDto);
 
-          const memberSaveMock = jest
-            .spyOn(membersRepository, 'save')
-            .mockResolvedValueOnce(member);
+        const memberSaveMock = jest
+          .spyOn(membersRepository, 'save')
+          .mockResolvedValueOnce(member);
 
-          await expect(
-            authService.signup(
-              scenario.providerId,
-              scenario.profile,
-              scenario.token,
-            ),
-          ).resolves.not.toThrow();
-          expect(memberSaveMock).toHaveBeenCalledWith(member);
-        });
+        await expect(
+          authService.signup(providerId, profile, token),
+        ).resolves.not.toThrow();
+        expect(memberSaveMock).toHaveBeenCalledWith(member);
       });
     });
   });
 
   describe('login', () => {
-    describe('성공', () => {
-      it('로그인 한다 (기존회원)', () => {
-        [
-          {
-            id: 'id1',
-            providerId: PROVIDER_ID.KAKAO,
-            profile: profileDto,
-            token: oauthTokenDto,
-          },
-          {
-            id: 'id2',
-            providerId: PROVIDER_ID.NAVER,
-            profile: profileDto,
-            token: oauthTokenDto,
-          },
-          {
-            id: 'id3',
-            providerId: PROVIDER_ID.GOOGLE,
-            profile: profileDto,
-            token: oauthTokenDto,
-          },
-        ].forEach(async (scenario) => {
-          const updateMemberDto: UpdateMemberDto = UpdateMemberDto.fromProfile(
-            scenario.providerId,
-            scenario.profile,
-          );
+    it('기존회원은 로그인 할 수 있다.', () => {
+      [
+        {
+          id: 'id1',
+          providerId: PROVIDER_ID.KAKAO,
+          profile: profileDto,
+          token: oauthTokenDto,
+        },
+        {
+          id: 'id2',
+          providerId: PROVIDER_ID.NAVER,
+          profile: profileDto,
+          token: oauthTokenDto,
+        },
+        {
+          id: 'id3',
+          providerId: PROVIDER_ID.GOOGLE,
+          profile: profileDto,
+          token: oauthTokenDto,
+        },
+      ].forEach(async ({ id, providerId, profile, token }) => {
+        const updateMemberDto: UpdateMemberDto = UpdateMemberDto.fromProfile(
+          providerId,
+          profile,
+        );
 
-          const memberUpdateMock = jest
-            .spyOn(membersRepository, 'update')
-            .mockResolvedValueOnce({ affected: 1 } as any);
+        const memberUpdateMock = jest
+          .spyOn(membersRepository, 'update')
+          .mockResolvedValueOnce({ affected: 1 } as any);
 
-          await expect(
-            authService.login(
-              scenario.id,
-              scenario.providerId,
-              scenario.profile,
-              scenario.token,
-            ),
-          ).resolves.not.toThrow();
-          expect(memberUpdateMock).toHaveBeenCalledWith(
-            { id: scenario.id },
-            updateMemberDto,
-          );
-        });
+        await expect(
+          authService.login(id, providerId, profile, token),
+        ).resolves.not.toThrow();
+        expect(memberUpdateMock).toHaveBeenCalledWith(
+          { id: id },
+          updateMemberDto,
+        );
       });
     });
   });
