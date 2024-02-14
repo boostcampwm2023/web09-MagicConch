@@ -1,6 +1,6 @@
 feature: */feature/*
 bug: */bugfix/*
 refactor: */refactor/*
-BE: BE/*
-FE: FE/*
+BE: Be/*
+FE: Fe/*
 DevOps: DEVOPS/*
