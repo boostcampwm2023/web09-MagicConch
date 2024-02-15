@@ -10,10 +10,14 @@ import { ChattingInfo } from './chatting-info.interface';
 import {
   ChattingMessageDto,
   ChattingRoomDto,
+  ChattingRoomGroupDto,
   CreateChattingMessageDto,
   UpdateChattingRoomDto,
 } from './dto';
 import { ChattingMessage, ChattingRoom } from './entities';
+
+const JAN_15: string = '2024-01-15';
+const JAN_26: string = '2024-01-26';
 
 describe('ChatService', () => {
   let chatService: ChatService;
@@ -203,36 +207,43 @@ describe('ChatService', () => {
           id: '12345678-1234-5678-1234-567812345671',
           title: '오늘의 운세 채팅방',
           participant: member,
+          createdAt: new Date(JAN_15),
         },
         {
           id: '12345678-1234-5678-1234-567812345672',
           title: '내일의 운세 채팅방',
           participant: member,
+          createdAt: new Date(JAN_26),
         },
       ];
 
+      const roomGroups: ChattingRoomGroupDto[] = rooms.reduce(
+        (acc: ChattingRoomGroupDto[], curr) => {
+          const roomDto: ChattingRoomDto = ChattingRoomDto.fromEntity(curr);
+          const date: string = (
+            curr?.createdAt ?? new Date()
+          ).toLocaleDateString('ko-KR');
+
+          if (date === acc.at(-1)?.date) {
+            acc.at(-1)?.rooms.push(roomDto);
+            return acc;
+          }
+          acc.push(ChattingRoomGroupDto.makeGroup(date, roomDto));
+          return acc;
+        },
+        [],
+      );
+
       const transactionMock = jest
         .spyOn(entityManager, 'transaction')
-        .mockImplementation(
-          async () =>
-            await Promise.resolve(
-              rooms.map((room: ChattingRoom) => ({
-                id: room.id,
-                title: room.title,
-              })),
-            ),
-        );
+        .mockImplementation(async () => await Promise.resolve(roomGroups));
 
-      const expectation: ChattingRoomDto[] = await chatService.findRoomsByEmail(
-        member.email ?? '',
-        member.providerId ?? 0,
-      );
-      expect(expectation).toEqual(
-        rooms.map((room: ChattingRoom) => ({
-          id: room.id,
-          title: room.title,
-        })),
-      );
+      const expectation: ChattingRoomGroupDto[] =
+        await chatService.findRoomsByEmail(
+          member.email ?? '',
+          member.providerId ?? 0,
+        );
+      expect(expectation).toEqual(roomGroups);
       expect(transactionMock).toHaveBeenCalled();
     });
   });
