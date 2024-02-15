@@ -25,6 +25,7 @@ const JAN_26: string = '2024-01-26';
 describe('Chat', () => {
   let app: INestApplication;
   let entityManager: EntityManager;
+  let member: Member;
   let savedRoom: ChattingRoom;
   const oneDay: Date = new Date(JAN_15);
   const anotherDay: Date = new Date(JAN_26);
@@ -50,7 +51,7 @@ describe('Chat', () => {
 
     entityManager = moduleRef.get(EntityManager);
 
-    const member: Member = new Member();
+    member = new Member();
     member.email = 'tarotmilktea@kakao.com';
     member.providerId = ProviderIdEnum.KAKAO;
     await entityManager.save(member);
@@ -67,13 +68,6 @@ describe('Chat', () => {
     room.participant = member;
     savedRoom = await entityManager.save(room);
 
-    const anotherRoom: ChattingRoom = new ChattingRoom();
-    anotherRoom.id = id2;
-    anotherRoom.title = `${JAN_26}일자 채팅방`;
-    anotherRoom.createdAt = anotherDay;
-    anotherRoom.participant = member;
-    await entityManager.save(anotherRoom);
-
     app.use(cookieParser());
     await app.init();
   });
@@ -83,6 +77,15 @@ describe('Chat', () => {
   });
 
   describe('GET /chat/ai', () => {
+    beforeAll(async () => {
+      const anotherRoom: ChattingRoom = new ChattingRoom();
+      anotherRoom.id = id2;
+      anotherRoom.title = `${JAN_26}일자 채팅방`;
+      anotherRoom.createdAt = anotherDay;
+      anotherRoom.participant = member;
+      await entityManager.save(anotherRoom);
+    });
+
     [
       {
         scenario:
