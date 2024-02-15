@@ -12,6 +12,7 @@ import { ChattingInfo } from './chatting-info.interface';
 import {
   ChattingMessageDto,
   ChattingRoomDto,
+  ChattingRoomGroupDto,
   CreateChattingMessageDto,
   UpdateChattingRoomDto,
 } from './dto';
@@ -53,7 +54,7 @@ export class ChatService {
   async findRoomsByEmail(
     email: string,
     providerId: number,
-  ): Promise<ChattingRoomDto[]> {
+  ): Promise<ChattingRoomGroupDto[]> {
     return this.entityManager.transaction(async (manager: EntityManager) => {
       try {
         const member: Member = await this.findMemberByEmail(
@@ -61,15 +62,28 @@ export class ChatService {
           email,
           providerId,
         );
-        const rooms: ChattingRoom[] = await manager.find(ChattingRoom, {
-          where: {
-            participant: { id: member.id },
+        const rooms: ChattingRoom[] = await manager
+          .createQueryBuilder(ChattingRoom, 'room')
+          .select()
+          .where('room.participantId = :memberId', { memberId: member.id })
+          .orderBy('DATE(room.createdAt)', 'DESC')
+          .getMany();
+
+        return rooms.reduce(
+          (acc: ChattingRoomGroupDto[], curr: ChattingRoom) => {
+            const roomDto: ChattingRoomDto = ChattingRoomDto.fromEntity(curr);
+            const date: string = (
+              curr?.createdAt ?? new Date()
+            ).toLocaleDateString('ko-KR');
+
+            if (date === acc.at(-1)?.date) {
+              acc.at(-1)?.rooms.push(roomDto);
+              return acc;
+            }
+            acc.push(ChattingRoomGroupDto.makeGroup(date, roomDto));
+            return acc;
           },
-          select: ['id', 'title'],
-        });
-        return rooms.map(
-          (room: ChattingRoom): ChattingRoomDto =>
-            ChattingRoomDto.fromEntity(room),
+          [],
         );
       } catch (err: unknown) {
         throw err;
