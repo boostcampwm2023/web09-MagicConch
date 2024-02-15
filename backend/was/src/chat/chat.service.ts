@@ -55,40 +55,38 @@ export class ChatService {
     email: string,
     providerId: number,
   ): Promise<ChattingRoomGroupDto[]> {
-    return this.entityManager.transaction(async (manager: EntityManager) => {
-      try {
-        const member: Member = await this.findMemberByEmail(
-          manager,
-          email,
-          providerId,
-        );
-        const rooms: ChattingRoom[] = await manager
-          .createQueryBuilder(ChattingRoom, 'room')
-          .select()
-          .where('room.participantId = :memberId', { memberId: member.id })
-          .orderBy('DATE(room.createdAt)', 'DESC')
-          .getMany();
+    const rooms: ChattingRoom[] = await this.entityManager.transaction(
+      async (manager: EntityManager) => {
+        try {
+          const member: Member = await this.findMemberByEmail(
+            manager,
+            email,
+            providerId,
+          );
+          return await manager
+            .createQueryBuilder(ChattingRoom, 'room')
+            .select()
+            .where('room.participantId = :memberId', { memberId: member.id })
+            .orderBy('DATE(room.createdAt)', 'DESC')
+            .getMany();
+        } catch (err: unknown) {
+          throw err;
+        }
+      },
+    );
+    return rooms.reduce((acc: ChattingRoomGroupDto[], curr: ChattingRoom) => {
+      const roomDto: ChattingRoomDto = ChattingRoomDto.fromEntity(curr);
+      const date: string = (curr?.createdAt ?? new Date()).toLocaleDateString(
+        'ko-KR',
+      );
 
-        return rooms.reduce(
-          (acc: ChattingRoomGroupDto[], curr: ChattingRoom) => {
-            const roomDto: ChattingRoomDto = ChattingRoomDto.fromEntity(curr);
-            const date: string = (
-              curr?.createdAt ?? new Date()
-            ).toLocaleDateString('ko-KR');
-
-            if (date === acc.at(-1)?.date) {
-              acc.at(-1)?.rooms.push(roomDto);
-              return acc;
-            }
-            acc.push(ChattingRoomGroupDto.makeGroup(date, roomDto));
-            return acc;
-          },
-          [],
-        );
-      } catch (err: unknown) {
-        throw err;
+      if (date === acc.at(-1)?.date) {
+        acc.at(-1)?.rooms.push(roomDto);
+        return acc;
       }
-    });
+      acc.push(ChattingRoomGroupDto.makeGroup(date, roomDto));
+      return acc;
+    }, []);
   }
 
   async findMessagesById(
@@ -96,29 +94,28 @@ export class ChatService {
     email: string,
     providerId: number,
   ): Promise<ChattingMessageDto[]> {
-    return this.entityManager.transaction(async (manager: EntityManager) => {
-      try {
-        const member: Member = await this.findMemberByEmail(
-          manager,
-          email,
-          providerId,
-        );
-        await this.findRoomById(manager, id, member.id);
-        const messages: ChattingMessage[] = await manager.find(
-          ChattingMessage,
-          {
+    const messages: ChattingMessage[] = await this.entityManager.transaction(
+      async (manager: EntityManager) => {
+        try {
+          const member: Member = await this.findMemberByEmail(
+            manager,
+            email,
+            providerId,
+          );
+          await this.findRoomById(manager, id, member.id);
+          return await manager.find(ChattingMessage, {
             where: { room: { id: id } },
             select: ['isHost', 'message'],
-          },
-        );
-        return messages.map(
-          (message: ChattingMessage): ChattingMessageDto =>
-            ChattingMessageDto.fromEntity(message),
-        );
-      } catch (err: unknown) {
-        throw err;
-      }
-    });
+          });
+        } catch (err: unknown) {
+          throw err;
+        }
+      },
+    );
+    return messages.map(
+      (message: ChattingMessage): ChattingMessageDto =>
+        ChattingMessageDto.fromEntity(message),
+    );
   }
 
   async updateRoom(
@@ -170,37 +167,43 @@ export class ChatService {
     email: string,
     providerId: number,
   ): Promise<ChattingInfo> {
-    return this.entityManager.transaction(async (manager: EntityManager) => {
-      try {
-        const member: Member = await this.findMemberByEmail(
-          manager,
-          email,
-          providerId,
-        );
-        const room = await manager.save(
-          ChattingRoom,
-          ChattingRoom.fromMember(member),
-        );
-        return { memberId: member.id, roomId: room.id };
-      } catch (err: unknown) {
-        throw err;
-      }
-    });
+    const { member, room } = await this.entityManager.transaction(
+      async (manager: EntityManager) => {
+        try {
+          const member: Member = await this.findMemberByEmail(
+            manager,
+            email,
+            providerId,
+          );
+          const room = await manager.save(
+            ChattingRoom,
+            ChattingRoom.fromMember(member),
+          );
+          return { member, room };
+        } catch (err: unknown) {
+          throw err;
+        }
+      },
+    );
+    return { memberId: member.id, roomId: room.id };
   }
 
   private async createRoomForNonMember(): Promise<ChattingInfo> {
-    return this.entityManager.transaction(async (manager: EntityManager) => {
-      try {
-        const member: Member = await manager.save(Member, new Member());
-        const room = await manager.save(
-          ChattingRoom,
-          ChattingRoom.fromMember(member),
-        );
-        return { memberId: member.id, roomId: room.id };
-      } catch (err: unknown) {
-        throw err;
-      }
-    });
+    const { member, room } = await this.entityManager.transaction(
+      async (manager: EntityManager) => {
+        try {
+          const member: Member = await manager.save(Member, new Member());
+          const room = await manager.save(
+            ChattingRoom,
+            ChattingRoom.fromMember(member),
+          );
+          return { member, room };
+        } catch (err: unknown) {
+          throw err;
+        }
+      },
+    );
+    return { memberId: member.id, roomId: room.id };
   }
 
   private async findRoomById(
