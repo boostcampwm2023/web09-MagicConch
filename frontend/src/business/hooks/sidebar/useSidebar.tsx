@@ -49,12 +49,12 @@ export function useSidebar() {
     () =>
       ({ children }: PropsWithChildren) =>
         (
-          <main
+          <section
             ref={mainRef}
             className={`w-h-full transition-transform ease-in-out duration-500`}
           >
             {children}
-          </main>
+          </section>
         ),
     [],
   );
