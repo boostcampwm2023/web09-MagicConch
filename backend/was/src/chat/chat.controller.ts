@@ -20,7 +20,7 @@ import {
 import { ChatService } from './chat.service';
 import {
   ChattingMessageDto,
-  ChattingRoomDto,
+  ChattingRoomGroupDto,
   UpdateChattingRoomDto,
 } from './dto';
 
@@ -31,8 +31,8 @@ export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
   @Get('ai')
-  @FindRoomsDecorator('채팅방', [ChattingRoomDto])
-  async findRooms(@Req() req: any): Promise<ChattingRoomDto[]> {
+  @FindRoomsDecorator('채팅방', [ChattingRoomGroupDto])
+  async findRooms(@Req() req: any): Promise<ChattingRoomGroupDto[]> {
     return await this.chatService.findRoomsByEmail(
       req.user.email,
       req.user.providerId,
