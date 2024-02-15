@@ -25,13 +25,11 @@ export function AIChatPage({}: AIChatPageProps) {
         ]}
       />
       <SlideableContent>
-        <div className="w-h-full p-[5%] lg:pl-[25%] lg:pr-[25%]">
-          <ChatContainer
-            messages={messages}
-            inputDisabled={inputDisabled}
-            onSubmitMessage={onSubmitMessage}
-          />
-        </div>
+        <ChatContainer
+          messages={messages}
+          inputDisabled={inputDisabled}
+          onSubmitMessage={onSubmitMessage}
+        />
       </SlideableContent>
       <Sidebar>
         <ChatLogContainer />
