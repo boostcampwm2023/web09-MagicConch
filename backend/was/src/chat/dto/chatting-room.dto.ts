@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsString, IsUUID } from 'class-validator';
+import { IsArray, IsDate, IsString, IsUUID } from 'class-validator';
 import { ChattingRoom } from '../entities';
 
 export class ChattingRoomDto {
@@ -25,10 +25,17 @@ export class ChattingRoomDto {
 }
 
 export class ChattingRoomGroupDto {
+  @IsString()
   @ApiProperty({ description: '특정 일자', required: true })
   readonly date?: string;
 
-  @ApiProperty({ description: '특정 일자의 채팅방 목록', required: true })
+  @IsArray()
+  @ApiProperty({
+    description: '특정 일자의 채팅방 목록',
+    type: ChattingRoomDto,
+    isArray: true,
+    required: true,
+  })
   readonly rooms: ChattingRoomDto[] = [];
 
   static makeGroup(date: string, dto: ChattingRoomDto): ChattingRoomGroupDto {
