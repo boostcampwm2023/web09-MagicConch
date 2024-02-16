@@ -12,6 +12,7 @@ export function ChatLogList({ list }: ChatLogListProps) {
       {list.map(({ id, title }) => (
         <ChatLogItem
           key={id}
+          id={id}
           title={title}
         />
       ))}

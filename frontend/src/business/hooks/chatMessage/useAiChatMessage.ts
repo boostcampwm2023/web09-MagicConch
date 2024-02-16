@@ -1,9 +1,12 @@
 import { useChatMessage } from '.';
 import { useEffect, useState } from 'react';
 
-import { MessageButton } from '@components/common/ChatContainer';
+import type { Message, MessageButton } from '@components/common/ChatContainer';
 
 import { AISocketManager } from '@business/services/SocketManager';
+
+import { getChatLogQuery } from '@stores/queries/getChatLogQuery';
+import { useAiChatLogId } from '@stores/zustandStores/useAiChatLogId';
 
 export function useAiChatMessage() {
   const socketManager = AISocketManager.getInstance();
@@ -49,6 +52,25 @@ export function useAiChatMessage() {
   const addPickCardMessage = (tarotId: number) => {
     addMessage('left', { tarotId });
   };
+
+  const { id } = useAiChatLogId();
+  const { data } = getChatLogQuery(id);
+
+  if (data) {
+    const messages =
+      data?.map(({ isHost, message }) => {
+        const type = isHost ? 'left' : 'right';
+        const profile = isHost ? '/moon.png' : '/ddung.png';
+        return { type, profile, message };
+      }) || [];
+
+    return {
+      messages: messages as Message[],
+      inputDisabled: true,
+      onSubmitMessage: () => {},
+      addPickCardMessage: () => {},
+    };
+  }
 
   return { messages, inputDisabled, onSubmitMessage, addPickCardMessage };
 }
