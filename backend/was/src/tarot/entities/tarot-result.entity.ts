@@ -15,7 +15,7 @@ export class TarotResult {
   @Column({ length: 255 })
   cardUrl: string;
 
-  @Column({ type: 'text' })
+  @Column({ length: 1000 })
   message: string;
 
   @CreateDateColumn()

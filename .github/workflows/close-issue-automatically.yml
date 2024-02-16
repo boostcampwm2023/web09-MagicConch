@@ -7,42 +7,33 @@ on:
 
 jobs:
   close-issue:
-    name: close issue automatically
+    name: Close Issue
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/github-script@v6
+      - uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
           script: |
-            // 현재 pr 날린 브랜치 이름
-            const branch_name = context.payload.pull_request.head.ref;
-            // 브랜치 이름에 포함된 이슈 번호
-            const issue_num = branch_name.match(/#(\d+)/)[1];
+            const branchName = context.payload.pull_request.head.ref;
+            const issueNumbers = branchName.match(/#(\d+)/g);
 
-            // 이슈 번호로 해당 이슈 받아오기
-            const issue = await github.rest.issues.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: issue_num
-            });
-
-            const issue_data = issue.data;
-            const issue_body = issue_data.body;
-
-            const issue_nums = [issue_num];
-
-            issue_body
-              ?.match(/#(\d+)/g)
-              ?.forEach(issue => {
-                issue_nums.push(issue.replace('#', ''))
+            for(const num of issueNumbers) {
+              const issueNumber = num.replace('#', '');
+              const res = await github.rest.issues.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
               });
+              const subIssues = res?.data.body
+                ?.match(/#(\d+)/g)
+                ?.forEach((issue) => issueNumbers.push(issue.replace('#', '')));
+            }
 
-            // 이슈들을 닫아줌.
-            issue_nums?.forEach(issue_num => {
+            issueNumbers?.forEach((num) => {
               github.rest.issues.update({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                issue_number: issue_num,
-                state: 'closed'
+                issue_number: num.replace('#', ''),
+                state: 'closed',
               });
             });

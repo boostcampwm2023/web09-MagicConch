@@ -9,7 +9,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
-import { PROVIDER_ID } from 'src/common/constants/etc';
+import { ProviderIdEnum } from 'src/common/constants/etc';
 import {
   AuthenticateDecorator,
   KakaoLoginDecorator,
@@ -60,12 +60,12 @@ export class AuthController {
   async kakaoLogout(@Req() req: any, @Res() res: Response): Promise<void> {
     const user: JwtPayloadDto = req.user;
     switch (user.providerId) {
-      case PROVIDER_ID.KAKAO:
+      case ProviderIdEnum.KAKAO:
         await this.kakaoAuthService.logoutOAuth(user);
         break;
-      case PROVIDER_ID.NAVER:
+      case ProviderIdEnum.NAVER:
         break;
-      case PROVIDER_ID.GOOGLE:
+      case ProviderIdEnum.GOOGLE:
         break;
     }
     res.clearCookie('magicconch');

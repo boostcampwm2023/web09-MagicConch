@@ -17,7 +17,7 @@ export class ChattingMessage {
   @Column('boolean')
   isHost: boolean;
 
-  @Column({ length: 1000 })
+  @Column({ length: 1000, nullable: false })
   message: string;
 
   @CreateDateColumn()

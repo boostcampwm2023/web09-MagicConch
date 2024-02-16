@@ -1,4 +1,5 @@
 import { ChattingRoom } from 'src/chat/entities';
+import { ProviderIdEnum } from 'src/common/constants/etc';
 import { TarotCardPack } from 'src/tarot/entities';
 import {
   Column,
@@ -19,8 +20,8 @@ export class Member {
   @Column({ length: 320, nullable: true })
   email?: string;
 
-  @Column({ nullable: true })
-  providerId?: number;
+  @Column({ type: 'tinyint', nullable: true })
+  providerId?: ProviderIdEnum;
 
   @Column({ length: 30, nullable: true })
   nickname?: string;
@@ -34,7 +35,7 @@ export class Member {
   @UpdateDateColumn()
   updatedAt?: Date;
 
-  @DeleteDateColumn({ name: 'deletedAt', nullable: true })
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
   deletedAt?: Date;
 
   @OneToMany(() => ChattingRoom, (chattingRoom) => chattingRoom.participant)

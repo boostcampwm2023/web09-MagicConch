@@ -33,10 +33,14 @@ export class TarotService {
   async findTarotCardByCardNo(cardNo: number): Promise<TarotCardDto> {
     try {
       const tarotCard: TarotCard | null =
-        await this.tarotCardRepository.findOneBy({
-          cardNo: cardNo,
-          cardPack: undefined,
+        await this.tarotCardRepository.findOne({
+          where: {
+            cardNo: cardNo,
+            cardPack: undefined,
+          },
+          select: ['cardNo', 'ext', 'cardPack'],
         });
+
       if (!tarotCard) {
         throw new NotFoundException(ERR_MSG.TAROT_CARD_NOT_FOUND);
       }
@@ -49,7 +53,10 @@ export class TarotService {
   async findTarotResultById(id: string): Promise<TarotResultDto> {
     try {
       const tarotResult: TarotResult | null =
-        await this.tarotResultRepository.findOneBy({ id: id });
+        await this.tarotResultRepository.findOne({
+          where: { id: id },
+          select: ['cardUrl', 'message'],
+        });
       if (!tarotResult) {
         throw new NotFoundException(ERR_MSG.TAROT_RESULT_NOT_FOUND);
       }

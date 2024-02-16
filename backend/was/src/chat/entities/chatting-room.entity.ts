@@ -16,7 +16,7 @@ export class ChattingRoom {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ nullable: true })
+  @Column({ length: 30, nullable: true })
   title?: string;
 
   @CreateDateColumn()
@@ -25,7 +25,7 @@ export class ChattingRoom {
   @UpdateDateColumn()
   updatedAt?: Date;
 
-  @DeleteDateColumn({ name: 'deletedAt', nullable: true })
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
   deletedAt?: Date;
 
   @OneToMany(() => ChattingMessage, (chattingMessage) => chattingMessage.id)
