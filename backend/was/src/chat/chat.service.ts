@@ -68,7 +68,8 @@ export class ChatService {
           );
           return await manager
             .createQueryBuilder(ChattingRoom, 'room')
-            .select()
+            .select(['room.id', 'room.title'])
+            .addSelect('room.createdAt', 'room_created_at')
             .where('room.participant_id = :memberId', { memberId: member.id })
             .orderBy('DATE(room.createdAt)', 'DESC')
             .getMany();
@@ -108,7 +109,8 @@ export class ChatService {
           await this.findRoomById(manager, id, member.id);
           return await manager
             .createQueryBuilder(ChattingMessage, 'message')
-            .select()
+            .select('message.message', 'message_message')
+            .addSelect('message.isHost', 'message_is_host')
             .where('message.room_id = :roomId', { roomId: id })
             .orderBy('DATE(message.order)')
             .getMany();
