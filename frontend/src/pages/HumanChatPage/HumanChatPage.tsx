@@ -50,32 +50,35 @@ export function HumanChatPage() {
   }, []);
 
   return (
-    <Background type="dynamic">
-      <Header
-        rightItems={[
-          <SideBarButton
-            onClick={toggleSidebar}
-            sideBarOpened={sidebarOpened}
-          />,
-        ]}
-      />
-      <Sidebar>
-        <ChatContainer
-          messages={messages}
-          inputDisabled={inputDisabled}
-          onSubmitMessage={onSubmitMessage}
+    <>
+      <Background type="dynamic" />
+      <main className="flex-with-center flex-col w-screen h-dvh">
+        <Header
+          rightItems={[
+            <SideBarButton
+              onClick={toggleSidebar}
+              sideBarOpened={sidebarOpened}
+            />,
+          ]}
         />
-      </Sidebar>
-      <SlideableContent>
-        <Outlet
-          context={{
-            tarotButtonClick,
-            tarotButtonDisabled,
-            unblockGoBack,
-            ...humanChatPageState,
-          }}
-        />
-      </SlideableContent>
-    </Background>
+        <SlideableContent>
+          <Outlet
+            context={{
+              tarotButtonClick,
+              tarotButtonDisabled,
+              unblockGoBack,
+              ...humanChatPageState,
+            }}
+          />
+        </SlideableContent>
+        <Sidebar>
+          <ChatContainer
+            messages={messages}
+            inputDisabled={inputDisabled}
+            onSubmitMessage={onSubmitMessage}
+          />
+        </Sidebar>
+      </main>
+    </>
   );
 }

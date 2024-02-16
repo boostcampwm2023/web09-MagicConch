@@ -37,7 +37,7 @@ export function useSidebar() {
         (
           <aside
             ref={sidebarRef}
-            className={`absolute left-[100%] w-screen lg:w-240  h-full pl-30 pr-30 surface-alt z-10 transition-transform ease-in-out duration-500`}
+            className={`fixed top-0 left-[100%] w-screen lg:w-240 h-full surface-alt z-10 transition-transform ease-in-out duration-500 `}
           >
             {children}
           </aside>
@@ -49,12 +49,12 @@ export function useSidebar() {
     () =>
       ({ children }: PropsWithChildren) =>
         (
-          <div
+          <section
             ref={mainRef}
-            className="w-h-full transition-transform ease-in-out duration-500"
+            className={`w-h-full transition-transform ease-in-out duration-500`}
           >
             {children}
-          </div>
+          </section>
         ),
     [],
   );
