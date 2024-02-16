@@ -7,6 +7,7 @@ import { TarotController } from 'src/tarot/tarot.controller';
 import { TarotService } from 'src/tarot/tarot.service';
 import * as request from 'supertest';
 import { EntityManager } from 'typeorm';
+import { SqliteModule } from './common/database/sqlite.module';
 import { id, wrongId } from './constants';
 
 describe('Tarot', () => {
@@ -16,12 +17,7 @@ describe('Tarot', () => {
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [
-        TypeOrmModule.forRoot({
-          type: 'sqlite',
-          database: ':memory:',
-          entities: [__dirname + '/../src/**/entities/*.entity.{js,ts}'],
-          synchronize: true,
-        }),
+        SqliteModule,
         TypeOrmModule.forFeature([TarotCard, TarotResult, TarotCardPack]),
       ],
       controllers: [TarotController],

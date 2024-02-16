@@ -17,6 +17,7 @@ import { ProviderIdEnum } from 'src/common/constants/etc';
 import { Member } from 'src/members/entities';
 import * as request from 'supertest';
 import { EntityManager } from 'typeorm';
+import { SqliteModule } from './common/database/sqlite.module';
 import { diffJwtToken, id, id2, jwtToken, wrongId } from './constants';
 
 const JAN_15: string = '2024-01-15';
@@ -33,14 +34,7 @@ describe('Chat', () => {
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [
-        TypeOrmModule.forRoot({
-          type: 'sqlite',
-          database: ':memory:',
-          entities: [__dirname + '/../src/**/entities/*.entity.{js,ts}'],
-          synchronize: true,
-          logging: ['query'],
-          logger: 'file',
-        }),
+        SqliteModule,
         TypeOrmModule.forFeature([ChattingRoom, ChattingMessage, Member]),
       ],
       providers: [ChatService, JwtAuthGuard, JwtStrategy],
