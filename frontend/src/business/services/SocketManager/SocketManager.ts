@@ -20,7 +20,7 @@ export class SocketManager {
     return this.socket.connected;
   }
 
-  connect({ withCredentials = false }) {
+  connect({ withCredentials = false } = {}) {
     if (this.socket?.connected) {
       return;
     }
