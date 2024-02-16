@@ -14,8 +14,8 @@ import { RedisCacheModule } from 'src/common/config/cache/redis-cache.module';
 import { ERR_MSG } from 'src/common/constants/errors';
 import { Member } from 'src/members/entities';
 import * as request from 'supertest';
+import { jwtToken } from './common/constants';
 import { SqliteModule } from './common/database/sqlite.module';
-import { jwtToken } from './constants';
 
 dotenv.config();
 

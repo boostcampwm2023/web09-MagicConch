@@ -17,8 +17,8 @@ import { ProviderIdEnum } from 'src/common/constants/etc';
 import { Member } from 'src/members/entities';
 import * as request from 'supertest';
 import { EntityManager } from 'typeorm';
+import { diffJwtToken, id, id2, jwtToken, wrongId } from './common/constants';
 import { SqliteModule } from './common/database/sqlite.module';
-import { diffJwtToken, id, id2, jwtToken, wrongId } from './constants';
 
 const JAN_15: string = '2024-01-15';
 const JAN_26: string = '2024-01-26';

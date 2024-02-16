@@ -7,8 +7,8 @@ import { TarotController } from 'src/tarot/tarot.controller';
 import { TarotService } from 'src/tarot/tarot.service';
 import * as request from 'supertest';
 import { EntityManager } from 'typeorm';
+import { id, wrongId } from './common/constants';
 import { SqliteModule } from './common/database/sqlite.module';
-import { id, wrongId } from './constants';
 
 describe('Tarot', () => {
   let app: INestApplication;
