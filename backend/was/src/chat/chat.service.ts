@@ -66,7 +66,7 @@ export class ChatService {
           return await manager
             .createQueryBuilder(ChattingRoom, 'room')
             .select()
-            .where('room.participantId = :memberId', { memberId: member.id })
+            .where('room.participant_id = :memberId', { memberId: member.id })
             .orderBy('DATE(room.createdAt)', 'DESC')
             .getMany();
         } catch (err: unknown) {
