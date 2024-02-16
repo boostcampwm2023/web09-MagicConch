@@ -4,7 +4,7 @@ import { act } from 'react-dom/test-utils';
 
 import * as Media from '@business/services/Media';
 
-import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
+import { useMediaInfo } from '@stores/zustandStores';
 
 import { __setMockMediaStreamTracks, createFakeMediaStreamTrack, mockMediaStream } from '@mocks/webRTC';
 

@@ -5,8 +5,8 @@ import type { Message, MessageButton } from '@components/common/ChatContainer';
 
 import { AISocketManager } from '@business/services/SocketManager';
 
-import { getChatLogQuery } from '@stores/queries/getChatLogQuery';
-import { useAiChatLogId } from '@stores/zustandStores/useAiChatLogId';
+import { getChatLogQuery } from '@stores/queries';
+import { useAiChatLogId } from '@stores/zustandStores';
 
 export function useAiChatMessage() {
   const socketManager = AISocketManager.getInstance();

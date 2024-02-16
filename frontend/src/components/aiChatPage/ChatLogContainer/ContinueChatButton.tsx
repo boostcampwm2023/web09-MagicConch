@@ -1,6 +1,6 @@
 import { IconButton } from '@components/common/Buttons';
 
-import { useAiChatLogId } from '@stores/zustandStores/useAiChatLogId';
+import { useAiChatLogId } from '@stores/zustandStores';
 
 export function ContinueChatButton() {
   const { id, removeId } = useAiChatLogId();

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 import { AISocketManager } from '@business/services/SocketManager';
 
-import { getChatLogListQuery } from '@stores/queries/getChatLogListQuery';
+import { getChatLogListQuery } from '@stores/queries';
 import { useAiChatLogId } from '@stores/zustandStores';
 
 export function useChatLogList() {

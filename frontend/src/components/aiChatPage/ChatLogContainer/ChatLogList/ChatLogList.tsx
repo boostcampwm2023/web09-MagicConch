@@ -1,4 +1,4 @@
-import { ChatLogListResponse } from '@stores/queries/getChatLogListQuery';
+import { ChatLogListResponse } from '@stores/queries';
 
 import { ChatLogItem } from './ChatLogItem';
 

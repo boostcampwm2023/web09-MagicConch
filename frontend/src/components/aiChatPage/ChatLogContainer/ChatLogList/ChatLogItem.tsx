@@ -1,6 +1,6 @@
 import { IconButton } from '@components/common';
 
-import { useAiChatLogId } from '@stores/zustandStores/useAiChatLogId';
+import { useAiChatLogId } from '@stores/zustandStores';
 
 interface ChatLogItemProps {
   id: string;
