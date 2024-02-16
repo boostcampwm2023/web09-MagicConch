@@ -138,16 +138,19 @@ describe('Chat', () => {
         {
           isHost: true,
           message: '어떤 고민이 있어?',
+          order: 1,
         },
         {
           isHost: false,
           message: '오늘 운세를 알고 싶어',
+          order: 2,
         },
       ];
       for (const chatLog of chatLogs) {
         const message: ChattingMessage = new ChattingMessage();
         message.isHost = chatLog.isHost;
         message.message = chatLog.message;
+        message.order = chatLog.order;
         message.room = savedRoom;
         await entityManager.save(message);
         messages.push(ChattingMessageDto.fromEntity(message));
