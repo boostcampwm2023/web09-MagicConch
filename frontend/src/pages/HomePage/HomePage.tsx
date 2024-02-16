@@ -17,8 +17,9 @@ export function HomePage() {
   };
 
   return (
-    <Background>
-      <div className="relative top-75 flex gap-36 z-1">
+    <>
+      <Background />
+      <main className="w-screen h-dvh relative flex-with-center gap-36 z-1">
         <Button onClick={openLoginPopup}>AI에게 타로보기</Button>
         <Button
           onClick={moveHumanChat}
@@ -26,7 +27,7 @@ export function HomePage() {
         >
           채팅방 개설하기
         </Button>
-      </div>
-    </Background>
+      </main>
+    </>
   );
 }

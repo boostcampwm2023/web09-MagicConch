@@ -15,27 +15,28 @@ export function AIChatPage({}: AIChatPageProps) {
   useAiTarotSpread(addPickCardMessage);
 
   return (
-    <Background type="dynamic">
-      <Header
-        rightItems={[
-          <SideBarButton
-            onClick={toggleSidebar}
-            sideBarOpened={sidebarOpened}
-          />,
-        ]}
-      />
-      <SlideableContent>
-        <div className="w-h-full p-[5%] lg:pl-[25%] lg:pr-[25%]">
+    <>
+      <Background type="dynamic" />
+      <main className="flex-with-center flex-col w-screen h-dvh">
+        <Header
+          rightItems={[
+            <SideBarButton
+              onClick={toggleSidebar}
+              sideBarOpened={sidebarOpened}
+            />,
+          ]}
+        />
+        <SlideableContent>
           <ChatContainer
             messages={messages}
             inputDisabled={inputDisabled}
             onSubmitMessage={onSubmitMessage}
           />
-        </div>
-      </SlideableContent>
-      <Sidebar>
-        <ChatLogContainer />
-      </Sidebar>
-    </Background>
+        </SlideableContent>
+        <Sidebar>
+          <ChatLogContainer />
+        </Sidebar>
+      </main>
+    </>
   );
 }
