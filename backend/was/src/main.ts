@@ -1,42 +1,48 @@
-import { ValidationPipe } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
+import * as dotenv from 'dotenv';
 import { AppModule } from './app.module';
 import { setupSentry } from './common/config/sentry.setting';
 import { setupSwagger } from './common/config/swagger.setting';
 import { LoggerService } from './logger/logger.service';
 
+dotenv.config();
+
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app: INestApplication = await NestFactory.create(AppModule);
 
-  app.enableCors({
-    origin: '*',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
-  });
-
-  app.useGlobalPipes(new ValidationPipe());
-  app.use(cookieParser());
+  const origin: string = process.env.CORS_ALLOW_DOMAIN ?? '';
+  const port: number = parseInt(process.env.PORT || '3000');
+  const dsn: string = process.env.SENTRY_DSN || '';
 
   const logger: LoggerService = app.get(LoggerService);
+
+  app.enableCors({
+    origin: origin,
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+    credentials: true,
+    allowedHeaders: ['Authorization', 'Content-type'],
+  });
+  app.enableShutdownHooks();
+  app.use(cookieParser());
+  app.useGlobalPipes(new ValidationPipe());
   app.useLogger(logger);
 
-  const dsn: string = process.env.SENTRY_DSN || '';
   setupSentry(app, dsn);
+  if (process.env.ENV === 'DEV') {
+    setupSwagger(app);
+  }
 
-  setupSwagger(app);
-
-  const port: number = parseInt(process.env.PORT || '3000');
   const server: any = await app.listen(port);
 
   process.on('SIGTERM', async () => {
     logger.log('🖐️ Received SIGTERM signal. Start Graceful Shutdown...');
 
-    server.close();
+    await server.close();
     await app.close();
-
-    logger.log('🖐️ Nest Application closed gracefully...');
     process.exit(0);
   });
 }
+
 bootstrap();

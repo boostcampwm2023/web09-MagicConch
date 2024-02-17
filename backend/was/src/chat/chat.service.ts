@@ -1,136 +1,257 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { ERR_MSG } from 'src/common/constants/errors';
-import { Member } from 'src/members/entities/member.entity';
-import { Repository } from 'typeorm';
-import { ChattingMessageResponseDto } from './dto/chatting-message-response.dto';
-import { ChattingRoomResponseDto } from './dto/chatting-room-response.dto';
-import { CreateChattingMessageDto } from './dto/create-chatting-message.dto';
-import { UpdateChattingRoomDto } from './dto/update-chatting-room.dto';
-import { ChattingMessage } from './entities/chatting-message.entity';
-import { ChattingRoom } from './entities/chatting-room.entity';
-
-export interface ChattingInfo {
-  memeberId: string;
-  roomId: string;
-}
+import { UserInfo } from 'src/common/types/socket';
+import { Member } from 'src/members/entities';
+import { EntityManager } from 'typeorm';
+import { ChattingInfo } from './chatting-info.interface';
+import {
+  ChattingMessageDto,
+  ChattingRoomDto,
+  ChattingRoomGroupDto,
+  CreateChattingMessageDto,
+  UpdateChattingRoomDto,
+} from './dto';
+import { ChattingMessage, ChattingRoom } from './entities';
 
 @Injectable()
 export class ChatService {
-  constructor(
-    @InjectRepository(ChattingRoom)
-    private readonly chattingRoomRepository: Repository<ChattingRoom>,
-    @InjectRepository(ChattingMessage)
-    private readonly chattingMessageRepository: Repository<ChattingMessage>,
-    @InjectRepository(Member)
-    private readonly membersRepository: Repository<Member>,
-  ) {}
+  constructor(private readonly entityManager: EntityManager) {}
 
-  async createRoom(memberId: string): Promise<ChattingInfo> {
-    /**
-     * 임시로 쿠키 대신 사용
-     */
-    const member: Member = new Member();
-    const savedMember: Member = await this.membersRepository.save(member);
-
-    // const member: Member | null = await this.membersRepository.findOneBy({
-    //   id: memberId,
-    // });
-    // if (!member) {
-    //   throw new NotFoundException();
-    // }
-
-    const room: ChattingRoom = ChattingRoom.fromMember(savedMember);
-    try {
-      const savedRoom: ChattingRoom =
-        await this.chattingRoomRepository.save(room);
-      return { memeberId: savedMember.id, roomId: savedRoom.id };
-    } catch (err: unknown) {
-      throw err;
-    }
+  async createRoom(userInfo?: UserInfo): Promise<ChattingInfo> {
+    return userInfo
+      ? this.createRoomForMember(userInfo.email, userInfo.providerId)
+      : this.createRoomForNonMember();
   }
 
-  async createMessage(
-    roomId: string,
-    createChattingMessageDto: CreateChattingMessageDto[],
+  async createMessages(
+    id: string,
+    memberId: string,
+    createMessageDtos: CreateChattingMessageDto[],
   ): Promise<void> {
-    const room: ChattingRoom | null =
-      await this.chattingRoomRepository.findOneBy({
-        id: roomId,
-      });
-    if (!room) {
-      throw new NotFoundException(ERR_MSG.CHATTING_ROOM_NOT_FOUND);
-    }
-    try {
-      createChattingMessageDto.forEach(
-        async (messageDto: CreateChattingMessageDto) => {
-          const message: ChattingMessage = ChattingMessage.fromDto(
-            messageDto,
-            room,
-          );
-          await this.chattingMessageRepository.save(message);
-        },
-      );
-    } catch (err: unknown) {
-      throw err;
-    }
-  }
-
-  async findRoomsById(id: string): Promise<ChattingRoomResponseDto[]> {
-    const rooms: ChattingRoom[] = await this.chattingRoomRepository.findBy({
-      id,
+    return this.entityManager.transaction(async (manager: EntityManager) => {
+      try {
+        const room: ChattingRoom = await this.findRoomById(
+          manager,
+          id,
+          memberId,
+        );
+        const messages: ChattingMessage[] = createMessageDtos.map(
+          (
+            createMessageDto: CreateChattingMessageDto,
+            idx: number,
+          ): ChattingMessage =>
+            ChattingMessage.fromDto(createMessageDto, room, idx),
+        );
+        await manager.insert(ChattingMessage, messages);
+      } catch (err: unknown) {
+        throw err;
+      }
     });
-    return rooms.map((room: ChattingRoom) =>
-      ChattingRoomResponseDto.fromEntity(room),
-    );
   }
 
-  async findMessagesById(id: string): Promise<ChattingMessageResponseDto[]> {
-    const messages: ChattingMessage[] =
-      await this.chattingMessageRepository.findBy({ id });
-    return messages.map((message: ChattingMessage) =>
-      ChattingMessageResponseDto.fromEntity(message),
+  async findRoomsByEmail(
+    email: string,
+    providerId: number,
+  ): Promise<ChattingRoomGroupDto[]> {
+    const rooms: ChattingRoom[] = await this.entityManager.transaction(
+      async (manager: EntityManager) => {
+        try {
+          const member: Member = await this.findMemberByEmail(
+            manager,
+            email,
+            providerId,
+          );
+          return await manager
+            .createQueryBuilder(ChattingRoom, 'room')
+            .select(['room.id', 'room.title'])
+            .addSelect('room.createdAt', 'room_created_at')
+            .where('room.participant_id = :memberId', { memberId: member.id })
+            .orderBy('DATE(room.createdAt)', 'DESC')
+            .getMany();
+        } catch (err: unknown) {
+          throw err;
+        }
+      },
+    );
+    return rooms.reduce((acc: ChattingRoomGroupDto[], curr: ChattingRoom) => {
+      const roomDto: ChattingRoomDto = ChattingRoomDto.fromEntity(curr);
+      const date: string = (curr?.createdAt ?? new Date()).toLocaleDateString(
+        'ko-KR',
+      );
+
+      if (date === acc.at(-1)?.date) {
+        acc.at(-1)?.rooms.push(roomDto);
+        return acc;
+      }
+      acc.push(ChattingRoomGroupDto.makeGroup(date, roomDto));
+      return acc;
+    }, []);
+  }
+
+  async findMessagesById(
+    id: string,
+    email: string,
+    providerId: number,
+  ): Promise<ChattingMessageDto[]> {
+    const messages: ChattingMessage[] = await this.entityManager.transaction(
+      async (manager: EntityManager) => {
+        try {
+          const member: Member = await this.findMemberByEmail(
+            manager,
+            email,
+            providerId,
+          );
+          await this.findRoomById(manager, id, member.id);
+          return await manager
+            .createQueryBuilder(ChattingMessage, 'message')
+            .select('message.message', 'message_message')
+            .addSelect('message.isHost', 'message_is_host')
+            .where('message.room_id = :roomId', { roomId: id })
+            .orderBy('DATE(message.order)')
+            .getMany();
+        } catch (err: unknown) {
+          throw err;
+        }
+      },
+    );
+    return messages.map(
+      (message: ChattingMessage): ChattingMessageDto =>
+        ChattingMessageDto.fromEntity(message),
     );
   }
 
   async updateRoom(
     id: string,
-    memberId: string,
+    email: string,
+    providerId: number,
     updateChattingRoomDto: UpdateChattingRoomDto,
   ): Promise<void> {
-    const room: ChattingRoom | null =
-      await this.chattingRoomRepository.findOneBy({ id });
-    if (!room) {
-      throw new NotFoundException(ERR_MSG.CHATTING_ROOM_NOT_FOUND);
-    }
-    if (room.participant.id !== memberId) {
-      throw new ForbiddenException(ERR_MSG.UPDATE_CHATTING_ROOM_FORBIDDEN);
-    }
+    return this.entityManager.transaction(async (manager: EntityManager) => {
+      try {
+        const member: Member = await this.findMemberByEmail(
+          manager,
+          email,
+          providerId,
+        );
+        await this.findRoomById(manager, id, member.id);
+        await manager.update(
+          ChattingRoom,
+          { id: id },
+          { title: updateChattingRoomDto.title },
+        );
+      } catch (err: unknown) {
+        throw err;
+      }
+    });
+  }
+
+  async removeRoom(
+    id: string,
+    email: string,
+    providerId: number,
+  ): Promise<void> {
+    return this.entityManager.transaction(async (manager: EntityManager) => {
+      try {
+        const member: Member = await this.findMemberByEmail(
+          manager,
+          email,
+          providerId,
+        );
+        await this.findRoomById(manager, id, member.id);
+        await manager.softDelete(ChattingRoom, { id: id });
+      } catch (err: unknown) {
+        throw err;
+      }
+    });
+  }
+
+  private async createRoomForMember(
+    email: string,
+    providerId: number,
+  ): Promise<ChattingInfo> {
+    const { member, room } = await this.entityManager.transaction(
+      async (manager: EntityManager) => {
+        try {
+          const member: Member = await this.findMemberByEmail(
+            manager,
+            email,
+            providerId,
+          );
+          const room = await manager.save(
+            ChattingRoom,
+            ChattingRoom.fromMember(member),
+          );
+          return { member, room };
+        } catch (err: unknown) {
+          throw err;
+        }
+      },
+    );
+    return { memberId: member.id, roomId: room.id };
+  }
+
+  private async createRoomForNonMember(): Promise<ChattingInfo> {
+    const { member, room } = await this.entityManager.transaction(
+      async (manager: EntityManager) => {
+        try {
+          const member: Member = await manager.save(Member, new Member());
+          const room = await manager.save(
+            ChattingRoom,
+            ChattingRoom.fromMember(member),
+          );
+          return { member, room };
+        } catch (err: unknown) {
+          throw err;
+        }
+      },
+    );
+    return { memberId: member.id, roomId: room.id };
+  }
+
+  private async findRoomById(
+    manager: EntityManager,
+    id: string,
+    memberId: string,
+  ): Promise<ChattingRoom> {
     try {
-      await this.chattingRoomRepository.update(
-        { id },
-        { title: updateChattingRoomDto.title },
-      );
+      const room: ChattingRoom | null = await manager.findOne(ChattingRoom, {
+        where: { id: id },
+        select: ['id', 'participant'],
+      });
+      if (!room) {
+        throw new NotFoundException(ERR_MSG.CHATTING_ROOM_NOT_FOUND);
+      }
+      if (room.participant.id !== memberId) {
+        throw new ForbiddenException(ERR_MSG.UPDATE_CHATTING_ROOM_FORBIDDEN);
+      }
+      return room;
     } catch (err: unknown) {
       throw err;
     }
   }
 
-  async removeRoom(id: string, memberId: string): Promise<void> {
-    const room: ChattingRoom | null =
-      await this.chattingRoomRepository.findOneBy({ id });
-    if (!room) {
-      throw new NotFoundException(ERR_MSG.CHATTING_ROOM_NOT_FOUND);
-    }
-    if (room.participant.id !== memberId) {
-      throw new ForbiddenException(ERR_MSG.DELETE_CHATTING_ROOM_FORBIDDEN);
-    }
+  private async findMemberByEmail(
+    manager: EntityManager,
+    email: string,
+    providerId: number,
+  ): Promise<Member> {
     try {
-      await this.chattingRoomRepository.softDelete({ id });
+      const member: Member | null = await manager.findOne(Member, {
+        where: {
+          email: email,
+          providerId: providerId,
+        },
+        select: ['id'],
+      });
+      if (!member) {
+        throw new BadRequestException();
+      }
+      return member;
     } catch (err: unknown) {
       throw err;
     }

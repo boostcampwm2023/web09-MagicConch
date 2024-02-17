@@ -1,4 +1,4 @@
-import { useOverflowTextBoxCenter } from '@business/hooks/useOverflowTextBoxCenter';
+import { useOverflowTextBoxCenter } from '@business/hooks';
 
 interface ResultTextBoxProps {
   content: string;

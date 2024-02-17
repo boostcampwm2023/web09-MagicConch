@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { CreateChattingMessageDto } from '../dto/create-chatting-message.dto';
+import { CreateChattingMessageDto } from '../dto';
 import { ChattingRoom } from './chatting-room.entity';
 
 @Entity()
@@ -17,14 +17,17 @@ export class ChattingMessage {
   @Column('boolean')
   isHost: boolean;
 
-  @Column({ length: 1000 })
+  @Column({ length: 1000, nullable: false })
   message: string;
 
+  @Column({ type: 'tinyint', nullable: false })
+  order: number;
+
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt?: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt?: Date;
 
   @ManyToOne(
     () => ChattingRoom,
@@ -35,11 +38,13 @@ export class ChattingMessage {
   static fromDto(
     dto: CreateChattingMessageDto,
     room: ChattingRoom,
+    order: number,
   ): ChattingMessage {
     const message: ChattingMessage = new ChattingMessage();
     message.room = room;
     message.isHost = dto.isHost;
     message.message = dto.message;
+    message.order = order;
     return message;
   }
 }

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsString, IsUUID } from 'class-validator';
-import { Message } from 'src/events/type';
+import { ChatLog } from 'src/common/types/chatbot';
 
 export class CreateChattingMessageDto {
   @IsUUID()
@@ -20,11 +20,10 @@ export class CreateChattingMessageDto {
   })
   readonly message: string;
 
-  static fromMessage(message: Message): CreateChattingMessageDto {
-    return {
-      roomId: message.roomId,
-      isHost: message.chat.role === 'assistant',
-      message: message.chat.content,
-    };
+  static fromChatLog(
+    roomId: string,
+    chatLog: ChatLog,
+  ): CreateChattingMessageDto {
+    return { roomId, ...chatLog };
   }
 }

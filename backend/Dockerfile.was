@@ -2,13 +2,12 @@ FROM node:20
 
 RUN apt-get update && apt-get install -y tini
 
-WORKDIR /app
-
-COPY was ./was
-
 WORKDIR /app/was
 
-RUN npm install
+COPY was/package*.json ./
+RUN npm ci
+
+COPY was .
 RUN npm run build
 
 CMD ["tini", "--", "npm", "run", "start:prod"]

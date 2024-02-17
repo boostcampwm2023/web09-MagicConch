@@ -31,7 +31,7 @@
     <div>
         💡 <a href="https://github.com/boostcampwm2023/web09-MagicConch/wiki/%EA%B8%B0%ED%9A%8D%EC%84%9C">기획서</a>
         &nbsp|&nbsp
-        📋 <a href="https://www.notion.so/Product-Backlog-88058d924740408a952ee52792adb375">백로그</a>
+        📋 <a href="https://github.com/orgs/boostcampwm2023/projects/19">백로그</a>
         &nbsp|&nbsp
         📚 <a href="https://season-broccoli-784.notion.site/8c30523a4b4d47039baf6fd5e7e90b2c?v=b39be6c6aa4e42089a8bb612404e9ab2">기술블로그</a>
     </div>
@@ -43,16 +43,24 @@
     </div>
     <br>
     <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fboostcampwm2023%2Fweb09-MagicConch&count_bg=%238350C6&title_bg=%23555555&icon=github.svg&icon_color=%23E7E7E7&title=hits&edge_flat=false"/></a>
-    <br><br>
-    🔗 <a href="https://github.com/boostcampwm2023/web09-MagicConch?tab=readme-ov-file#%EC%9A%B0%EB%8B%B9%ED%83%95%ED%83%95-%EC%9D%B4%EC%8A%88-%ED%95%B4%EA%B2%B0%EA%B8%B0-">우당탕탕 이슈 해결기</a> 💦
 </div>
 
 <br>
 
+### 우당탕탕 이슈 해결기 💦
+> 타로 밀크티의 기술적 도전과 이슈 해결 기록
+
+- [[BE] 야 너두 무중단 배포 할 수 있어 🫵](https://github.com/boostcampwm2023/web09-MagicConch/wiki/%EC%95%BC-%EB%84%88%EB%91%90-%EB%AC%B4%EC%A4%91%EB%8B%A8-%EB%B0%B0%ED%8F%AC-%ED%95%A0-%EC%88%98-%EC%9E%88%EC%96%B4-%F0%9F%AB%B5)
+- [[BE] SWAG하게 Swagger 사용하는 법 🤟 (Feat. Swagger 데코레이터를 위한 패키지 만들기)](https://github.com/boostcampwm2023/web09-MagicConch/wiki/SWAG%ED%95%98%EA%B2%8C-Swagger-%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94-%EB%B2%95-%F0%9F%A4%9F-(Feat.-Swagger-%EB%8D%B0%EC%BD%94%EB%A0%88%EC%9D%B4%ED%84%B0%EB%A5%BC-%EC%9C%84%ED%95%9C-%ED%8C%A8%ED%82%A4%EC%A7%80-%EB%A7%8C%EB%93%A4%EA%B8%B0))
+- [[FE] 인터랙티브 웹: 카드 애니메이션](https://github.com/boostcampwm2023/web09-MagicConch/wiki/%EC%9D%B8%ED%84%B0%EB%9E%99%ED%8B%B0%EB%B8%8C-%EC%9B%B9:-%EC%B9%B4%EB%93%9C-%EC%95%A0%EB%8B%88%EB%A9%94%EC%9D%B4%EC%85%98)
+- [[FE] 🐻 Context API, Provider 지옥 그리고 귀여운 곰돌이 🐻](https://github.com/boostcampwm2023/web09-MagicConch/wiki/%F0%9F%90%BB-Context-API%EC%99%80-Provider-%EC%A7%80%EC%98%A5%EA%B3%BC-%EA%B7%80%EC%97%AC%EC%9A%B4-%EA%B3%B0%EB%8F%8C%EC%9D%B4-%F0%9F%90%BB)
+- [[FE] 🚀 복잡함을 단순하게, 더 나은 경험으로 🚀](https://github.com/boostcampwm2023/web09-MagicConch/wiki/%F0%9F%9A%80-useWebRTC%ED%9B%85-%EB%A6%AC%ED%8C%A9%ED%86%A0%EB%A7%81-%EC%97%AC%EC%A0%95:-%EB%B3%B5%EC%9E%A1%ED%95%A8%EC%9D%84-%EB%8B%A8%EC%88%9C%ED%95%98%EA%B2%8C,-%EB%8D%94-%EB%82%98%EC%9D%80-%EA%B2%BD%ED%97%98%EC%9C%BC%EB%A1%9C-%F0%9F%9A%80)
+- [[FE/BE] UX를 위해 AI 채팅 반응 속도를 84.87%까지 개선한 방법 😎](https://github.com/boostcampwm2023/web09-MagicConch/wiki/UX%EB%A5%BC-%EC%9C%84%ED%95%B4-AI-%EC%B1%84%ED%8C%85-%EB%B0%98%EC%9D%91-%EC%86%8D%EB%8F%84%EB%A5%BC-84.87%25%EA%B9%8C%EC%A7%80-%EA%B0%9C%EC%84%A0%ED%95%9C-%EB%B0%A9%EB%B2%95-%F0%9F%98%8E)
+- [[FE/BE] 소켓 아이고 😇 (Feat. socket.io는 파싱을 해)](https://github.com/boostcampwm2023/web09-MagicConch/wiki/%EC%86%8C%EC%BC%93-%EC%95%84%EC%9D%B4%EA%B3%A0-%F0%9F%98%87-(Feat.-socket.io%EB%8A%94-%ED%8C%8C%EC%8B%B1%EC%9D%84-%ED%95%B4))
+<br>
+
 ## 시스템 아키텍처
-<div align="center">
-    <img src="https://github.com/boostcampwm2023/web09-MagicConch/assets/70785620/f3ad78e5-5fea-4bd8-a50e-022cf5122485" width="80%"/>
-</div>
+![magic_conch-system architecture drawio](https://github.com/boostcampwm2023/web09-MagicConch/assets/70785620/c1f6ca2e-08db-486a-af2c-d6b115ecba3c)
 
 <br>
 
@@ -63,11 +71,13 @@
   <tr>
     <td align="center"><b>common</b></td>
     <td>
-      <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=flat&logo=typescript&logoColor=white" />
+      <img src="https://img.shields.io/badge/Typescript-%23007ACC.svg?style=flat&logo=typescript&logoColor=white" />
       <img src="https://img.shields.io/badge/ESLint-4B3263?style=flat&logo=eslint&logoColor=white" />
       <img src="https://img.shields.io/badge/Prettier-F7B93E?style=flat&logo=Prettier&logoColor=white" />
       <img src="https://img.shields.io/badge/dotenv-ecd53f?style=flat&logo=dotenv&logoColor=white" />
       <img src="https://img.shields.io/badge/Socket.io-black?style=flat&logo=socket.io&badgeColor=010101" />
+      <img src="https://img.shields.io/badge/Jest-%23C21325?style=flat&logo=jest&logoColor=white" />
+      <img src="https://img.shields.io/badge/npm-%23CB3837.svg?style=flat&logo=npm&logoColor=white" />
     </td>
   </tr>
   <tr>
@@ -78,53 +88,61 @@
       <img src="https://img.shields.io/badge/Zustand-000000?style=flat&logo=zustand&logoColor=white" />
       <img src="https://img.shields.io/badge/TailwindCss-06B6D4.svg?style=flat&logo=tailwindcss&logoColor=white" />
       <img src="https://img.shields.io/badge/WebRTC-DB4437.svg?style=flat&logo=WebRTC&logoColor=white" />
+      <img src="https://img.shields.io/badge/Vite-%23646CFF.svg?style=flat&logo=vite&logoColor=white" />
     </td>
   </tr>
   <tr>
     <td align="center"><b>backend</b></td>
     <td>
-      <img src="https://img.shields.io/badge/nestjs-%23E0234E.svg?style=flat&logo=nestjs&logoColor=white" />
-      <img src="https://img.shields.io/badge/TypeORM-fe0902.svg?style=flat&logo=TypeORM&logoColor=white" />
+      <img src="https://img.shields.io/badge/NestJS-%23E0234E.svg?style=flat&logo=nestjs&logoColor=white" />
+      <img src="https://img.shields.io/badge/TypeORM-fe0902.svg?style=flat&logo=typeorm&logoColor=white" />
+      <img src="https://img.shields.io/badge/Supertest-red.svg?style=flat&logo=supertest&logoColor=white" />
+      <img src="https://img.shields.io/badge/Passport-black.svg?style=flat&logo=passport&logoColor=35df79" />
+      <img src="https://img.shields.io/badge/winston-white.svg?style=flat&logo=winston&logoColor=black" />
     </td>
   </tr>
   <tr>
     <td align="center"><b>DB<b></td>
     <td>
-      <img src="https://img.shields.io/badge/mysql-00758f.svg?style=flat&logo=mysql&logoColor=white" />
+      <img src="https://img.shields.io/badge/MySQL-00758f.svg?style=flat&logo=mysql&logoColor=white" />
+      <img src="https://img.shields.io/badge/Redis-%23DD0031.svg?style=flat&logo=redis&logoColor=white" />
     </td>
   </tr>
   <tr>
     <td align="center"><b>CI/CD</b></td>
     <td>
-      <img src="https://img.shields.io/badge/github%20actions-%232671E5.svg?style=flat&logo=githubactions&logoColor=white" />
+      <img src="https://img.shields.io/badge/GitHub%20Actions-%232671E5.svg?style=flat&logo=githubactions&logoColor=white" />
     </td>
   </tr>
   <tr>
     <td align="center"><b>deployment</b></td>
     <td>
       <img src="https://img.shields.io/badge/Cloudflare-F38020?style=flat&logo=Cloudflare&logoColor=white" />
-      <img src="https://img.shields.io/badge/docker-%230db7ed.svg?style=flat&logo=docker&logoColor=white" />
-      <img src="https://img.shields.io/badge/nginx-%23009639.svg?style=flat&logo=nginx&logoColor=white" />
-      <img src="https://img.shields.io/badge/%20Naver%20Cloud%20Platform-03C75A?logo=naver&logoColor=white" />
+      <img src="https://img.shields.io/badge/docker-1D63ED.svg?style=flat&logo=docker&logoColor=white" />
+      <img src="https://img.shields.io/badge/NGINX-%23009639.svg?style=flat&logo=nginx&logoColor=white" />
+      <img src="https://img.shields.io/badge/%20NAVER%20Cloud%20Platform-333333" />
+      <img src="https://img.shields.io/badge/aws-%23FF9900.svg?style=flat&logo=amazon-aws&logoColor=white" />
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><b>others</b></td>
+    <td>
+      <img src="https://img.shields.io/badge/Notion-%23000000.svg?style=flat&logo=notion&logoColor=white" />
+      <img src="https://img.shields.io/badge/Slack-4A154B?style=flat&logo=slack" />
+      <img src="https://img.shields.io/badge/Jitsi-17a0db?style=flat&logo=jitsi&logoColor=white" />
+      <img src="https://img.shields.io/badge/-Swagger-173647.svg?style=flat&logo=swagger" />
     </td>
   </tr>
 </table>
-
-<br>
-
-### 우당탕탕 이슈 해결기 💦
-> 타로 밀크티의 기술적 도전과 이슈 해결 기록
-
-- [[BE] 야 너두 무중단 배포 할 수 있어](https://github.com/boostcampwm2023/web09-MagicConch/wiki/%EC%95%BC-%EB%84%88%EB%91%90-%EB%AC%B4%EC%A4%91%EB%8B%A8-%EB%B0%B0%ED%8F%AC-%ED%95%A0-%EC%88%98-%EC%9E%88%EC%96%B4)
-- [[FE] 인터랙티브 웹: 카드 애니메이션](https://github.com/boostcampwm2023/web09-MagicConch/wiki/%EC%9D%B8%ED%84%B0%EB%9E%99%ED%8B%B0%EB%B8%8C-%EC%9B%B9:-%EC%B9%B4%EB%93%9C-%EC%95%A0%EB%8B%88%EB%A9%94%EC%9D%B4%EC%85%98)
-- [[FE/BE] UX를 위해 AI 채팅 반응 속도를 84.87%까지 개선한 방법 😎](https://github.com/boostcampwm2023/web09-MagicConch/wiki/UX%EB%A5%BC-%EC%9C%84%ED%95%B4-AI-%EC%B1%84%ED%8C%85-%EB%B0%98%EC%9D%91-%EC%86%8D%EB%8F%84%EB%A5%BC-84.87%25%EA%B9%8C%EC%A7%80-%EA%B0%9C%EC%84%A0%ED%95%9C-%EB%B0%A9%EB%B2%95-%F0%9F%98%8E)
-
+<p>
+    🔗 <a href="https://github.com/boostcampwm2023/web09-MagicConch/wiki/%EA%B8%B0%EC%88%A0-%EC%8A%A4%ED%83%9D#-%EA%B8%B0%EC%88%A0-%EC%84%A0%ED%83%9D-%EC%9D%B4%EC%9C%A0">기술 선택 이유</a>
+</p>
 <br>
 
 ## 🔮🥛 타로 밀크티 소개
 > 타로 밀크티는 **FE 3명 & BE 1명** 으로 구성되어 있어요!!
 > 
-> 인원 불균형을 해결하기 위해 FE 팀원들의 ✨ **풀스택 도전** ✨이 담겨 있어요~ 덕분에 BE 팀원은 처음 해보는 배포와 인프라를 성공적으로 마칠 수 있었습니다 🥰
+> 인원 불균형을 해결하기 위해 FE 팀원들의 ✨ **풀스택 도전** ✨이 담겨 있어요~ <br>덕분에 BE 팀원은 처음 해보는 배포와 인프라를 성공적으로 마칠 수 있었습니다 🥰
 > 
 > 자세한 담당 업무는 [여기](https://github.com/boostcampwm2023/web09-MagicConch/wiki/팀-소개)를 확인해주세요 👍  
 

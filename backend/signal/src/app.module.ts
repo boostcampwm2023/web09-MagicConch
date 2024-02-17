@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { AppController } from './app.controller';
 import { EventsModule } from './events/events.module';
 import { LoggerModule } from './logger/logger.module';
 
@@ -9,5 +10,6 @@ import { LoggerModule } from './logger/logger.module';
     EventsModule,
     LoggerModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}

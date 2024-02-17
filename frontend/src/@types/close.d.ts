@@ -1,3 +1,6 @@
-interface CloseFunc {
-  close: () => void;
+interface ClosePopupFunc {
+  closePopup: () => void;
+}
+interface CloseOverlayFunc {
+  closeOverlay: () => void;
 }

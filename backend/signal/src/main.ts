@@ -6,9 +6,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: '*',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    origin: process.env.CORS_ALLOW_DOMAIN,
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
     credentials: true,
+    allowedHeaders: ['Authorization', 'Content-type'],
   });
 
   const logger: LoggerService = app.get(LoggerService);
@@ -20,10 +21,9 @@ async function bootstrap() {
   process.on('SIGTERM', async () => {
     logger.log('🖐️ Received SIGTERM signal. Start Graceful Shutdown...');
 
-    server.close();
+    await server.close();
     await app.close();
 
-    logger.log('🖐️ Nest Application closed gracefully...');
     process.exit(0);
   });
 }

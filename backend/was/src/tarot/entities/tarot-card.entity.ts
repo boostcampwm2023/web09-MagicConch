@@ -1,6 +1,8 @@
+import { ExtEnum } from 'src/common/constants/etc';
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -13,21 +15,21 @@ export class TarotCard {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('int')
+  @Column('tinyint')
   cardNo: number;
 
-  @Column({ length: 10 })
-  ext: string;
+  @Column({ type: 'tinyint' })
+  ext: ExtEnum;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt?: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt?: Date;
 
-  @Column({ nullable: true })
-  deletedAt: Date;
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  deletedAt?: Date;
 
   @ManyToOne(() => TarotCardPack, (tarotCardPack) => tarotCardPack.tarotCards)
-  cardPack: TarotCardPack;
+  cardPack?: TarotCardPack;
 }

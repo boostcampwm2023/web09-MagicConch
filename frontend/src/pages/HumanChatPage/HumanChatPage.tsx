@@ -1,53 +1,47 @@
-import { Dispatch, SetStateAction, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
-import Background from '@components/Background';
-import ChatContainer from '@components/ChatContainer';
-import Header from '@components/Header';
-import SideBar from '@components/SideBar';
+import { Background, ChatContainer, Header } from '@components/common';
+import { SideBarButton } from '@components/common/SideBar';
 
+import { useHumanChatMessage } from '@business/hooks/chatMessage';
+import { useSidebar } from '@business/hooks/sidebar';
+import { useHumanTarotSpread } from '@business/hooks/tarotSpread';
 import { useBlocker } from '@business/hooks/useBlocker';
-import { useHumanChatMessage } from '@business/hooks/useChatMessage';
-import { useHumanTarotSpread } from '@business/hooks/useTarotSpread';
-import useWebRTC from '@business/hooks/useWebRTC';
+import { useWebRTC } from '@business/hooks/webRTC';
 
-import { useHumanChatPageContentAnimation } from './useHumanChatPageContentAnimation';
-import { ChatPageState, useHumanChatPageCreateRoomEvent } from './useHumanChatPageCreateRoomEvent';
-import { useHumanChatPageSideBar } from './useHumanChatPageSIdeBar';
-import { useHumanChatPageWrongURL } from './useHumanChatPageWrongURL';
+import { useCreateRoomEvent } from './hooks/useCreateRoomEvent';
+import { useHumanChatPageState } from './hooks/useHumanChatPageState';
+import { usePageWrongURL } from './hooks/usePageWrongURL';
 
-export interface OutletContext {
+type HumanChatPageState = ReturnType<typeof useHumanChatPageState>;
+
+export interface OutletContext extends HumanChatPageState {
   tarotButtonClick: () => void;
   tarotButtonDisabled: boolean;
-  chatPageState: ChatPageState;
-  setChatPageState: Dispatch<SetStateAction<ChatPageState>>;
   disableSideBar: () => void;
   enableSideBar: () => void;
   unblockGoBack: () => void;
 }
 
-export default function HumanChatPage() {
-  useHumanChatPageWrongURL();
+export function HumanChatPage() {
+  const humanChatPageState = useHumanChatPageState();
+
+  usePageWrongURL();
+  useCreateRoomEvent({ ...humanChatPageState });
 
   const navigate = useNavigate();
   const { endWebRTC } = useWebRTC();
 
-  const { chatPageState, setChatPageState } = useHumanChatPageCreateRoomEvent();
-
   const { messages, onSubmitMessage, inputDisabled, addPickCardMessage } = useHumanChatMessage();
   const { tarotButtonClick, tarotButtonDisabled } = useHumanTarotSpread(addPickCardMessage);
-
-  const { changeContentAnimation, contentAnimation } = useHumanChatPageContentAnimation();
-  const { disableSideBar, enableSideBar, sideBarDisabled } = useHumanChatPageSideBar({
-    onDisableSideBar: () => {
-      changeContentAnimation(false);
-    },
-  });
 
   const { unblockGoBack } = useBlocker({
     when: ({ nextLocation }) => nextLocation.pathname === '/' || nextLocation.pathname === '/chat/human',
     onConfirm: () => navigate('/'),
   });
+
+  const { toggleSidebar, sidebarOpened, Sidebar, SlideableContent } = useSidebar();
 
   useEffect(() => {
     return () => {
@@ -56,41 +50,35 @@ export default function HumanChatPage() {
   }, []);
 
   return (
-    <Background type="dynamic">
-      <Header
-        rightItems={[
-          <SideBar
-            key="chat-side-bar"
-            onSide={changeContentAnimation}
-            icon={{ open: 'mdi:message-off', close: 'mdi:message' }}
-            disabled={sideBarDisabled}
-          >
-            <ChatContainer
-              width="w-[90%]"
-              height="h-[80%]"
-              position="top-[5vh]"
-              messages={messages}
-              onSubmitMessage={onSubmitMessage}
-              inputDisabled={inputDisabled}
-            />
-          </SideBar>,
-        ]}
-      />
-      <div className="w-h-screen">
-        <div className={`flex-with-center h-full ${contentAnimation}`}>
+    <>
+      <Background type="dynamic" />
+      <main className="flex-with-center flex-col w-screen h-dvh">
+        <Header
+          rightItems={[
+            <SideBarButton
+              onClick={toggleSidebar}
+              sideBarOpened={sidebarOpened}
+            />,
+          ]}
+        />
+        <SlideableContent>
           <Outlet
             context={{
               tarotButtonClick,
               tarotButtonDisabled,
-              chatPageState,
-              setChatPageState,
-              disableSideBar,
-              enableSideBar,
               unblockGoBack,
+              ...humanChatPageState,
             }}
           />
-        </div>
-      </div>
-    </Background>
+        </SlideableContent>
+        <Sidebar>
+          <ChatContainer
+            messages={messages}
+            inputDisabled={inputDisabled}
+            onSubmitMessage={onSubmitMessage}
+          />
+        </Sidebar>
+      </main>
+    </>
   );
 }

@@ -1,27 +1,24 @@
 import { useEffect } from 'react';
-import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-import ProfileSetting from '@components/ProfileSetting';
+import { ProfileSetting } from '@components/humanChatPage';
 
-import { useControllMedia } from '@business/hooks/useWebRTC/useControllMedia';
-import { useStreamVideoRef } from '@business/hooks/useWebRTC/useStreamVideoRef';
+import { useControllMedia, useStreamVideoRef } from '@business/hooks/webRTC';
 import { HumanSocketManager } from '@business/services/SocketManager';
 
-import type { OutletContext } from './HumanChatPage';
-import { useSettingPageMediaOptinos } from './useSettingPageMediaOptions';
-import { useSettingPageProfileNicknameSetting } from './useSettingPageProfileNicknameSetting';
+import { useMediaOptinos } from './hooks';
+import { useProfileNicknameSetting } from './hooks';
 
-export default function ChattingPage() {
+export function SettingPage() {
   const socketManager = HumanSocketManager.getInstance();
 
   const navigate = useNavigate();
 
   const { localVideoRef } = useStreamVideoRef();
-  const { enableSideBar, disableSideBar }: OutletContext = useOutletContext();
+
   const { changeMyAudioTrack, changeMyVideoTrack, toggleAudio, toggleVideo } = useControllMedia({ localVideoRef });
 
   useEffect(() => {
-    disableSideBar();
     if (!socketManager.connected) {
       navigate('..');
     }
@@ -29,9 +26,9 @@ export default function ChattingPage() {
     changeMyVideoTrack();
   }, []);
 
-  const { setLocalNickname, setLocalProfileImage, sendProfileInfo } = useSettingPageProfileNicknameSetting();
+  const { setLocalNickname, setLocalProfileImage, sendProfileInfo } = useProfileNicknameSetting();
 
-  const { mediaOptions } = useSettingPageMediaOptinos();
+  const { mediaOptions } = useMediaOptinos();
 
   return (
     <ProfileSetting
@@ -44,7 +41,6 @@ export default function ChattingPage() {
       videoRef={localVideoRef}
       onConfirm={() => {
         sendProfileInfo();
-        enableSideBar();
         navigate('..');
       }}
       onChangeProfileImage={setLocalProfileImage}

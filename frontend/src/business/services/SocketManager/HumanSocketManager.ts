@@ -1,8 +1,7 @@
+import { SocketManager } from '.';
 import { HumanClientEvent, HumanServerEvent } from '@tarotmilktea/human-socketio-event';
 
-import SocketManager from './SocketManager';
-
-class HumanSocketManager extends SocketManager {
+export class HumanSocketManager extends SocketManager {
   static instance: HumanSocketManager | null = null;
 
   private constructor() {
@@ -24,5 +23,3 @@ class HumanSocketManager extends SocketManager {
     super.emit(eventName, ...eventArgs);
   }
 }
-
-export default HumanSocketManager;

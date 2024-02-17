@@ -4,26 +4,48 @@ import { HumanSocketManager } from './SocketManager';
 
 type RTCDataChannelKey = 'mediaInfoChannel' | 'chatChannel' | 'profileChannel' | 'nicknameChannel';
 
-export default class WebRTC {
-  public localStream: MediaStream | undefined;
-  public remoteStream: MediaStream | undefined;
-  public peerConnection: RTCPeerConnection | null = null;
-  public dataChannels: Map<RTCDataChannelKey, RTCDataChannel> = new Map();
+export class WebRTC {
+  private static instance: WebRTC;
+  private socketManager: HumanSocketManager;
 
-  private static instance: WebRTC | undefined;
-  private nextDataChannelId = 0;
+  private constructor(socketManager: HumanSocketManager) {
+    this.socketManager = socketManager;
+  }
 
-  socketManager = HumanSocketManager.getInstance();
-
-  constructor() {}
-
-  static getInstace() {
-    if (!this.instance) {
-      this.instance = new WebRTC();
+  static getInstance(socketManager?: HumanSocketManager) {
+    if (!socketManager && !this.instance) {
+      throw new Error('socketManager가 초기화 되지 않았습니다.');
+    }
+    if (socketManager && !this.instance) {
+      this.instance = new WebRTC(socketManager);
     }
     return this.instance;
   }
 
+  private localStream: MediaStream | undefined;
+  private remoteStream: MediaStream | undefined;
+  private peerConnection: RTCPeerConnection | null = null;
+  private dataChannels: Map<RTCDataChannelKey, RTCDataChannel> = new Map();
+  private nextDataChannelId = 0;
+
+  getLocalStream = () => this.localStream;
+  getFirstVideoTrack = () => this.localStream?.getVideoTracks()[0];
+  getFirstAudioTrack = () => this.localStream?.getAudioTracks()[0];
+
+  getRemoteStream = () => this.remoteStream;
+  getPeerConnection = () => this.peerConnection;
+  getDataChannels = () => this.dataChannels;
+  getDataChannel = (key: RTCDataChannelKey) => this.dataChannels.get(key);
+  // getSocketManager = () => this.socketManager;
+  // getNextDataChannelId = () => this.nextDataChannelId;
+
+  public resetForTesting() {
+    this.localStream = undefined;
+    this.remoteStream = undefined;
+    this.peerConnection = null;
+    this.dataChannels = new Map();
+    this.nextDataChannelId = 0;
+  }
   public setLocalStream = (stream: MediaStream) => {
     this.localStream = stream;
   };
@@ -87,6 +109,9 @@ export default class WebRTC {
     listener: (this: RTCPeerConnection, ev: RTCPeerConnectionEventMap[K]) => any,
     options?: boolean | AddEventListenerOptions,
   ): void => {
+    if (!this.peerConnection) {
+      throw new Error('addRTCPeerConnectionEventListener 도중 에러, peerConnection이 없습니다.');
+    }
     this.peerConnection?.addEventListener(type, listener, options);
   };
 
@@ -110,6 +135,10 @@ export default class WebRTC {
   };
 
   public addDataChannel = (key: RTCDataChannelKey) => {
+    if (!this.peerConnection) {
+      throw new Error('addDataChannel 도중 에러, peerConnection이 없습니다.');
+    }
+
     const dataChannel = this.peerConnection?.createDataChannel(key, {
       negotiated: true,
       id: this.nextDataChannelId++,

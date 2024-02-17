@@ -1,21 +1,21 @@
-import useOverlay from './useOverlay';
+import { useOverlay } from './overlay';
 
 type TOLD_TYPE = 'AI' | 'HUMAN';
 
-export default function useTOLD(event: TOLD_TYPE) {
+export function useTOLD(event: TOLD_TYPE) {
   const global = window as any;
-  const { open } = useOverlay();
+  const { openOverlay } = useOverlay();
 
   const displayTold = () => {
     global.dataLayer.push({ event });
 
-    open(({ close }) => {
+    openOverlay(({ closeOverlay }) => {
       const interval = setInterval(() => {
         const container = document.querySelector('#told-container');
         if (container && !container.innerHTML) {
           return;
         }
-        close();
+        closeOverlay();
         clearInterval(interval);
       }, 1000);
 
