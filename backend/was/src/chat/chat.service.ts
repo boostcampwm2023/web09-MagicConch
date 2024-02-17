@@ -41,8 +41,11 @@ export class ChatService {
           memberId,
         );
         const messages: ChattingMessage[] = createMessageDtos.map(
-          (createMessageDto: CreateChattingMessageDto): ChattingMessage =>
-            ChattingMessage.fromDto(createMessageDto, room),
+          (
+            createMessageDto: CreateChattingMessageDto,
+            idx: number,
+          ): ChattingMessage =>
+            ChattingMessage.fromDto(createMessageDto, room, idx),
         );
         await manager.insert(ChattingMessage, messages);
       } catch (err: unknown) {
@@ -65,8 +68,9 @@ export class ChatService {
           );
           return await manager
             .createQueryBuilder(ChattingRoom, 'room')
-            .select()
-            .where('room.participantId = :memberId', { memberId: member.id })
+            .select(['room.id', 'room.title'])
+            .addSelect('room.createdAt', 'room_created_at')
+            .where('room.participant_id = :memberId', { memberId: member.id })
             .orderBy('DATE(room.createdAt)', 'DESC')
             .getMany();
         } catch (err: unknown) {
@@ -103,10 +107,13 @@ export class ChatService {
             providerId,
           );
           await this.findRoomById(manager, id, member.id);
-          return await manager.find(ChattingMessage, {
-            where: { room: { id: id } },
-            select: ['isHost', 'message'],
-          });
+          return await manager
+            .createQueryBuilder(ChattingMessage, 'message')
+            .select('message.message', 'message_message')
+            .addSelect('message.isHost', 'message_is_host')
+            .where('message.room_id = :roomId', { roomId: id })
+            .orderBy('DATE(message.order)')
+            .getMany();
         } catch (err: unknown) {
           throw err;
         }

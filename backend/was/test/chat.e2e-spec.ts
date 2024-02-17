@@ -17,7 +17,8 @@ import { ProviderIdEnum } from 'src/common/constants/etc';
 import { Member } from 'src/members/entities';
 import * as request from 'supertest';
 import { EntityManager } from 'typeorm';
-import { diffJwtToken, id, id2, jwtToken, wrongId } from './constants';
+import { diffJwtToken, id, id2, jwtToken, wrongId } from './common/constants';
+import { SqliteModule } from './common/database/sqlite.module';
 
 const JAN_15: string = '2024-01-15';
 const JAN_26: string = '2024-01-26';
@@ -33,14 +34,7 @@ describe('Chat', () => {
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [
-        TypeOrmModule.forRoot({
-          type: 'sqlite',
-          database: ':memory:',
-          entities: [__dirname + '/../src/**/entities/*.entity.{js,ts}'],
-          synchronize: true,
-          logging: ['query'],
-          logger: 'file',
-        }),
+        SqliteModule,
         TypeOrmModule.forFeature([ChattingRoom, ChattingMessage, Member]),
       ],
       providers: [ChatService, JwtAuthGuard, JwtStrategy],
@@ -144,16 +138,19 @@ describe('Chat', () => {
         {
           isHost: true,
           message: '어떤 고민이 있어?',
+          order: 1,
         },
         {
           isHost: false,
           message: '오늘 운세를 알고 싶어',
+          order: 2,
         },
       ];
       for (const chatLog of chatLogs) {
         const message: ChattingMessage = new ChattingMessage();
         message.isHost = chatLog.isHost;
         message.message = chatLog.message;
+        message.order = chatLog.order;
         message.room = savedRoom;
         await entityManager.save(message);
         messages.push(ChattingMessageDto.fromEntity(message));

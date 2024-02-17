@@ -20,6 +20,9 @@ export class ChattingMessage {
   @Column({ length: 1000, nullable: false })
   message: string;
 
+  @Column({ type: 'tinyint', nullable: false })
+  order: number;
+
   @CreateDateColumn()
   createdAt?: Date;
 
@@ -35,11 +38,13 @@ export class ChattingMessage {
   static fromDto(
     dto: CreateChattingMessageDto,
     room: ChattingRoom,
+    order: number,
   ): ChattingMessage {
     const message: ChattingMessage = new ChattingMessage();
     message.room = room;
     message.isHost = dto.isHost;
     message.message = dto.message;
+    message.order = order;
     return message;
   }
 }

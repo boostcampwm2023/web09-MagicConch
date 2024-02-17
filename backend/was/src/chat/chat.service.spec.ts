@@ -280,12 +280,14 @@ describe('ChatService', () => {
           id: '12345678-1234-5678-1234-567812345672',
           isHost: true,
           message: '어떤 고민이 있어?',
+          order: 0,
           room: room,
         },
         {
           id: '12345678-1234-5678-1234-567812345673',
           isHost: false,
           message: '오늘 운세를 알고 싶어',
+          order: 1,
           room: room,
         },
       ];
