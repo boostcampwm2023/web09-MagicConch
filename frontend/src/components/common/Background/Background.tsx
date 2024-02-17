@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 
 interface BackgroundProps {
-  children?: React.ReactNode;
   type?: 'default' | 'open' | 'close' | 'dynamic';
 }
 
-export function Background({ children, type = 'default' }: BackgroundProps) {
+export function Background({ type = 'default' }: BackgroundProps) {
   const html = document.querySelector('html');
   const [conchAnimation, setConchAnimation] = useState<boolean>(false);
   const [darkMode, setDarkMode] = useState<boolean>(html?.dataset.theme === 'dark');
@@ -35,39 +34,36 @@ export function Background({ children, type = 'default' }: BackgroundProps) {
   };
 
   return (
-    <div className={`flex-with-center w-screen h-dvh flex-col ${fadeInIfOpen} ${fadeOutIfClose}`}>
-      <div className="w-screen h-dvh absolute flex-col flex-with-center">
-        <img
-          className={`absolute w-screen h-dvh object-cover
+    <div className={`w-screen h-dvh absolute flex-col flex-with-center ${fadeInIfOpen} ${fadeOutIfClose}`}>
+      <img
+        className={`absolute w-screen h-dvh object-cover
           ${!initMode && (darkMode ? 'animate-fadeOut' : 'animate-fadeIn')}`}
-          src="/bg-light.png"
-          alt="낮하늘 배경 이미지"
-        />
-        <img
-          className={`absolute w-screen h-dvh object-cover ${initMode && !darkMode && 'hidden'} 
+        src="/bg-light.png"
+        alt="낮하늘 배경 이미지"
+      />
+      <img
+        className={`absolute w-screen h-dvh object-cover ${initMode && !darkMode && 'hidden'} 
           ${!initMode && (darkMode ? 'animate-fadeIn' : 'animate-fadeOut')}`}
-          src="/bg-night.png"
-          alt="밤하늘 배경 이미지"
-        />
+        src="/bg-night.png"
+        alt="밤하늘 배경 이미지"
+      />
 
-        <button
-          className={`absolute -bottom-[20%] -translate-y-[65vh] lg:hover:scale-105 transition-transform
+      <button
+        className={`absolute -bottom-[20%] -translate-y-[65vh] lg:hover:scale-105 transition-transform
           ${conchAnimation && 'animate-rotatingConch'}`}
-          onClick={toggleTheme}
-        >
-          <img
-            className="animate-shining w-[35vh] h-[35vh] "
-            src="/moon.png"
-            alt="빛나는 마법의 소라 고둥"
-          />
-        </button>
-        {type != 'default' && (
-          <div
-            className={`absolute w-screen h-dvh ${darkMode ? 'bg-black/75' : 'bg-neutral-500/60'} ${fadeInIfDynamic}`}
-          />
-        )}
-      </div>
-      {children}
+        onClick={toggleTheme}
+      >
+        <img
+          className="animate-shining w-[35vh] h-[35vh] "
+          src="/moon.png"
+          alt="빛나는 마법의 소라 고둥"
+        />
+      </button>
+      {type != 'default' && (
+        <div
+          className={`absolute w-screen h-dvh ${darkMode ? 'bg-black/75' : 'bg-neutral-500/60'} ${fadeInIfDynamic}`}
+        />
+      )}
     </div>
   );
 }
