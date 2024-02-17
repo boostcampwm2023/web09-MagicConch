@@ -18,7 +18,7 @@ export function ChatLogItem({ id, title }: ChatLogItemProps) {
       className="group w-full h-30 display-medium14 text-white p-5 rounded-lg flex justify-between items-center hover:surface-default"
       onClick={handleClick}
     >
-      {title ?? '임시 타이틀~'}
+      {title}
       {/* <div className="hidden group-hover:flex">
         <IconButton
           icon="ic:outline-edit"
