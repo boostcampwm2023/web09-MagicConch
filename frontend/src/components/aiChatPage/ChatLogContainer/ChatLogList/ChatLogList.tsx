@@ -1,4 +1,4 @@
-import { ChatLogListResponse } from '@stores/queries/getChatLogListQuery';
+import { ChatLogListResponse } from '@stores/queries';
 
 import { ChatLogItem } from './ChatLogItem';
 
@@ -12,6 +12,7 @@ export function ChatLogList({ list }: ChatLogListProps) {
       {list.map(({ id, title }) => (
         <ChatLogItem
           key={id}
+          id={id}
           title={title}
         />
       ))}

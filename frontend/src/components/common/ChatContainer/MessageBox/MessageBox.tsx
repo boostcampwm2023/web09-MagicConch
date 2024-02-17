@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { Button, IconButton } from '@components/common/Buttons';
 
-import { getTarotImageQuery } from '@stores/queries/getTarotImageQuery';
+import { getTarotImageQuery } from '@stores/queries';
 
 interface MessageBoxProps extends MessageType {}
 

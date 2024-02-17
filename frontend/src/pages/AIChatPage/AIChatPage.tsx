@@ -6,7 +6,7 @@ import { useAiChatMessage } from '@business/hooks/chatMessage';
 import { useSidebar } from '@business/hooks/sidebar';
 import { useAiTarotSpread } from '@business/hooks/tarotSpread';
 
-import { getAuthorizedQuery } from '@stores/queries/getAuthorizedQuery';
+import { getAuthorizedQuery } from '@stores/queries';
 
 interface AIChatPageProps {}
 

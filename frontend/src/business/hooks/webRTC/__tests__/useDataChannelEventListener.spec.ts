@@ -3,8 +3,7 @@ import { act, renderHook } from '@testing-library/react';
 
 import { WebRTC } from '@business/services';
 
-import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
-import { useProfileInfo } from '@stores/zustandStores/useProfileInfo';
+import { useMediaInfo, useProfileInfo } from '@stores/zustandStores';
 
 vi.mock('@business/services');
 

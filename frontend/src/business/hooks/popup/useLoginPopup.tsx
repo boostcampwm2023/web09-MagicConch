@@ -2,7 +2,7 @@ import { useOverlay } from '../overlay';
 
 import { LoginPopup } from '@components/common';
 
-import { getAuthorizedQuery } from '@stores/queries/getAuthorizedQuery';
+import { getAuthorizedQuery } from '@stores/queries';
 
 interface UseLoginPopupParams {
   moveAiChat: () => void;

@@ -1,15 +1,14 @@
-import { getChatLogListQuery } from '@stores/queries/getChatLogListQuery';
-
 import { ChatLogList } from './ChatLogList';
-import { NewChatButton } from './NewChatButton';
+import { ContinueChatButton } from './ContinueChatButton';
+import { useChatLogList } from './hooks';
 
 export function ChatLogContainer() {
-  const { data } = getChatLogListQuery();
+  const { list } = useChatLogList();
 
   return (
     <div className="w-h-full overflow-auto pt-64 flex-with-center flex-col gap-8 pl-30 pr-30">
-      <NewChatButton />
-      <ChatLogList list={data ?? []} />
+      <ContinueChatButton />
+      <ChatLogList list={list} />
     </div>
   );
 }
