@@ -1,13 +1,13 @@
 import { IconButton } from '@components/common';
 
 interface ChatLogItemProps {
-  log: string;
+  title: string;
 }
 
-export function ChatLogItem({ log }: ChatLogItemProps) {
+export function ChatLogItem({ title }: ChatLogItemProps) {
   return (
     <li className="group w-full h-30 display-medium14 text-white p-5 rounded-lg flex justify-between items-center hover:surface-default">
-      {log}
+      {title}
       <div className="hidden group-hover:flex">
         <IconButton
           icon="ic:outline-edit"

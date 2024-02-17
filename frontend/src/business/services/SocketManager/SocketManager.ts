@@ -20,11 +20,11 @@ export class SocketManager {
     return this.socket.connected;
   }
 
-  connect() {
+  connect({ withCredentials = false } = {}) {
     if (this.socket?.connected) {
       return;
     }
-    this.#socket = io(this.#url, { path: this.#path });
+    this.#socket = io(this.#url, { path: this.#path, withCredentials });
   }
 
   disconnect() {

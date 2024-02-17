@@ -1,12 +1,15 @@
 import { IconButton } from '@components/common/Buttons';
 
-export function NewChatLogButton() {
+export function NewChatButton() {
   return (
-    <IconButton
-      icon="ic:round-plus"
-      buttonColor="transparent"
-    >
-      새로운 타로점 보기
-    </IconButton>
+    <div className="w-200">
+      <IconButton
+        icon="ic:round-plus"
+        buttonColor="transparent"
+        size="s"
+      >
+        새로운 타로점 보기
+      </IconButton>
+    </div>
   );
 }
