@@ -2,8 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 export type ChatLogListResponse = {
-  id: string;
-  title: string;
+  date: string;
+  rooms: {
+    id: string;
+    title: string;
+    createdAt: string;
+  }[];
 }[];
 
 export function getChatLogListQuery() {
