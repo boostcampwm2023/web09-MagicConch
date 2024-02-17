@@ -9,11 +9,14 @@ import { ChatService } from './chat.service';
 import { ChattingInfo } from './chatting-info.interface';
 import {
   ChattingMessageDto,
-  ChattingRoomDto,
+  ChattingRoomGroupDto,
   CreateChattingMessageDto,
   UpdateChattingRoomDto,
 } from './dto';
 import { ChattingMessage, ChattingRoom } from './entities';
+
+const JAN_15: string = '2024-01-15';
+const JAN_26: string = '2024-01-26';
 
 describe('ChatService', () => {
   let chatService: ChatService;
@@ -65,8 +68,7 @@ describe('ChatService', () => {
           const transactionMock = jest
             .spyOn(entityManager, 'transaction')
             .mockImplementation(
-              async () =>
-                await Promise.resolve({ memberId: member.id, roomId: room.id }),
+              async () => await Promise.resolve({ member, room }),
             );
 
           await expect(chatService.createRoom()).resolves.toEqual({
@@ -110,8 +112,7 @@ describe('ChatService', () => {
           const transactionMock = jest
             .spyOn(entityManager, 'transaction')
             .mockImplementation(
-              async () =>
-                await Promise.resolve({ memberId: member.id, roomId: room.id }),
+              async () => await Promise.resolve({ member, room }),
             );
 
           const expectation: ChattingInfo =
@@ -192,7 +193,10 @@ describe('ChatService', () => {
   });
 
   describe('findRoomsByEmail', () => {
-    it('사용자는 자신의 채팅방 목록을 조회할 수 있다.', async () => {
+    it('사용자는 자신의 채팅방 목록을 생성일자 내림차순으로 조회할 수 있다.', async () => {
+      const jan15 = new Date(JAN_15);
+      const jan26 = new Date(JAN_26);
+
       const member: Member = {
         id: '12345678-1234-5678-1234-567812345670',
         email: 'tarotmilktea@kakao.com',
@@ -200,39 +204,56 @@ describe('ChatService', () => {
       };
       const rooms: ChattingRoom[] = [
         {
-          id: '12345678-1234-5678-1234-567812345671',
-          title: '오늘의 운세 채팅방',
-          participant: member,
-        },
-        {
           id: '12345678-1234-5678-1234-567812345672',
           title: '내일의 운세 채팅방',
           participant: member,
+          createdAt: jan26,
+        },
+        {
+          id: '12345678-1234-5678-1234-567812345671',
+          title: '오늘의 운세 채팅방',
+          participant: member,
+          createdAt: jan15,
+        },
+      ];
+
+      const roomGroups: ChattingRoomGroupDto[] = [
+        {
+          date: jan26.toLocaleDateString('ko-KR'),
+          rooms: [
+            {
+              id: rooms.at(0)?.id ?? '',
+              title: rooms.at(0)?.title,
+              createdAt: (
+                rooms.at(0)?.createdAt ?? new Date()
+              ).toLocaleDateString('ko-KR'),
+            },
+          ],
+        },
+        {
+          date: jan15.toLocaleDateString('ko-KR'),
+          rooms: [
+            {
+              id: rooms.at(1)?.id ?? '',
+              title: rooms.at(1)?.title,
+              createdAt: (
+                rooms.at(1)?.createdAt ?? new Date()
+              ).toLocaleDateString('ko-KR'),
+            },
+          ],
         },
       ];
 
       const transactionMock = jest
         .spyOn(entityManager, 'transaction')
-        .mockImplementation(
-          async () =>
-            await Promise.resolve(
-              rooms.map((room: ChattingRoom) => ({
-                id: room.id,
-                title: room.title,
-              })),
-            ),
-        );
+        .mockImplementation(async () => await Promise.resolve(rooms));
 
-      const expectation: ChattingRoomDto[] = await chatService.findRoomsByEmail(
-        member.email ?? '',
-        member.providerId ?? 0,
-      );
-      expect(expectation).toEqual(
-        rooms.map((room: ChattingRoom) => ({
-          id: room.id,
-          title: room.title,
-        })),
-      );
+      const expectation: ChattingRoomGroupDto[] =
+        await chatService.findRoomsByEmail(
+          member.email ?? '',
+          member.providerId ?? 0,
+        );
+      expect(expectation).toEqual(roomGroups);
       expect(transactionMock).toHaveBeenCalled();
     });
   });
@@ -259,12 +280,14 @@ describe('ChatService', () => {
           id: '12345678-1234-5678-1234-567812345672',
           isHost: true,
           message: '어떤 고민이 있어?',
+          order: 0,
           room: room,
         },
         {
           id: '12345678-1234-5678-1234-567812345673',
           isHost: false,
           message: '오늘 운세를 알고 싶어',
+          order: 1,
           room: room,
         },
       ];
@@ -273,15 +296,7 @@ describe('ChatService', () => {
     it('해당 아이디의 채팅방에 오고 간 채팅 메시지를 조회할 수 있다.', async () => {
       const transactionMock = jest
         .spyOn(entityManager, 'transaction')
-        .mockImplementation(
-          async () =>
-            await Promise.resolve(
-              messages.map(
-                (message: ChattingMessage): ChattingMessageDto =>
-                  ChattingMessageDto.fromEntity(message),
-              ),
-            ),
-        );
+        .mockImplementation(async () => await Promise.resolve(messages));
 
       const expectation: ChattingMessageDto[] =
         await chatService.findMessagesById(

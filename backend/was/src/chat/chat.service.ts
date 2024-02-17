@@ -12,6 +12,7 @@ import { ChattingInfo } from './chatting-info.interface';
 import {
   ChattingMessageDto,
   ChattingRoomDto,
+  ChattingRoomGroupDto,
   CreateChattingMessageDto,
   UpdateChattingRoomDto,
 } from './dto';
@@ -40,8 +41,11 @@ export class ChatService {
           memberId,
         );
         const messages: ChattingMessage[] = createMessageDtos.map(
-          (createMessageDto: CreateChattingMessageDto): ChattingMessage =>
-            ChattingMessage.fromDto(createMessageDto, room),
+          (
+            createMessageDto: CreateChattingMessageDto,
+            idx: number,
+          ): ChattingMessage =>
+            ChattingMessage.fromDto(createMessageDto, room, idx),
         );
         await manager.insert(ChattingMessage, messages);
       } catch (err: unknown) {
@@ -53,28 +57,40 @@ export class ChatService {
   async findRoomsByEmail(
     email: string,
     providerId: number,
-  ): Promise<ChattingRoomDto[]> {
-    return this.entityManager.transaction(async (manager: EntityManager) => {
-      try {
-        const member: Member = await this.findMemberByEmail(
-          manager,
-          email,
-          providerId,
-        );
-        const rooms: ChattingRoom[] = await manager.find(ChattingRoom, {
-          where: {
-            participant: { id: member.id },
-          },
-          select: ['id', 'title'],
-        });
-        return rooms.map(
-          (room: ChattingRoom): ChattingRoomDto =>
-            ChattingRoomDto.fromEntity(room),
-        );
-      } catch (err: unknown) {
-        throw err;
+  ): Promise<ChattingRoomGroupDto[]> {
+    const rooms: ChattingRoom[] = await this.entityManager.transaction(
+      async (manager: EntityManager) => {
+        try {
+          const member: Member = await this.findMemberByEmail(
+            manager,
+            email,
+            providerId,
+          );
+          return await manager
+            .createQueryBuilder(ChattingRoom, 'room')
+            .select(['room.id', 'room.title'])
+            .addSelect('room.createdAt', 'room_created_at')
+            .where('room.participant_id = :memberId', { memberId: member.id })
+            .orderBy('DATE(room.createdAt)', 'DESC')
+            .getMany();
+        } catch (err: unknown) {
+          throw err;
+        }
+      },
+    );
+    return rooms.reduce((acc: ChattingRoomGroupDto[], curr: ChattingRoom) => {
+      const roomDto: ChattingRoomDto = ChattingRoomDto.fromEntity(curr);
+      const date: string = (curr?.createdAt ?? new Date()).toLocaleDateString(
+        'ko-KR',
+      );
+
+      if (date === acc.at(-1)?.date) {
+        acc.at(-1)?.rooms.push(roomDto);
+        return acc;
       }
-    });
+      acc.push(ChattingRoomGroupDto.makeGroup(date, roomDto));
+      return acc;
+    }, []);
   }
 
   async findMessagesById(
@@ -82,29 +98,31 @@ export class ChatService {
     email: string,
     providerId: number,
   ): Promise<ChattingMessageDto[]> {
-    return this.entityManager.transaction(async (manager: EntityManager) => {
-      try {
-        const member: Member = await this.findMemberByEmail(
-          manager,
-          email,
-          providerId,
-        );
-        await this.findRoomById(manager, id, member.id);
-        const messages: ChattingMessage[] = await manager.find(
-          ChattingMessage,
-          {
-            where: { room: { id: id } },
-            select: ['isHost', 'message'],
-          },
-        );
-        return messages.map(
-          (message: ChattingMessage): ChattingMessageDto =>
-            ChattingMessageDto.fromEntity(message),
-        );
-      } catch (err: unknown) {
-        throw err;
-      }
-    });
+    const messages: ChattingMessage[] = await this.entityManager.transaction(
+      async (manager: EntityManager) => {
+        try {
+          const member: Member = await this.findMemberByEmail(
+            manager,
+            email,
+            providerId,
+          );
+          await this.findRoomById(manager, id, member.id);
+          return await manager
+            .createQueryBuilder(ChattingMessage, 'message')
+            .select('message.message', 'message_message')
+            .addSelect('message.isHost', 'message_is_host')
+            .where('message.room_id = :roomId', { roomId: id })
+            .orderBy('DATE(message.order)')
+            .getMany();
+        } catch (err: unknown) {
+          throw err;
+        }
+      },
+    );
+    return messages.map(
+      (message: ChattingMessage): ChattingMessageDto =>
+        ChattingMessageDto.fromEntity(message),
+    );
   }
 
   async updateRoom(
@@ -156,37 +174,43 @@ export class ChatService {
     email: string,
     providerId: number,
   ): Promise<ChattingInfo> {
-    return this.entityManager.transaction(async (manager: EntityManager) => {
-      try {
-        const member: Member = await this.findMemberByEmail(
-          manager,
-          email,
-          providerId,
-        );
-        const room = await manager.save(
-          ChattingRoom,
-          ChattingRoom.fromMember(member),
-        );
-        return { memberId: member.id, roomId: room.id };
-      } catch (err: unknown) {
-        throw err;
-      }
-    });
+    const { member, room } = await this.entityManager.transaction(
+      async (manager: EntityManager) => {
+        try {
+          const member: Member = await this.findMemberByEmail(
+            manager,
+            email,
+            providerId,
+          );
+          const room = await manager.save(
+            ChattingRoom,
+            ChattingRoom.fromMember(member),
+          );
+          return { member, room };
+        } catch (err: unknown) {
+          throw err;
+        }
+      },
+    );
+    return { memberId: member.id, roomId: room.id };
   }
 
   private async createRoomForNonMember(): Promise<ChattingInfo> {
-    return this.entityManager.transaction(async (manager: EntityManager) => {
-      try {
-        const member: Member = await manager.save(Member, new Member());
-        const room = await manager.save(
-          ChattingRoom,
-          ChattingRoom.fromMember(member),
-        );
-        return { memberId: member.id, roomId: room.id };
-      } catch (err: unknown) {
-        throw err;
-      }
-    });
+    const { member, room } = await this.entityManager.transaction(
+      async (manager: EntityManager) => {
+        try {
+          const member: Member = await manager.save(Member, new Member());
+          const room = await manager.save(
+            ChattingRoom,
+            ChattingRoom.fromMember(member),
+          );
+          return { member, room };
+        } catch (err: unknown) {
+          throw err;
+        }
+      },
+    );
+    return { memberId: member.id, roomId: room.id };
   }
 
   private async findRoomById(
