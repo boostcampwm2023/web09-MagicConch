@@ -38,7 +38,7 @@ export async function sendCreatedSDP(roomName: string, type: 'offer' | 'answer')
   const socketManager = HumanSocketManager.getInstance();
 
   const sdp = type === 'offer' ? await webRTC.createOffer() : await webRTC.createAnswer();
-  webRTC.setLocalDescription(sdp);
+  await webRTC.setLocalDescription(sdp);
 
   const description = webRTC.getPeerConnection()?.localDescription;
   socketManager.emit('connection', { roomName, description });
