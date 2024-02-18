@@ -1,11 +1,10 @@
 import { CamBox } from '..';
 
-import { InputText } from '@components/common';
-import { Button, IconButton, InputFileButton } from '@components/common';
-import { SelectOptions } from '@components/common';
+import { Button, IconButton, InputFileButton, InputText, SelectOptions } from '@components/common';
 
-import { useMediaInfo } from '@stores/zustandStores';
-import { useProfileInfo } from '@stores/zustandStores';
+import { useMediaStream } from '@business/hooks/webRTC';
+
+import { useMediaInfo, useProfileInfo } from '@stores/zustandStores';
 
 import { DEFAULT_NICKNAME } from '@constants/nickname';
 
@@ -13,13 +12,8 @@ import { DeviceSelect } from './DeviceSelect';
 import { DeviceToggleButtons } from './DeviceToggleButtons';
 
 interface ProfileSettingProps {
-  toggleVideo: () => void;
-  toggleAudio: () => void;
   camList: SelectOptions[];
   micList: SelectOptions[];
-  videoRef: React.RefObject<HTMLVideoElement>;
-  changeMyCamera: (deviceId: string) => void;
-  changeMyAudio: (deviceId: string) => void;
   onConfirm: () => void;
   onChangeProfileImage: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onChangeNickname: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -28,11 +22,6 @@ interface ProfileSettingProps {
 export function ProfileSetting({
   camList,
   micList,
-  videoRef,
-  toggleVideo,
-  toggleAudio,
-  changeMyCamera,
-  changeMyAudio,
   onConfirm,
   onChangeProfileImage,
   onChangeNickname,
@@ -49,12 +38,14 @@ export function ProfileSetting({
     selectedCameraID: state.selectedCameraID,
   }));
 
+  const { localStream, changeMediaTrack, toggleMediaOnOff } = useMediaStream();
+
   return (
     <div className="relative w-h-full flex-with-center z-10 lg:top-24">
       <div className="flex gap-24 sm:gap-0 flex-col rounded-lg p-32 surface-box sm:w-full sm:h-full sm:rounded-none sm:pt-[10vh]">
         <div className="flex-with-center flex-row sm:flex-col gap-48 sm:gap-12 z-10">
           <CamBox
-            videoRef={videoRef}
+            stream={localStream}
             cameraConnected={myVideoOn}
             audioConnected={myMicOn}
             defaultImage="bg-ddung"
@@ -87,7 +78,7 @@ export function ProfileSetting({
               <DeviceSelect
                 name="카메라"
                 deviceList={camList}
-                onChange={changeMyCamera}
+                onChange={id => changeMediaTrack('video', id)}
                 defaultId={selectedCameraID}
               />
             </div>
@@ -95,7 +86,7 @@ export function ProfileSetting({
               <DeviceSelect
                 name="마이크"
                 deviceList={micList}
-                onChange={changeMyAudio}
+                onChange={id => changeMediaTrack('audio', id)}
                 defaultId={selectedAudioID}
               />
             </div>
@@ -106,8 +97,8 @@ export function ProfileSetting({
           <DeviceToggleButtons
             cameraActive={myVideoOn}
             micActive={myMicOn}
-            toggleVideo={toggleVideo}
-            toggleAudio={toggleAudio}
+            toggleVideo={() => toggleMediaOnOff('video')}
+            toggleAudio={() => toggleMediaOnOff('audio')}
           />
           <Button
             onClick={onConfirm}

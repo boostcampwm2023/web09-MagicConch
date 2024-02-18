@@ -1,32 +1,48 @@
-import { useDataChannel, useMedia } from '.';
+import { useDataChannel } from '.';
 
 import { WebRTC } from '@business/services';
 import { initSignalingSocket } from '@business/services';
 import { HumanSocketManager } from '@business/services/SocketManager';
 
+import { useMediaStreamStore } from '@stores/zustandStores';
+
 export function useWebRTC() {
   const humanSocket = HumanSocketManager.getInstance();
   const webRTC = WebRTC.getInstance(humanSocket);
 
-  const { getLocalStream } = useMedia();
-
   const { initDataChannels } = useDataChannel();
+
+  const { localStream, setRemoteStream } = useMediaStreamStore(state => ({
+    localStream: state.localStream,
+    setRemoteStream: state.setRemoteStream,
+  }));
+
+  const resetWebRTCDataChannel = (roomName: string) => {
+    webRTC.closeRTCPeerConnection();
+    webRTC.closeDataChannels();
+    webRTC.connectRTCPeerConnection({ roomName, onTrack: e => setRemoteStream(e.streams[0]) });
+    initDataChannels();
+    localStream.getTracks().forEach(track => {
+      webRTC.addTrack2PeerConnection(localStream, track);
+    });
+  };
 
   const startWebRTC = async ({ roomName }: { roomName: string }) => {
     if (webRTC.isConnectedPeerConnection()) {
       return false;
     }
-    const stream = await getLocalStream();
-    webRTC.setLocalStream(stream);
 
     initSignalingSocket({
       roomName,
-      onExitUser: () => resetWebRTCDataChannel(webRTC, initDataChannels, roomName),
+      onExitUser: () => resetWebRTCDataChannel(roomName),
     });
 
-    webRTC.connectRTCPeerConnection(roomName);
+    webRTC.connectRTCPeerConnection({
+      roomName,
+      onTrack: e => setRemoteStream(e.streams[0]),
+    });
+
     initDataChannels();
-    webRTC.addTracks();
   };
 
   const endWebRTC = () => {
@@ -39,12 +55,4 @@ export function useWebRTC() {
     startWebRTC,
     endWebRTC,
   };
-}
-
-export function resetWebRTCDataChannel(webRTC: WebRTC, initDataChannels: () => void, roomName: string) {
-  webRTC.closeRTCPeerConnection();
-  webRTC.closeDataChannels();
-  webRTC.connectRTCPeerConnection(roomName);
-  initDataChannels();
-  webRTC.addTracks();
 }

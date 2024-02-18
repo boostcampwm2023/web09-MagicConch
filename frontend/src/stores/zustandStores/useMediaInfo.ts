@@ -1,15 +1,6 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
-interface MediaInfoState {
-  myMicOn: boolean;
-  myVideoOn: boolean;
-  remoteMicOn: boolean;
-  remoteVideoOn: boolean;
-  selectedCameraID: string;
-  selectedAudioID: string;
-}
-
 interface MediaInfoActions {
   toggleMyVideo: () => void;
   toggleMyMic: () => void;
@@ -23,7 +14,7 @@ interface MediaInfoActions {
   setSelectedAudioID: (value: string) => void;
 }
 
-const initialState: MediaInfoState = {
+const initialState = {
   myMicOn: false,
   myVideoOn: false,
   remoteMicOn: false,
@@ -32,7 +23,7 @@ const initialState: MediaInfoState = {
   selectedAudioID: '',
 };
 
-export const useMediaInfo = create<MediaInfoState & MediaInfoActions>()(
+export const useMediaInfo = create<typeof initialState & MediaInfoActions>()(
   devtools(set => ({
     ...initialState,
     toggleMyVideo: () => set(state => ({ myVideoOn: !state.myVideoOn })),

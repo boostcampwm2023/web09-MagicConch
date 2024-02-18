@@ -9,7 +9,7 @@ import { arrayBuffer2Blob } from '@utils/array';
 import { Icon } from '@iconify/react';
 
 interface CamBoxProps {
-  stream: MediaStream;
+  stream?: MediaStream;
   defaultImage: 'bg-ddung' | 'bg-sponge';
   profileInfo?: ProfileInfo;
   cameraConnected?: boolean;
@@ -42,7 +42,7 @@ export function CamBox({
   useSpeakerHighlighter(videoRef);
 
   useEffect(() => {
-    if (!videoRef.current) {
+    if (!videoRef.current || !stream) {
       return;
     }
     videoRef.current.srcObject = stream;
@@ -51,7 +51,7 @@ export function CamBox({
   return (
     <>
       <div className="flex relative w-320 h-320 sm:w-[30vh] sm:h-[30vh] rounded-[55px] sm:rounded-[50px] shadow-white">
-        {!stream.active && <div className="absolute skeleton w-h-full"></div>}
+        {!stream?.active && <div className="absolute skeleton w-h-full rounded-[55px] "></div>}
         <video
           className={`flex-1 w-h-full rounded-[55px] sm:rounded-[50px]`}
           ref={videoRef}
