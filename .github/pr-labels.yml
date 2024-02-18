@@ -1,7 +1,7 @@
-feature: "*/feature/*"
-bug: "*/bugfix/*"
-refactor: "*/refactor/*"
+feature: "*feature*"
+bug: "*bugfix*"
+refactor: "*refactor*"
 release: "release/*"
-BE: "Be/*"
-FE: "Fe/*"
+BE: ["Be/*", "Fe,be/*", "Be,fe/*"]
+FE: ["Fe/*", "Fe,be/*", "Be,fe/*"]
 DevOps: "Devops/*"
