@@ -8,7 +8,7 @@ import { useHumanChatMessage } from '@business/hooks/chatMessage';
 import { useSidebar } from '@business/hooks/sidebar';
 import { useHumanTarotSpread } from '@business/hooks/tarotSpread';
 import { useBlocker } from '@business/hooks/useBlocker';
-import { useWebRTC } from '@business/hooks/webRTC';
+import { useMediaStream, useWebRTC } from '@business/hooks/webRTC';
 
 import { useCreateRoomEvent } from './hooks/useCreateRoomEvent';
 import { useHumanChatPageState } from './hooks/useHumanChatPageState';
@@ -32,6 +32,7 @@ export function HumanChatPage() {
 
   const navigate = useNavigate();
   const { endWebRTC } = useWebRTC();
+  const { disconnectMediaStream } = useMediaStream();
 
   const { messages, onSubmitMessage, inputDisabled, addPickCardMessage } = useHumanChatMessage();
   const { tarotButtonClick, tarotButtonDisabled } = useHumanTarotSpread(addPickCardMessage);
@@ -46,6 +47,7 @@ export function HumanChatPage() {
   useEffect(() => {
     return () => {
       endWebRTC();
+      disconnectMediaStream();
     };
   }, []);
 
