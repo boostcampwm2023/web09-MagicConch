@@ -2,15 +2,26 @@ name: Configure PR When PR Opened
 
 on:
   pull_request:
-    types:
-      - opened
+    # types: ["opened", "edited"]
 
 permissions:
   contents: read
 
 jobs:
+  check-title:
+    name: Check PR Title
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check PR title
+        uses: deepakputhraya/action-pr-title@master
+        with:
+          regex: "((BE|FE|DEVOPS)\/(feature|bugfix|refactor)(,(feature|bugfix|refactor))*\/(#[\d]+(\-#[\d]+)*)\-[\w가-힣-]+|release v[\d]+\.[\d]+\.[\d]+)"
+          github_token: ${{ secrets.ADD_TO_PROJECT_PAT }}
+
   set-label:
     name: Set Labels to PR
+    needs: check-title
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -24,6 +35,7 @@ jobs:
 
   set-issue:
     name: Set Issue to PR
+    needs: check-title
     runs-on: ubuntu-latest
 
     steps:
