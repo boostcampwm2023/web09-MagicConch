@@ -32,7 +32,7 @@ describe('Socket 서비스', () => {
     });
 
     it('welcom 이벤트가 발생: offer 생성 후 시그널링 서버로 전달한다.', async () => {
-      sendCreatedSDP('roomName', 'offer');
+      await sendCreatedSDP('roomName', 'offer');
 
       expect(webRTC.setLocalDescription).toBeCalledWith(await webRTC.createOffer());
       expect(socketManager.emit).toBeCalledWith('connection', {
