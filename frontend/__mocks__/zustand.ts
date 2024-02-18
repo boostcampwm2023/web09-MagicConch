@@ -36,6 +36,13 @@ export const createStore = (<T>(stateCreator: zustand.StateCreator<T>) => {
   return typeof stateCreator === 'function' ? createStoreUncurried(stateCreator) : createStoreUncurried;
 }) as typeof zustand.createStore;
 
+window.MediaStream = vi.fn().mockReturnValue({
+  getTracks: vi.fn().mockReturnValue([
+    { enabled: true, id: 'test' },
+    { enabled: true, id: 'test' },
+  ]),
+});
+
 // reset all stores after each test run
 afterEach(() => {
   act(() => {
