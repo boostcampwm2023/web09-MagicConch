@@ -28,19 +28,20 @@ jobs:
 
     steps:
       - uses: actions/github-script@v7
+        if: github.event.pull_request.base.ref != 'release'
         with:
           github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
           script: |
             const prTitle = context.payload.pull_request.title;
             const issueNumbers = prTitle.match(/#(\d+)/g);
-            const prefix = issueNumbers ? issueNumbers.reduce((acc, curr) => `${acc} ${curr}`, "resolved") : '';
+            const prefix = issueNumbers ? issueNumbers.reduce((acc, curr) => `${acc} ${curr}`, "🔮 resolved") + '\n' : '';
             const body = context.payload.pull_request.body.replace(/🔮 resolved #(\d+)( #(\d+))*/g, '');
 
             github.rest.pulls.update({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: context.payload.number,
-              body: `🔮 ${prefix}\n${body}`,
+              body: `${prefix}${body}`,
             });
 
             issueNumbers?.forEach((num) => {
@@ -58,6 +59,7 @@ jobs:
 
     steps:
       - uses: actions/github-script@v7
+        if: github.event.pull_request.base.ref != 'release'
         with:
           github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
           script: |
