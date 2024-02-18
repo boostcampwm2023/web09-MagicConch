@@ -18,11 +18,11 @@ export const initSignalingSocket = ({ roomName, onExitUser }: initSignalingSocke
   const socketManager = HumanSocketManager.getInstance();
 
   // 최초 접속 시, welcome 이벤트를 받고 offer를 생성하여 상대방에게 보냄
-  socketManager.on('welcome', async () => sendCreatedSDP(roomName, 'answer'));
+  socketManager.on('welcome', () => sendCreatedSDP(roomName, 'offer'));
 
-  socketManager.on('connection', async (params: WebRTCConnectionSetupParams) => {
-    await handleWebRTCConnectionSetup({ ...params, roomName });
-  });
+  socketManager.on('connection', (params: WebRTCConnectionSetupParams) =>
+    handleWebRTCConnectionSetup({ ...params, roomName }),
+  );
 
   socketManager.on('roomFull', () => {
     alert(ERROR_MESSAGE.FULL_ROOM);

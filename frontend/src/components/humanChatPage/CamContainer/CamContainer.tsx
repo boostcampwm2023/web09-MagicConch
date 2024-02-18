@@ -75,14 +75,14 @@ export function CamContainer({ tarotButtonClick, tarotButtonDisabled }: CamConta
             inactiveIcon="pepicons-pop:camera-off"
             size="l"
             active={myVideoOn}
-            onClick={() => toggleMediaOnOff('video')}
+            onClick={() => toggleMediaOnOff({ type: 'video' })}
           />
           <IconToggleButton
             activeIcon="mingcute:mic-line"
             inactiveIcon="mingcute:mic-off-line"
             size="l"
             active={myMicOn}
-            onClick={() => toggleMediaOnOff('audio')}
+            onClick={() => toggleMediaOnOff({ type: 'audio' })}
           />
         </div>
       </div>

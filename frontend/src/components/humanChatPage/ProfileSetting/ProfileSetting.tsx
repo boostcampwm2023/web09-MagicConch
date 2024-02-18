@@ -78,7 +78,7 @@ export function ProfileSetting({
               <DeviceSelect
                 name="카메라"
                 deviceList={camList}
-                onChange={id => changeMediaTrack('video', id)}
+                onChange={id => changeMediaTrack({ type: 'video', id })}
                 defaultId={selectedCameraID}
               />
             </div>
@@ -86,7 +86,7 @@ export function ProfileSetting({
               <DeviceSelect
                 name="마이크"
                 deviceList={micList}
-                onChange={id => changeMediaTrack('audio', id)}
+                onChange={id => changeMediaTrack({ type: 'audio', id })}
                 defaultId={selectedAudioID}
               />
             </div>
@@ -97,8 +97,8 @@ export function ProfileSetting({
           <DeviceToggleButtons
             cameraActive={myVideoOn}
             micActive={myMicOn}
-            toggleVideo={() => toggleMediaOnOff('video')}
-            toggleAudio={() => toggleMediaOnOff('audio')}
+            toggleVideo={() => toggleMediaOnOff({ type: 'video' })}
+            toggleAudio={() => toggleMediaOnOff({ type: 'audio' })}
           />
           <Button
             onClick={onConfirm}

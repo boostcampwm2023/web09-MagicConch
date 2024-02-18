@@ -26,10 +26,10 @@ export function useMediaStream() {
       setSelectedAudioID: state.setSelectedAudioID,
     }));
 
-  const addTracks = (stream: MediaStream) => {
+  const addTracks = (stream: MediaStream, replacePeerconnection?: boolean) => {
     stream.getTracks().forEach(track => {
       localStream.addTrack(track);
-      webRTC.addTrack2PeerConnection(localStream, track);
+      replacePeerconnection && webRTC.addTrack2PeerConnection(localStream, track);
     });
   };
 
@@ -47,7 +47,13 @@ export function useMediaStream() {
     });
   };
 
-  const toggleMediaOnOff = async (type: 'audio' | 'video') => {
+  const toggleMediaOnOff = async ({
+    type,
+    replacePeerconnection = true,
+  }: {
+    type: 'audio' | 'video';
+    replacePeerconnection?: boolean;
+  }) => {
     const mediaEnabled = type === 'video' ? myVideoEnabled : myMicEnabled;
     const toggleMediaState = type === 'video' ? toggleMyVideo : toggleMyMic;
 
@@ -61,13 +67,21 @@ export function useMediaStream() {
       stopTracks(type);
     } else {
       const stream = type === 'video' ? await getVideoStream() : await getAudioStream();
-      addTracks(stream);
-      replacePeerconnectionTrack(type);
+
       setLocalStream(localStream);
+      addTracks(stream, replacePeerconnection);
     }
   };
 
-  const changeMediaTrack = async (type: 'audio' | 'video', id?: string) => {
+  const changeMediaTrack = async ({
+    type,
+    id,
+    replacePeerconnection = true,
+  }: {
+    type: 'audio' | 'video';
+    id?: string;
+    replacePeerconnection?: boolean;
+  }) => {
     const stream = type === 'audio' ? await getAudioStream({ audioID: id }) : await getVideoStream({ cameraID: id });
 
     if (id) {
@@ -90,6 +104,7 @@ export function useMediaStream() {
     toggleMediaOnOff,
     changeMediaTrack,
     disconnectMediaStream,
+    replacePeerconnectionTrack,
     localStream,
     remoteStream,
   };
