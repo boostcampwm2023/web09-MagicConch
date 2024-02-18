@@ -2,7 +2,7 @@ name: Configure PR When PR Opened
 
 on:
   pull_request:
-    # types: ["opened", "edited"]
+    types: ["opened", "edited"]
 
 permissions:
   contents: read
