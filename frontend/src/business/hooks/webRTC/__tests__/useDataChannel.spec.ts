@@ -8,6 +8,19 @@ vi.mock('@business/services');
 describe('useDataChannel 테스트', () => {
   let mockWebRTCModule = WebRTC.getInstance();
 
+  const addEventListener = vi.fn();
+
+  beforeAll(() => {
+    const mediaInfoChannelStub: any = { addEventListener };
+    vi.spyOn(mockWebRTCModule, 'addDataChannel').mockReturnValue(mediaInfoChannelStub);
+
+    window.MediaStream = {} as any;
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
   function rerenderHook() {
     const {
       rerender,
@@ -17,18 +30,6 @@ describe('useDataChannel 테스트', () => {
     } = renderHook(() => useDataChannel());
     return { rerender, dataChannels, initDataChannels };
   }
-
-  const addEventListener = vi.fn();
-
-  beforeAll(() => {
-    const mediaInfoChannelStub: any = { addEventListener };
-    vi.spyOn(mockWebRTCModule, 'addDataChannel').mockReturnValue(mediaInfoChannelStub);
-  });
-
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
-
   describe('initDataChannels 함수 테스트: 아래 A ~ D의 함수가 실행됨', () => {
     describe('A. initMediaInfoChannel 함수 테스트', () => {
       it('mediaInfoChannel 데이터 채널 추가 + message와 open 이벤트가 등록됨.', () => {

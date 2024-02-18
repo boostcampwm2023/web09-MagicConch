@@ -54,5 +54,6 @@ export function useWebRTC() {
   return {
     startWebRTC,
     endWebRTC,
+    resetWebRTCDataChannel,
   };
 }

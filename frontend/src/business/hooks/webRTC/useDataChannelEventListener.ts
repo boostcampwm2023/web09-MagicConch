@@ -1,5 +1,4 @@
-import { useMediaInfo } from '@stores/zustandStores';
-import { useProfileInfo } from '@stores/zustandStores';
+import { useMediaInfo, useProfileInfo } from '@stores/zustandStores/index';
 
 import { array2ArrayBuffer } from '@utils/array';
 

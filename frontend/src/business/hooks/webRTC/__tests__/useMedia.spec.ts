@@ -21,15 +21,17 @@ const mockAudioIdState = 'audioIDState';
 
 describe('useMedia훅', () => {
   let getUserMediaStream = vi.spyOn(Media, 'getUserMediaStream').mockResolvedValue(mockMediaStream);
-  let getLocalStream: any;
 
   function rerenderHook() {
-    const util = renderHook(() => useMedia());
-    getLocalStream = util.result.current.getLocalStream;
+    const {
+      result: {
+        current: { getAudioStream, getVideoStream },
+      },
+    } = renderHook(() => useMedia());
+    return { getAudioStream, getVideoStream };
   }
 
   beforeEach(() => {
-    rerenderHook();
     __setMockMediaStreamTracks([
       createFakeMediaStreamTrack('video', mockCameraId),
       createFakeMediaStreamTrack('audio', mockAudioId),
@@ -40,101 +42,72 @@ describe('useMedia훅', () => {
     vi.clearAllMocks();
   });
 
-  describe('getLocalStream 함수', () => {
-    describe('audioId 테스트', () => {
-      it('함수의 인수로 전달된 audioId ✅: 해당 Id로 MediaStream을 받아옴', async () => {
-        await getLocalStream({ audioID: mockAudioId });
+  describe('getAudioStream 테스트', () => {
+    it('함수의 인수로 전달된 audioId ✅: 해당 Id로 MediaStream을 받아옴', async () => {
+      const { getAudioStream } = rerenderHook();
 
-        expect(getUserMediaStream).toBeCalledWith({
-          audio: { deviceId: mockAudioId },
-          video: defaultVideoOptions,
-        });
-      });
+      await getAudioStream({ audioID: mockAudioId });
 
-      it('함수의 인수로 전달된 audioId ❌, 전역의 audioId ✅: 전역의 Id로 MediaStream을 받아옴', async () => {
-        act(() => {
-          useMediaInfo.getState().setSelectedAudioID(mockAudioIdState);
-        });
-        rerenderHook();
-        await getLocalStream();
-
-        expect(getUserMediaStream).toBeCalledWith({
-          audio: { deviceId: mockAudioIdState },
-          video: defaultVideoOptions,
-        });
-      });
-
-      it('함수의 인수로 전달된 audioId ❌, 전역의 audioId ❌: 기본 옵션이 들어감', async () => {
-        await getLocalStream({ cameraID: 'mockCameraId' });
-
-        expect(getUserMediaStream).toBeCalledWith({
-          audio: defaultAudioOptions,
-          video: createDefaultVideoOptions('mockCameraId'),
-        });
+      expect(getUserMediaStream).toBeCalledWith({
+        audio: { deviceId: mockAudioId },
       });
     });
 
-    describe('cameraId 테스트', () => {
-      it('함수의 인수로 전달된 videoId ✅: 해당 Id로 MediaStream을 받아옴', async () => {
-        await getLocalStream({ cameraID: mockCameraId });
-
-        expect(getUserMediaStream).toBeCalledWith({
-          audio: defaultAudioOptions,
-          video: createDefaultVideoOptions(mockCameraId),
-        });
+    it('함수의 인수로 전달된 audioId ❌, 전역의 audioId ✅: 전역의 Id로 MediaStream을 받아옴', async () => {
+      act(() => {
+        useMediaInfo.getState().setSelectedAudioID(mockAudioIdState);
       });
+      const { getAudioStream } = rerenderHook();
 
-      it('함수의 인수로 전달된 videoId ❌, 전역의 videoId ✅: 전역의 Id로 MediaStream을 받아옴', async () => {
-        act(() => {
-          useMediaInfo.getState().setSelectedCameraID(mockCameraIdState);
-        });
-        rerenderHook();
+      await getAudioStream();
 
-        await getLocalStream();
-
-        expect(getUserMediaStream).toBeCalledWith({
-          audio: defaultAudioOptions,
-          video: createDefaultVideoOptions(mockCameraIdState),
-        });
-      });
-
-      it('함수의 인수로 전달된 videoId ❌, 전역의 videoId ❌: 기본 옵션이 들어감', async () => {
-        await getLocalStream();
-
-        expect(getUserMediaStream).toBeCalledWith({
-          audio: defaultAudioOptions,
-          video: defaultVideoOptions,
-        });
+      expect(getUserMediaStream).toBeCalledWith({
+        audio: { deviceId: mockAudioIdState },
       });
     });
 
-    describe('내 마이크가 꺼져있다면(전역상태 myMicOn이 false라면)', () => {
-      it('stream의 audioTrack들의 enabled가 false가 됨', async () => {
-        act(() => {
-          useMediaInfo.getState().setMyMicOn(false);
-        });
-        rerenderHook();
+    it('함수의 인수로 전달된 audioId ❌, 전역의 audioId ❌: 기본 옵션이 들어감', async () => {
+      const { getAudioStream } = rerenderHook();
 
-        const media = await getLocalStream();
+      await getAudioStream();
 
-        media.getAudioTracks().forEach((track: any) => {
-          expect(track.enabled).toBe(false);
-        });
+      expect(getUserMediaStream).toBeCalledWith({
+        audio: defaultAudioOptions,
+      });
+    });
+  });
+
+  describe('getVideoStream 테스트', () => {
+    it('함수의 인수로 전달된 videoId ✅: 해당 Id로 MediaStream을 받아옴', async () => {
+      const { getVideoStream } = rerenderHook();
+
+      await getVideoStream({ cameraID: mockCameraId });
+
+      expect(getUserMediaStream).toBeCalledWith({
+        video: createDefaultVideoOptions(mockCameraId),
       });
     });
 
-    describe('내 카메라가 꺼져있다면(전역상태 myVideoOn이 false라면)', () => {
-      it('stream의 videoTrack들의 enabled가 false가 됨', async () => {
-        act(() => {
-          useMediaInfo.getState().setMyVideoOn(false);
-        });
-        rerenderHook();
+    it('함수의 인수로 전달된 videoId ❌, 전역의 videoId ✅: 전역의 Id로 MediaStream을 받아옴', async () => {
+      act(() => {
+        useMediaInfo.getState().setSelectedCameraID(mockCameraIdState);
+      });
+      const { getVideoStream } = rerenderHook();
 
-        const media = await getLocalStream();
+      await getVideoStream();
 
-        media.getVideoTracks().forEach((track: any) => {
-          expect(track.enabled).toBe(false);
-        });
+      expect(getUserMediaStream).toBeCalledWith({
+        video: createDefaultVideoOptions(mockCameraIdState),
+      });
+    });
+
+    it('함수의 인수로 전달된 videoId ❌, 전역의 videoId ❌: 기본 옵션이 들어감', async () => {
+      const { getVideoStream } = rerenderHook();
+
+      await getVideoStream();
+
+      expect(getUserMediaStream).toBeCalledWith({
+        video: defaultVideoOptions,
       });
     });
   });
