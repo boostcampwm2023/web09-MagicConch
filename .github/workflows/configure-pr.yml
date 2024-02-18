@@ -46,8 +46,8 @@ jobs:
           script: |
             const prTitle = context.payload.pull_request.title;
             const issueNumbers = prTitle.match(/#(\d+)/g);
-            const prefix = issueNumbers ? issueNumbers.reduce((acc, curr) => `${acc}🔮 resolved #${curr}\n`, "") : '';
-            const body = context.payload.pull_request.body.replace(/(🔮 resolved #(\d+))+/g, '');
+            const prefix = issueNumbers ? issueNumbers.reduce((acc, curr) => `${acc}🔮 resolved ${curr}\n`, "") : '';
+            const body = context.payload.pull_request.body.replace(/(🔮 resolved #(\d+)\n)+/g, '');
 
             github.rest.pulls.update({
               owner: context.repo.owner,
