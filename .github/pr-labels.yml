@@ -1,6 +1,7 @@
 feature: "*/feature/*"
 bug: "*/bugfix/*"
 refactor: "*/refactor/*"
+release: "release/*"
 BE: "Be/*"
 FE: "Fe/*"
 DevOps: "Devops/*"
