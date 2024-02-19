@@ -3,7 +3,7 @@ name: Blue/Green CD for Backend
 on:
   push:
     paths: ["backend/**"]
-    branches: ["release"]
+    branches: ["release", "*hotfix*"]
 
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
