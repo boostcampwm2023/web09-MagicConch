@@ -125,28 +125,31 @@ export function TarotSpread({ opened, closeSpread, pickCard }: TarotSpreadProps)
   };
 
   return (
-    <Background type={`${closing ? 'close' : 'open'}`}>
-      <div
-        ref={tarotSpreadRef}
-        {...(!__iOS__ && MouseEventHandler)}
-        {...(!__iOS__ && TouchEventHandler)}
-        className="transition-all ease-out rotate-[270deg] absolute w-220 h-400 sm:w-160 sm:h-270 origin-center top-1150 left-[50%] translate-x-[-50%] sm:top-[35vh] sm:-left-800 md:top-[35vh] md:-left-700"
-      >
-        {Array.from({ length: TAROT_CARDS_LENGTH }, (_, idx) => idx).map((_, idx: number) => (
-          <div
-            key={idx}
-            ref={ref => (tarotCardRefs.current[idx] = ref!)}
-            className="absolute w-h-full"
-            onClick={() => flipCard(tarotCardRefs.current[idx])}
-          >
-            <TarotCard
-              dragging={dragging}
-              backImg={backImg}
-              frontImg={frontImg}
-            />
-          </div>
-        ))}
-      </div>
-    </Background>
+    <>
+      <Background type={`${closing ? 'close' : 'open'}`} />
+      <section className="flex-with-center flex-col w-screen h-dvh">
+        <div
+          ref={tarotSpreadRef}
+          {...(!__iOS__ && MouseEventHandler)}
+          {...(!__iOS__ && TouchEventHandler)}
+          className="transition-all ease-out rotate-[270deg] absolute w-220 h-400 sm:w-160 sm:h-270 origin-center top-1150 left-[50%] translate-x-[-50%] sm:top-[35vh] sm:-left-800 md:top-[35vh] md:-left-700"
+        >
+          {Array.from({ length: TAROT_CARDS_LENGTH }, (_, idx) => idx).map((_, idx: number) => (
+            <div
+              key={idx}
+              ref={ref => (tarotCardRefs.current[idx] = ref!)}
+              className="absolute w-h-full"
+              onClick={() => flipCard(tarotCardRefs.current[idx])}
+            >
+              <TarotCard
+                dragging={dragging}
+                backImg={backImg}
+                frontImg={frontImg}
+              />
+            </div>
+          ))}
+        </div>
+      </section>
+    </>
   );
 }
