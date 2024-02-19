@@ -133,7 +133,7 @@ export class EventsGateway
   }
 
   @SubscribeMessage<HumanClientEvent>('connection')
-  handleMessageEvent(
+  handleConnectionEvent(
     socket: Socket,
     {
       description,
