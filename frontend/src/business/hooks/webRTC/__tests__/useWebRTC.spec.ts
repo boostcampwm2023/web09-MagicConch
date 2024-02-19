@@ -1,4 +1,4 @@
-import { useDataChannel, useMedia, useWebRTC } from '..';
+import { useDataChannel, useWebRTC } from '..';
 import { renderHook } from '@testing-library/react';
 
 import { WebRTC, initSignalingSocket } from '@business/services';
