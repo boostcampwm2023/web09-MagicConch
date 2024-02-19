@@ -2,7 +2,7 @@ name: Configure PR When PR Opened
 
 on:
   pull_request:
-    types: ["opened"]
+    # types: ["opened"]
 
 permissions:
   contents: read
@@ -76,9 +76,11 @@ jobs:
           github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
           script: |
             const sender = context.payload.sender.login;
+            console.log(sender);
             const assignees = context.payload.pull_request.assignees;
             const newAssignees = assignees ?? [];
             newAssignees.push(sender);
+            console.log(newAssignees);
 
             github.rest.issues.addAssignees({
               owner: context.repo.owner,
