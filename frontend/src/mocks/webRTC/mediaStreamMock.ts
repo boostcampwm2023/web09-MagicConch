@@ -2,6 +2,7 @@ export const createFakeMediaStreamTrack = (kind: 'video' | 'audio', id: string):
   kind,
   id,
   enabled: true,
+  stop: vi.fn(),
 });
 
 export const mockMediaStream = {
