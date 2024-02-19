@@ -1,5 +1,5 @@
 feature: "*feature*"
-bug: "*bugfix*"
+bug: ["*bugfix*", "*hotfix*"]
 refactor: "*refactor*"
 release: "release*"
 BE: ["Be/*", "Fe,be/*", "Be,fe/*"]

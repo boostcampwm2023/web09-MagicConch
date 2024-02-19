@@ -16,7 +16,7 @@ jobs:
       - name: Check PR title
         uses: deepakputhraya/action-pr-title@master
         with:
-          regex: '((Be|Fe|Devops|Be,fe|Fe,be)\/(feature|bugfix|refactor)(,(feature|bugfix|refactor))*\/#[\d]+( #[\d]+)*.+|release v[\d]+\.[\d]+\.[\d]+)'
+          regex: '((Be|Fe|Devops|Be,fe|Fe,be)\/(feature|bugfix|hotfix|refactor)(,(feature|bugfix|hotfix|refactor))*\/#[\d]+( #[\d]+)*.+|release v[\d]+\.[\d]+\.[\d]+)'
           github_token: ${{ secrets.ADD_TO_PROJECT_PAT }}
 
   set-label:
