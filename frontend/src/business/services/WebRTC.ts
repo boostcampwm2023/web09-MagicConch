@@ -22,38 +22,27 @@ export class WebRTC {
     return this.instance;
   }
 
-  private localStream: MediaStream | undefined;
-  private remoteStream: MediaStream | undefined;
-  private peerConnection: RTCPeerConnection | null = null;
+  private peerConnection: RTCPeerConnection | undefined;
   private dataChannels: Map<RTCDataChannelKey, RTCDataChannel> = new Map();
   private nextDataChannelId = 0;
 
-  getLocalStream = () => this.localStream;
-  getFirstVideoTrack = () => this.localStream?.getVideoTracks()[0];
-  getFirstAudioTrack = () => this.localStream?.getAudioTracks()[0];
-
-  getRemoteStream = () => this.remoteStream;
   getPeerConnection = () => this.peerConnection;
   getDataChannels = () => this.dataChannels;
   getDataChannel = (key: RTCDataChannelKey) => this.dataChannels.get(key);
-  // getSocketManager = () => this.socketManager;
-  // getNextDataChannelId = () => this.nextDataChannelId;
 
   public resetForTesting() {
-    this.localStream = undefined;
-    this.remoteStream = undefined;
-    this.peerConnection = null;
+    this.peerConnection = undefined;
     this.dataChannels = new Map();
     this.nextDataChannelId = 0;
   }
-  public setLocalStream = (stream: MediaStream) => {
-    this.localStream = stream;
-  };
-  public setRemoteStream = (stream: MediaStream) => {
-    this.remoteStream = stream;
-  };
 
-  public connectRTCPeerConnection = (roomName: string) => {
+  public connectRTCPeerConnection = ({
+    roomName,
+    onTrack,
+  }: {
+    roomName: string;
+    onTrack: (e: RTCTrackEvent) => void;
+  }) => {
     const devIceServerConfig = [{ urls: iceServers }];
 
     this.peerConnection = new RTCPeerConnection({
@@ -61,16 +50,28 @@ export class WebRTC {
       iceServers: import.meta.env.MODE === 'development' ? devIceServerConfig : devIceServerConfig,
     });
 
-    this.addRTCPeerConnectionEventListener('track', e => {
-      this.setRemoteStream(e.streams[0]);
+    this.peerConnection.addEventListener('track', e => {
+      onTrack(e);
     });
 
-    this.addRTCPeerConnectionEventListener('icecandidate', e => {
+    // 이 리스너는 재협상이 필요한 상황에서 호출됨
+    this.peerConnection.addEventListener('negotiationneeded', async () => {
+      // 만약 아직 peerConnection이 초기화되지 않았거나, 연결된적이 없다면 리턴함
+      if (this.peerConnection?.signalingState !== 'stable' || !this.peerConnection?.remoteDescription) {
+        return;
+      }
+
+      const offer = await this.peerConnection?.createOffer();
+      await this.setLocalDescription(offer);
+      this.socketManager.emit('connection', { roomName, description: this.peerConnection?.localDescription });
+    });
+
+    this.peerConnection.addEventListener('icecandidate', e => {
       if (!e.candidate) {
         return;
       }
 
-      this.socketManager.emit('candidate', e.candidate, roomName);
+      this.socketManager.emit('connection', { roomName, candidate: e.candidate });
     });
   };
 
@@ -104,17 +105,6 @@ export class WebRTC {
     await this.peerConnection?.setLocalDescription(sdp);
   };
 
-  public addRTCPeerConnectionEventListener = <K extends keyof RTCPeerConnectionEventMap>(
-    type: K,
-    listener: (this: RTCPeerConnection, ev: RTCPeerConnectionEventMap[K]) => any,
-    options?: boolean | AddEventListenerOptions,
-  ): void => {
-    if (!this.peerConnection) {
-      throw new Error('addRTCPeerConnectionEventListener 도중 에러, peerConnection이 없습니다.');
-    }
-    this.peerConnection?.addEventListener(type, listener, options);
-  };
-
   public addIceCandidate = async (candidate?: RTCIceCandidateInit) => {
     if (!candidate) {
       throw new Error('addIceCandidate 도중 에러, candidate가 없습니다.');
@@ -124,7 +114,7 @@ export class WebRTC {
 
   public closeRTCPeerConnection = () => {
     this.peerConnection?.close();
-    this.peerConnection = null;
+    this.peerConnection = undefined;
   };
 
   public isConnectedPeerConnection = () => {
@@ -160,25 +150,12 @@ export class WebRTC {
     this.nextDataChannelId = 0;
   };
 
-  public addTracks = () => {
-    if (this.localStream === undefined) {
-      return;
-    }
-
-    this.localStream.getTracks().forEach(track => {
-      this.peerConnection?.addTrack(track, this.localStream!);
-    });
+  public addTrack2PeerConnection = (stream: MediaStream, track: MediaStreamTrack) => {
+    this.peerConnection?.addTrack(track, stream);
   };
 
-  public replacePeerconnectionVideoTrack2NowLocalStream = () => {
-    const nowVideoTrack = this.localStream?.getVideoTracks()[0];
-    const sender = this.peerConnection?.getSenders().find(sender => sender.track?.kind === 'video');
-    sender?.replaceTrack(nowVideoTrack!);
-  };
-
-  public replacePeerconnectionAudioTrack2NowLocalStream = () => {
-    const nowAudioTrack = this.localStream?.getAudioTracks()[0];
-    const sender = this.peerConnection?.getSenders().find(sender => sender.track?.kind === 'audio');
-    sender?.replaceTrack(nowAudioTrack!);
+  public replacePeerconnectionSendersTrack = (type: 'video' | 'audio', track: MediaStreamTrack) => {
+    const sender = this.peerConnection?.getSenders().find(sender => sender.track?.kind === type);
+    sender?.replaceTrack(track);
   };
 }

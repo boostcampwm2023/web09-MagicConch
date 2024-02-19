@@ -127,7 +127,7 @@ export function TarotSpread({ opened, closeSpread, pickCard }: TarotSpreadProps)
   return (
     <>
       <Background type={`${closing ? 'close' : 'open'}`} />
-      <main className="flex-with-center flex-col w-screen h-dvh">
+      <section className="flex-with-center flex-col w-screen h-dvh">
         <div
           ref={tarotSpreadRef}
           {...(!__iOS__ && MouseEventHandler)}
@@ -149,7 +149,7 @@ export function TarotSpread({ opened, closeSpread, pickCard }: TarotSpreadProps)
             </div>
           ))}
         </div>
-      </main>
+      </section>
     </>
   );
 }

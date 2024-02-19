@@ -33,6 +33,6 @@
 
   },
   "typeRoots": ["./node_modules/@types", "./src/@types"],
-  "include": ["src", "@types", ".src/setup-vitest.ts"],
+  "include": ["src", "@types", ".src/setup-vitest.ts", "__mocks__"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

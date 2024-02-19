@@ -1,29 +1,26 @@
 import { WebRTC } from '../WebRTC';
 
-import { mockEventType, mockListener, mockOptions, setupEventListener } from '@mocks/event';
+import { setupEventListener } from '@mocks/event';
 import { mockSocketManager } from '@mocks/socket';
 import {
   __setMockMediaStreamTracks,
   createFakeDataChannel,
   createFakeMediaStreamTrack,
-  mockMediaStream,
   mockPeerConnection,
   mockRTCDataChannelKeys,
   mockRoomName,
   mockSdp,
-  mockSender,
 } from '@mocks/webRTC';
 
 describe('WebRTC.ts', () => {
-  it('aa', () => expect(1).toBe(1));
-  let instance: WebRTC;
+  let webRTC: WebRTC;
   let events: any = {};
   beforeEach(() => {
     global.RTCPeerConnection = vi.fn().mockImplementation(() => mockPeerConnection) as any;
-    instance = WebRTC.getInstance(mockSocketManager)!;
+    webRTC = WebRTC.getInstance(mockSocketManager)!;
     events = {};
     setupEventListener(events, mockPeerConnection);
-    instance.resetForTesting();
+    webRTC.resetForTesting();
     __setMockMediaStreamTracks([
       createFakeMediaStreamTrack('video', 'video1'),
       createFakeMediaStreamTrack('video', 'video2'),
@@ -34,44 +31,40 @@ describe('WebRTC.ts', () => {
   afterEach(() => {
     vi.clearAllMocks();
   });
+
   it('해당 모듈이 존재함', () => {
     expect(WebRTC).toBeDefined();
   });
+
   it('이 모듈은 싱글톤 이어야함', () => {
     const instance1 = WebRTC.getInstance();
     const instance2 = WebRTC.getInstance();
     expect(instance1).toEqual(instance2);
   });
-  describe('setLocalStream 메서드', () => {
-    it('localStream을 설정해야함', () => {
-      instance.setLocalStream(mockMediaStream);
-      expect(instance.getLocalStream()).toEqual(mockMediaStream);
-    });
-  });
-  describe('setRemoteStream 메서드', () => {
-    it('remoteStream을 설정해야함', () => {
-      instance.setRemoteStream(mockMediaStream);
-      expect(instance.getRemoteStream()).toEqual(mockMediaStream);
-    });
-  });
+
   describe('connectRTCPeerConnection 메서드', () => {
     it('호출시: RTCPeerConnection을 생성', () => {
-      instance.connectRTCPeerConnection(mockRoomName);
-      expect(instance.getPeerConnection()).toBe(mockPeerConnection);
+      webRTC.connectRTCPeerConnection({ roomName: mockRoomName, onTrack: vi.fn() });
+      expect(webRTC.getPeerConnection()).toBe(mockPeerConnection);
     });
+
     it('호출시: track 이벤트 리스너를 추가', () => {
-      instance.connectRTCPeerConnection(mockRoomName);
-      expect(instance.getPeerConnection()?.addEventListener).toBeCalledWith('track', expect.any(Function), undefined);
+      webRTC.connectRTCPeerConnection({ roomName: mockRoomName, onTrack: vi.fn() });
+      expect(webRTC.getPeerConnection()?.addEventListener).toBeCalledWith('track', expect.any(Function));
     });
+
     it('호출시: icecandidate 이벤트 리스너를 추가', () => {
-      instance.connectRTCPeerConnection(mockRoomName);
-      expect(instance.getPeerConnection()?.addEventListener).toBeCalledWith(
-        'icecandidate',
-        expect.any(Function),
-        undefined,
-      );
+      webRTC.connectRTCPeerConnection({ roomName: mockRoomName, onTrack: vi.fn() });
+      expect(webRTC.getPeerConnection()?.addEventListener).toBeCalledWith('icecandidate', expect.any(Function));
     });
-    it('track 이벤트 발생: setRemoteStream 메서드를 호출 해야함', () => {
+
+    it('호출시: negotiationneeded 이벤트 리스너를 추가', () => {
+      webRTC.connectRTCPeerConnection({ roomName: mockRoomName, onTrack: vi.fn() });
+      expect(webRTC.getPeerConnection()?.addEventListener).toBeCalledWith('negotiationneeded', expect.any(Function));
+    });
+
+    it('track 이벤트 발생: 인수로 들어온 onTrack이벤트를 발생시킴', () => {
+      const onTrack = vi.fn();
       const event = {
         streams: [
           createFakeMediaStreamTrack('video', 'video1'),
@@ -80,97 +73,111 @@ describe('WebRTC.ts', () => {
           createFakeMediaStreamTrack('audio', 'audio2'),
         ],
       };
-      instance.connectRTCPeerConnection(mockRoomName);
+
+      webRTC.connectRTCPeerConnection({ roomName: mockRoomName, onTrack });
       events.track(event);
-      expect(instance.getRemoteStream()).toEqual(event.streams[0]);
+
+      expect(onTrack).toBeCalledWith(event);
     });
+
     it('icecandidate 이벤트 발생: candidate가 없으면 아무것도 하지 않음', () => {
-      instance.connectRTCPeerConnection(mockRoomName);
+      webRTC.connectRTCPeerConnection({ roomName: mockRoomName, onTrack: vi.fn() });
       events.icecandidate({ candidate: null });
       expect(mockSocketManager.emit).not.toBeCalled();
     });
+
     it('icecandidate 이벤트 발생: candidate가 있으면 socketManager.emit을 호출해야함', () => {
-      instance.connectRTCPeerConnection(mockRoomName);
+      webRTC.connectRTCPeerConnection({ roomName: mockRoomName, onTrack: vi.fn() });
       events.icecandidate({ candidate: 'candidate' });
-      expect(mockSocketManager.emit).toBeCalledWith('candidate', 'candidate', mockRoomName);
+      expect(mockSocketManager.emit).toBeCalledWith('connection', { roomName: mockRoomName, candidate: 'candidate' });
+    });
+
+    it('negotiationneeded 이벤트 발생: 연결된적 없다면 아무것도 하지않음', async () => {
+      webRTC.connectRTCPeerConnection({ roomName: mockRoomName, onTrack: vi.fn() });
+      events.negotiationneeded();
+      expect(mockPeerConnection.createOffer).not.toBeCalled();
+    });
+
+    it('negotiationneeded 이벤트 발생: 연결된적이 있으면 createOffer를 호출해야함', async () => {
+      mockPeerConnection.signalingState = 'stable';
+      mockPeerConnection.remoteDescription = 'remoteDescription';
+      mockPeerConnection.createOffer.mockResolvedValue(mockSdp);
+
+      webRTC.connectRTCPeerConnection({ roomName: mockRoomName, onTrack: vi.fn() });
+      events.negotiationneeded();
+
+      expect(mockPeerConnection.createOffer).toBeCalled();
     });
   });
+
   describe('createOffer 메서드', () => {
     it('peerConnection이 없음: 에러를 던짐', async () => {
-      expect(instance.createOffer()).rejects.toThrowError();
+      expect(webRTC.createOffer()).rejects.toThrowError();
     });
+
     it('peerConnection이 있음 createOffer결과를 리턴', async () => {
-      instance.connectRTCPeerConnection(mockRoomName);
+      webRTC.connectRTCPeerConnection({ roomName: mockRoomName, onTrack: vi.fn() });
       mockPeerConnection.createOffer.mockResolvedValue(mockSdp);
-      expect(instance.createOffer()).resolves.toBe(mockSdp);
+      expect(webRTC.createOffer()).resolves.toBe(mockSdp);
     });
   });
   describe('createAnswer 메서드', () => {
     it('peerConnection이 없음: 에러 발생', async () => {
-      expect(instance.createAnswer()).rejects.toThrowError();
+      expect(webRTC.createAnswer()).rejects.toThrowError();
     });
     it('peerConnection이 있음: createAnswer결과를 리턴', async () => {
-      instance.connectRTCPeerConnection(mockRoomName);
+      webRTC.connectRTCPeerConnection({ roomName: mockRoomName, onTrack: vi.fn() });
       mockPeerConnection.createAnswer.mockResolvedValue(mockSdp);
-      expect(instance.createAnswer()).resolves.toBe(mockSdp);
+      expect(webRTC.createAnswer()).resolves.toBe(mockSdp);
     });
   });
   describe('setRemoteDescription 메서드', () => {
     it('peerConnection이 없음: 에러 발생', async () => {
-      expect(instance.setRemoteDescription()).rejects.toThrowError();
+      expect(webRTC.setRemoteDescription()).rejects.toThrowError();
     });
     it('peerConnection이 있음: setRemoteDescription을 호출해야함', async () => {
-      instance.connectRTCPeerConnection(mockRoomName);
-      instance.setRemoteDescription(mockSdp);
+      webRTC.connectRTCPeerConnection({ roomName: mockRoomName, onTrack: vi.fn() });
+      webRTC.setRemoteDescription(mockSdp);
       expect(mockPeerConnection.setRemoteDescription).toBeCalledWith(mockSdp);
     });
   });
-  describe('addRTCPeerConnectionEventListener 메서드', () => {
-    it('peerConnection 없음: 에러 발생', () => {
-      expect(() => instance.addRTCPeerConnectionEventListener(mockEventType, vi.fn())).toThrowError();
-    });
-    it('peerConnection 있음: peerConnection.addEventListener를 호출해야함', () => {
-      instance.connectRTCPeerConnection(mockRoomName);
-      instance.addRTCPeerConnectionEventListener(mockEventType, mockListener, mockOptions);
-      expect(mockPeerConnection.addEventListener).toBeCalledWith(mockEventType, mockListener, mockOptions);
-    });
-  });
+
   describe('addIceCandidate 메서드', () => {
     it('peerConnection 없음: 에러 발생', async () => {
-      await expect(instance.addIceCandidate()).rejects.toThrowError();
+      await expect(webRTC.addIceCandidate()).rejects.toThrowError();
     });
     it('peerConnection 있음: addIceCandidate를 호출해야함', async () => {
-      instance.connectRTCPeerConnection(mockRoomName);
-      instance.addIceCandidate(mockSdp);
+      webRTC.connectRTCPeerConnection({ roomName: mockRoomName, onTrack: vi.fn() });
+      webRTC.addIceCandidate(mockSdp);
       expect(mockPeerConnection.addIceCandidate).toBeCalledWith(mockSdp);
     });
   });
   describe('closeRTCPeerConnection 메서드', () => {
     it('호출시 peerConnection.close() 호출, peerConnection = null로 초기화', () => {
-      instance.connectRTCPeerConnection(mockRoomName);
-      instance.closeRTCPeerConnection();
+      webRTC.connectRTCPeerConnection({ roomName: mockRoomName, onTrack: vi.fn() });
+      webRTC.closeRTCPeerConnection();
       expect(mockPeerConnection.close).toBeCalled();
-      expect(instance.getPeerConnection()).toBe(null);
+      expect(webRTC.getPeerConnection()).toBe(undefined);
     });
   });
   describe('isConnectedPeerConnection 메서드', () => {
     it('peerConnection이 없음 false를 리턴', () => {
-      expect(instance.isConnectedPeerConnection()).toBe(false);
+      expect(webRTC.isConnectedPeerConnection()).toBe(false);
     });
     it('peerConnection이 있고, iceConnectionState가 connected: true를 리턴', () => {
-      instance.connectRTCPeerConnection(mockRoomName);
+      webRTC.connectRTCPeerConnection({ roomName: mockRoomName, onTrack: vi.fn() });
       mockPeerConnection.iceConnectionState = 'connected';
-      expect(instance.isConnectedPeerConnection()).toBe(true);
+      expect(webRTC.isConnectedPeerConnection()).toBe(true);
     });
     it('peerConnection이 있고, iceConnectionState가 connected 아님: false를 리턴', () => {
-      instance.connectRTCPeerConnection(mockRoomName);
+      webRTC.connectRTCPeerConnection({ roomName: mockRoomName, onTrack: vi.fn() });
       mockPeerConnection.iceConnectionState = '';
-      expect(instance.isConnectedPeerConnection()).toBe(false);
+      expect(webRTC.isConnectedPeerConnection()).toBe(false);
     });
   });
   describe('addDataChannel 메서드', () => {
     it('peerConnection이 없음: 에러 발생', () => {
-      expect(() => instance.addDataChannel(mockRTCDataChannelKeys[0])).toThrowError();
+      expect(() => webRTC.addDataChannel(mockRTCDataChannelKeys[0])).toThrowError();
     });
     it(`peerConnection이 있고, 정상적으로 데이터 채널을 생성:
     \t  1. createDataChannel을 호출해서 데이터 채널을 생성
@@ -178,17 +185,17 @@ describe('WebRTC.ts', () => {
     \t  3. 생성된 데이터 채널을 리턴함`, () => {
       const mockKey = mockRTCDataChannelKeys[0];
       const mockDataChannel = createFakeDataChannel(0);
-      instance.connectRTCPeerConnection(mockRoomName);
+      webRTC.connectRTCPeerConnection({ roomName: mockRoomName, onTrack: vi.fn() });
       mockPeerConnection.createDataChannel.mockReturnValue(mockDataChannel);
-      const spy = vi.spyOn(instance, 'addDataChannel');
-      instance.addDataChannel(mockRTCDataChannelKeys[0]);
+      const spy = vi.spyOn(webRTC, 'addDataChannel');
+      webRTC.addDataChannel(mockRTCDataChannelKeys[0]);
       // 1. peerConnection.createDataChannel로 데이터 채널을 생성함
       expect(mockPeerConnection.createDataChannel).toBeCalledWith(mockRTCDataChannelKeys[0], {
         negotiated: true,
         id: 0,
       });
       // 2. 데이터 채널을 생성후 dataChannels에 추가됨
-      const dataChannels = instance.getDataChannel(mockKey);
+      const dataChannels = webRTC.getDataChannel(mockKey);
       expect(dataChannels).toBe(mockDataChannel);
       // 3. 데이터 채널을 생성후 리턴
       expect(spy).toReturnWith(mockDataChannel);
@@ -196,62 +203,22 @@ describe('WebRTC.ts', () => {
   });
   describe('closeDataChannels 메서드', () => {
     it('호출시: dataChannel.close() 호출: 각 데이터채널의 close() 호출, 데이채널', () => {
-      instance.connectRTCPeerConnection(mockRoomName);
+      webRTC.connectRTCPeerConnection({ roomName: mockRoomName, onTrack: vi.fn() });
       const mockDataChanels: any[] = [];
       // 데이터 채널을 두개 추가함
       [0, 1].forEach(id => {
         mockPeerConnection.createDataChannel.mockReturnValue(createFakeDataChannel(id));
-        mockDataChanels.push(instance.addDataChannel(mockRTCDataChannelKeys[id]));
+        mockDataChanels.push(webRTC.addDataChannel(mockRTCDataChannelKeys[id]));
       });
       // 데이터 채널이 두개 추가됨
-      expect(instance.getDataChannels().size).toBe(2);
-      instance.closeDataChannels();
+      expect(webRTC.getDataChannels().size).toBe(2);
+      webRTC.closeDataChannels();
       // 데이터 채널의 close 메서드가 각각 호출됨
       mockDataChanels.forEach(mockDataChannel => {
         expect(mockDataChannel.close).toBeCalledTimes(1);
       });
       // 데이터 채널이 모두 닫힘
-      expect(instance.getDataChannels().size).toBe(0);
-    });
-  });
-  describe('addTracks 메서드', () => {
-    it('localStream이 없음: 아무것도 하지 않음', () => {
-      instance.addTracks();
-      expect(mockPeerConnection.addTrack).not.toBeCalled();
-    });
-    it('localStream이 있음: localStream.getTracks를 forEach로 돌며 peerConnection.addTrack(track, localStream)실행 ', () => {
-      instance.connectRTCPeerConnection(mockRoomName);
-      instance.setLocalStream(mockMediaStream);
-      instance.addTracks();
-      mockMediaStream.getTracks().forEach((track: any) => {
-        expect(mockPeerConnection.addTrack).toBeCalledWith(track, mockMediaStream);
-      });
-    });
-  });
-  describe('replacePeerconnectionVideoTrack2NowLocalStream 메서드', () => {
-    it('localStream이 없음: 아무것도 하지 않음', () => {
-      instance.replacePeerconnectionVideoTrack2NowLocalStream();
-      expect(mockPeerConnection.addTrack).not.toBeCalled();
-    });
-    it('localStream이 있음: sender의 replaceTrack(firstVideoTrack)이 호출됨', () => {
-      instance.connectRTCPeerConnection(mockRoomName);
-      instance.setLocalStream(mockMediaStream);
-      instance.replacePeerconnectionVideoTrack2NowLocalStream();
-      const firstVideoTrack = mockMediaStream.getVideoTracks()[0];
-      expect(mockSender.video.replaceTrack).toBeCalledWith(firstVideoTrack);
-    });
-  });
-  describe('replacePeerconnectionAudioTrack2NowLocalStream 메서드', () => {
-    it('localStream이 없음: 아무것도 하지 않음', () => {
-      instance.replacePeerconnectionAudioTrack2NowLocalStream();
-      expect(mockPeerConnection.addTrack).not.toBeCalled();
-    });
-    it('localStream이 있음: sender의 replaceTrack(firstVideoTrack)이 호출됨', () => {
-      instance.connectRTCPeerConnection(mockRoomName);
-      instance.setLocalStream(mockMediaStream);
-      instance.replacePeerconnectionAudioTrack2NowLocalStream();
-      const firstAudioTrack = mockMediaStream.getAudioTracks()[0];
-      expect(mockSender.audio.replaceTrack).toBeCalledWith(firstAudioTrack);
+      expect(webRTC.getDataChannels().size).toBe(0);
     });
   });
 });

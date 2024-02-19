@@ -1,16 +1,10 @@
-import { WebRTC } from '@business/services';
-import { HumanSocketManager } from '@business/services/SocketManager';
-
-import { useMediaInfo } from '@stores/zustandStores';
-import { useProfileInfo } from '@stores/zustandStores';
+import { useMediaInfo, useProfileInfo } from '@stores/zustandStores/index';
 
 import { array2ArrayBuffer } from '@utils/array';
 
 import { DEFAULT_NICKNAME } from '@constants/nickname';
 
 export function useDataChannelEventListener() {
-  const webRTC = WebRTC.getInstance(HumanSocketManager.getInstance());
-
   const { setRemoteMicOn, setRemoteVideoOn } = useMediaInfo(state => ({
     setRemoteMicOn: state.setRemoteMicOn,
     setRemoteVideoOn: state.setRemoteVideoOn,
@@ -47,13 +41,11 @@ export function useDataChannelEventListener() {
   }
 
   function sendNowMediaStates(this: RTCDataChannel) {
-    const audioTrack = webRTC.getFirstAudioTrack();
-    const videoTrack = webRTC.getFirstVideoTrack();
-
+    const { myMicOn, myVideoOn } = useMediaInfo.getState();
     this.send(
       JSON.stringify([
-        { type: 'audio', onOrOff: audioTrack?.enabled },
-        { type: 'video', onOrOff: videoTrack?.enabled },
+        { type: 'video', onOrOff: myVideoOn },
+        { type: 'audio', onOrOff: myMicOn },
       ]),
     );
   }

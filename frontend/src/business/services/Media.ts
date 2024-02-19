@@ -18,11 +18,11 @@ export async function getMediaDeviceOptions() {
 }
 
 export async function getUserMediaStream({
-  audio,
-  video,
+  audio = false,
+  video = false,
 }: {
-  audio: boolean | MediaTrackConstraints | undefined;
-  video: boolean | MediaTrackConstraints | undefined;
+  audio?: boolean | MediaTrackConstraints | undefined;
+  video?: boolean | MediaTrackConstraints | undefined;
 }) {
   return await navigator.mediaDevices.getUserMedia({ audio, video });
 }

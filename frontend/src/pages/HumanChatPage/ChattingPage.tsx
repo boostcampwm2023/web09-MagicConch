@@ -1,11 +1,8 @@
-import { useEffect } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import { IconButton } from '@components/common/Buttons';
 import { DocumentBodyPortal } from '@components/common/Portals';
 import { CamContainer } from '@components/humanChatPage';
-
-import { useControllMedia, useStreamVideoRef } from '@business/hooks/webRTC';
 
 import type { OutletContext } from './HumanChatPage';
 import { useCreateJoinRoomPasswordPopup } from './hooks';
@@ -14,21 +11,6 @@ export function ChattingPage() {
   const { tarotButtonDisabled, tarotButtonClick, unblockGoBack, joinedRoom } = useOutletContext<OutletContext>();
 
   useCreateJoinRoomPasswordPopup({ unblockGoBack });
-  const { localVideoRef, remoteVideoRef } = useStreamVideoRef();
-  const { toggleAudio, toggleVideo, changeMyVideoTrack } = useControllMedia({ localVideoRef });
-
-  useEffect(() => {
-    if (joinedRoom) {
-      changeMyVideoTrack();
-    }
-  }, [joinedRoom]);
-
-  useEffect(() => {
-    if (!localVideoRef.current) {
-      return;
-    }
-    localVideoRef.current.volume = 0;
-  }, []);
 
   const navigate = useNavigate();
   const goSettingPage = () => navigate('setting');
@@ -38,10 +20,6 @@ export function ChattingPage() {
       <>
         <div className={`flex-with-center w-h-full`}>
           <CamContainer
-            localVideoRef={localVideoRef}
-            remoteVideoRef={remoteVideoRef}
-            toggleVideo={toggleVideo}
-            toggleAudio={toggleAudio}
             tarotButtonClick={tarotButtonClick}
             tarotButtonDisabled={tarotButtonDisabled}
           />

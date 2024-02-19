@@ -132,31 +132,30 @@ export class EventsGateway
     this.eventEmit(socket, 'joinRoomSuccess', roomId);
   }
 
-  @SubscribeMessage<HumanClientEvent>('offer')
-  handleOfferEvent(
+  @SubscribeMessage('connection')
+  handleConnectionEvent(
     socket: Socket,
-    [sdp, roomName]: [RTCSessionDescription, string],
+    {
+      description,
+      candidate,
+      roomName,
+    }: {
+      description?: RTCSessionDescription;
+      candidate?: RTCIceCandidate;
+      roomName: string;
+    },
   ) {
-    this.logger.debug(`🚀 Offer Received from ${socket.id}`);
-    this.eventEmitToRoom(socket, roomName, 'offer', sdp);
-  }
-
-  @SubscribeMessage<HumanClientEvent>('answer')
-  handleAnswerEvent(
-    socket: Socket,
-    [sdp, roomName]: [RTCSessionDescription, string],
-  ) {
-    this.logger.debug(`🚀 Answer Received from ${socket.id}`);
-    this.eventEmitToRoom(socket, roomName, 'answer', sdp);
-  }
-
-  @SubscribeMessage<HumanClientEvent>('candidate')
-  handleCandidateEvent(
-    socket: Socket,
-    [candidate, roomName]: [RTCIceCandidate, string],
-  ) {
-    this.logger.debug(`🚀 Candidate Received from ${socket.id}`);
-    this.eventEmitToRoom(socket, roomName, 'candidate', candidate);
+    try {
+      if (description) {
+        this.logger.debug(`🚀 ${description.type} Received from ${socket.id}`);
+        this.eventEmitToRoom(socket, roomName, 'connection', { description });
+      } else if (candidate) {
+        this.logger.debug(`🚀 Candidate Received from ${socket.id}`);
+        this.eventEmitToRoom(socket, roomName, 'connection', { candidate });
+      }
+    } catch (error) {
+      this.logger.error(`🚀 Error in handleMessageEvent : ${error}`);
+    }
   }
 
   @SubscribeMessage<HumanClientEvent>('checkRoomExist')
@@ -178,7 +177,7 @@ export class EventsGateway
   public eventEmitToRoom(
     socket: Socket,
     roomName: string,
-    event: HumanServerEvent,
+    event: HumanServerEvent | 'connection',
     ...args: any[]
   ) {
     socket.to(roomName).emit(event, ...args);

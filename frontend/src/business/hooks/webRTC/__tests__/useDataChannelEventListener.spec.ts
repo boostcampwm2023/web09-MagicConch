@@ -1,15 +1,11 @@
 import { useDataChannelEventListener } from '../useDataChannelEventListener';
 import { act, renderHook } from '@testing-library/react';
 
-import { WebRTC } from '@business/services';
-
 import { useMediaInfo, useProfileInfo } from '@stores/zustandStores';
 
 vi.mock('@business/services');
 
 describe('useDataChannelEventListener 훅 테스트', () => {
-  let mockWebRTCModule = WebRTC.getInstance();
-
   function rerenderHook() {
     const {
       result: {
@@ -40,6 +36,11 @@ describe('useDataChannelEventListener 훅 테스트', () => {
     vi.clearAllMocks();
   });
 
+  test('test', () => {
+    // const a = new MediaStream();
+    // console.log(a);
+    expect(1).toBe(1);
+  });
   describe(`setMediaStates 함수 테스트`, () => {
     [
       {
@@ -128,20 +129,19 @@ describe('useDataChannelEventListener 훅 테스트', () => {
       },
     ].forEach(({ scenario, audioTrack, videoTrack }) => {
       it(scenario, () => {
-        vi.spyOn(mockWebRTCModule, 'getFirstAudioTrack').mockReturnValueOnce(audioTrack as any);
-        vi.spyOn(mockWebRTCModule, 'getFirstVideoTrack').mockReturnValueOnce(videoTrack as any);
+        vi.spyOn(useMediaInfo.getState(), 'myVideoOn', 'get').mockReturnValueOnce(videoTrack.enabled);
+        vi.spyOn(useMediaInfo.getState(), 'myMicOn', 'get').mockReturnValueOnce(audioTrack.enabled);
+
         const RTCDataChannelSendFn = vi.fn();
 
         const { sendNowMediaStates } = rerenderHook();
 
-        act(() => {
-          sendNowMediaStates.call({ send: RTCDataChannelSendFn } as any);
-        });
+        sendNowMediaStates.call({ send: RTCDataChannelSendFn } as any);
 
         expect(RTCDataChannelSendFn).toBeCalledWith(
           JSON.stringify([
-            { type: 'audio', onOrOff: audioTrack?.enabled },
-            { type: 'video', onOrOff: videoTrack?.enabled },
+            { type: 'video', onOrOff: videoTrack.enabled },
+            { type: 'audio', onOrOff: audioTrack.enabled },
           ]),
         );
       });

@@ -2,6 +2,7 @@ export const createFakeMediaStreamTrack = (kind: 'video' | 'audio', id: string):
   kind,
   id,
   enabled: true,
+  stop: vi.fn(),
 });
 
 export const mockMediaStream = {
@@ -32,6 +33,13 @@ export function __setMockMediaStreamTracks(_tracks: MediaStreamTrack[]) {
   vi.spyOn(mockMediaStream, 'getVideoTracks').mockReturnValue(tracks.filter(track => track.kind === 'video'));
   vi.spyOn(mockMediaStream, 'getAudioTracks').mockReturnValue(tracks.filter(track => track.kind === 'audio'));
 }
+
+export const createFakeEnumerateDevice = (kind: 'videoinput' | 'audioinput', id: string): any => ({
+  kind,
+  deviceId: `fakeDeviceId${id}`,
+  groupId: `fakeGroupId${id}`,
+  label: `fakeLabel${id}`,
+});
 
 afterAll(() => {
   window.navigator = originalNavigator;

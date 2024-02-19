@@ -202,32 +202,27 @@ describe('EventsGateway', () => {
     });
   });
 
-  describe('signal 이벤트 (offer, answer, candidate) on', () => {
-    it('offer 이벤트: 방에 offer이벤트에 받은 sdp 보냄', () => {
-      gateway.handleOfferEvent(hostSocket, ['sdp' as any, roomMock.roomId]);
+  describe('connection 이벤트 (offer, answer, candidate) ', () => {
+    it('description(offer, answer)이 있을 때: 방에 description 보냄', () => {
+      gateway.handleConnectionEvent(hostSocket, {
+        description: 'description' as any,
+        roomName: roomMock.roomId,
+      });
 
-      expectEmitToRoom(hostSocket, roomMock.roomId, 'offer', 'sdp');
-      expect(loggerService.debug).toHaveBeenCalledWith(
-        `🚀 Offer Received from ${hostSocket.id}`,
-      );
+      expectEmitToRoom(hostSocket, roomMock.roomId, 'connection', {
+        description: 'description',
+      });
     });
 
-    it('answer 이벤트: 방에 answer이벤트에 받은 sdp 보냄', () => {
-      gateway.handleAnswerEvent(guestSocket, ['sdp' as any, roomMock.roomId]);
+    it('candidate가 있을 때: 방에 candidate 보냄', () => {
+      gateway.handleConnectionEvent(hostSocket, {
+        candidate: 'candidate' as any,
+        roomName: roomMock.roomId,
+      });
 
-      expectEmitToRoom(guestSocket, roomMock.roomId, 'answer', 'sdp');
-      expect(loggerService.debug).toHaveBeenCalledWith(
-        `🚀 Answer Received from ${guestSocket.id}`,
-      );
-    });
-
-    it('candidate 이벤트: 방에 candidate이벤트에 받은 candidate 보냄', () => {
-      gateway.handleCandidateEvent(guestSocket, ['candidate' as any, 'roomId']);
-
-      expectEmitToRoom(guestSocket, 'roomId', 'candidate', 'candidate');
-      expect(loggerService.debug).toHaveBeenCalledWith(
-        `🚀 Candidate Received from ${guestSocket.id}`,
-      );
+      expectEmitToRoom(hostSocket, roomMock.roomId, 'connection', {
+        candidate: 'candidate',
+      });
     });
   });
 
