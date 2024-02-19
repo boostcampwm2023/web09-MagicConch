@@ -132,7 +132,7 @@ export class EventsGateway
     this.eventEmit(socket, 'joinRoomSuccess', roomId);
   }
 
-  @SubscribeMessage<HumanClientEvent>('connection')
+  @SubscribeMessage('connection')
   handleConnectionEvent(
     socket: Socket,
     {
@@ -177,7 +177,7 @@ export class EventsGateway
   public eventEmitToRoom(
     socket: Socket,
     roomName: string,
-    event: HumanServerEvent,
+    event: HumanServerEvent | 'connection',
     ...args: any[]
   ) {
     socket.to(roomName).emit(event, ...args);
