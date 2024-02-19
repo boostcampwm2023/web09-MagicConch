@@ -76,7 +76,7 @@ export function useMediaStream() {
   const changeMediaTrack = async ({
     type,
     id,
-    replacePeerconnection = true,
+    replacePeerconnection,
   }: {
     type: 'audio' | 'video';
     id?: string;
@@ -89,7 +89,7 @@ export function useMediaStream() {
     }
 
     stopTracks(type);
-    addTracks(stream);
+    addTracks(stream, replacePeerconnection);
     replacePeerconnectionTrack(type);
   };
 
