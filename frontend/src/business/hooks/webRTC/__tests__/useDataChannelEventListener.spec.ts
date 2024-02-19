@@ -1,8 +1,9 @@
 import { useDataChannelEventListener } from '../useDataChannelEventListener';
 import { act, renderHook } from '@testing-library/react';
 
-import { useMediaInfo } from '@stores/zustandStores/useMediaInfo';
-import { useProfileInfo } from '@stores/zustandStores/useProfileInfo';
+import { useMediaInfo, useProfileInfo } from '@stores/zustandStores';
+
+vi.mock('@business/services');
 
 describe('useDataChannelEventListener 훅 테스트', () => {
   function rerenderHook() {

@@ -1,16 +1,24 @@
-import { ChatLogItem } from '.';
+import { ChatLogItem } from './ChatLogItem';
 
 interface ChatLogGroupProps {
   date: string;
-  logs: string[];
+  rooms: {
+    id: string;
+    title: string;
+    createdAt: string;
+  }[];
 }
 
-export function ChatLogGroup({ date, logs }: ChatLogGroupProps) {
+export function ChatLogGroup({ date, rooms }: ChatLogGroupProps) {
   return (
     <ul className="flex flex-col gap-12">
-      <header className="display-medium14 text-weak">{date}</header>
-      {logs.map(log => (
-        <ChatLogItem log={log} />
+      {date}
+      {rooms.map(({ id, title }) => (
+        <ChatLogItem
+          key={id}
+          id={id}
+          title={title}
+        />
       ))}
     </ul>
   );

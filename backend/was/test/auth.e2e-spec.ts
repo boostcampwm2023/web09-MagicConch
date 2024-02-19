@@ -14,7 +14,8 @@ import { RedisCacheModule } from 'src/common/config/cache/redis-cache.module';
 import { ERR_MSG } from 'src/common/constants/errors';
 import { Member } from 'src/members/entities';
 import * as request from 'supertest';
-import { jwtToken } from './constants';
+import { jwtToken } from './common/constants';
+import { SqliteModule } from './common/database/sqlite.module';
 
 dotenv.config();
 
@@ -34,12 +35,7 @@ describe('Auth', () => {
             };
           },
         }),
-        TypeOrmModule.forRoot({
-          type: 'sqlite',
-          database: ':memory:',
-          entities: [__dirname + '/../src/**/entities/*.entity.{js,ts}'],
-          synchronize: true,
-        }),
+        SqliteModule,
         TypeOrmModule.forFeature([Member]),
       ],
       controllers: [AuthController],

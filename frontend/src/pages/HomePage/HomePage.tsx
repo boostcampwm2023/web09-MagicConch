@@ -19,14 +19,16 @@ export function HomePage() {
   return (
     <>
       <Background />
-      <main className="w-screen h-dvh relative flex-with-center gap-36 z-1">
-        <Button onClick={openLoginPopup}>AI에게 타로보기</Button>
-        <Button
-          onClick={moveHumanChat}
-          color="dark"
-        >
-          채팅방 개설하기
-        </Button>
+      <main className="w-screen h-dvh relative flex-with-center z-1">
+        <div className="flex gap-36 mt-150">
+          <Button onClick={openLoginPopup}>AI에게 타로보기</Button>
+          <Button
+            onClick={moveHumanChat}
+            color="dark"
+          >
+            채팅방 개설하기
+          </Button>
+        </div>
       </main>
     </>
   );

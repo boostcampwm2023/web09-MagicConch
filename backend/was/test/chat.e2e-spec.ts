@@ -6,28 +6,35 @@ import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { JwtStrategy } from 'src/auth/strategies/jwt.strategy';
 import { ChatController } from 'src/chat/chat.controller';
 import { ChatService } from 'src/chat/chat.service';
-import { ChattingMessageDto, UpdateChattingRoomDto } from 'src/chat/dto';
+import {
+  ChattingMessageDto,
+  ChattingRoomDto,
+  ChattingRoomGroupDto,
+  UpdateChattingRoomDto,
+} from 'src/chat/dto';
 import { ChattingMessage, ChattingRoom } from 'src/chat/entities';
 import { ProviderIdEnum } from 'src/common/constants/etc';
 import { Member } from 'src/members/entities';
 import * as request from 'supertest';
 import { EntityManager } from 'typeorm';
-import { diffJwtToken, id, jwtToken, wrongId } from './constants';
+import { diffJwtToken, id, id2, jwtToken, wrongId } from './common/constants';
+import { SqliteModule } from './common/database/sqlite.module';
+
+const JAN_15: string = '2024-01-15';
+const JAN_26: string = '2024-01-26';
 
 describe('Chat', () => {
   let app: INestApplication;
   let entityManager: EntityManager;
+  let member: Member;
   let savedRoom: ChattingRoom;
+  const oneDay: Date = new Date(JAN_15);
+  const anotherDay: Date = new Date(JAN_26);
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [
-        TypeOrmModule.forRoot({
-          type: 'sqlite',
-          database: ':memory:',
-          entities: [__dirname + '/../src/**/entities/*.entity.{js,ts}'],
-          synchronize: true,
-        }),
+        SqliteModule,
         TypeOrmModule.forFeature([ChattingRoom, ChattingMessage, Member]),
       ],
       providers: [ChatService, JwtAuthGuard, JwtStrategy],
@@ -38,7 +45,7 @@ describe('Chat', () => {
 
     entityManager = moduleRef.get(EntityManager);
 
-    const member: Member = new Member();
+    member = new Member();
     member.email = 'tarotmilktea@kakao.com';
     member.providerId = ProviderIdEnum.KAKAO;
     await entityManager.save(member);
@@ -50,7 +57,8 @@ describe('Chat', () => {
 
     const room: ChattingRoom = new ChattingRoom();
     room.id = id;
-    room.title = '채팅방 제목';
+    room.title = `${JAN_15}일자 채팅방`;
+    room.createdAt = oneDay;
     room.participant = member;
     savedRoom = await entityManager.save(room);
 
@@ -63,16 +71,42 @@ describe('Chat', () => {
   });
 
   describe('GET /chat/ai', () => {
+    beforeAll(async () => {
+      const anotherRoom: ChattingRoom = new ChattingRoom();
+      anotherRoom.id = id2;
+      anotherRoom.title = `${JAN_26}일자 채팅방`;
+      anotherRoom.createdAt = anotherDay;
+      anotherRoom.participant = member;
+      await entityManager.save(anotherRoom);
+    });
+
     [
       {
-        scenario: '인증 받은 사용자는 자신의 채팅방 목록을 조회할 수 있다.',
+        scenario:
+          '인증 받은 사용자는 자신의 채팅방 목록을 생성일자 내림차순으로 조회할 수 있다.',
         route: '/chat/ai',
         cookie: `magicconch=${jwtToken}`,
         status: 200,
         body: [
           {
-            id: id,
-            title: '채팅방 제목',
+            date: anotherDay.toLocaleDateString('ko-KR'),
+            rooms: [
+              {
+                id: id2,
+                title: `${JAN_26}일자 채팅방`,
+                createdAt: anotherDay.toLocaleDateString('ko-KR'),
+              },
+            ],
+          },
+          {
+            date: oneDay.toLocaleDateString('ko-KR'),
+            rooms: [
+              {
+                id,
+                title: `${JAN_15}일자 채팅방`,
+                createdAt: oneDay.toLocaleDateString('ko-KR'),
+              },
+            ],
           },
         ],
       },
@@ -104,16 +138,19 @@ describe('Chat', () => {
         {
           isHost: true,
           message: '어떤 고민이 있어?',
+          order: 1,
         },
         {
           isHost: false,
           message: '오늘 운세를 알고 싶어',
+          order: 2,
         },
       ];
       for (const chatLog of chatLogs) {
         const message: ChattingMessage = new ChattingMessage();
         message.isHost = chatLog.isHost;
         message.message = chatLog.message;
+        message.order = chatLog.order;
         message.room = savedRoom;
         await entityManager.save(message);
         messages.push(ChattingMessageDto.fromEntity(message));
@@ -188,8 +225,16 @@ describe('Chat', () => {
         .set('Cookie', `magicconch=${jwtToken}`)
         .expect(200);
 
-      const room: ChattingRoom[] = res.body.filter(
-        (room: ChattingRoom) => id === room.id,
+      const rooms: ChattingRoomDto[] = res.body.reduce(
+        (acc: ChattingRoomDto[], { rooms }: ChattingRoomGroupDto) => {
+          rooms.forEach((room: ChattingRoomDto) => acc.push(room));
+          return acc;
+        },
+        [],
+      );
+
+      const room: ChattingRoomDto[] = rooms.filter(
+        (room: ChattingRoomDto) => id === room.id,
       );
       expect(room).toHaveLength(1);
       expect(room[0].title).toBe(updateRoomDto.title);

@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { IconToggleButton } from '@components/common/Buttons';
 
-import { getBgmQuery } from '@stores/queries/getBgmQuery';
+import { getBgmQuery } from '@stores/queries';
 
 export function BackgroundMusic() {
   const backgroundMusicURL = getBgmQuery().data.url;

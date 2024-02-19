@@ -1,14 +1,25 @@
-import { IconButton } from '@components/common';
+// import { IconButton } from '@components/common';
+import { useAiChatLogId } from '@stores/zustandStores';
 
 interface ChatLogItemProps {
-  log: string;
+  id: string;
+  title: string;
 }
 
-export function ChatLogItem({ log }: ChatLogItemProps) {
+export function ChatLogItem({ id, title }: ChatLogItemProps) {
+  const { setId } = useAiChatLogId();
+
+  const handleClick = () => {
+    setId(id);
+  };
+
   return (
-    <li className="group w-full h-30 display-medium14 text-white p-5 rounded-lg flex justify-between items-center hover:surface-default">
-      {log}
-      <div className="hidden group-hover:flex">
+    <li
+      className="group w-full h-30 display-medium14 text-white p-5 rounded-lg flex justify-between items-center hover:surface-default"
+      onClick={handleClick}
+    >
+      {title}
+      {/* <div className="hidden group-hover:flex">
         <IconButton
           icon="ic:outline-edit"
           size="s"
@@ -19,7 +30,7 @@ export function ChatLogItem({ log }: ChatLogItemProps) {
           size="s"
           buttonColor="transparent"
         />
-      </div>
+      </div> */}
     </li>
   );
 }

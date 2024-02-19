@@ -1,6 +1,6 @@
 import { useOverlay } from '@business/hooks/overlay';
 
-import { getTarotImageQuery } from '@stores/queries/getTarotImageQuery';
+import { getTarotImageQuery } from '@stores/queries';
 
 export function useDisplayTarotCard() {
   const { openOverlay } = useOverlay();

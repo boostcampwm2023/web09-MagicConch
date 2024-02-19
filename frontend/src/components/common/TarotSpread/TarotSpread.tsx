@@ -2,7 +2,7 @@ import { Background, TarotCard } from '..';
 import { detect } from 'detect-browser';
 import React, { useEffect, useRef, useState } from 'react';
 
-import { getTarotImageQuery } from '@stores/queries/getTarotImageQuery';
+import { getTarotImageQuery } from '@stores/queries';
 
 import { TAROT_CARDS_LENGTH } from '@constants/sizes';
 
