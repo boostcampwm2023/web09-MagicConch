@@ -97,6 +97,9 @@ devDependencies:
   '@types/react-dom':
     specifier: ^18.2.15
     version: 18.2.15
+  '@types/react-gtm-module':
+    specifier: ^2.0.3
+    version: 2.0.3
   '@types/socket.io-client':
     specifier: ^3.0.0
     version: 3.0.0
@@ -4469,6 +4472,10 @@ packages:
     resolution: {integrity: sha512-HWMdW+7r7MR5+PZqJF6YFNSCtjz1T0dsvo/f1BV6HkV+6erD/nA7wd9NM00KVG83zf2nJ7uATPO9ttdIPvi3gg==}
     dependencies:
       '@types/react': 18.2.37
+    dev: true
+
+  /@types/react-gtm-module@2.0.3:
+    resolution: {integrity: sha512-fL2zKdDFN5LckSsVBXEhhm9M4tFTM9oHJfGcfZJzktQkzpOTGtDM8oXIP9d9UBDxO4xLNZhS22dlgRVv6wgK9w==}
     dev: true
 
   /@types/react@18.2.37:
