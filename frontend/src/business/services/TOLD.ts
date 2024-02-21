@@ -1,5 +1,9 @@
 const TOLD = {
-  displayForm: (type: string) => (window as any).dataLayer.push({ event: type }),
+  displayForm: (type: string) => {
+    const button = document.createElement('button');
+    button.innerText = type;
+    button.click();
+  },
   isFormVisible: () => {
     const container = document.querySelector('#told-container');
     return container?.innerHTML ?? false;
