@@ -14,50 +14,38 @@ export function AIChatPage({}: AIChatPageProps) {
   const { messages, inputDisabled, onSubmitMessage, addPickCardMessage } = useAiChatMessage();
   useAiTarotSpread(addPickCardMessage);
 
-  const { toggleSidebar, sidebarOpened, Sidebar, SlideableContent } = useSidebar();
+  const { toggleSidebar, sidebarOpened, Sidebar } = useSidebar();
 
   const { data } = getAuthorizedQuery();
-
-  if (!data?.isAuthenticated) {
-    return (
-      <>
-        <Background type="dynamic" />
-        <main className="flex-with-center flex-col w-screen h-dvh">
-          <Header />
-          <div className="w-h-full p-[5%] lg:pl-[25%] lg:pr-[25%]">
-            <ChatContainer
-              messages={messages}
-              inputDisabled={inputDisabled}
-              onSubmitMessage={onSubmitMessage}
-            />
-          </div>
-        </main>
-      </>
-    );
-  }
 
   return (
     <>
       <Background type="dynamic" />
       <main className="flex-with-center flex-col w-screen h-dvh">
         <Header
-          rightItems={[
-            <SideBarButton
-              onClick={toggleSidebar}
-              sideBarOpened={sidebarOpened}
-            />,
-          ]}
+          rightItems={
+            data?.isAuthenticated
+              ? [
+                  <SideBarButton
+                    onClick={toggleSidebar}
+                    sideBarOpened={sidebarOpened}
+                  />,
+                ]
+              : []
+          }
         />
-        <SlideableContent>
+        <div className="w-h-full p-[5%] lg:pl-[25%] lg:pr-[25%]">
           <ChatContainer
             messages={messages}
             inputDisabled={inputDisabled}
             onSubmitMessage={onSubmitMessage}
           />
-        </SlideableContent>
-        <Sidebar>
-          <ChatLogContainer />
-        </Sidebar>
+        </div>
+        {data?.isAuthenticated && (
+          <Sidebar>
+            <ChatLogContainer />
+          </Sidebar>
+        )}
       </main>
     </>
   );
