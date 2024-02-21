@@ -7,7 +7,7 @@ const tagManagerArgs = {
 TagManager.initialize(tagManagerArgs);
 
 const TOLD = {
-  displayForm: (type: string) => TagManager.dataLayer({ dataLayer: { event: type } }),
+  displayForm: (type: string) => (window as any).dataLayer.push({ event: type }),
   isFormVisible: () => {
     const container = document.querySelector('#told-container');
     return container?.innerHTML ?? false;
