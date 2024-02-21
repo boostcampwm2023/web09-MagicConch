@@ -10,7 +10,7 @@ import {
   SettingPage,
 } from './pages';
 
-export const rootRouter = createBrowserRouter(
+export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/">
       <Route
