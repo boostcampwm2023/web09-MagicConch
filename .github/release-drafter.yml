@@ -22,7 +22,7 @@ categories:
     labels:
       - "refactor"
 change-template: "- $TITLE (#$NUMBER) @$AUTHOR"
-change-title-escapes: '\<*_&#/@'
+change-title-escapes: '\<*_&#/@[]'
 version-resolver:
   major:
     labels:
@@ -40,4 +40,4 @@ replacers:
   - search: "/(feature|bugfix|hotfix|refactor)(,(feature|bugfix|hotfix|refactor))/"
     replace: "[$1$2]"
   - search: "/"
-    replace: ""
+    replace: " "
