@@ -10,15 +10,15 @@ footer: |
   $CONTRIBUTORS
 categories:
   - title: "🚀 Features"
-    collapse-after: 10
+    collapse-after: 15
     labels:
       - "feature"
   - title: "🐛 Bug Fixes"
-    collapse-after: 10
+    collapse-after: 15
     labels:
       - "bug"
   - title: "🛠️ Improvement"
-    collapse-after: 10
+    collapse-after: 15
     labels:
       - "refactor"
 change-template: "- $TITLE (#$NUMBER) @$AUTHOR"
@@ -34,7 +34,6 @@ version-resolver:
     labels:
       - "patch"
   default: patch
-
 replacers:
   - search: "/$(Be|Fe|Devops|Be,fe|Fe,be)/"
     replace: "[$1]"
