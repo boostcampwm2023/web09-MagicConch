@@ -7,5 +7,5 @@ jobs:
     steps:
       - uses: deepakputhraya/action-branch-name@master
         with:
-          regex: '(Be|Fe|Devops|Be,fe|Fe,be)\/(feature|bugfix|hotfix|refactor)(,(feature|bugfix|hotfix|refactor))*\/#[\d]+( #[\d]+)*.+'
+          regex: '(BE|FE|DEVOPS|BE,FE|Fe,BE)\/(feature|bugfix|hotfix|refactor)(,(feature|bugfix|hotfix|refactor))*\/#[\d]+(-#[\d]+)*.+'
           ignore: dev,release
