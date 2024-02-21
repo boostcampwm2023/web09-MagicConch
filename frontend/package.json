@@ -23,7 +23,6 @@
     "html2canvas": "^1.4.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-gtm-module": "^2.0.11",
     "react-router-dom": "^6.20.1",
     "socket.io-client": "^4.7.2",
     "zustand": "^4.4.7"
@@ -46,7 +45,6 @@
     "@trivago/prettier-plugin-sort-imports": "4.1.1",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
-    "@types/react-gtm-module": "^2.0.3",
     "@types/socket.io-client": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^6.11.0",
     "@typescript-eslint/parser": "^6.11.0",
