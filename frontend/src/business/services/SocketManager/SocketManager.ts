@@ -24,7 +24,13 @@ export class SocketManager {
     if (this.socket?.connected) {
       return;
     }
-    this.#socket = io(this.#url, { path: this.#path, withCredentials });
+    try {
+      this.#socket = io(this.#url, { path: this.#path, withCredentials });
+    } catch (e) {
+      // throw new Error('소켓 연결에 실패했습니다.');
+      console.error('errorororor: ', e);
+      throw e;
+    }
   }
 
   disconnect() {

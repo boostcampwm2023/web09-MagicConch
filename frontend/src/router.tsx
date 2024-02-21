@@ -1,4 +1,6 @@
-import { Route, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
+import { SocketErrorBoundary, UnknownErrorBoundary } from 'errorBoundaries';
+import APIErrorBoundary from 'errorBoundaries/APIErrorBoundary';
+import { Outlet, Route, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
 
 import {
   AIChatPage,
@@ -12,7 +14,18 @@ import {
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/">
+    <Route
+      path="/"
+      element={
+        <UnknownErrorBoundary>
+          <SocketErrorBoundary>
+            <APIErrorBoundary>
+              <Outlet />
+            </APIErrorBoundary>
+          </SocketErrorBoundary>
+        </UnknownErrorBoundary>
+      }
+    >
       <Route
         index
         path=""
