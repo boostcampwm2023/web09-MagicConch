@@ -9,3 +9,7 @@ export const ERROR_MESSAGE = {
 export const POPUP_MESSAGE = {
   SPREAD_TAROT_CARD: '상담자에게 타로 카드가 펼쳐집니다.',
 };
+
+export const CHAT_MESSAGE = {
+  ASK_FEEDBACK: '타로 상담이 끝났어. 마법의 소라고둥에 대해 피드백을 남겨줄래?',
+};

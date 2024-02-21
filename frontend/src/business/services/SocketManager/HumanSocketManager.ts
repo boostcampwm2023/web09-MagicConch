@@ -1,5 +1,4 @@
 import { SocketManager } from '.';
-import { HumanClientEvent, HumanServerEvent } from '@tarotmilktea/human-socketio-event';
 
 export class HumanSocketManager extends SocketManager {
   static instance: HumanSocketManager | null = null;
@@ -15,11 +14,11 @@ export class HumanSocketManager extends SocketManager {
     return this.instance;
   }
 
-  on<U>(eventName: HumanServerEvent, eventListener: (args: U) => void) {
+  on<U>(eventName: string, eventListener: (args: U) => void) {
     super.on(eventName, eventListener);
   }
 
-  emit(eventName: HumanClientEvent, ...eventArgs: unknown[]) {
+  emit(eventName: string, ...eventArgs: unknown[]) {
     super.emit(eventName, ...eventArgs);
   }
 }
