@@ -1,10 +1,8 @@
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Background } from '@components/common';
 import { Button } from '@components/common/Buttons';
 
-import { useUserFeedback } from '@business/hooks';
 import { useLoginPopup } from '@business/hooks/popup';
 
 export function HomePage() {
@@ -14,15 +12,9 @@ export function HomePage() {
 
   const { openLoginPopup } = useLoginPopup({ moveAiChat });
 
-  const { displayForm } = useUserFeedback({ type: 'AI' });
-
   const moveHumanChat = () => {
     navigate('/chat/human', { state: { host: true } });
   };
-
-  useEffect(() => {
-    displayForm();
-  }, []);
 
   return (
     <>
