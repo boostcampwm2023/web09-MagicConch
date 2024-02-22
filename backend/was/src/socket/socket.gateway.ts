@@ -8,9 +8,13 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import * as dotenv from 'dotenv';
-import { Server } from 'socket.io';
 import { SocketJwtAuthGuard } from 'src/auth/guard';
-import type { Socket } from 'src/common/types/socket';
+import type {
+  AiServer,
+  AiSocket,
+  AiSocketClientEvent,
+  AiSocketClientEventParams,
+} from 'src/common/types/socket';
 import { LoggerService } from 'src/logger/logger.service';
 import { SocketService } from './socket.service';
 
@@ -23,50 +27,52 @@ export class SocketGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
   @WebSocketServer()
-  readonly server: Server;
+  readonly server: AiServer;
 
   constructor(
     private readonly socketService: SocketService,
     private readonly logger: LoggerService,
   ) {}
 
-  afterInit(server: Server) {
+  afterInit(server: AiServer) {
     this.logger.info('🚀 웹소켓 서버 초기화');
   }
 
-  handleConnection(client: any) {
+  handleConnection(client: AiSocket) {
     this.logger.debug(`🚀 Client Connected : ${client.id}`);
 
     this.socketService.initClient(client);
     this.socketService.sendWelcomeMessage(client);
   }
 
-  @SubscribeMessage('message')
-  async handleMessageEvent(client: Socket, message: string) {
+  @SubscribeMessage<AiSocketClientEvent>('message')
+  async handleMessageEvent(
+    client: AiSocket,
+    ...params: AiSocketClientEventParams<'message'>
+  ) {
     this.logger.debug(`🚀 Received a message from ${client.id}`);
 
-    const sentMessage = await this.socketService.handleMessageEvent(
-      client,
-      message,
-    );
-    this.logger.debug(`🚀 Send a message to ${client.id}: ${sentMessage}`);
+    await this.socketService.handleMessageEvent(client, ...params);
+
+    this.logger.debug(`🚀 Send a message to ${client.id}`);
   }
 
   @UseGuards(SocketJwtAuthGuard)
-  @SubscribeMessage('tarotRead')
-  async handleTarotReadEvent(client: Socket, cardIdx: number) {
-    this.logger.debug(
-      `🚀 TarotRead request received from ${client.id}: ${cardIdx}`,
-    );
+  @SubscribeMessage<AiSocketClientEvent>('tarotRead')
+  async handleTarotReadEvent(
+    client: AiSocket,
+    ...params: AiSocketClientEventParams<'tarotRead'>
+  ) {
+    this.logger.debug(`🚀 TarotRead request received from ${client.id}`);
 
     const sentMessage = await this.socketService.handleTarotReadEvent(
       client,
-      cardIdx,
+      ...params,
     );
     this.logger.debug(`🚀 Send a message to ${client.id}: ${sentMessage}`);
   }
 
-  handleDisconnect(client: Socket) {
+  handleDisconnect(client: AiSocket) {
     this.logger.debug(`🚀 Client Disconnected : ${client.id}`);
   }
 }
