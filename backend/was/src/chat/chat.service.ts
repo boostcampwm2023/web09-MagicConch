@@ -223,7 +223,7 @@ export class ChatService {
         throw new CustomException(CHAT_CODEMAP.ROOM_NOT_FOUND);
       }
       if (room.participant.id !== memberId) {
-        throw new CustomException(CHAT_CODEMAP.ROOM_UPDATE_FORBIDDEN);
+        throw new CustomException(CHAT_CODEMAP.ROOM_FORBIDDEN);
       }
       return room;
     } catch (err: unknown) {
