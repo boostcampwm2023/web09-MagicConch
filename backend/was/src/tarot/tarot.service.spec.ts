@@ -1,7 +1,8 @@
-import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { BUCKET_URL, ExtEnum } from 'src/common/constants/etc';
+import { CustomException } from 'src/exceptions';
+import { TAROT_CODEMAP } from 'src/exceptions/codemap';
 import { Repository } from 'typeorm';
 import { CreateTarotResultDto, TarotCardDto, TarotResultDto } from './dto';
 import { TarotCard, TarotResult } from './entities';
@@ -140,7 +141,7 @@ describe('TarotService', () => {
 
         await expect(
           tarotService.findTarotCardByCardNo(cardNo),
-        ).rejects.toThrow(NotFoundException);
+        ).rejects.toThrow(new CustomException(TAROT_CODEMAP.CARD_NOT_FOUND));
         expect(findOneMock).toHaveBeenCalledWith({
           where: {
             cardNo: cardNo,
@@ -202,7 +203,7 @@ describe('TarotService', () => {
           .mockResolvedValueOnce(null);
 
         await expect(tarotService.findTarotResultById(id)).rejects.toThrow(
-          NotFoundException,
+          new CustomException(TAROT_CODEMAP.RESULT_NOT_FOUND),
         );
         expect(findOneMock).toHaveBeenCalledWith({
           where: { id: id },
