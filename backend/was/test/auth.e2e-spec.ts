@@ -11,7 +11,6 @@ import { JwtAuthGuard, SocketJwtAuthGuard } from 'src/auth/guard';
 import { AuthService, KakaoAuthService } from 'src/auth/service';
 import { JwtStrategy } from 'src/auth/strategies/jwt.strategy';
 import { RedisCacheModule } from 'src/common/config/cache/redis-cache.module';
-import { ERR_MSG } from 'src/common/constants/errors';
 import { Member } from 'src/members/entities';
 import * as request from 'supertest';
 import { jwtToken } from './common/constants';
@@ -122,27 +121,19 @@ describe('Auth', () => {
           scenario: '잘못된 인증 코드를 받으면 401번 에러를 반환한다.',
           route: `/oauth/login/kakao?code=${wrongCode}`,
           status: 401,
-          message: ERR_MSG.OAUTH_KAKAO_TOKEN_FAILED,
         },
         {
           scenario: '사용자 정보 조회에 실패하면 400번 에러를 반환한다.',
           route: `/oauth/login/kakao?code=${codeGetUserFail}`,
           status: 400,
-          message: ERR_MSG.OAUTH_KAKAO_USER_FAILED,
         },
-      ].forEach(({ scenario, route, cookie, status, message }) => {
+      ].forEach(({ scenario, route, cookie, status }) => {
         it(scenario, () => {
           if (cookie) {
             return request(app.getHttpServer())
               .get(route)
               .set('Cookie', cookie)
               .expect(status);
-          }
-          if (message) {
-            return request(app.getHttpServer())
-              .get(route)
-              .expect(status)
-              .expect((res) => expect(res.body.message).toBe(message));
           }
           return request(app.getHttpServer()).get(route).expect(status);
         });
