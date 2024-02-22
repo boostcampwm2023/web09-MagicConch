@@ -11,12 +11,6 @@ dependencies:
   '@tanstack/react-query-devtools':
     specifier: ^5.12.2
     version: 5.12.2(@tanstack/react-query@5.12.2)(react@18.2.0)
-  '@tarotmilktea/ai-socketio-event':
-    specifier: ^2.0.2
-    version: 2.0.2
-  '@tarotmilktea/human-socketio-event':
-    specifier: ^2.0.1
-    version: 2.0.1
   axios:
     specifier: ^1.6.2
     version: 1.6.2
@@ -4116,14 +4110,6 @@ packages:
     dependencies:
       '@tanstack/query-core': 5.12.1
       react: 18.2.0
-    dev: false
-
-  /@tarotmilktea/ai-socketio-event@2.0.2:
-    resolution: {integrity: sha512-bXWzxAHQo5a6fMee9WJ8uqW4AMiKU0fnk8PmYn+xH3SX/6J1bIdrq6JdNlzqKcSVSvtDg5yrkYIe44RuPnrGtg==}
-    dev: false
-
-  /@tarotmilktea/human-socketio-event@2.0.1:
-    resolution: {integrity: sha512-V8cIxWr8dL0Yo/5DrLNoiqN0e6EQV+D02Dc148/UAK2PglSybI8P3yKx+rWyry3uPMMecybB9nUIkXe5aWMM1w==}
     dev: false
 
   /@testing-library/dom@9.3.4:

@@ -6,10 +6,6 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import type {
-  HumanClientEvent,
-  HumanServerEvent,
-} from '@tarotmilktea/human-socketio-event';
 import { Server, Socket } from 'socket.io';
 import { LoggerService } from 'src/logger/logger.service';
 import { v4 } from 'uuid';
@@ -76,7 +72,7 @@ export class EventsGateway
     }
   }
 
-  @SubscribeMessage<HumanClientEvent>('generateRoomName')
+  @SubscribeMessage('generateRoomName')
   handleCreateRoomEvent(socket: Socket) {
     const roomId: string = v4();
 
@@ -84,7 +80,7 @@ export class EventsGateway
 
     this.logger.debug(`🚀 Room Name Generated : ${roomId}`);
   }
-  @SubscribeMessage<HumanClientEvent>('createRoom')
+  @SubscribeMessage('createRoom')
   handleSetRoomPassword(socket: Socket, [roomId, password]: [string, string]) {
     const userId = socket.id;
     this.socketRooms[roomId] = { users: [userId], password: password };
@@ -96,7 +92,7 @@ export class EventsGateway
     this.logger.debug(`🚀 Room Created : ${roomId}`);
   }
 
-  @SubscribeMessage<HumanClientEvent>('joinRoom')
+  @SubscribeMessage('joinRoom')
   handleJoinRoomEvent(socket: Socket, [roomId, password]: [string, string]) {
     const userId = socket.id;
 
@@ -158,7 +154,7 @@ export class EventsGateway
     }
   }
 
-  @SubscribeMessage<HumanClientEvent>('checkRoomExist')
+  @SubscribeMessage('checkRoomExist')
   handleCheckRoomExistEvent(socket: Socket, roomName: string) {
     const existRoom: any = this.socketRooms[roomName];
 
@@ -171,13 +167,13 @@ export class EventsGateway
     }
   }
 
-  public eventEmit(socket: Socket, event: HumanServerEvent, ...args: any[]) {
+  public eventEmit(socket: Socket, event: string, ...args: any[]) {
     socket.emit(event, ...args);
   }
   public eventEmitToRoom(
     socket: Socket,
     roomName: string,
-    event: HumanServerEvent | 'connection',
+    event: string,
     ...args: any[]
   ) {
     socket.to(roomName).emit(event, ...args);
