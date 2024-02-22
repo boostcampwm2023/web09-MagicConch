@@ -1,14 +1,11 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import {
-  BadRequestException,
-  Inject,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Cache } from 'cache-manager';
-import { ERR_MSG } from 'src/common/constants/errors';
 import { ProviderIdEnum, ProviderName } from 'src/common/constants/etc';
+import { CustomException } from 'src/exceptions';
+import { AUTH_CODEMAP } from 'src/exceptions/codemap';
 import { Member } from 'src/members/entities';
 import { Repository } from 'typeorm';
 import { JwtPayloadDto, OAuthTokenDto, ProfileDto } from '../dto';
@@ -103,21 +100,22 @@ export class MockedKakaoAuthService extends AuthService {
     if (authCodes.includes(code)) {
       return tokens[code];
     }
-    throw new UnauthorizedException(ERR_MSG.OAUTH_KAKAO_TOKEN_FAILED);
+    throw new CustomException(AUTH_CODEMAP.KAKAO_TOKEN_REQUEST_FAILED);
   }
 
   private refreshToken(refreshToken: string): KakaoTokenDto {
     if (refreshToken === correctRefreshToken) {
       return tokens.code;
     }
-    throw new UnauthorizedException(ERR_MSG.OAUTH_KAKAO_TOKEN_FAILED);
+    throw new CustomException(AUTH_CODEMAP.KAKAO_TOKEN_REFRESH_FAILED);
   }
 
   private getUser(accessToken: string): ProfileDto {
     if (accessToken === correctAccessToken) {
       return profile;
     }
-    throw new BadRequestException(ERR_MSG.OAUTH_KAKAO_USER_FAILED);
+    console.log(new CustomException(AUTH_CODEMAP.KAKAO_USER_FAILED));
+    throw new CustomException(AUTH_CODEMAP.KAKAO_USER_FAILED);
   }
 
   private getAccessTokenInfo(accessToken: string): KakaoAccessTokenInfoDto {

@@ -1,17 +1,12 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  InternalServerErrorException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Cache } from 'cache-manager';
 import { CONTENT_TYPE, METHODS, OAUTH_URL } from 'src/common/constants/apis';
-import { ERR_MSG } from 'src/common/constants/errors';
 import { ProviderIdEnum } from 'src/common/constants/etc';
+import { CustomException } from 'src/exceptions';
+import { AUTH_CODEMAP } from 'src/exceptions/codemap';
 import { Member } from 'src/members/entities';
 import { Repository } from 'typeorm';
 import { JwtPayloadDto, OAuthTokenDto, ProfileDto } from '../dto';
@@ -87,7 +82,7 @@ export class KakaoAuthService extends AuthService {
       });
       return (await res.json()) as KakaoTokenDto;
     } catch (err: unknown) {
-      throw new UnauthorizedException(ERR_MSG.OAUTH_KAKAO_TOKEN_FAILED);
+      throw new CustomException(AUTH_CODEMAP.KAKAO_TOKEN_REQUEST_FAILED);
     }
   }
 
@@ -108,7 +103,7 @@ export class KakaoAuthService extends AuthService {
       });
       return (await res.json()) as KakaoTokenDto;
     } catch (err: unknown) {
-      throw new UnauthorizedException(ERR_MSG.OAUTH_KAKAO_TOKEN_FAILED);
+      throw new CustomException(AUTH_CODEMAP.KAKAO_TOKEN_REFRESH_FAILED);
     }
   }
 
@@ -126,7 +121,7 @@ export class KakaoAuthService extends AuthService {
     if (detail.status === 200) {
       return ProfileDto.fromKakao(detail.body.kakao_account);
     }
-    throw new BadRequestException(ERR_MSG.OAUTH_KAKAO_USER_FAILED);
+    throw new CustomException(AUTH_CODEMAP.KAKAO_USER_FAILED);
   }
 
   /**
@@ -160,13 +155,12 @@ export class KakaoAuthService extends AuthService {
   }
 
   private handleAccessTokenInfoError(status: number, code: number): null {
-    if (status === 401) {
+    if (status === -401) {
       return null;
     }
-    throw new InternalServerErrorException(
-      code === -1
-        ? ERR_MSG.OAUTH_KAKAO_ACCESS_TOKEN_INFO_KAKAO_ERROR
-        : ERR_MSG.OAUTH_KAKAO_ACCESS_TOKEN_INFO_BAD_REQUEST,
-    );
+    if (code === -1) {
+      throw new CustomException(AUTH_CODEMAP.KAKAO_PLATFORM_ERROR);
+    }
+    throw new CustomException(AUTH_CODEMAP.KAKAO_INVALID_ACCESS_TOKEN);
   }
 }
