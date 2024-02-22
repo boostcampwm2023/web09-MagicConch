@@ -114,7 +114,6 @@ export class MockedKakaoAuthService extends AuthService {
     if (accessToken === correctAccessToken) {
       return profile;
     }
-    console.log(new CustomException(AUTH_CODEMAP.KAKAO_USER_FAILED));
     throw new CustomException(AUTH_CODEMAP.KAKAO_USER_FAILED);
   }
 
