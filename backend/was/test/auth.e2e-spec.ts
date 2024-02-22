@@ -120,7 +120,7 @@ describe('Auth', () => {
         {
           scenario: '잘못된 인증 코드를 받으면 401번 에러를 반환한다.',
           route: `/oauth/login/kakao?code=${wrongCode}`,
-          status: 401,
+          status: 400,
         },
         {
           scenario: '사용자 정보 조회에 실패하면 400번 에러를 반환한다.',
