@@ -17,7 +17,10 @@ interface AiSocketEvent {
 
 interface HumanSocketEvent {
   ServerToClientEvent: {
-    connection: (data: { description?: RTCSessionDescription; candidate?: RTCIceCandidate }) => void;
+    connection: (data: {
+      description?: RTCSessionDescription | null;
+      candidate?: RTCIceCandidate | null;
+    }) => void;
     welcome: (otherUsers: any) => void;
     userExit: (data: { id: string }) => void;
     hostExit: () => void;
@@ -30,7 +33,11 @@ interface HumanSocketEvent {
     roomFull: () => void;
   };
   ClientToServerEvent: {
-    connection: (data: { description?: RTCSessionDescription; candidate?: RTCIceCandidate; roomName: string }) => void;
+    connection: (data: {
+      description?: RTCSessionDescription | null;
+      candidate?: RTCIceCandidate | null;
+      roomName: string;
+    }) => void;
     generateRoomName: () => void;
     createRoom: (roomId: string, password: string) => void;
     joinRoom: (roomId: string, password: string) => void;
