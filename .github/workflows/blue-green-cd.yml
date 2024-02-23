@@ -25,11 +25,6 @@ jobs:
           echo "${{ secrets.ENV_FILE }}" > .env
           echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
           echo "GITHUB_SHA=${{ github.sha }}" >> .env
-          mkdir -p config/nginx/ssl/
-          echo "${{ secrets.SSL_OPTIONS }}" > config/nginx/ssl/options-ssl-nginx.conf
-          echo "${{ secrets.SSL_FULLCHAIN }}" > config/nginx/ssl/fullchain.pem
-          echo "${{ secrets.SSL_PRIVKEY }}" > config/nginx/ssl/privkey.pem
-          echo "${{ secrets.SSL_DHPARAMS }}" > config/nginx/ssl/ssl-dhparams.pem
 
       - name: Add Remote Host Key to known_hosts
         run: |
@@ -43,7 +38,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          source: "backend/.env,backend/deploy.sh,backend/send-slack-message.sh,backend/config,backend/compose.blue-deploy.yml,backend/compose.green-deploy.yml,backend/Dockerfile.nginx"
+          source: "backend/.env,backend/deploy.sh,backend/send-slack-message.sh,backend/compose.blue-deploy.yml,backend/compose.green-deploy.yml,backend/Dockerfile.nginx"
           target: "~/app/"
           overwrite: true
 
