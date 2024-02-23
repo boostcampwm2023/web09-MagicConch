@@ -1,13 +1,6 @@
 import { getAudioInputOptions, getCameraInputOptions, getMediaDeviceOptions, getUserMediaStream } from '../Media';
 
-import { __setMockNavigatorWithTracks, mockMediaStream } from '@mocks/webRTC';
-
-const createFakeEnumerateDevice = (kind: 'videoinput' | 'audioinput', id: string): any => ({
-  kind,
-  deviceId: `fakeDeviceId${id}`,
-  groupId: `fakeGroupId${id}`,
-  label: `fakeLabel${id}`,
-});
+import { __setMockNavigatorWithTracks, createFakeEnumerateDevice, mockMediaStream } from '@mocks/webRTC';
 
 describe('Media 서비스', () => {
   beforeEach(() => {

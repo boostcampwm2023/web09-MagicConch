@@ -7,10 +7,12 @@ export function useSidebar() {
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   const translateX = (width: number = 0) => {
-    if (!mainRef.current || !sidebarRef.current) return;
-
-    mainRef.current.style.transform = `translateX(-${width}px)`;
-    sidebarRef.current.style.transform = `translateX(-${width}px)`;
+    if (mainRef.current) {
+      mainRef.current.style.transform = `translateX(-${width}px)`;
+    }
+    if (sidebarRef.current) {
+      sidebarRef.current.style.transform = `translateX(-${width}px)`;
+    }
   };
 
   const showSidebar = () => {
@@ -37,7 +39,7 @@ export function useSidebar() {
         (
           <aside
             ref={sidebarRef}
-            className={`fixed top-0 left-[100%] w-screen lg:w-240 h-full surface-alt z-10 transition-transform ease-in-out duration-500 `}
+            className={`fixed top-0 left-[100%] w-screen lg:w-360 h-full surface-alt z-10 transition-transform ease-in-out duration-500 p-15`}
           >
             {children}
           </aside>

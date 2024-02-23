@@ -1,6 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ERR_MSG } from 'src/common/constants/errors';
+import { CustomException } from 'src/exceptions';
+import { TAROT_CODEMAP } from 'src/exceptions/codemap';
 import { Repository } from 'typeorm';
 import { CreateTarotResultDto, TarotCardDto, TarotResultDto } from './dto';
 import { TarotCard, TarotResult } from './entities';
@@ -42,7 +43,7 @@ export class TarotService {
         });
 
       if (!tarotCard) {
-        throw new NotFoundException(ERR_MSG.TAROT_CARD_NOT_FOUND);
+        throw new CustomException(TAROT_CODEMAP.CARD_NOT_FOUND);
       }
       return TarotCardDto.fromEntity(tarotCard);
     } catch (err: unknown) {
@@ -58,7 +59,7 @@ export class TarotService {
           select: ['cardUrl', 'message'],
         });
       if (!tarotResult) {
-        throw new NotFoundException(ERR_MSG.TAROT_RESULT_NOT_FOUND);
+        throw new CustomException(TAROT_CODEMAP.RESULT_NOT_FOUND);
       }
       return TarotResultDto.fromEntity(tarotResult);
     } catch (err: unknown) {

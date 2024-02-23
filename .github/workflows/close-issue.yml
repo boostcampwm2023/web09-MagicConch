@@ -8,6 +8,7 @@ on:
 jobs:
   close-issue:
     name: Close Issue
+    if: github.event.pull_request.base.ref != 'release'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/github-script@v7

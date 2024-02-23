@@ -10,7 +10,7 @@ interface ChatContainerProps {
 }
 export function ChatContainer({ messages, inputDisabled, onSubmitMessage }: ChatContainerProps) {
   return (
-    <div className={`relative w-h-full flex-with-center flex-col p-[5%] lg:pl-[25%] lg:pr-[25%] pt-64`}>
+    <div className={`relative w-h-full flex-with-center flex-col pl-[5%] pr-[5%]`}>
       <ChatList messages={messages} />
       <ChatInput
         disabled={inputDisabled}

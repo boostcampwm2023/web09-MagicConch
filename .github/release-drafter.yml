@@ -1,0 +1,43 @@
+name-template: "v$RESOLVED_VERSION"
+tag-template: "v$RESOLVED_VERSION"
+template: |
+  # Changes (v$RESOLVED_VERSION)
+
+  $CHANGES
+footer: |
+  ### Contributors
+
+  $CONTRIBUTORS
+categories:
+  - title: "🚀 Features"
+    collapse-after: 15
+    labels:
+      - "feature"
+  - title: "🐛 Bug Fixes"
+    collapse-after: 15
+    labels:
+      - "bug"
+  - title: "🛠️ Improvement"
+    collapse-after: 15
+    labels:
+      - "refactor"
+change-template: "- $TITLE (#$NUMBER) @$AUTHOR"
+change-title-escapes: '\<*_&#/@[]'
+version-resolver:
+  major:
+    labels:
+      - "major"
+  minor:
+    labels:
+      - "minor"
+  patch:
+    labels:
+      - "patch"
+  default: patch
+replacers:
+  - search: "/$(Be|Fe|Devops|Be,fe|Fe,be)/"
+    replace: "[$1]"
+  - search: "/(feature|bugfix|hotfix|refactor)(,(feature|bugfix|hotfix|refactor))/"
+    replace: "[$1$2]"
+  - search: "/"
+    replace: " "

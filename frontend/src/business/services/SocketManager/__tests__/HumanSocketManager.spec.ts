@@ -21,7 +21,7 @@ describe('HumanSocketManager 클래스 테스트', () => {
   it('on(): super.on()을 호출한다.', () => {
     const socketManager = HumanSocketManager.getInstance();
     const spyOn = vi.spyOn(SocketManager.prototype, 'on');
-    const eventName = 'answer';
+    const eventName = 'eventName' as any;
     const eventListener = vi.fn();
 
     socketManager.connect();
@@ -30,15 +30,58 @@ describe('HumanSocketManager 클래스 테스트', () => {
     expect(spyOn).toBeCalledWith(eventName, eventListener);
   });
 
-  it('emit(): super.emit()을 호출한다.', () => {
-    const socketManager = HumanSocketManager.getInstance();
-    const spyOn = vi.spyOn(SocketManager.prototype, 'emit');
-    const eventName = 'answer';
-    const eventArgs = ['test'];
+  describe('emit(): super.emit()을 호출한다.', () => {
+    [
+      {
+        scenario: 'data: { description: RTCSessionDescription; roomName: string } 형식 인수 emit',
+        eventName: 'connection' as any,
+        eventArgs: [{ description: 'description', roomName: 'roomName' }],
+      },
+      {
+        scenario: 'data: { candidate: RTCIceCandidate; roomName: string } 형식 인수 emit',
+        eventName: 'connection' as any,
+        eventArgs: [{ candidate: 'candidate', roomName: 'roomName' }],
+      },
+      {
+        scenario: 'roomName: string 형식 인수 emit',
+        eventName: 'checkRoomExist' as any,
+        eventArgs: ['roomName'],
+      },
+      {
+        scenario: 'roomId: string, password: string 형식 인수 emit',
+        eventName: 'createRoom' as any,
+        eventArgs: ['roomId', 'password'],
+      },
+    ].forEach(({ scenario, eventName, eventArgs }: { scenario: string; eventName: any; eventArgs: any[] }) => {
+      it(scenario, () => {
+        const socketManager = HumanSocketManager.getInstance();
+        const spyOn = vi.spyOn(SocketManager.prototype, 'emit');
 
-    socketManager.connect();
-    socketManager.emit(eventName, ...eventArgs);
+        socketManager.connect();
 
-    expect(spyOn).toBeCalledWith(eventName, ...eventArgs);
+        if (eventArgs.length === 0) {
+          socketManager.emit(eventName);
+        }
+        if (eventArgs.length === 1) {
+          socketManager.emit(eventName, eventArgs[0]);
+        }
+        if (eventArgs.length === 2) {
+          socketManager.emit(eventName, eventArgs[0], eventArgs[1]);
+        }
+
+        expect(spyOn).toBeCalledWith(eventName, ...eventArgs);
+      });
+    });
   });
+  // it('', () => {
+  //   const socketManager = HumanSocketManager.getInstance();
+  //   const spyOn = vi.spyOn(SocketManager.prototype, 'emit');
+  //   const eventName = 'answer' as any;
+  //   const eventArgs = ['id', 'password'] as [string, string];
+
+  //   socketManager.connect();
+  //   socketManager.emit(eventName, ...eventArgs);
+
+  //   expect(spyOn).toBeCalledWith(eventName, ...eventArgs);
+  // });
 });

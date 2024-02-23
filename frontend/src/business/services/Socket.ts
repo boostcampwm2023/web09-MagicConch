@@ -4,63 +4,64 @@ import { ERROR_MESSAGE } from '@constants/messages';
 
 import { HumanSocketManager } from './SocketManager';
 
+interface WebRTCConnectionSetupParams {
+  description?: RTCSessionDescription;
+  candidate?: RTCIceCandidate;
+}
+
 interface initSignalingSocketParams {
   roomName: string;
-  onExitUser: () => void;
+  onExitUser?: () => void;
 }
 
 export const initSignalingSocket = ({ roomName, onExitUser }: initSignalingSocketParams) => {
-  const webRTC = WebRTC.getInstance(HumanSocketManager.getInstance());
   const socketManager = HumanSocketManager.getInstance();
 
-  socketManager.on('welcome', async (users: { id: string }[]) => {
-    await sendCreatedOffer(users, roomName);
-  });
+  // 최초 접속 시, welcome 이벤트를 받고 offer를 생성하여 상대방에게 보냄
+  socketManager.on('welcome', () => sendCreatedSDP(roomName, 'offer'));
 
-  socketManager.on('offer', async (sdp: RTCSessionDescription) => {
-    await sendCreatedAnswer(sdp, roomName);
-  });
-
-  socketManager.on('answer', async (sdp: RTCSessionDescription) => {
-    await webRTC.setRemoteDescription(sdp);
-  });
-
-  socketManager.on('candidate', async (candidate: RTCIceCandidate) => {
-    await webRTC.addIceCandidate(candidate);
-  });
+  socketManager.on('connection', (params: WebRTCConnectionSetupParams) =>
+    handleWebRTCConnectionSetup({ ...params, roomName }),
+  );
 
   socketManager.on('roomFull', () => {
     alert(ERROR_MESSAGE.FULL_ROOM);
   });
 
   socketManager.on('userExit', async () => {
-    onExitUser();
+    onExitUser?.();
   });
 };
 
-export async function sendCreatedOffer(users: { id: string }[], roomName: string) {
-  if (users.length === 0) {
-    return;
-  }
-  const webRTC = WebRTC.getInstance();
+export async function sendCreatedSDP(roomName: string, type: 'offer' | 'answer') {
+  const webRTC = WebRTC.getInstance(HumanSocketManager.getInstance());
   const socketManager = HumanSocketManager.getInstance();
 
-  const sdp = await webRTC.createOffer();
-
+  const sdp = type === 'offer' ? await webRTC.createOffer() : await webRTC.createAnswer();
   await webRTC.setLocalDescription(sdp);
 
-  socketManager.emit('offer', sdp, roomName);
+  const description = webRTC.getPeerConnection()?.localDescription;
+  socketManager.emit('connection', { roomName, description });
 }
 
-export async function sendCreatedAnswer(sdp: RTCSessionDescription, roomName: string) {
-  const webRTC = WebRTC.getInstance();
-  const socketManager = HumanSocketManager.getInstance();
+export async function handleWebRTCConnectionSetup({
+  description,
+  candidate,
+  roomName,
+}: { roomName: string } & WebRTCConnectionSetupParams) {
+  const webRTC = WebRTC.getInstance(HumanSocketManager.getInstance());
 
-  await webRTC.setRemoteDescription(sdp);
+  // offer & answer를 주고받는 과정
+  if (description) {
+    await webRTC.setRemoteDescription(description);
 
-  const answerSdp = await webRTC.createAnswer();
-
-  webRTC.setLocalDescription(answerSdp);
-
-  socketManager.emit('answer', answerSdp, roomName);
+    // 상대방이 보낸 offer에 대해 answer를 생성하고, 이를 다시 상대방에게 보냄
+    if (description.type === 'offer') {
+      sendCreatedSDP(roomName, 'answer');
+    }
+  }
+  // 위의 과정이 끝나고 ice candidate를 주고받는 과정
+  else if (candidate) {
+    await webRTC.addIceCandidate(candidate);
+  }
 }

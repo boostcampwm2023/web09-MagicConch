@@ -1,8 +1,9 @@
-import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProviderIdEnum } from 'src/common/constants/etc';
 import { ChatLog } from 'src/common/types/chatbot';
 import { UserInfo } from 'src/common/types/socket';
+import { CustomException } from 'src/exceptions';
+import { CHAT_CODEMAP } from 'src/exceptions/codemap';
 import { Member } from 'src/members/entities';
 import { EntityManager } from 'typeorm';
 import { ChatService } from './chat.service';
@@ -181,12 +182,15 @@ describe('ChatService', () => {
         const transactionMock = jest
           .spyOn(entityManager, 'transaction')
           .mockImplementation(
-            async () => await Promise.reject(new NotFoundException()),
+            async () =>
+              await Promise.reject(
+                new CustomException(CHAT_CODEMAP.ROOM_NOT_FOUND),
+              ),
           );
 
         await expect(
           chatService.createMessages(roomId, memberId, []),
-        ).rejects.toThrow(NotFoundException);
+        ).rejects.toThrow(new CustomException(CHAT_CODEMAP.ROOM_NOT_FOUND));
         expect(transactionMock).toHaveBeenCalled();
       }
     });
@@ -319,7 +323,10 @@ describe('ChatService', () => {
         const transactionMock = jest
           .spyOn(entityManager, 'transaction')
           .mockImplementation(
-            async () => await Promise.reject(new NotFoundException()),
+            async () =>
+              await Promise.reject(
+                new CustomException(CHAT_CODEMAP.ROOM_NOT_FOUND),
+              ),
           );
 
         await expect(
@@ -328,7 +335,7 @@ describe('ChatService', () => {
             member.email ?? '',
             member.providerId ?? 0,
           ),
-        ).rejects.toThrow(NotFoundException);
+        ).rejects.toThrow(new CustomException(CHAT_CODEMAP.ROOM_NOT_FOUND));
         expect(transactionMock).toHaveBeenCalled();
       });
 
@@ -342,7 +349,10 @@ describe('ChatService', () => {
         const transactionMock = jest
           .spyOn(entityManager, 'transaction')
           .mockImplementation(
-            async () => await Promise.reject(new ForbiddenException()),
+            async () =>
+              await Promise.reject(
+                new CustomException(CHAT_CODEMAP.ROOM_FORBIDDEN),
+              ),
           );
 
         await expect(
@@ -351,7 +361,7 @@ describe('ChatService', () => {
             forbiddenMember.email ?? '',
             forbiddenMember.providerId ?? 0,
           ),
-        ).rejects.toThrow(ForbiddenException);
+        ).rejects.toThrow(new CustomException(CHAT_CODEMAP.ROOM_FORBIDDEN));
         expect(transactionMock).toHaveBeenCalled();
       });
     });
@@ -402,7 +412,10 @@ describe('ChatService', () => {
         const transactionMock = jest
           .spyOn(entityManager, 'transaction')
           .mockImplementation(
-            async () => await Promise.reject(new NotFoundException()),
+            async () =>
+              await Promise.reject(
+                new CustomException(CHAT_CODEMAP.ROOM_NOT_FOUND),
+              ),
           );
 
         await expect(
@@ -412,7 +425,7 @@ describe('ChatService', () => {
             member.providerId ?? 0,
             updateRoomDto,
           ),
-        ).rejects.toThrow(NotFoundException);
+        ).rejects.toThrow(new CustomException(CHAT_CODEMAP.ROOM_NOT_FOUND));
         expect(transactionMock).toHaveBeenCalled();
       });
 
@@ -426,7 +439,10 @@ describe('ChatService', () => {
         const transactionMock = jest
           .spyOn(entityManager, 'transaction')
           .mockImplementation(
-            async () => await Promise.reject(new ForbiddenException()),
+            async () =>
+              await Promise.reject(
+                new CustomException(CHAT_CODEMAP.ROOM_FORBIDDEN),
+              ),
           );
 
         await expect(
@@ -436,7 +452,7 @@ describe('ChatService', () => {
             forbiddenMember.providerId ?? 0,
             updateRoomDto,
           ),
-        ).rejects.toThrow(ForbiddenException);
+        ).rejects.toThrow(new CustomException(CHAT_CODEMAP.ROOM_FORBIDDEN));
         expect(transactionMock).toHaveBeenCalled();
       });
     });
@@ -481,7 +497,10 @@ describe('ChatService', () => {
         const transactionMock = jest
           .spyOn(entityManager, 'transaction')
           .mockImplementation(
-            async () => await Promise.reject(new NotFoundException()),
+            async () =>
+              await Promise.reject(
+                new CustomException(CHAT_CODEMAP.ROOM_NOT_FOUND),
+              ),
           );
 
         await expect(
@@ -490,7 +509,7 @@ describe('ChatService', () => {
             member.email ?? '',
             member.providerId ?? 0,
           ),
-        ).rejects.toThrow(NotFoundException);
+        ).rejects.toThrow(new CustomException(CHAT_CODEMAP.ROOM_NOT_FOUND));
         expect(transactionMock).toHaveBeenCalled();
       });
 
@@ -504,7 +523,10 @@ describe('ChatService', () => {
         const transactionMock = jest
           .spyOn(entityManager, 'transaction')
           .mockImplementation(
-            async () => await Promise.reject(new ForbiddenException()),
+            async () =>
+              await Promise.reject(
+                new CustomException(CHAT_CODEMAP.ROOM_FORBIDDEN),
+              ),
           );
 
         await expect(
@@ -513,7 +535,7 @@ describe('ChatService', () => {
             forbiddenMember.email ?? '',
             forbiddenMember.providerId ?? 0,
           ),
-        ).rejects.toThrow(ForbiddenException);
+        ).rejects.toThrow(new CustomException(CHAT_CODEMAP.ROOM_FORBIDDEN));
         expect(transactionMock).toHaveBeenCalled();
       });
     });

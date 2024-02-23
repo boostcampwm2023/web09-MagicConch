@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 import { useSpeakerHighlighter } from '@business/hooks';
 
@@ -9,7 +9,7 @@ import { arrayBuffer2Blob } from '@utils/array';
 import { Icon } from '@iconify/react';
 
 interface CamBoxProps {
-  videoRef: React.RefObject<HTMLVideoElement>;
+  stream?: MediaStream;
   defaultImage: 'bg-ddung' | 'bg-sponge';
   profileInfo?: ProfileInfo;
   cameraConnected?: boolean;
@@ -19,7 +19,7 @@ interface CamBoxProps {
 }
 
 export function CamBox({
-  videoRef,
+  stream,
   defaultImage,
   cameraConnected,
   audioConnected,
@@ -27,8 +27,7 @@ export function CamBox({
   nickname,
   defaultNickname,
 }: CamBoxProps) {
-  const loading = useMemo(() => !videoRef.current?.srcObject, [videoRef.current?.srcObject]);
-  const hidden = useMemo(() => !cameraConnected, [cameraConnected]);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const bgImage = useMemo(() => {
     if (!profileInfo || !profileInfo.type) {
@@ -42,17 +41,24 @@ export function CamBox({
 
   useSpeakerHighlighter(videoRef);
 
+  useEffect(() => {
+    if (!videoRef.current || !stream) {
+      return;
+    }
+    videoRef.current.srcObject = stream;
+  }, [stream]);
+
   return (
     <>
       <div className="flex relative w-320 h-320 sm:w-[30vh] sm:h-[30vh] rounded-[55px] sm:rounded-[50px] shadow-white">
-        {loading && <div className="absolute skeleton w-h-full"></div>}{' '}
+        {!stream?.active && <div className="absolute skeleton w-h-full rounded-[55px] "></div>}
         <video
           className={`flex-1 w-h-full rounded-[55px] sm:rounded-[50px]`}
           ref={videoRef}
           autoPlay
           playsInline
         />
-        {hidden &&
+        {!cameraConnected &&
           (bgImage ? (
             <img
               className={`absolute w-h-full bg-cover rounded-[55px] sm:rounded-[50px]`}

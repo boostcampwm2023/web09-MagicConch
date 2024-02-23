@@ -5,8 +5,11 @@ import { Button } from '@components/common/Buttons';
 
 import { useLoginPopup } from '@business/hooks/popup';
 
+import { useReset } from './hooks';
+
 export function HomePage() {
   const navigate = useNavigate();
+  useReset();
 
   const moveAiChat = () => navigate('/chat/ai');
 

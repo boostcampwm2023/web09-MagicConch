@@ -3,16 +3,21 @@ import { useEffect, useState } from 'react';
 
 import type { Message, MessageButton } from '@components/common/ChatContainer';
 
+import { useUserFeedback } from '@business/hooks';
 import { AISocketManager } from '@business/services/SocketManager';
 
 import { getChatLogQuery } from '@stores/queries';
 import { useAiChatLogId } from '@stores/zustandStores';
+
+import { CHAT_MESSAGE } from '@constants/messages';
 
 export function useAiChatMessage() {
   const socketManager = AISocketManager.getInstance();
 
   const { messages, pushMessage, updateMessage } = useChatMessage();
   const [inputDisabled, setInputDisabled] = useState(true);
+
+  const { displayForm } = useUserFeedback({ type: 'AI' });
 
   const addMessage = (
     type: 'left' | 'right',
@@ -44,6 +49,11 @@ export function useAiChatMessage() {
 
       const shareLinkId: string = id;
       updateMessage(message => ({ ...message, shareLinkId }));
+
+      addMessage('left', {
+        message: CHAT_MESSAGE.ASK_FEEDBACK,
+        button: { content: '피드백 남기기', onClick: displayForm },
+      });
     });
 
     return () => socketManager.disconnect();
