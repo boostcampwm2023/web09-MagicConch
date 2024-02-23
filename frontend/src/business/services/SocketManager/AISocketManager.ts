@@ -1,6 +1,9 @@
 import { SocketManager } from './SocketManager';
 
-export class AISocketManager extends SocketManager<AiSocketEvent["ServerToClientEvent"], AiSocketEvent["ClientToServerEvent"]> {
+export class AISocketManager extends SocketManager<
+  AiSocketEvent['ServerToClientEvent'],
+  AiSocketEvent['ClientToServerEvent']
+> {
   static instance: AISocketManager | null = null;
 
   private constructor() {
