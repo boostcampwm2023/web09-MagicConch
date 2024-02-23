@@ -1,9 +1,11 @@
 import { SocketManager } from './SocketManager';
 
-export class HumanSocketManager extends SocketManager<
-  HumanSocketEvent['ServerToClientEvent'],
-  HumanSocketEvent['ClientToServerEvent']
-> {
+// export class HumanSocketManager extends SocketManager<
+//   HumanSocketEvent['ServerToClientEvent'],
+//   HumanSocketEvent['ClientToServerEvent']
+// > {
+
+export class HumanSocketManager extends SocketManager<any, any> {
   static instance: HumanSocketManager | null = null;
 
   private constructor() {
