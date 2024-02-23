@@ -1,6 +1,8 @@
-*.pem
 .env*
 *.local
+
+*.pem
+*.eslintcache
 
 # compiled output
 */dist
