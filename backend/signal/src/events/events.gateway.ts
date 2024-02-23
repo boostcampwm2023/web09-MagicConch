@@ -6,9 +6,14 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { Server, Socket } from 'socket.io';
 import { LoggerService } from 'src/logger/logger.service';
 import { v4 } from 'uuid';
+import type {
+  HumanServer,
+  HumanSocket,
+  HumanSocketClientEvent,
+  HumanSocketClientEventParams,
+} from './type';
 
 const MAXIMUM = 2;
 
@@ -22,20 +27,20 @@ export class EventsGateway
   constructor(private readonly logger: LoggerService) {}
 
   @WebSocketServer()
-  server: Server;
+  server: HumanServer;
 
   private socketRooms: any = {};
   private users: any = {};
 
-  afterInit(server: Server) {
+  afterInit(server: HumanServer) {
     this.logger.info('🚀 시그널링 서버 초기화');
   }
 
-  handleConnection(socket: Socket) {
+  handleConnection(socket: HumanSocket) {
     this.logger.debug(`🚀 Client Connected : ${socket.id}`);
   }
 
-  handleDisconnect(socket: Socket) {
+  handleDisconnect(socket: HumanSocket) {
     this.logger.debug(`🚀 Client Disconnected : ${socket.id}`);
 
     const userId = socket.id;
@@ -56,7 +61,7 @@ export class EventsGateway
     }
 
     if (role === 'host') {
-      this.eventEmitToRoom(socket, roomId, 'hostExit');
+      socket.to(roomId).emit('hostExit');
       delete this.socketRooms[roomId];
 
       this.logger.debug(`🚀 host Exit from ${roomId}`);
@@ -66,34 +71,40 @@ export class EventsGateway
         (_userId: string) => _userId !== userId,
       );
 
-      this.eventEmitToRoom(socket, roomId, 'userExit', { id: userId });
+      socket.to(roomId).emit('userExit', { id: userId });
 
       this.logger.debug(`🚀 User Exit from ${roomId}`);
     }
   }
 
-  @SubscribeMessage('generateRoomName')
-  handleCreateRoomEvent(socket: Socket) {
+  @SubscribeMessage<HumanSocketClientEvent>('generateRoomName')
+  handleCreateRoomEvent(socket: HumanSocket) {
     const roomId: string = v4();
 
-    this.eventEmit(socket, 'roomNameGenerated', roomId);
+    socket.emit('roomNameGenerated', roomId);
 
     this.logger.debug(`🚀 Room Name Generated : ${roomId}`);
   }
-  @SubscribeMessage('createRoom')
-  handleSetRoomPassword(socket: Socket, [roomId, password]: [string, string]) {
+  @SubscribeMessage<HumanSocketClientEvent>('createRoom')
+  handleSetRoomPassword(
+    socket: HumanSocket,
+    [roomId, password]: HumanSocketClientEventParams<'createRoom'>,
+  ) {
     const userId = socket.id;
     this.socketRooms[roomId] = { users: [userId], password: password };
 
     this.users[userId] = { roomId, role: 'host' };
     socket.join(roomId);
-    this.eventEmit(socket, 'roomCreated');
+    socket.emit('roomCreated');
 
     this.logger.debug(`🚀 Room Created : ${roomId}`);
   }
 
-  @SubscribeMessage('joinRoom')
-  handleJoinRoomEvent(socket: Socket, [roomId, password]: [string, string]) {
+  @SubscribeMessage<HumanSocketClientEvent>('joinRoom')
+  handleJoinRoomEvent(
+    socket: HumanSocket,
+    [roomId, password]: HumanSocketClientEventParams<'joinRoom'>,
+  ) {
     const userId = socket.id;
 
     const existRoom: any = this.socketRooms[roomId];
@@ -101,7 +112,7 @@ export class EventsGateway
       this.socketRooms[roomId]?.password !== password;
 
     if (!existRoom || wrongPassword) {
-      this.eventEmit(socket, 'joinRoomFailed');
+      socket.emit('joinRoomFailed');
       const logMessage: string = !existRoom
         ? `🚀 Invalid Room : ${roomId}`
         : `🚀 Wrong Password for ${roomId}`;
@@ -112,7 +123,7 @@ export class EventsGateway
     const fullRoom: boolean = this.socketRooms[roomId].users.length === MAXIMUM;
     if (fullRoom) {
       this.logger.debug(`🚀 Cannot Join to full room ${roomId}`);
-      this.eventEmit(socket, 'roomFull');
+      socket.emit('roomFull');
       return;
     }
 
@@ -124,58 +135,43 @@ export class EventsGateway
     const otherUsers = this.socketRooms[roomId].users.filter(
       (_userId: string) => _userId !== userId,
     );
-    this.eventEmitToRoom(socket, roomId, 'welcome', otherUsers);
-    this.eventEmit(socket, 'joinRoomSuccess', roomId);
+    socket.to(roomId).emit('welcome', otherUsers);
+    socket.emit('joinRoomSuccess', roomId);
   }
 
-  @SubscribeMessage('connection')
+  @SubscribeMessage<HumanSocketClientEvent>('connection')
   handleConnectionEvent(
-    socket: Socket,
-    {
-      description,
-      candidate,
-      roomName,
-    }: {
-      description?: RTCSessionDescription;
-      candidate?: RTCIceCandidate;
-      roomName: string;
-    },
+    socket: HumanSocket,
+    [
+      { description, candidate, roomName },
+    ]: HumanSocketClientEventParams<'connection'>,
   ) {
     try {
       if (description) {
         this.logger.debug(`🚀 ${description.type} Received from ${socket.id}`);
-        this.eventEmitToRoom(socket, roomName, 'connection', { description });
+        socket.to(roomName).emit('connection', { description });
       } else if (candidate) {
         this.logger.debug(`🚀 Candidate Received from ${socket.id}`);
-        this.eventEmitToRoom(socket, roomName, 'connection', { candidate });
+        socket.to(roomName).emit('connection', { candidate });
       }
     } catch (error) {
       this.logger.error(`🚀 Error in handleMessageEvent : ${error}`);
     }
   }
 
-  @SubscribeMessage('checkRoomExist')
-  handleCheckRoomExistEvent(socket: Socket, roomName: string) {
+  @SubscribeMessage<HumanSocketClientEvent>('checkRoomExist')
+  handleCheckRoomExistEvent(
+    socket: HumanSocket,
+    [roomName]: HumanSocketClientEventParams<'checkRoomExist'>,
+  ) {
     const existRoom: any = this.socketRooms[roomName];
 
     if (existRoom) {
-      this.eventEmit(socket, 'roomExist');
+      socket.emit('roomExist');
       this.logger.debug(`🚀 Room Exist : ${roomName}`);
     } else {
-      this.eventEmit(socket, 'roomNotExist');
+      socket.emit('roomNotExist');
       this.logger.debug(`🚀 Room Not Exist : ${roomName}`);
     }
-  }
-
-  public eventEmit(socket: Socket, event: string, ...args: any[]) {
-    socket.emit(event, ...args);
-  }
-  public eventEmitToRoom(
-    socket: Socket,
-    roomName: string,
-    event: string,
-    ...args: any[]
-  ) {
-    socket.to(roomName).emit(event, ...args);
   }
 }

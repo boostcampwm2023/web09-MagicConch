@@ -16,28 +16,26 @@ interface AiSocketEvent {
 }
 
 interface HumanSocketEvent {
-  ServerToClientEvent: DefaultEventsMap;
-  // {
-  //   connection: (data: { description?: RTCSessionDescription; candidate?: RTCIceCandidate }) => void;
-  //   welcome: () => void;
-  //   userExit: () => void;
-  //   hostExit: () => void;
-  //   roomCreated: () => void;
-  //   roomNameGenerated: (roomId: string) => void;
-  //   joinRoomFailed: () => void;
-  //   joinRoomSuccess: () => void;
-  //   roomExist: () => void;
-  //   roomNotExist: () => void;
-  //   roomFull: () => void;
-  // };
-  ClientToServerEvent: DefaultEventsMap;
-  // {
-  //   connection: (data: { description?: RTCSessionDescription; candidate?: RTCIceCandidate; roomName: string }) => void;
-  //   generateRoomName: () => void;
-  //   createRoom: (roomId: string, password: string) => void;
-  //   joinRoom: (roomId: string, password: string) => void;
-  //   checkRoomExist: (roomName: string) => void;
-  // };
+  ServerToClientEvent: {
+    connection: (data: { description?: RTCSessionDescription; candidate?: RTCIceCandidate }) => void;
+    welcome: (otherUsers: any) => void;
+    userExit: (data: { id: string }) => void;
+    hostExit: () => void;
+    roomCreated: () => void;
+    roomNameGenerated: (roomId: string) => void;
+    joinRoomFailed: () => void;
+    joinRoomSuccess: (roomId: string) => void;
+    roomExist: () => void;
+    roomNotExist: () => void;
+    roomFull: () => void;
+  };
+  ClientToServerEvent: {
+    connection: (data: { description?: RTCSessionDescription; candidate?: RTCIceCandidate; roomName: string }) => void;
+    generateRoomName: () => void;
+    createRoom: (roomId: string, password: string) => void;
+    joinRoom: (roomId: string, password: string) => void;
+    checkRoomExist: (roomName: string) => void;
+  };
   InterServerEvents: {};
   SocketData: {};
 }
