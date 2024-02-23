@@ -1,6 +1,9 @@
-import { SocketManager } from '.';
+import { SocketManager } from './SocketManager';
 
-export class HumanSocketManager extends SocketManager {
+export class HumanSocketManager extends SocketManager<
+  HumanSocketEvent['ServerToClientEvent'],
+  HumanSocketEvent['ClientToServerEvent']
+> {
   static instance: HumanSocketManager | null = null;
 
   private constructor() {
@@ -12,13 +15,5 @@ export class HumanSocketManager extends SocketManager {
       this.instance = new HumanSocketManager();
     }
     return this.instance;
-  }
-
-  on<U>(eventName: string, eventListener: (args: U) => void) {
-    super.on(eventName, eventListener);
-  }
-
-  emit(eventName: string, ...eventArgs: unknown[]) {
-    super.emit(eventName, ...eventArgs);
   }
 }
