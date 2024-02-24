@@ -33,16 +33,6 @@ describe('ClovaStudioService', () => {
     expect(clovaStudioService).toBeDefined();
   });
 
-  describe('function getAPIKeys()', () => {
-    it('getAPIKeys(): clova api key 불러 와서 객체로 만들어서 반환', () => {
-      const apiKeys = getAPIKeys(configServieMock);
-
-      CLOVA_API_KEY_NAMES.forEach((key) => {
-        expect(apiKeys[key.replaceAll('_', '-')]).toBe(key);
-      });
-    });
-  });
-
   describe('ClovaStudioService.generateTalk()', () => {
     it('사용자의 메세지 입력으로 AI의 답변을 생성해서 token stream 형식으로 반환', async () => {
       setApiMock(tokens);

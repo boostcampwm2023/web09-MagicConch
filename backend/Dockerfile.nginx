@@ -2,9 +2,4 @@ FROM nginx:1.18.0
 
 COPY config/nginx/default.conf /etc/nginx/conf.d/default.conf
 
-COPY config/nginx/ssl/options-ssl-nginx.conf /etc/letsencrypt/options-ssl-nginx.conf
-COPY config/nginx/ssl/fullchain.pem /etc/letsencrypt/live/was.tarotmilktea.com/fullchain.pem
-COPY config/nginx/ssl/privkey.pem /etc/letsencrypt/live/was.tarotmilktea.com/privkey.pem
-COPY config/nginx/ssl/ssl-dhparams.pem /etc/letsencrypt/ssl-dhparams.pem
-
 CMD ["nginx", "-g", "daemon off;"]

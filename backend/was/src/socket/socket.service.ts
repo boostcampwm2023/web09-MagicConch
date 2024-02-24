@@ -9,7 +9,7 @@ import {
   WELCOME_MESSAGE,
 } from 'src/common/constants/socket';
 import { ChatLog } from 'src/common/types/chatbot';
-import type { Socket, UserInfo } from 'src/common/types/socket';
+import type { AiSocket } from 'src/common/types/socket';
 import { readStream, string2Uint8ArrayStream } from 'src/common/utils/stream';
 import { LoggerService } from 'src/logger/logger.service';
 import { CreateTarotResultDto } from 'src/tarot/dto';
@@ -24,12 +24,12 @@ export class SocketService {
     private readonly logger: LoggerService,
   ) {}
 
-  initClient(client: Socket) {
+  initClient(client: AiSocket) {
     client.chatLog = [];
     client.chatEnd = false;
   }
 
-  async sendWelcomeMessage(client: Socket) {
+  async sendWelcomeMessage(client: AiSocket) {
     try {
       const sentMessage = await this.streamMessage(client, () =>
         string2Uint8ArrayStream(WELCOME_MESSAGE),
@@ -47,7 +47,7 @@ export class SocketService {
     }
   }
 
-  async handleMessageEvent(client: Socket, message: string) {
+  async handleMessageEvent(client: AiSocket, message: string) {
     try {
       const sentMessage = await this.streamMessage(client, () =>
         this.chatbotService.generateTalk(client.chatLog, message),
@@ -76,7 +76,7 @@ export class SocketService {
     }
   }
 
-  async handleTarotReadEvent(client: Socket, cardIdx: number) {
+  async handleTarotReadEvent(client: AiSocket, cardIdx: number) {
     try {
       const sentMessage = await this.streamMessage(client, () =>
         this.chatbotService.generateTarotReading(client.chatLog, cardIdx),
@@ -105,7 +105,7 @@ export class SocketService {
   }
 
   async streamMessage(
-    client: Socket,
+    client: AiSocket,
     generateStream: () => Promise<ReadableStream<Uint8Array>>,
   ) {
     client.emit('streamStart');
@@ -120,7 +120,7 @@ export class SocketService {
     return sentMessage;
   }
 
-  private async createRoom(client: Socket) {
+  private async createRoom(client: AiSocket) {
     try {
       const chattingInfo = await this.chatService.createRoom(client.user);
       return chattingInfo;

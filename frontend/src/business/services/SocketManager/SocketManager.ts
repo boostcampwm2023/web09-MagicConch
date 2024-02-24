@@ -1,7 +1,11 @@
 import { Socket, io } from 'socket.io-client';
 
-export class SocketManager {
-  #socket: Socket | undefined;
+interface EventsMap {
+  [event: string]: any;
+}
+
+export class SocketManager<T1 extends EventsMap, T2 extends EventsMap> {
+  #socket: Socket<T1, T2> | undefined;
 
   #url: string;
   #path?: string;
@@ -16,12 +20,12 @@ export class SocketManager {
   }
 
   get connected(): boolean {
-    if (!this.socket) return false;
-    return this.socket.connected;
+    if (!this.#socket) return false;
+    return this.#socket.connected;
   }
 
   connect({ withCredentials = false } = {}) {
-    if (this.socket?.connected) {
+    if (this.#socket?.connected) {
       return;
     }
     try {
@@ -34,24 +38,24 @@ export class SocketManager {
   }
 
   disconnect() {
-    if (!this.socket?.connected) {
+    if (!this.#socket?.connected) {
       return;
     }
-    this.socket.disconnect();
+    this.#socket.disconnect();
     this.#socket = undefined;
   }
 
-  on<U>(eventName: string, eventListener: (args: U) => void) {
-    if (!this.socket) {
+  on(...params: Parameters<Socket<T1, T2>['on']>) {
+    if (!this.#socket) {
       throw new Error('소켓이 존재하지 않습니다.');
     }
-    this.socket.on(eventName, eventListener);
+    this.#socket.on(...params);
   }
 
-  emit(eventName: string, ...eventArgs: unknown[]) {
-    if (!this.socket) {
+  emit(...params: Parameters<Socket<T1, T2>['emit']>) {
+    if (!this.#socket) {
       throw new Error('소켓이 존재하지 않습니다.');
     }
-    this.socket.emit(eventName, ...eventArgs);
+    this.#socket.emit(...params);
   }
 }

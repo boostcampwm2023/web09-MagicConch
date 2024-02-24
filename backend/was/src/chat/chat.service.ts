@@ -1,11 +1,7 @@
-import {
-  BadRequestException,
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { ERR_MSG } from 'src/common/constants/errors';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UserInfo } from 'src/common/types/socket';
+import { CustomException } from 'src/exceptions';
+import { CHAT_CODEMAP } from 'src/exceptions/codemap';
 import { Member } from 'src/members/entities';
 import { EntityManager } from 'typeorm';
 import { ChattingInfo } from './chatting-info.interface';
@@ -224,10 +220,10 @@ export class ChatService {
         select: ['id', 'participant'],
       });
       if (!room) {
-        throw new NotFoundException(ERR_MSG.CHATTING_ROOM_NOT_FOUND);
+        throw new CustomException(CHAT_CODEMAP.ROOM_NOT_FOUND);
       }
       if (room.participant.id !== memberId) {
-        throw new ForbiddenException(ERR_MSG.UPDATE_CHATTING_ROOM_FORBIDDEN);
+        throw new CustomException(CHAT_CODEMAP.ROOM_FORBIDDEN);
       }
       return room;
     } catch (err: unknown) {

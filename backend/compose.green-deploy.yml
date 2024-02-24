@@ -49,20 +49,12 @@ services:
     depends_on:
       - was-green
       - signal-green
-      - certbot
     volumes:
+      - /var/www/certbot:/var/www/certbot
+      - /etc/letsencrypt:/etc/letsencrypt
       - /var/log/nginx:/var/log/nginx
     networks:
       - backend
-
-  certbot:
-    image: certbot/certbot
-    volumes:
-      - /etc/letsencrypt
-      - /var/www/html:/var/www/html
-    networks:
-      - backend
-    command: certonly --webroot --webroot-path=/var/www/html -d was.tarotmilktea.com
 
 networks:
   backend:
