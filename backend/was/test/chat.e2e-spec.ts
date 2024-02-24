@@ -1,22 +1,22 @@
+import * as cookieParser from 'cookie-parser';
+import * as request from 'supertest';
+import { EntityManager } from 'typeorm';
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import * as cookieParser from 'cookie-parser';
-import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
-import { JwtStrategy } from 'src/auth/strategies/jwt.strategy';
-import { ChatController } from 'src/chat/chat.controller';
-import { ChatService } from 'src/chat/chat.service';
+import { ProviderIdEnum } from '@constants/etc';
+import { JwtAuthGuard } from '@auth/guard/jwt-auth.guard';
+import { JwtStrategy } from '@auth/strategies/jwt.strategy';
+import { ChatController } from '@chat/chat.controller';
+import { ChatService } from '@chat/chat.service';
 import {
   ChattingMessageDto,
   ChattingRoomDto,
   ChattingRoomGroupDto,
   UpdateChattingRoomDto,
-} from 'src/chat/dto';
-import { ChattingMessage, ChattingRoom } from 'src/chat/entities';
-import { ProviderIdEnum } from 'src/common/constants/etc';
-import { Member } from 'src/members/entities';
-import * as request from 'supertest';
-import { EntityManager } from 'typeorm';
+} from '@chat/dto';
+import { ChattingMessage, ChattingRoom } from '@chat/entities';
+import { Member } from '@members/entities';
 import { diffJwtToken, id, id2, jwtToken, wrongId } from './common/constants';
 import { SqliteModule } from './common/database/sqlite.module';
 
@@ -131,7 +131,7 @@ describe('Chat', () => {
   });
 
   describe('GET /chat/ai/:id', () => {
-    let messages: ChattingMessageDto[] = [];
+    const messages: ChattingMessageDto[] = [];
 
     beforeAll(async () => {
       const chatLogs = [
