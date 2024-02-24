@@ -19,5 +19,5 @@
     "noFallthroughCasesInSwitch": true
   },
   "typeRoots": ["../../@types"],
-  "include": ["src", "../../@types"]
+  "include": ["src", "test", "../../@types"]
 }
