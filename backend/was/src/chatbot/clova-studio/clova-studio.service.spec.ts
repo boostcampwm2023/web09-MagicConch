@@ -1,14 +1,13 @@
-import { ConfigService } from '@nestjs/config';
-import { Test, TestingModule } from '@nestjs/testing';
-import { CLOVA_API_KEY_NAMES } from 'src/common/constants/clova-studio';
-import { string2Uint8ArrayStream } from 'src/common/utils/stream';
 import {
   clovaStudioApiMock,
   configServieMock,
   createAllEventStringMock,
   vaildateTokenStream,
 } from 'src/mocks/clova-studio';
-import { ClovaStudioService, getAPIKeys } from './clova-studio.service';
+import { ConfigService } from '@nestjs/config';
+import { Test, TestingModule } from '@nestjs/testing';
+import { string2Uint8ArrayStream } from '@common/utils/stream';
+import { ClovaStudioService } from './clova-studio.service';
 
 jest.mock('./api');
 

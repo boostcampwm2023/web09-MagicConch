@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/guard';
+import { JwtAuthGuard } from '@auth/guard';
 import {
   DeleteRoomDecorator,
   FindMessagesDecorator,
@@ -33,7 +33,7 @@ export class ChatController {
   @Get('ai')
   @FindRoomsDecorator('채팅방', [ChattingRoomGroupDto])
   async findRooms(@Req() req: any): Promise<ChattingRoomGroupDto[]> {
-    return await this.chatService.findRoomsByEmail(
+    return this.chatService.findRoomsByEmail(
       req.user.email,
       req.user.providerId,
     );
@@ -47,7 +47,7 @@ export class ChatController {
     @Param('id', ParseUUIDPipe) id: string,
     @Req() req: any,
   ): Promise<ChattingMessageDto[]> {
-    return await this.chatService.findMessagesById(
+    return this.chatService.findMessagesById(
       id,
       req.user.email,
       req.user.providerId,

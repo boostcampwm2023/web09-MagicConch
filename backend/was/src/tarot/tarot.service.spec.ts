@@ -1,9 +1,9 @@
+import { Repository } from 'typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { BUCKET_URL, ExtEnum } from 'src/common/constants/etc';
-import { CustomException } from 'src/exceptions';
-import { TAROT_CODEMAP } from 'src/exceptions/codemap';
-import { Repository } from 'typeorm';
+import { BUCKET_URL, ExtEnum } from '@constants/etc';
+import { TAROT_CODEMAP } from '@exceptions/codemap';
+import { CustomException } from '@exceptions/custom-exception';
 import { CreateTarotResultDto, TarotCardDto, TarotResultDto } from './dto';
 import { TarotCard, TarotResult } from './entities';
 import { TarotService } from './tarot.service';

@@ -1,3 +1,5 @@
+import * as dotenv from 'dotenv';
+import { Request, Response } from 'express';
 import {
   BadRequestException,
   Controller,
@@ -7,9 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import * as dotenv from 'dotenv';
-import { Request, Response } from 'express';
-import { ProviderIdEnum } from 'src/common/constants/etc';
+import { ProviderIdEnum } from '@constants/etc';
 import {
   AuthenticateDecorator,
   KakaoLoginDecorator,
@@ -25,6 +25,7 @@ dotenv.config();
 @Controller('oauth')
 export class AuthController {
   private readonly cookieOptions: object;
+
   constructor(private readonly kakaoAuthService: KakaoAuthService) {
     this.cookieOptions = {
       httpOnly: true,

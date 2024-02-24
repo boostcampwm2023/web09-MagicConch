@@ -1,4 +1,3 @@
-import { string2Uint8Array, uint8Array2String } from 'src/common/utils/stream';
 import {
   createAllEventStringMock,
   createResponseStreamMock,
@@ -6,6 +5,7 @@ import {
   vaildateEventString,
   vaildateTokenStream,
 } from 'src/mocks/clova-studio';
+import { string2Uint8Array, uint8Array2String } from '@common/utils/stream';
 import {
   apiResponseStream2TokenStream,
   extractKeyValue,
@@ -59,11 +59,11 @@ describe('[chatbot/clova-studio/stream]', () => {
           output: ['id', eventIdMock],
         },
         {
-          input: `event: token`,
+          input: 'event: token',
           output: ['event', 'token'],
         },
         {
-          input: `data: {"message": {"role": "assistant", "content": "안"}}`,
+          input: 'data: {"message": {"role": "assistant", "content": "안"}}',
           output: [
             'data',
             '{"message": {"role": "assistant", "content": "안"}}',
