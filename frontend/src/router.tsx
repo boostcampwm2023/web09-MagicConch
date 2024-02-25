@@ -1,5 +1,5 @@
-import { SocketErrorBoundary, UnknownErrorBoundary } from 'errorBoundaries';
-import APIErrorBoundary from 'errorBoundaries/APIErrorBoundary';
+import { UnknownErrorBoundary } from 'errors';
+import APIErrorBoundary from 'errors/APIErrorBoundary';
 import { Outlet, Route, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
 
 import {
@@ -18,11 +18,9 @@ export const router = createBrowserRouter(
       path="/"
       element={
         <UnknownErrorBoundary>
-          <SocketErrorBoundary>
-            <APIErrorBoundary>
-              <Outlet />
-            </APIErrorBoundary>
-          </SocketErrorBoundary>
+          <APIErrorBoundary>
+            <Outlet />
+          </APIErrorBoundary>
         </UnknownErrorBoundary>
       }
     >
