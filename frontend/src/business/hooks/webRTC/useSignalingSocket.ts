@@ -29,18 +29,21 @@ export function useSignalingSocket() {
     onFull,
     onFail,
     onSuccess,
+    onCancel,
     onHostExit,
   }: {
     roomName: string;
     onFull?: VoidFunction;
     onFail?: VoidFunction;
     onSuccess?: InitSocketEvents;
+    onCancel?: VoidFunction;
     onHostExit?: VoidFunction;
   }) => {
     const socketManager = HumanSocketManager.getInstance();
 
     openPasswordPopup({
       onSubmit: ({ password }) => socketManager.emit('joinRoom', roomName, password),
+      onCancel,
       initSocketEvents: ({ closePopup }) =>
         initGuestSocketEvents({ closePopup, onSuccess, onHostExit, onFail, onFull }),
     });
