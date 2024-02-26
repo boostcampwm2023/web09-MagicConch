@@ -1,6 +1,6 @@
 import { OutletContext } from '..';
 import { useEffect } from 'react';
-import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 
 import { useSignalingSocket, useWebRTC } from '@business/hooks/webRTC';
 import { HumanSocketManager } from '@business/services/SocketManager';
@@ -14,7 +14,8 @@ interface useCreateJoinRoomParams {
 }
 export function useCreateJoinRoomPasswordPopup({ unblockGoBack }: useCreateJoinRoomParams) {
   const humanSocket = HumanSocketManager.getInstance();
-  const { host, joinedRoom, roomName } = useOutletContext<OutletContext>();
+  const { host, joinedRoom } = useOutletContext<OutletContext>();
+  const { roomName } = useParams();
 
   const { createRoom, joinRoom, checkRoomExist } = useSignalingSocket();
   const { startWebRTC } = useWebRTC();
