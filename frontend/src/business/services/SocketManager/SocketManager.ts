@@ -29,6 +29,16 @@ export class SocketManager<T1 extends EventsMap, T2 extends EventsMap> {
       return;
     }
     this.#socket = io(this.#url, { path: this.#path, withCredentials });
+
+    this.socket?.on('disconnect', () => {
+      alert('서버와 연결이 끊겼습니다. 메인 페이지로 이동합니다.');
+      window.location.href = '/';
+    });
+
+    this.socket?.on('connect_error', () => {
+      alert('서버와 연결할 수 없습니다. 메인 페이지로 이동합니다.');
+      window.location.href = '/';
+    });
   }
 
   disconnect() {
