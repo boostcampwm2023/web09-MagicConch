@@ -31,6 +31,11 @@ export function useCreateJoinRoomPasswordPopup({ unblockGoBack }: useCreateJoinR
         closePopup();
         enableSideBarButton();
       },
+      onCancel: () => {
+        unblockGoBack(() => {
+          navigate('/');
+        });
+      },
       onFull: () => {
         unblockGoBack(() => {
           alert(ERROR_MESSAGE.FULL_ROOM);
