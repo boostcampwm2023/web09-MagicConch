@@ -1,18 +1,18 @@
+import * as cookieParser from 'cookie-parser';
+import * as dotenv from 'dotenv';
+import * as request from 'supertest';
 import { INestApplication } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { Test } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import * as cookieParser from 'cookie-parser';
-import * as dotenv from 'dotenv';
-import { MockedKakaoAuthService } from 'src/auth/__mocks__/kakao.auth.service';
-import { AuthController } from 'src/auth/auth.controller';
-import { JwtAuthGuard, SocketJwtAuthGuard } from 'src/auth/guard';
-import { AuthService, KakaoAuthService } from 'src/auth/service';
-import { JwtStrategy } from 'src/auth/strategies/jwt.strategy';
-import { RedisCacheModule } from 'src/common/config/cache/redis-cache.module';
-import { Member } from 'src/members/entities';
-import * as request from 'supertest';
+import { RedisCacheModule } from '@config/cache/redis-cache.module';
+import { MockedKakaoAuthService } from '@auth/__mocks__/kakao.auth.service';
+import { AuthController } from '@auth/auth.controller';
+import { JwtAuthGuard, SocketJwtAuthGuard } from '@auth/guard';
+import { AuthService, KakaoAuthService } from '@auth/service';
+import { JwtStrategy } from '@auth/strategies/jwt.strategy';
+import { Member } from '@members/entities';
 import { jwtToken } from './common/constants';
 import { SqliteModule } from './common/database/sqlite.module';
 

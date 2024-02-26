@@ -1,11 +1,11 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { ProviderIdEnum } from 'src/common/constants/etc';
-import { ChatLog } from 'src/common/types/chatbot';
-import { UserInfo } from 'src/common/types/socket';
-import { CustomException } from 'src/exceptions';
-import { CHAT_CODEMAP } from 'src/exceptions/codemap';
-import { Member } from 'src/members/entities';
 import { EntityManager } from 'typeorm';
+import { Test, TestingModule } from '@nestjs/testing';
+import { ChatLog } from '@common/types/chatbot';
+import { UserInfo } from '@common/types/socket';
+import { ProviderIdEnum } from '@constants/etc';
+import { CHAT_CODEMAP } from '@exceptions/codemap';
+import { CustomException } from '@exceptions/custom-exception';
+import { Member } from '@members/entities';
 import { ChatService } from './chat.service';
 import { ChattingInfo } from './chatting-info.interface';
 import {
@@ -68,9 +68,7 @@ describe('ChatService', () => {
 
           const transactionMock = jest
             .spyOn(entityManager, 'transaction')
-            .mockImplementation(
-              async () => await Promise.resolve({ member, room }),
-            );
+            .mockImplementation(async () => Promise.resolve({ member, room }));
 
           await expect(chatService.createRoom()).resolves.toEqual({
             memberId: member.id,
@@ -112,9 +110,7 @@ describe('ChatService', () => {
 
           const transactionMock = jest
             .spyOn(entityManager, 'transaction')
-            .mockImplementation(
-              async () => await Promise.resolve({ member, room }),
-            );
+            .mockImplementation(async () => Promise.resolve({ member, room }));
 
           const expectation: ChattingInfo =
             await chatService.createRoom(userInfo);
@@ -158,7 +154,7 @@ describe('ChatService', () => {
 
         const transactionMock = jest
           .spyOn(entityManager, 'transaction')
-          .mockImplementation(async () => await Promise.resolve());
+          .mockImplementation(async () => Promise.resolve());
 
         await expect(
           chatService.createMessages(roomId, memberId, [createMessageDto]),
@@ -181,11 +177,8 @@ describe('ChatService', () => {
       for (const { roomId, memberId } of testData) {
         const transactionMock = jest
           .spyOn(entityManager, 'transaction')
-          .mockImplementation(
-            async () =>
-              await Promise.reject(
-                new CustomException(CHAT_CODEMAP.ROOM_NOT_FOUND),
-              ),
+          .mockImplementation(async () =>
+            Promise.reject(new CustomException(CHAT_CODEMAP.ROOM_NOT_FOUND)),
           );
 
         await expect(
@@ -250,7 +243,7 @@ describe('ChatService', () => {
 
       const transactionMock = jest
         .spyOn(entityManager, 'transaction')
-        .mockImplementation(async () => await Promise.resolve(rooms));
+        .mockImplementation(async () => Promise.resolve(rooms));
 
       const expectation: ChattingRoomGroupDto[] =
         await chatService.findRoomsByEmail(
@@ -300,7 +293,7 @@ describe('ChatService', () => {
     it('해당 아이디의 채팅방에 오고 간 채팅 메시지를 조회할 수 있다.', async () => {
       const transactionMock = jest
         .spyOn(entityManager, 'transaction')
-        .mockImplementation(async () => await Promise.resolve(messages));
+        .mockImplementation(async () => Promise.resolve(messages));
 
       const expectation: ChattingMessageDto[] =
         await chatService.findMessagesById(
@@ -322,11 +315,8 @@ describe('ChatService', () => {
 
         const transactionMock = jest
           .spyOn(entityManager, 'transaction')
-          .mockImplementation(
-            async () =>
-              await Promise.reject(
-                new CustomException(CHAT_CODEMAP.ROOM_NOT_FOUND),
-              ),
+          .mockImplementation(async () =>
+            Promise.reject(new CustomException(CHAT_CODEMAP.ROOM_NOT_FOUND)),
           );
 
         await expect(
@@ -348,11 +338,8 @@ describe('ChatService', () => {
 
         const transactionMock = jest
           .spyOn(entityManager, 'transaction')
-          .mockImplementation(
-            async () =>
-              await Promise.reject(
-                new CustomException(CHAT_CODEMAP.ROOM_FORBIDDEN),
-              ),
+          .mockImplementation(async () =>
+            Promise.reject(new CustomException(CHAT_CODEMAP.ROOM_FORBIDDEN)),
           );
 
         await expect(
@@ -392,7 +379,7 @@ describe('ChatService', () => {
     it('해당 아이디의 채팅방 제목을 수정할 수 있다.', async () => {
       const transactionMock = jest
         .spyOn(entityManager, 'transaction')
-        .mockImplementation(async () => await Promise.resolve());
+        .mockImplementation(async () => Promise.resolve());
 
       await expect(
         chatService.updateRoom(
@@ -411,11 +398,8 @@ describe('ChatService', () => {
 
         const transactionMock = jest
           .spyOn(entityManager, 'transaction')
-          .mockImplementation(
-            async () =>
-              await Promise.reject(
-                new CustomException(CHAT_CODEMAP.ROOM_NOT_FOUND),
-              ),
+          .mockImplementation(async () =>
+            Promise.reject(new CustomException(CHAT_CODEMAP.ROOM_NOT_FOUND)),
           );
 
         await expect(
@@ -438,11 +422,8 @@ describe('ChatService', () => {
 
         const transactionMock = jest
           .spyOn(entityManager, 'transaction')
-          .mockImplementation(
-            async () =>
-              await Promise.reject(
-                new CustomException(CHAT_CODEMAP.ROOM_FORBIDDEN),
-              ),
+          .mockImplementation(async () =>
+            Promise.reject(new CustomException(CHAT_CODEMAP.ROOM_FORBIDDEN)),
           );
 
         await expect(
@@ -478,7 +459,7 @@ describe('ChatService', () => {
     it('해당 아이디의 채팅방을 삭제할 수 있다.', async () => {
       const transactionMock = jest
         .spyOn(entityManager, 'transaction')
-        .mockImplementation(async () => await Promise.resolve());
+        .mockImplementation(async () => Promise.resolve());
 
       await expect(
         chatService.removeRoom(
@@ -496,11 +477,8 @@ describe('ChatService', () => {
 
         const transactionMock = jest
           .spyOn(entityManager, 'transaction')
-          .mockImplementation(
-            async () =>
-              await Promise.reject(
-                new CustomException(CHAT_CODEMAP.ROOM_NOT_FOUND),
-              ),
+          .mockImplementation(async () =>
+            Promise.reject(new CustomException(CHAT_CODEMAP.ROOM_NOT_FOUND)),
           );
 
         await expect(
@@ -522,11 +500,8 @@ describe('ChatService', () => {
 
         const transactionMock = jest
           .spyOn(entityManager, 'transaction')
-          .mockImplementation(
-            async () =>
-              await Promise.reject(
-                new CustomException(CHAT_CODEMAP.ROOM_FORBIDDEN),
-              ),
+          .mockImplementation(async () =>
+            Promise.reject(new CustomException(CHAT_CODEMAP.ROOM_FORBIDDEN)),
           );
 
         await expect(

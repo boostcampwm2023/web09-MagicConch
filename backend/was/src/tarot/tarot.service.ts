@@ -1,8 +1,8 @@
+import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CustomException } from 'src/exceptions';
-import { TAROT_CODEMAP } from 'src/exceptions/codemap';
-import { Repository } from 'typeorm';
+import { TAROT_CODEMAP } from '@exceptions/codemap';
+import { CustomException } from '@exceptions/custom-exception';
 import { CreateTarotResultDto, TarotCardDto, TarotResultDto } from './dto';
 import { TarotCard, TarotResult } from './entities';
 

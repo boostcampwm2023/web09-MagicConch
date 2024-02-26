@@ -1,9 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { UserInfo } from 'src/common/types/socket';
-import { CustomException } from 'src/exceptions';
-import { CHAT_CODEMAP } from 'src/exceptions/codemap';
-import { Member } from 'src/members/entities';
 import { EntityManager } from 'typeorm';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { UserInfo } from '@common/types/socket';
+import { CHAT_CODEMAP } from '@exceptions/codemap';
+import { CustomException } from '@exceptions/custom-exception';
+import { Member } from '@members/entities';
 import { ChattingInfo } from './chatting-info.interface';
 import {
   ChattingMessageDto,

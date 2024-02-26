@@ -1,4 +1,3 @@
-import { ExtEnum } from 'src/common/constants/etc';
 import {
   Column,
   CreateDateColumn,
@@ -8,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ExtEnum } from '@constants/etc';
 import { TarotCardPack } from './tarot-card-pack.entity';
 
 @Entity()

@@ -1,12 +1,12 @@
+import * as dotenv from 'dotenv';
+import { Repository } from 'typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import * as dotenv from 'dotenv';
-import { RedisCacheModule } from 'src/common/config/cache/redis-cache.module';
-import { ProviderIdEnum } from 'src/common/constants/etc';
-import { CreateMemberDto, UpdateMemberDto } from 'src/members/dto';
-import { Member } from 'src/members/entities';
-import { Repository } from 'typeorm';
+import { RedisCacheModule } from '@common/config/cache/redis-cache.module';
+import { ProviderIdEnum } from '@constants/etc';
+import { CreateMemberDto, UpdateMemberDto } from '@members/dto';
+import { Member } from '@members/entities';
 import { OAuthTokenDto, ProfileDto } from '../dto';
 import { AuthService } from './auth.service';
 

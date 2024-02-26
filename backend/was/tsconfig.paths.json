@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@auth/*": ["src/auth/*"],
+      "@chat/*": ["src/chat/*"],
+      "@chatbot/*": ["src/chatbot/*"],
+      "@common/*": ["src/common/*"],
+      "@config/*": ["src/common/config/*"],
+      "@constants/*": ["src/common/constants/*"],
+      "@interceptors/*": ["src/common/interceptors/*"],
+      "@exceptions/*": ["src/exceptions/*"],
+      "@logger/*": ["src/logger/*"],
+      "@members/*": ["src/members/*"],
+      "@socket/*": ["src/socket/*"],
+      "@tarot/*": ["src/tarot/*"]
+    }
+  }
+}

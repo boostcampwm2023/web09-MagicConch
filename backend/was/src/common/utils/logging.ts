@@ -1,4 +1,4 @@
-import { LoggerService } from 'src/logger/logger.service';
+import { LoggerService } from '@logger/logger.service';
 
 export function makeErrorLogMessage(logMessage: string, err: any): string {
   const errorMessage: string =

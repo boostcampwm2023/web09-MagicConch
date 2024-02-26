@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Member } from 'src/members/entities';
+import { Member } from '@members/entities';
 import { AuthController } from './auth.controller';
 import { JwtAuthGuard, SocketJwtAuthGuard } from './guard';
 import { AuthService, KakaoAuthService } from './service';

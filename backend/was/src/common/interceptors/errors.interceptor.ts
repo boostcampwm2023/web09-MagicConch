@@ -1,3 +1,7 @@
+import * as dotenv from 'dotenv';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { QueryFailedError } from 'typeorm';
 import {
   CallHandler,
   ExecutionContext,
@@ -5,13 +9,9 @@ import {
   InternalServerErrorException,
   NestInterceptor,
 } from '@nestjs/common';
+import { LoggerService } from '@logger/logger.service';
 import * as Sentry from '@sentry/node';
 import { IncomingWebhook } from '@slack/client';
-import * as dotenv from 'dotenv';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { LoggerService } from 'src/logger/logger.service';
-import { QueryFailedError } from 'typeorm';
 import { ERR_MSG } from '../constants/errors';
 import { logErrorWithStack, makeErrorLogMessage } from '../utils/logging';
 import { makeSlackMessage } from '../utils/slack-webhook';

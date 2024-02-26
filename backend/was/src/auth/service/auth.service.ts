@@ -1,12 +1,12 @@
+import { Cache } from 'cache-manager';
+import * as dotenv from 'dotenv';
+import { Repository } from 'typeorm';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Cache } from 'cache-manager';
-import * as dotenv from 'dotenv';
-import { CreateMemberDto, UpdateMemberDto } from 'src/members/dto';
-import { Member } from 'src/members/entities';
-import { Repository } from 'typeorm';
+import { CreateMemberDto, UpdateMemberDto } from '@members/dto';
+import { Member } from '@members/entities';
 import { JwtPayloadDto, OAuthTokenDto, ProfileDto } from '../dto';
 import { CacheKey } from '../interface/cache-key';
 
@@ -15,8 +15,11 @@ dotenv.config();
 @Injectable()
 export class AuthService {
   clientId: string;
+
   redirectUri: string;
+
   clientSecret: string;
+
   ttl: number;
 
   constructor(

@@ -1,5 +1,5 @@
-import type { ChatLog } from 'src/common/types/chatbot';
-import type { ClovaStudioMessage } from 'src/common/types/clova-studio';
+import type { ChatLog } from '@common/types/chatbot';
+import type { ClovaStudioMessage } from '@common/types/clova-studio';
 
 export function chatLog2clovaStudioMessages(
   chatLogs: ChatLog[],

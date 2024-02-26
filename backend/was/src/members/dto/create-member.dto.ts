@@ -6,8 +6,8 @@ import {
   IsString,
   IsUrl,
 } from 'class-validator';
-import { ProfileDto } from 'src/auth/dto';
-import { ProviderIdEnum } from 'src/common/constants/etc';
+import { ProviderIdEnum } from '@constants/etc';
+import { ProfileDto } from '@auth/dto';
 
 export class CreateMemberDto {
   @IsEmail()

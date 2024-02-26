@@ -1,6 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { IsUrl } from 'class-validator';
-import { BUCKET_URL, ExtArray } from 'src/common/constants/etc';
+import { ApiProperty } from '@nestjs/swagger';
+import { BUCKET_URL, ExtArray } from '@constants/etc';
 import { TarotCard } from '../entities';
 
 export class TarotCardDto {

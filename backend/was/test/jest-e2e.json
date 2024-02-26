@@ -2,7 +2,19 @@
   "moduleFileExtensions": ["js", "json", "ts"],
   "rootDir": "..",
   "moduleNameMapper": {
-    "^src/(.*)$": "<rootDir>/src/$1"
+    "^src/(.*)$": "<rootDir>/src/$1",
+    "@auth/(.*)$": "<rootDir>/src/auth/$1",
+    "@chat/(.*)$": "<rootDir>/src/chat/$1",
+    "@chatbot/(.*)$": "<rootDir>/src/chatbot/$1",
+    "@common/(.*)$": "<rootDir>/src/common/$1",
+    "@config/(.*)$": "<rootDir>/src/common/config/$1",
+    "@constants/(.*)$": "<rootDir>/src/common/constants/$1",
+    "@interceptors/(.*)$": "<rootDir>/src/common/interceptors/$1",
+    "@exceptions/(.*)$": "<rootDir>/src/exceptions/$1",
+    "@logger/(.*)$": "<rootDir>/src/logger/$1",
+    "@members/(.*)$": "<rootDir>/src/members/$1",
+    "@socket/(.*)$": "<rootDir>/src/socket/$1",
+    "@tarot/(.*)$": "<rootDir>/src/tarot/$1"
   },
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
