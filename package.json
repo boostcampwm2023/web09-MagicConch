@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "build:logger": "npm --prefix packages/logger run build",
+    "build:logger": "npm --prefix packages/winston-logger run build",
     "dev:was": "npm --prefix backend/was run start:dev",
     "dev:signal": "npm --prefix backend/signal run start:dev",
     "dev:front": "npm --prefix frontend run dev"
