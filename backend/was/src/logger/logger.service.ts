@@ -1,11 +1,11 @@
-import { Inject, Injectable, OnApplicationShutdown } from '@nestjs/common';
 import { Logger } from 'winston';
+import { Inject, Injectable, OnApplicationShutdown } from '@nestjs/common';
 
 @Injectable()
 export class LoggerService implements OnApplicationShutdown {
   constructor(@Inject('WINSTON') private readonly logger: Logger) {}
 
-  async onApplicationShutdown(signal?: string): Promise<void> {
+  async onApplicationShutdown(_signal?: string): Promise<void> {
     this.logger.close();
   }
 
