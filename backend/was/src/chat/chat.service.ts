@@ -4,6 +4,7 @@ import { UserInfo } from '@common/types/socket';
 import { CHAT_CODEMAP } from '@exceptions/codemap';
 import { CustomException } from '@exceptions/custom-exception';
 import { Member } from '@members/entities';
+import { TarotResult } from '@tarot/entities';
 import { ChattingInfo } from './chatting-info.interface';
 import {
   ChattingMessageDto,
@@ -18,10 +19,13 @@ import { ChattingMessage, ChattingRoom } from './entities';
 export class ChatService {
   constructor(private readonly entityManager: EntityManager) {}
 
-  async createRoom(userInfo?: UserInfo): Promise<ChattingInfo> {
+  async createRoom(
+    result: TarotResult,
+    userInfo?: UserInfo,
+  ): Promise<ChattingInfo> {
     return userInfo
-      ? this.createRoomForMember(userInfo.email, userInfo.providerId)
-      : this.createRoomForNonMember();
+      ? this.createRoomForMember(result, userInfo.email, userInfo.providerId)
+      : this.createRoomForNonMember(result);
   }
 
   async createMessages(
@@ -102,14 +106,21 @@ export class ChatService {
             email,
             providerId,
           );
-          await this.findRoomById(manager, id, member.id);
-          return await manager
+          const { result }: ChattingRoom = await this.findRoomById(
+            manager,
+            id,
+            member.id,
+          );
+          const messages: ChattingMessage[] = await manager
             .createQueryBuilder(ChattingMessage, 'message')
             .select('message.message', 'message_message')
             .addSelect('message.isHost', 'message_is_host')
             .where('message.room_id = :roomId', { roomId: id })
             .orderBy('DATE(message.order)')
             .getMany();
+          const { tarotCard, tarotResult } = this.formatResultToMessage(result);
+          messages.push(tarotCard, tarotResult);
+          return messages;
         } catch (err: unknown) {
           throw err;
         }
@@ -167,6 +178,7 @@ export class ChatService {
   }
 
   private async createRoomForMember(
+    result: TarotResult,
     email: string,
     providerId: number,
   ): Promise<ChattingInfo> {
@@ -180,7 +192,7 @@ export class ChatService {
           );
           const room = await manager.save(
             ChattingRoom,
-            ChattingRoom.fromMember(member),
+            ChattingRoom.fromInfo(result, member),
           );
           return { member, room };
         } catch (err: unknown) {
@@ -191,14 +203,16 @@ export class ChatService {
     return { memberId: member.id, roomId: room.id };
   }
 
-  private async createRoomForNonMember(): Promise<ChattingInfo> {
+  private async createRoomForNonMember(
+    result: TarotResult,
+  ): Promise<ChattingInfo> {
     const { member, room } = await this.entityManager.transaction(
       async (manager: EntityManager) => {
         try {
           const member: Member = await manager.save(Member, new Member());
           const room = await manager.save(
             ChattingRoom,
-            ChattingRoom.fromMember(member),
+            ChattingRoom.fromInfo(result, member),
           );
           return { member, room };
         } catch (err: unknown) {
@@ -251,5 +265,15 @@ export class ChatService {
     } catch (err: unknown) {
       throw err;
     }
+  }
+
+  private formatResultToMessage(result: TarotResult): {
+    tarotCard: ChattingMessage;
+    tarotResult: ChattingMessage;
+  } {
+    return {
+      tarotCard: ChattingMessage.formatResult(result.cardUrl),
+      tarotResult: ChattingMessage.formatResult(result.message),
+    };
   }
 }
