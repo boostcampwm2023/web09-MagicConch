@@ -2,6 +2,7 @@
   "private": true,
   "scripts": {
     "build:logger": "npm --prefix packages/winston-logger run build",
+    "link:logger": "cd packages/winston-logger && npm link && cd ../../backend/was && npm link winston-logger && cd ../../backend/signal && npm link winston-logger",
     "dev:was": "npm --prefix backend/was run start:dev",
     "dev:signal": "npm --prefix backend/signal run start:dev",
     "dev:front": "npm --prefix frontend run dev"
