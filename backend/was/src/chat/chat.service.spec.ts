@@ -6,6 +6,7 @@ import { ProviderIdEnum } from '@constants/etc';
 import { CHAT_CODEMAP } from '@exceptions/codemap';
 import { CustomException } from '@exceptions/custom-exception';
 import { Member } from '@members/entities';
+import { TarotResult } from '@tarot/entities';
 import { ChatService } from './chat.service';
 import { ChattingInfo } from './chatting-info.interface';
 import {
@@ -22,6 +23,7 @@ const JAN_26: string = '2024-01-26';
 describe('ChatService', () => {
   let chatService: ChatService;
   let entityManager: EntityManager;
+  let result: TarotResult;
 
   beforeAll(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
@@ -36,6 +38,11 @@ describe('ChatService', () => {
 
     chatService = moduleRef.get<ChatService>(ChatService);
     entityManager = moduleRef.get<EntityManager>(EntityManager);
+
+    result = new TarotResult();
+    result.id = '12345678-0000-0000-0000-567812345678';
+    result.cardUrl = 'cardUrl';
+    result.message = 'message';
   });
 
   afterAll(() => {
@@ -64,13 +71,14 @@ describe('ChatService', () => {
           const room: ChattingRoom = {
             id: roomId,
             participant: member,
+            result,
           };
 
           const transactionMock = jest
             .spyOn(entityManager, 'transaction')
             .mockImplementation(async () => Promise.resolve({ member, room }));
 
-          await expect(chatService.createRoom()).resolves.toEqual({
+          await expect(chatService.createRoom(result)).resolves.toEqual({
             memberId: member.id,
             roomId: room.id,
           });
@@ -102,6 +110,7 @@ describe('ChatService', () => {
           const room: ChattingRoom = {
             id: roomId,
             participant: member,
+            result,
           };
           const userInfo: UserInfo = {
             email: email ?? '',
@@ -112,8 +121,10 @@ describe('ChatService', () => {
             .spyOn(entityManager, 'transaction')
             .mockImplementation(async () => Promise.resolve({ member, room }));
 
-          const expectation: ChattingInfo =
-            await chatService.createRoom(userInfo);
+          const expectation: ChattingInfo = await chatService.createRoom(
+            result,
+            userInfo,
+          );
           expect(expectation).toEqual({
             memberId: memberId,
             roomId: roomId,
@@ -144,6 +155,7 @@ describe('ChatService', () => {
         const room: ChattingRoom = {
           id: roomId,
           participant: member,
+          result,
         };
         const chatLog: ChatLog = {
           isHost: messages.role === 'assistant',
@@ -204,12 +216,14 @@ describe('ChatService', () => {
           id: '12345678-1234-5678-1234-567812345672',
           title: '내일의 운세 채팅방',
           participant: member,
+          result,
           createdAt: jan26,
         },
         {
           id: '12345678-1234-5678-1234-567812345671',
           title: '오늘의 운세 채팅방',
           participant: member,
+          result,
           createdAt: jan15,
         },
       ];
@@ -270,6 +284,7 @@ describe('ChatService', () => {
       room = {
         id: '12345678-1234-5678-1234-567812345671',
         participant: member,
+        result,
       };
 
       messages = [
@@ -369,6 +384,7 @@ describe('ChatService', () => {
       room = {
         id: '12345678-1234-5678-1234-567812345671',
         participant: member,
+        result,
       };
 
       updateRoomDto = {
@@ -453,6 +469,7 @@ describe('ChatService', () => {
       room = {
         id: '12345678-1234-5678-1234-567812345671',
         participant: member,
+        result,
       };
     });
 
