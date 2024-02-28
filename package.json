@@ -1,12 +1,25 @@
 {
+  "private": true,
+  "scripts": {
+    "build:logger": "npm --prefix packages/winston-logger run build",
+    "link:logger": "cd packages/winston-logger && npm link && cd ../../backend/was && npm link winston-logger && cd ../../backend/signal && npm link winston-logger",
+    "dev:was": "npm --prefix backend/was run start:dev",
+    "dev:signal": "npm --prefix backend/signal run start:dev",
+    "dev:front": "npm --prefix frontend run dev"
+  },
   "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.2",
+    "@typescript-eslint/parser": "^7.0.2",
     "eslint": "^8.53.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
     "prettier": "^3.0.0",
     "typescript": "^5.2.2"
   },
-  "scripts": {
-    "prepare": "husky"
-  }
+  "workspaces": [
+    "packages/*"
+  ]
 }

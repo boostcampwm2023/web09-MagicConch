@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import { transports } from 'winston';
 import * as DailyRotateFile from 'winston-daily-rotate-file';
 
-const dirname = 'logs';
+const dirname: string = 'logs';
 
 function createDailyRotateFile(level: string): DailyRotateFile {
   if (!fs.existsSync(dirname)) {
