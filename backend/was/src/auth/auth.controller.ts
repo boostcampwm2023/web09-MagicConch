@@ -30,7 +30,7 @@ export class AuthController {
     this.cookieOptions = {
       httpOnly: true,
       secure: process.env.ENV === 'PROD',
-      sameSite: 'lax',
+      sameSite: 'none',
       maxAge: 3600000,
     };
   }
