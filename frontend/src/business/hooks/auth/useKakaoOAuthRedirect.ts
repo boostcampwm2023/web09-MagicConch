@@ -11,6 +11,10 @@ export function useKakaoOAuthRedirect() {
     const res = await axios.get(KAKAO_LOGIN_URL, {
       params: { code },
       withCredentials: true,
+      headers: {
+        SameSite: 'None',
+        Secure: true,
+      },
     });
 
     if (!res || res.status !== 200) {
