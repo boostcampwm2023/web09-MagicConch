@@ -190,7 +190,7 @@ export class ChatService {
             email,
             providerId,
           );
-          const room = await manager.save(
+          const room: ChattingRoom = await manager.save(
             ChattingRoom,
             ChattingRoom.fromInfo(result, member),
           );
@@ -210,7 +210,7 @@ export class ChatService {
       async (manager: EntityManager) => {
         try {
           const member: Member = await manager.save(Member, new Member());
-          const room = await manager.save(
+          const room: ChattingRoom = await manager.save(
             ChattingRoom,
             ChattingRoom.fromInfo(result, member),
           );
