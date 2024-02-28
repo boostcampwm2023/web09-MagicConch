@@ -1,4 +1,5 @@
 import { Server, Socket } from 'socket.io';
+import { TarotResult } from '@tarot/entities';
 import { ChatLog } from './chatbot';
 
 export interface UserInfo {
@@ -19,6 +20,7 @@ export interface AiSocket
   user?: UserInfo;
   chatLog: ChatLog[];
   chatEnd: boolean;
+  result?: TarotResult;
 }
 
 export type AiSocketClientEvent = keyof AiSocketEvent['ClientToServerEvent'];
