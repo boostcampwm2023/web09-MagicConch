@@ -3,7 +3,7 @@ import { Repository } from 'typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { RedisCacheModule } from '@common/config/cache/redis-cache.module';
+import { RedisCacheModule } from '@config/cache/redis-cache.module';
 import { ProviderIdEnum } from '@constants/etc';
 import { CreateMemberDto, UpdateMemberDto } from '@members/dto';
 import { Member } from '@members/entities';
