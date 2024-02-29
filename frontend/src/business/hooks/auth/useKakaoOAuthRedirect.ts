@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+import { isProdctionMode } from '@utils/env';
+
 import { KAKAO_LOGIN_URL } from '@constants/kakao';
 
 export function useKakaoOAuthRedirect() {
@@ -13,7 +15,7 @@ export function useKakaoOAuthRedirect() {
       withCredentials: true,
       headers: {
         SameSite: 'None',
-        Secure: true,
+        Secure: isProdctionMode(),
       },
     });
 
