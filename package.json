@@ -2,8 +2,10 @@
   "private": true,
   "scripts": {
     "build:logger": "npm --prefix packages/winston-logger run build",
-    "link:logger": "cd packages/winston-logger && npm link && cd ../../backend/was && npm link winston-logger && cd ../../backend/signal && npm link winston-logger",
     "build:event": "npm --prefix packages/socket-event run build",
+    "build-prod:logger": "cd winston-logger && npm ci && npm run build && cd ..",
+    "build-prod:event": "cd socket-event && npm ci && npm run build && cd ..",
+    "link:logger": "cd packages/winston-logger && npm link && cd ../../backend/was && npm link winston-logger && cd ../../backend/signal && npm link winston-logger",
     "link:event": "cd packages/socket-event && npm link && cd ../../backend/was && npm link socket-event && cd ../../backend/signal && npm link socket-event && cd ../../frontend && pnpm link ../packages/socket-event",
     "dev:was": "npm --prefix backend/was run start:dev",
     "dev:signal": "npm --prefix backend/signal run start:dev",
