@@ -2,7 +2,7 @@ name: Backend Build
 
 on:
   pull_request:
-    types: [opened, edited]
+    # types: [opened, edited]
     # paths: ["backend/**"]
 
 env:
