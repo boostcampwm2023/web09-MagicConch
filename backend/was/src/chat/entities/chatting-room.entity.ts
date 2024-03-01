@@ -3,12 +3,15 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Member } from '@members/entities';
+import { TarotResult } from '@tarot/entities';
 import { ChattingMessage } from './chatting-message.entity';
 
 @Entity()
@@ -34,8 +37,13 @@ export class ChattingRoom {
   @ManyToOne(() => Member, (member) => member.chattingRooms, { eager: true })
   participant: Member;
 
-  static fromMember(member: Member): ChattingRoom {
+  @OneToOne(() => TarotResult, (result) => result.id, { eager: true })
+  @JoinColumn()
+  result: TarotResult;
+
+  static fromInfo(result: TarotResult, member: Member): ChattingRoom {
     const room = new ChattingRoom();
+    room.result = result;
     room.participant = member;
     return room;
   }

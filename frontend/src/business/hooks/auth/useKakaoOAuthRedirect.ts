@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+import { isProdctionMode } from '@utils/env';
+
 import { KAKAO_LOGIN_URL } from '@constants/kakao';
 
 export function useKakaoOAuthRedirect() {
@@ -11,6 +13,10 @@ export function useKakaoOAuthRedirect() {
     const res = await axios.get(KAKAO_LOGIN_URL, {
       params: { code },
       withCredentials: true,
+      headers: {
+        SameSite: 'None',
+        Secure: isProdctionMode(),
+      },
     });
 
     if (!res || res.status !== 200) {

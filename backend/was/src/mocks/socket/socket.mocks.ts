@@ -3,6 +3,7 @@ import type { ExtendedAiSocket as AiSocket } from '@common/types/socket';
 import { string2Uint8ArrayStream } from '@common/utils/stream';
 import { ChatService } from '@chat/chat.service';
 import { ChatbotService } from '@chatbot/chatbot.interface';
+import { TarotResult } from '@tarot/entities';
 import { TarotService } from '@tarot/tarot.service';
 
 export const aiMessageMock = '인공지능입니다.';
@@ -33,3 +34,9 @@ export const clientMock = {
   chatEnd: false,
   emit: jest.fn(),
 } as unknown as AiSocket;
+
+export const TarotResultMock: TarotResult = {
+  id: 'id',
+  cardUrl: 'cardUrl',
+  message: 'message',
+};
