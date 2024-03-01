@@ -47,4 +47,11 @@ export class ChattingMessage {
     message.order = order;
     return message;
   }
+
+  static formatResult(result: string): ChattingMessage {
+    const message: ChattingMessage = new ChattingMessage();
+    message.isHost = true;
+    message.message = result;
+    return message;
+  }
 }

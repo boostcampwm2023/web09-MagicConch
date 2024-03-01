@@ -13,6 +13,7 @@ import { ChatService } from '@chat/chat.service';
 import { CreateChattingMessageDto } from '@chat/dto';
 import { ChatbotService } from '@chatbot/chatbot.interface';
 import { CreateTarotResultDto } from '@tarot/dto';
+import { TarotResult } from '@tarot/entities';
 import { TarotService } from '@tarot/tarot.service';
 
 @Injectable()
@@ -81,10 +82,11 @@ export class SocketService {
       const sentMessage = await this.streamMessage(client, () =>
         this.chatbotService.generateTarotReading(client.chatLog, cardIdx),
       );
-
       client.chatEnd = true;
 
-      const shareLinkId = await this.createShareLinkId(cardIdx, sentMessage);
+      client.result = await this.createResult(cardIdx, sentMessage);
+
+      const shareLinkId = client.result.id;
       client.emit('chatEnd', shareLinkId);
 
       const { memberId, roomId } = await this.createRoom(client);
@@ -120,7 +122,10 @@ export class SocketService {
 
   private async createRoom(client: AiSocket) {
     try {
-      const chattingInfo = await this.chatService.createRoom(client.user);
+      const chattingInfo = await this.chatService.createRoom(
+        client.result as TarotResult,
+        client.user,
+      );
       return chattingInfo;
     } catch (err) {
       if (err instanceof Error) {
@@ -158,10 +163,10 @@ export class SocketService {
     }
   }
 
-  private async createShareLinkId(
+  private async createResult(
     cardIdx: number,
     result: string,
-  ): Promise<string> {
+  ): Promise<TarotResult> {
     try {
       const tarotResult = CreateTarotResultDto.fromResult(cardIdx, result);
       return await this.tarotService.createTarotResult(tarotResult);

@@ -17,6 +17,7 @@ import {
 } from '@chat/dto';
 import { ChattingMessage, ChattingRoom } from '@chat/entities';
 import { Member } from '@members/entities';
+import { TarotResult } from '@tarot/entities';
 import { diffJwtToken, id, id2, jwtToken, wrongId } from './common/constants';
 import { SqliteModule } from './common/database/sqlite.module';
 
@@ -27,6 +28,7 @@ describe('Chat', () => {
   let app: INestApplication;
   let entityManager: EntityManager;
   let member: Member;
+  let savedResult: TarotResult;
   let savedRoom: ChattingRoom;
   const oneDay: Date = new Date(JAN_15);
   const anotherDay: Date = new Date(JAN_26);
@@ -35,7 +37,12 @@ describe('Chat', () => {
     const moduleRef = await Test.createTestingModule({
       imports: [
         SqliteModule,
-        TypeOrmModule.forFeature([ChattingRoom, ChattingMessage, Member]),
+        TypeOrmModule.forFeature([
+          ChattingRoom,
+          ChattingMessage,
+          Member,
+          TarotResult,
+        ]),
       ],
       providers: [ChatService, JwtAuthGuard, JwtStrategy],
       controllers: [ChatController],
@@ -55,11 +62,18 @@ describe('Chat', () => {
     diffMember.providerId = ProviderIdEnum.KAKAO;
     await entityManager.save(diffMember);
 
+    const result: TarotResult = new TarotResult();
+    result.cardUrl =
+      'https://kr.object.ncloudstorage.com/magicconch/basic/0.jpg';
+    result.message = '0번 카드에 대한 해설입니다.';
+    savedResult = await entityManager.save(result);
+
     const room: ChattingRoom = new ChattingRoom();
     room.id = id;
     room.title = `${JAN_15}일자 채팅방`;
     room.createdAt = oneDay;
     room.participant = member;
+    room.result = savedResult;
     savedRoom = await entityManager.save(room);
 
     app.use(cookieParser());
@@ -95,6 +109,7 @@ describe('Chat', () => {
                 id: id2,
                 title: `${JAN_26}일자 채팅방`,
                 createdAt: anotherDay.toLocaleDateString('ko-KR'),
+                result: savedResult,
               },
             ],
           },
@@ -105,6 +120,7 @@ describe('Chat', () => {
                 id,
                 title: `${JAN_15}일자 채팅방`,
                 createdAt: oneDay.toLocaleDateString('ko-KR'),
+                result: savedResult,
               },
             ],
           },
@@ -138,12 +154,12 @@ describe('Chat', () => {
         {
           isHost: true,
           message: '어떤 고민이 있어?',
-          order: 1,
+          order: 0,
         },
         {
           isHost: false,
           message: '오늘 운세를 알고 싶어',
-          order: 2,
+          order: 1,
         },
       ];
       for (const chatLog of chatLogs) {
@@ -155,6 +171,17 @@ describe('Chat', () => {
         await entityManager.save(message);
         messages.push(ChattingMessageDto.fromEntity(message));
       }
+      const resultMessages: ChattingMessage[] = [
+        ChattingMessage.formatResult(
+          'https://kr.object.ncloudstorage.com/magicconch/basic/0.jpg',
+        ),
+        ChattingMessage.formatResult('0번 카드에 대한 해설입니다.'),
+      ];
+      messages.push(
+        ...resultMessages.map((entity: ChattingMessage) =>
+          ChattingMessageDto.fromEntity(entity),
+        ),
+      );
     });
 
     it('인증 받은 사용자는 특정 채팅방에서 오간 메시지 목록을 조회할 수 있다.', () => {

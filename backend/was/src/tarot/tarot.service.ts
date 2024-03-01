@@ -17,12 +17,10 @@ export class TarotService {
 
   async createTarotResult(
     createTarotResultDto: CreateTarotResultDto,
-  ): Promise<string> {
+  ): Promise<TarotResult> {
     const tarotResult: TarotResult = TarotResult.fromDto(createTarotResultDto);
     try {
-      const savedResult: TarotResult =
-        await this.tarotResultRepository.save(tarotResult);
-      return savedResult.id;
+      return await this.tarotResultRepository.save(tarotResult);
     } catch (err: unknown) {
       throw err;
     }

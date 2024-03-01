@@ -35,7 +35,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          source: "backend/.env,backend/*.sh,backend/compose*deploy.yml,backend/Dockerfile.nginx"
+          source: "backend/.env,backend/*.sh,backend/compose*deploy.yml,backend/*nginx*"
           target: "~/app/"
           overwrite: true
 
