@@ -1,5 +1,5 @@
+import { AiSocket } from 'socket-event';
 import { LoggerService } from '@nestjs/common';
-import { Socket } from '@common/types/socket';
 import { string2Uint8ArrayStream } from '@common/utils/stream';
 import { ChatService } from '@chat/chat.service';
 import { ChatbotService } from '@chatbot/chatbot.interface';
@@ -32,4 +32,4 @@ export const clientMock = {
   chatLog: [],
   chatEnd: false,
   emit: jest.fn(),
-} as unknown as Socket;
+} as unknown as AiSocket;

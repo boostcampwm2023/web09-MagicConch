@@ -18,7 +18,5 @@
     "strictBindCallApply": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true
-  },
-  "typeRoots": ["../../@types"],
-  "include": ["src", "test", "../../@types"]
+  }
 }
