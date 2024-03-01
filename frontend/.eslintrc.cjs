@@ -3,9 +3,24 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  extends: ['plugin:pretter/recommended', 'plugin:react/recommended', 'plugin:react-hooks/recommended', 'plugin:@typescript-eslint/recommended', 'airbnb-typescript', 'plugin:import/recommended', 'prettier', 'plugin:storybook/recommended'],
-  plugins: ['prettier', 'react-refresh', 'import', 'eslint:recommended'],
+  extends: [
+    'plugin:prettier/recommended',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+    'plugin:@typescript-eslint/recommended',
+    'airbnb-typescript',
+    'plugin:import/recommended',
+    'prettier',
+    'plugin:storybook/recommended',
+    'eslint:recommended',
+  ],
+  plugins: ['prettier', 'react-refresh', 'import'],
   ignorePatterns: ['dist', '.eslintrc.cjs', 'vite.config.ts'],
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
 
   parser: '@typescript-eslint/parser',
   parserOptions: {
