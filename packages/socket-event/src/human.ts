@@ -1,6 +1,6 @@
 import { Server, Socket } from 'socket.io';
 
-interface HumanSocketEvent {
+export interface HumanSocketEvent {
   ServerToClientEvent: {
     connection: (data: {
       description?: RTCSessionDescription | null;

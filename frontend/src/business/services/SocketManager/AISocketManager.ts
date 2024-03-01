@@ -1,3 +1,5 @@
+import type { AiSocketEvent } from 'socket-event';
+
 import { SocketManager } from './SocketManager';
 
 export class AISocketManager extends SocketManager<

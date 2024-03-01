@@ -1,3 +1,5 @@
+import type { HumanSocketEvent } from 'socket-event';
+
 import { SocketManager } from './SocketManager';
 
 export class HumanSocketManager extends SocketManager<
