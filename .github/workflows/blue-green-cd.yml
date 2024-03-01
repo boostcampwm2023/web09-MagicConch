@@ -59,6 +59,7 @@ jobs:
         run: |
           cp package.json backend/package.json
           cp package-lock.json backend/package-lock.json
+          cp -r packages backend/packages
           cd backend
           docker-compose -f compose.blue-build.yml build --builder buildx --build-arg BUILDKIT_INLINE_CACHE=1
           docker-compose -f compose.green-build.yml build --builder buildx --build-arg BUILDKIT_INLINE_CACHE=1
