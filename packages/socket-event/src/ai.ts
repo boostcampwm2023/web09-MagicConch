@@ -20,25 +20,10 @@ export type AiServer = Server<
   AiSocketEvent['ServerToClientEvent']
 >;
 
-export interface AiSocket
-  extends Socket<
-    AiSocketEvent['ClientToServerEvent'],
-    AiSocketEvent['ServerToClientEvent']
-  > {
-  user?: UserInfo;
-  chatLog: ChatLog[];
-  chatEnd: boolean;
-}
-
-interface UserInfo {
-  email: string;
-  providerId: number;
-}
-
-interface ChatLog {
-  isHost: boolean;
-  message: string;
-}
+export type AiSocket = Socket<
+  AiSocketEvent['ClientToServerEvent'],
+  AiSocketEvent['ServerToClientEvent']
+>;
 
 export type AiSocketClientEvent = keyof AiSocketEvent['ClientToServerEvent'];
 

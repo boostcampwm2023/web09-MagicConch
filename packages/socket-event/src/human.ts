@@ -35,11 +35,10 @@ export type HumanServer = Server<
   HumanSocketEvent['ServerToClientEvent']
 >;
 
-export interface HumanSocket
-  extends Socket<
-    HumanSocketEvent['ClientToServerEvent'],
-    HumanSocketEvent['ServerToClientEvent']
-  > {}
+export type HumanSocket = Socket<
+  HumanSocketEvent['ClientToServerEvent'],
+  HumanSocketEvent['ServerToClientEvent']
+>;
 
 export type HumanSocketClientEvent =
   keyof HumanSocketEvent['ClientToServerEvent'];
