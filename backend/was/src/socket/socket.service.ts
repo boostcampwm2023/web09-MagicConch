@@ -1,7 +1,7 @@
-import type { AiSocket } from 'socket-event';
 import { Inject, Injectable } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 import { ChatLog } from '@common/types/chatbot';
+import type { ExtendedAiSocket as AiSocket } from '@common/types/socket';
 import { readStream, string2Uint8ArrayStream } from '@common/utils/stream';
 import { ERR_MSG } from '@constants/errors';
 import {

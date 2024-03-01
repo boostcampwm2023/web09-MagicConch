@@ -1,5 +1,5 @@
-import { AiSocket } from 'socket-event';
 import { LoggerService } from '@nestjs/common';
+import type { ExtendedAiSocket as AiSocket } from '@common/types/socket';
 import { string2Uint8ArrayStream } from '@common/utils/stream';
 import { ChatService } from '@chat/chat.service';
 import { ChatbotService } from '@chatbot/chatbot.interface';
