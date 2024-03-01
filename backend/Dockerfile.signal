@@ -7,12 +7,20 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
+COPY packages ./
+RUN cd socket-event && \
+    npm ci && npm run build && npm link && \
+    cd ..
+RUN cd winston-logger && \
+    npm ci && npm run build && npm link && \
+    cd ..
 WORKDIR /app/signal
 
 COPY signal/package*.json ./
 RUN npm ci
 
 COPY signal .
+RUN npm link socket-event && npm link winston-logger
 RUN npm run build
 
 CMD ["tini", "--", "npm", "run", "start:prod"]
