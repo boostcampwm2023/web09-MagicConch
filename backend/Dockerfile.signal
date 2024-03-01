@@ -8,20 +8,17 @@ COPY package*.json ./
 RUN npm ci
 
 COPY packages ./
-RUN cd socket-event && \
-    npm ci && npm run build && npm link && \
-    cd ..
-RUN cd winston-logger && \
-    npm ci && npm run build && npm link && \
-    cd ..
+RUN npm run build-prod:logger
+RUN npm run build-prod:event
 
 WORKDIR /app/signal
 
 COPY signal/package*.json ./
 RUN npm ci
+RUN mv ../socket-event/dist ./node_modules/socket-event
+RUN mv ../winston-logger/dist ./node_modules/winston-logger
 
 COPY signal .
-RUN npm link socket-event && npm link winston-logger
 RUN npm run build
 
 CMD ["tini", "--", "npm", "run", "start:prod"]
