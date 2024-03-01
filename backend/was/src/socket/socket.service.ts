@@ -82,8 +82,6 @@ export class SocketService {
         this.chatbotService.generateTarotReading(client.chatLog, cardIdx),
       );
 
-      client.chatLog.push({ isHost: true, message: sentMessage });
-
       client.chatEnd = true;
 
       const shareLinkId = await this.createShareLinkId(cardIdx, sentMessage);
