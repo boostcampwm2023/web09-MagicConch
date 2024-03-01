@@ -82,8 +82,6 @@ export class SocketService {
       const sentMessage = await this.streamMessage(client, () =>
         this.chatbotService.generateTarotReading(client.chatLog, cardIdx),
       );
-
-      client.chatLog.push({ isHost: true, message: sentMessage });
       client.chatEnd = true;
 
       client.result = await this.createResult(cardIdx, sentMessage);
