@@ -1,4 +1,4 @@
-import { Server, Socket } from 'socket.io';
+import { AiSocket } from 'socket-event';
 import { TarotResult } from '@tarot/entities';
 import { ChatLog } from './chatbot';
 
@@ -7,23 +7,9 @@ export interface UserInfo {
   providerId: number;
 }
 
-export type AiServer = Server<
-  AiSocketEvent['ClientToServerEvent'],
-  AiSocketEvent['ServerToClientEvent']
->;
-
-export interface AiSocket
-  extends Socket<
-    AiSocketEvent['ClientToServerEvent'],
-    AiSocketEvent['ServerToClientEvent']
-  > {
+export interface ExtendedAiSocket extends AiSocket {
   user?: UserInfo;
   chatLog: ChatLog[];
   chatEnd: boolean;
   result?: TarotResult;
 }
-
-export type AiSocketClientEvent = keyof AiSocketEvent['ClientToServerEvent'];
-
-export type AiSocketClientEventParams<T extends AiSocketClientEvent> =
-  Parameters<AiSocketEvent['ClientToServerEvent'][T]>;

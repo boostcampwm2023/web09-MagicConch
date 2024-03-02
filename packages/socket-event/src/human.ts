@@ -1,21 +1,6 @@
-interface AiSocketEvent {
-  ServerToClientEvent: {
-    streamStart: () => void;
-    streaming: (token: string) => void;
-    streamEnd: () => void;
-    tarotCard: () => void; // 타로 카드 펼치기 요청
-    chatEnd: (resultId: string) => void;
-    error: (message: string) => void;
-  };
-  ClientToServerEvent: {
-    message: (message: string) => void;
-    tarotRead: (cardIdx: number) => void; // 타로 카드 해설 요청
-  };
-  InterServerEvents: {};
-  SocketData: {};
-}
+import { Server, Socket } from 'socket.io';
 
-interface HumanSocketEvent {
+export interface HumanSocketEvent {
   ServerToClientEvent: {
     connection: (data: {
       description?: RTCSessionDescription | null;
@@ -43,6 +28,20 @@ interface HumanSocketEvent {
     joinRoom: (roomId: string, password: string) => void;
     checkRoomExist: (roomName: string) => void;
   };
-  InterServerEvents: {};
-  SocketData: {};
 }
+
+export type HumanServer = Server<
+  HumanSocketEvent['ClientToServerEvent'],
+  HumanSocketEvent['ServerToClientEvent']
+>;
+
+export type HumanSocket = Socket<
+  HumanSocketEvent['ClientToServerEvent'],
+  HumanSocketEvent['ServerToClientEvent']
+>;
+
+export type HumanSocketClientEvent =
+  keyof HumanSocketEvent['ClientToServerEvent'];
+
+export type HumanSocketClientEventParams<T extends HumanSocketClientEvent> =
+  Parameters<HumanSocketEvent['ClientToServerEvent'][T]>;

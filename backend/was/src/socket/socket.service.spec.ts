@@ -1,4 +1,5 @@
 import {
+  TarotResultMock,
   aiMessageMock,
   chatServiceMock,
   chatbotServiceMock,
@@ -152,7 +153,7 @@ describe('SocketService', () => {
       const shareLinkIdMock = 'shareLinkId';
       jest
         .spyOn(tarotServiceMock, 'createTarotResult')
-        .mockImplementation(() => Promise.resolve(shareLinkIdMock));
+        .mockImplementation(() => Promise.resolve(TarotResultMock));
 
       await socketService.handleTarotReadEvent(clientMock, tarotIdxMock);
 

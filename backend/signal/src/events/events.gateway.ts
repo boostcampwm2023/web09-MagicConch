@@ -6,14 +6,14 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { LoggerService } from 'src/logger/logger.service';
-import { v4 } from 'uuid';
 import type {
   HumanServer,
   HumanSocket,
   HumanSocketClientEvent,
   HumanSocketClientEventParams,
-} from './type';
+} from 'socket-event';
+import { LoggerService } from 'src/logger/logger.service';
+import { v4 } from 'uuid';
 
 const MAXIMUM = 2;
 
@@ -142,9 +142,9 @@ export class EventsGateway
   @SubscribeMessage<HumanSocketClientEvent>('connection')
   handleConnectionEvent(
     socket: HumanSocket,
-    [
+    ...[
       { description, candidate, roomName },
-    ]: HumanSocketClientEventParams<'connection'>,
+    ]: HumanSocketClientEventParams<'connection'>
   ) {
     try {
       if (description) {
@@ -162,7 +162,7 @@ export class EventsGateway
   @SubscribeMessage<HumanSocketClientEvent>('checkRoomExist')
   handleCheckRoomExistEvent(
     socket: HumanSocket,
-    [roomName]: HumanSocketClientEventParams<'checkRoomExist'>,
+    ...[roomName]: HumanSocketClientEventParams<'checkRoomExist'>
   ) {
     const existRoom: any = this.socketRooms[roomName];
 
