@@ -24,7 +24,6 @@ export function MessageBox({ tarotId, type, message, profile, button, shareLinkI
           />
         )}
       </div>
-
       {message && (
         <div className="flex flex-col w-full">
           <Message
@@ -33,19 +32,6 @@ export function MessageBox({ tarotId, type, message, profile, button, shareLinkI
             profile={profile}
             shareLinkId={shareLinkId}
           />
-          {/* {shareLinkId && (
-            <Link
-              className="block absolute right-0 bottom-0"
-              to={`/result/${shareLinkId}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <IconButton
-                icon="ion:share"
-                buttonColor="transparent"
-              />
-            </Link>
-          )} */}
           {button && (
             <div className="relative left-70">
               <Button
