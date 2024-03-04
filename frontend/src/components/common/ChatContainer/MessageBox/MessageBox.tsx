@@ -15,7 +15,7 @@ export function MessageBox({ tarotId, type, message, profile, button, shareLinkI
 
   return (
     <div className="relative w-full">
-      <div className={`relative ${type === 'left' ? 'left-75' : 'right-75'}`}>
+      <div className={`w-full flex pr-70 pl-70 ${type === 'left' ? 'justify-start' : 'justify-end'}`}>
         {tarotId && (
           <img
             className="w-120 h-200 min-w-120 rounded-lg"
