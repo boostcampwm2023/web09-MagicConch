@@ -1,10 +1,10 @@
-import { Message } from '.';
 import type { Message as MessageType } from '..';
-import { Link } from 'react-router-dom';
 
-import { Button, IconButton } from '@components/common/Buttons';
+import { Button } from '@components/common/Buttons';
 
 import { getTarotImageQuery } from '@stores/queries';
+
+import { Message } from './Message';
 
 interface MessageBoxProps extends MessageType {}
 
