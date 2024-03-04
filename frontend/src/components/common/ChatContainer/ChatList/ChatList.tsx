@@ -23,7 +23,7 @@ export function ChatList({ messages }: ChatListProps) {
         return (
           <li
             key={new Date().getTime() + index}
-            className={`flex ${message && 'mb-20'} ${type == 'right' && 'justify-end'}`}
+            className={`flex ${message && 'mb-20'} ${type == 'right' && 'justify-end'} ${index === 0 && 'mt-30'}`}
           >
             <MessageBox
               tarotId={tarotId}
