@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 
 interface BackgroundProps {
   type?: 'default' | 'open' | 'close' | 'dynamic';
+  themeButton?: boolean;
 }
 
-export function Background({ type = 'default' }: BackgroundProps) {
+export function Background({ type = 'default', themeButton = false }: BackgroundProps) {
   const html = document.querySelector('html');
   const [conchAnimation, setConchAnimation] = useState<boolean>(false);
   const [darkMode, setDarkMode] = useState<boolean>(html?.dataset.theme === 'dark');
@@ -50,7 +51,8 @@ export function Background({ type = 'default' }: BackgroundProps) {
 
       <button
         className={`absolute -bottom-[20%] -translate-y-[65vh] lg:hover:scale-105 transition-transform
-          ${conchAnimation && 'animate-rotatingConch'}`}
+          ${conchAnimation && 'animate-rotatingConch'}
+          ${themeButton ? 'z-10' : ''}`}
         onClick={toggleTheme}
       >
         <img
