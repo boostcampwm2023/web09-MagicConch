@@ -34,7 +34,7 @@ export function AIChatPage({}: AIChatPageProps) {
               : []
           }
         />
-        <div className="w-h-full p-[5%] lg:pl-[25%] lg:pr-[25%]">
+        <div className="w-h-full pl-[5%] pr-[5%] pb-[5%] lg:pl-[25%] lg:pr-[25%]">
           <ChatContainer
             messages={messages}
             inputDisabled={inputDisabled}
