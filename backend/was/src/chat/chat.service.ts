@@ -230,7 +230,7 @@ export class ChatService {
   ): Promise<ChattingRoom> {
     try {
       const room: ChattingRoom | null = await manager.findOne(ChattingRoom, {
-        where: { id: id },
+        where: { id },
         select: ['id', 'participant'],
       });
       if (!room) {
@@ -252,10 +252,7 @@ export class ChatService {
   ): Promise<Member> {
     try {
       const member: Member | null = await manager.findOne(Member, {
-        where: {
-          email: email,
-          providerId: providerId,
-        },
+        where: { email, providerId },
         select: ['id'],
       });
       if (!member) {
