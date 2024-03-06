@@ -12,7 +12,7 @@ import { MembersService } from '@members/members.service';
 import { diffJwtToken, id, jwtToken } from './common/constants';
 import { SqliteModule } from './common/database/sqlite.module';
 
-describe('Member', () => {
+describe('Members', () => {
   let app: INestApplication;
   let entityManager: EntityManager;
 
