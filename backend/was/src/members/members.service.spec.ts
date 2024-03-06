@@ -63,7 +63,7 @@ describe('MembersService', () => {
             providerId: 0,
           },
           dto: {
-            nickname: undefined,
+            nickname: '타로밀크티2',
             profileUrl: undefined,
           },
         },
