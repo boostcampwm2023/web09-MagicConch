@@ -1,5 +1,7 @@
 import { LogoButton } from '@components/common/Buttons';
 
+import Toast from './Toast';
+
 interface HeaderProps {
   rightItems?: React.ReactNode[];
 }
@@ -16,6 +18,7 @@ export function Header({ rightItems }: HeaderProps) {
           {item}
         </div>
       ))}
+      <Toast />
     </header>
   );
 }
