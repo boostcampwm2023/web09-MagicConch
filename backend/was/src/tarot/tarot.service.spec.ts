@@ -67,11 +67,7 @@ describe('TarotService', () => {
           cardUrl: `${BUCKET_URL}/basic/2.jpg`,
         },
       ].forEach(async ({ id, cardNo, message, cardUrl }) => {
-        const tarotResult: TarotResult = {
-          id: id,
-          message: message,
-          cardUrl: cardUrl,
-        };
+        const tarotResult: TarotResult = { id, message, cardUrl };
         const createTarotResultDto: CreateTarotResultDto =
           CreateTarotResultDto.fromResult(cardNo, message);
 
@@ -82,10 +78,7 @@ describe('TarotService', () => {
         await expect(
           tarotService.createTarotResult(createTarotResultDto),
         ).resolves.not.toThrow();
-        expect(saveMock).toHaveBeenCalledWith({
-          cardUrl: cardUrl,
-          message: message,
-        });
+        expect(saveMock).toHaveBeenCalledWith({ cardUrl, message });
       });
     });
   });
@@ -109,11 +102,7 @@ describe('TarotService', () => {
           ext: ExtEnum.JPG,
         },
       ].forEach(async ({ id, cardNo, ext }) => {
-        const tarotCard: TarotCard = {
-          id: id,
-          cardNo: cardNo,
-          ext: ext,
-        };
+        const tarotCard: TarotCard = { id, cardNo, ext };
         const tarotCardDto: TarotCardDto = TarotCardDto.fromEntity(tarotCard);
 
         const findOneMock = jest
@@ -124,10 +113,7 @@ describe('TarotService', () => {
           await tarotService.findTarotCardByCardNo(tarotCard.cardNo);
         expect(expectation).toEqual(tarotCardDto);
         expect(findOneMock).toHaveBeenCalledWith({
-          where: {
-            cardNo: cardNo,
-            cardPack: undefined,
-          },
+          where: { cardNo, cardPack: undefined },
           select: ['cardNo', 'ext', 'cardPack'],
         });
       });
@@ -143,10 +129,7 @@ describe('TarotService', () => {
           tarotService.findTarotCardByCardNo(cardNo),
         ).rejects.toThrow(new CustomException(TAROT_CODEMAP.CARD_NOT_FOUND));
         expect(findOneMock).toHaveBeenCalledWith({
-          where: {
-            cardNo: cardNo,
-            cardPack: undefined,
-          },
+          where: { cardNo, cardPack: undefined },
           select: ['cardNo', 'ext', 'cardPack'],
         });
       });
@@ -172,11 +155,7 @@ describe('TarotService', () => {
           cardUrl: `${BUCKET_URL}/basic/2.jpg`,
         },
       ].forEach(async ({ id, message, cardUrl }) => {
-        const tarotResult: TarotResult = {
-          id: id,
-          message: message,
-          cardUrl: cardUrl,
-        };
+        const tarotResult: TarotResult = { id, message, cardUrl };
         const tarotResultDto = TarotResultDto.fromEntity(tarotResult);
 
         const findOneMock = jest
@@ -187,7 +166,7 @@ describe('TarotService', () => {
           await tarotService.findTarotResultById(id);
         expect(expectation).toEqual(tarotResultDto);
         expect(findOneMock).toHaveBeenCalledWith({
-          where: { id: id },
+          where: { id },
           select: ['cardUrl', 'message'],
         });
       });
@@ -206,7 +185,7 @@ describe('TarotService', () => {
           new CustomException(TAROT_CODEMAP.RESULT_NOT_FOUND),
         );
         expect(findOneMock).toHaveBeenCalledWith({
-          where: { id: id },
+          where: { id },
           select: ['cardUrl', 'message'],
         });
       });
