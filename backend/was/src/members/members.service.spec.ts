@@ -46,11 +46,13 @@ describe('MembersService', () => {
             email: 'tarotmilktea@kakao.com',
             providerId: 0,
             nickname: '타로밀크티',
-            profileUrl: 'profileUrl',
+            profileUrl:
+              'https://kr.object.ncloudstorage.com/magicconch/basic/0.jpg',
           },
           dto: {
             nickname: '타로밀크티',
-            profileUrl: 'profileUrl',
+            profileUrl:
+              'https://kr.object.ncloudstorage.com/magicconch/basic/0.jpg',
           },
         },
         {

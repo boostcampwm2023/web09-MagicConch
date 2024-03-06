@@ -43,7 +43,8 @@ describe('Member', () => {
       member.email = 'tarotmilktea@kakao.com';
       member.providerId = 0;
       member.nickname = '타로밀크티';
-      member.profileUrl = 'profileUrl';
+      member.profileUrl =
+        'https://kr.object.ncloudstorage.com/magicconch/basic/0.jpg';
       await entityManager.save(member);
     });
 
@@ -55,7 +56,8 @@ describe('Member', () => {
         status: 200,
         body: {
           nickname: '타로밀크티',
-          profileUrl: 'profileUrl',
+          profileUrl:
+            'https://kr.object.ncloudstorage.com/magicconch/basic/0.jpg',
         },
       },
       {
