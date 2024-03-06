@@ -9,7 +9,7 @@ export function Toast() {
     <>
       {message && (
         <div
-          className="toast absolute top-[150%] right-20"
+          className="toast absolute top-[120%] right-20 animate-shining"
           onClick={removeToast}
         >
           <div className="alert w-fit">
