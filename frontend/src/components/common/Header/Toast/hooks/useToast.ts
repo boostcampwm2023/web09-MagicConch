@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { useSideBarStore, useToastStore } from '@stores/zustandStores';
+import { useToastStore } from '@stores/zustandStores';
 
 export function useToast() {
   const { message, removeToast } = useToastStore(state => ({
@@ -8,21 +8,10 @@ export function useToast() {
     removeToast: state.removeToast,
   }));
 
-  const { sideBarState } = useSideBarStore(state => ({
-    sideBarState: state.sideBarState,
-  }));
+  useEffect(removeToast, []);
 
   useEffect(() => {
     if (!message) return;
-    removeToast();
-  }, []);
-
-  useEffect(() => {
-    if (!message) return;
-
-    if (sideBarState) {
-      removeToast();
-    }
 
     if (message) {
       const timeout = setTimeout(() => {
@@ -32,5 +21,5 @@ export function useToast() {
     }
   }, [message]);
 
-  return { message, removeToast };
+  return { message };
 }
