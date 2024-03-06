@@ -102,11 +102,7 @@ describe('ChatService', () => {
           },
         ];
         for (const { memberId, email, providerId, roomId } of testData) {
-          const member: Member = {
-            id: memberId,
-            email: email,
-            providerId: providerId,
-          };
+          const member: Member = { id: memberId, email, providerId };
           const room: ChattingRoom = {
             id: roomId,
             participant: member,
@@ -125,10 +121,7 @@ describe('ChatService', () => {
             result,
             userInfo,
           );
-          expect(expectation).toEqual({
-            memberId: memberId,
-            roomId: roomId,
-          });
+          expect(expectation).toEqual({ memberId, roomId });
           expect(transactionMock).toHaveBeenCalled();
         }
       });
@@ -149,9 +142,7 @@ describe('ChatService', () => {
         },
       ];
       for (const { roomId, memberId, messages } of testData) {
-        const member: Member = {
-          id: memberId,
-        };
+        const member: Member = { id: memberId };
         const room: ChattingRoom = {
           id: roomId,
           participant: member,
