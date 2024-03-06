@@ -12,11 +12,9 @@ export function useOutSideClickEvent(callback: () => void) {
       callback();
     }
 
-    setTimeout(() => {
-      document.addEventListener('click', handleOutSideClick);
-    }, 100);
+    document.addEventListener('mousedown', handleOutSideClick);
 
-    return () => document.removeEventListener('click', handleOutSideClick);
+    return () => document.removeEventListener('mousedown', handleOutSideClick);
   }, []);
 
   return ref;
