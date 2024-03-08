@@ -1,11 +1,5 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { ChatService } from 'src/chat/chat.service';
 import {
-  ASK_TAROTCARD_MESSAGE_CANDIDATES,
-  WELCOME_MESSAGE,
-} from 'src/common/constants/socket';
-import { LoggerService } from 'src/logger/logger.service';
-import {
+  TarotResultMock,
   aiMessageMock,
   chatServiceMock,
   chatbotServiceMock,
@@ -15,7 +9,14 @@ import {
   tarotIdxMock,
   tarotServiceMock,
 } from 'src/mocks/socket';
-import { TarotService } from 'src/tarot/tarot.service';
+import { Test, TestingModule } from '@nestjs/testing';
+import {
+  ASK_TAROTCARD_MESSAGE_CANDIDATES,
+  WELCOME_MESSAGE,
+} from '@constants/socket';
+import { LoggerService } from '@logger/logger.service';
+import { ChatService } from '@chat/chat.service';
+import { TarotService } from '@tarot/tarot.service';
 import { SocketService } from './socket.service';
 
 describe('SocketService', () => {
@@ -152,7 +153,7 @@ describe('SocketService', () => {
       const shareLinkIdMock = 'shareLinkId';
       jest
         .spyOn(tarotServiceMock, 'createTarotResult')
-        .mockImplementation(() => Promise.resolve(shareLinkIdMock));
+        .mockImplementation(() => Promise.resolve(TarotResultMock));
 
       await socketService.handleTarotReadEvent(clientMock, tarotIdxMock);
 

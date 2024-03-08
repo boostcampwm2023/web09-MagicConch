@@ -1,11 +1,12 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { ProviderIdEnum } from 'src/common/constants/etc';
-import { ChatLog } from 'src/common/types/chatbot';
-import { UserInfo } from 'src/common/types/socket';
-import { CustomException } from 'src/exceptions';
-import { CHAT_CODEMAP } from 'src/exceptions/codemap';
-import { Member } from 'src/members/entities';
 import { EntityManager } from 'typeorm';
+import { Test, TestingModule } from '@nestjs/testing';
+import { ChatLog } from '@common/types/chatbot';
+import { UserInfo } from '@common/types/socket';
+import { ProviderIdEnum } from '@constants/etc';
+import { CHAT_CODEMAP } from '@exceptions/codemap';
+import { CustomException } from '@exceptions/custom-exception';
+import { Member } from '@members/entities';
+import { TarotResult } from '@tarot/entities';
 import { ChatService } from './chat.service';
 import { ChattingInfo } from './chatting-info.interface';
 import {
@@ -22,6 +23,7 @@ const JAN_26: string = '2024-01-26';
 describe('ChatService', () => {
   let chatService: ChatService;
   let entityManager: EntityManager;
+  let result: TarotResult;
 
   beforeAll(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
@@ -36,6 +38,11 @@ describe('ChatService', () => {
 
     chatService = moduleRef.get<ChatService>(ChatService);
     entityManager = moduleRef.get<EntityManager>(EntityManager);
+
+    result = new TarotResult();
+    result.id = '12345678-0000-0000-0000-567812345678';
+    result.cardUrl = 'cardUrl';
+    result.message = 'message';
   });
 
   afterAll(() => {
@@ -64,15 +71,14 @@ describe('ChatService', () => {
           const room: ChattingRoom = {
             id: roomId,
             participant: member,
+            result,
           };
 
           const transactionMock = jest
             .spyOn(entityManager, 'transaction')
-            .mockImplementation(
-              async () => await Promise.resolve({ member, room }),
-            );
+            .mockImplementation(async () => Promise.resolve({ member, room }));
 
-          await expect(chatService.createRoom()).resolves.toEqual({
+          await expect(chatService.createRoom(result)).resolves.toEqual({
             memberId: member.id,
             roomId: room.id,
           });
@@ -96,14 +102,11 @@ describe('ChatService', () => {
           },
         ];
         for (const { memberId, email, providerId, roomId } of testData) {
-          const member: Member = {
-            id: memberId,
-            email: email,
-            providerId: providerId,
-          };
+          const member: Member = { id: memberId, email, providerId };
           const room: ChattingRoom = {
             id: roomId,
             participant: member,
+            result,
           };
           const userInfo: UserInfo = {
             email: email ?? '',
@@ -112,16 +115,13 @@ describe('ChatService', () => {
 
           const transactionMock = jest
             .spyOn(entityManager, 'transaction')
-            .mockImplementation(
-              async () => await Promise.resolve({ member, room }),
-            );
+            .mockImplementation(async () => Promise.resolve({ member, room }));
 
-          const expectation: ChattingInfo =
-            await chatService.createRoom(userInfo);
-          expect(expectation).toEqual({
-            memberId: memberId,
-            roomId: roomId,
-          });
+          const expectation: ChattingInfo = await chatService.createRoom(
+            result,
+            userInfo,
+          );
+          expect(expectation).toEqual({ memberId, roomId });
           expect(transactionMock).toHaveBeenCalled();
         }
       });
@@ -142,12 +142,11 @@ describe('ChatService', () => {
         },
       ];
       for (const { roomId, memberId, messages } of testData) {
-        const member: Member = {
-          id: memberId,
-        };
+        const member: Member = { id: memberId };
         const room: ChattingRoom = {
           id: roomId,
           participant: member,
+          result,
         };
         const chatLog: ChatLog = {
           isHost: messages.role === 'assistant',
@@ -158,7 +157,7 @@ describe('ChatService', () => {
 
         const transactionMock = jest
           .spyOn(entityManager, 'transaction')
-          .mockImplementation(async () => await Promise.resolve());
+          .mockImplementation(async () => Promise.resolve());
 
         await expect(
           chatService.createMessages(roomId, memberId, [createMessageDto]),
@@ -181,11 +180,8 @@ describe('ChatService', () => {
       for (const { roomId, memberId } of testData) {
         const transactionMock = jest
           .spyOn(entityManager, 'transaction')
-          .mockImplementation(
-            async () =>
-              await Promise.reject(
-                new CustomException(CHAT_CODEMAP.ROOM_NOT_FOUND),
-              ),
+          .mockImplementation(async () =>
+            Promise.reject(new CustomException(CHAT_CODEMAP.ROOM_NOT_FOUND)),
           );
 
         await expect(
@@ -211,12 +207,14 @@ describe('ChatService', () => {
           id: '12345678-1234-5678-1234-567812345672',
           title: '내일의 운세 채팅방',
           participant: member,
+          result,
           createdAt: jan26,
         },
         {
           id: '12345678-1234-5678-1234-567812345671',
           title: '오늘의 운세 채팅방',
           participant: member,
+          result,
           createdAt: jan15,
         },
       ];
@@ -250,7 +248,7 @@ describe('ChatService', () => {
 
       const transactionMock = jest
         .spyOn(entityManager, 'transaction')
-        .mockImplementation(async () => await Promise.resolve(rooms));
+        .mockImplementation(async () => Promise.resolve(rooms));
 
       const expectation: ChattingRoomGroupDto[] =
         await chatService.findRoomsByEmail(
@@ -277,6 +275,7 @@ describe('ChatService', () => {
       room = {
         id: '12345678-1234-5678-1234-567812345671',
         participant: member,
+        result,
       };
 
       messages = [
@@ -300,7 +299,7 @@ describe('ChatService', () => {
     it('해당 아이디의 채팅방에 오고 간 채팅 메시지를 조회할 수 있다.', async () => {
       const transactionMock = jest
         .spyOn(entityManager, 'transaction')
-        .mockImplementation(async () => await Promise.resolve(messages));
+        .mockImplementation(async () => Promise.resolve(messages));
 
       const expectation: ChattingMessageDto[] =
         await chatService.findMessagesById(
@@ -322,11 +321,8 @@ describe('ChatService', () => {
 
         const transactionMock = jest
           .spyOn(entityManager, 'transaction')
-          .mockImplementation(
-            async () =>
-              await Promise.reject(
-                new CustomException(CHAT_CODEMAP.ROOM_NOT_FOUND),
-              ),
+          .mockImplementation(async () =>
+            Promise.reject(new CustomException(CHAT_CODEMAP.ROOM_NOT_FOUND)),
           );
 
         await expect(
@@ -348,11 +344,8 @@ describe('ChatService', () => {
 
         const transactionMock = jest
           .spyOn(entityManager, 'transaction')
-          .mockImplementation(
-            async () =>
-              await Promise.reject(
-                new CustomException(CHAT_CODEMAP.ROOM_FORBIDDEN),
-              ),
+          .mockImplementation(async () =>
+            Promise.reject(new CustomException(CHAT_CODEMAP.ROOM_FORBIDDEN)),
           );
 
         await expect(
@@ -382,6 +375,7 @@ describe('ChatService', () => {
       room = {
         id: '12345678-1234-5678-1234-567812345671',
         participant: member,
+        result,
       };
 
       updateRoomDto = {
@@ -392,7 +386,7 @@ describe('ChatService', () => {
     it('해당 아이디의 채팅방 제목을 수정할 수 있다.', async () => {
       const transactionMock = jest
         .spyOn(entityManager, 'transaction')
-        .mockImplementation(async () => await Promise.resolve());
+        .mockImplementation(async () => Promise.resolve());
 
       await expect(
         chatService.updateRoom(
@@ -411,11 +405,8 @@ describe('ChatService', () => {
 
         const transactionMock = jest
           .spyOn(entityManager, 'transaction')
-          .mockImplementation(
-            async () =>
-              await Promise.reject(
-                new CustomException(CHAT_CODEMAP.ROOM_NOT_FOUND),
-              ),
+          .mockImplementation(async () =>
+            Promise.reject(new CustomException(CHAT_CODEMAP.ROOM_NOT_FOUND)),
           );
 
         await expect(
@@ -438,11 +429,8 @@ describe('ChatService', () => {
 
         const transactionMock = jest
           .spyOn(entityManager, 'transaction')
-          .mockImplementation(
-            async () =>
-              await Promise.reject(
-                new CustomException(CHAT_CODEMAP.ROOM_FORBIDDEN),
-              ),
+          .mockImplementation(async () =>
+            Promise.reject(new CustomException(CHAT_CODEMAP.ROOM_FORBIDDEN)),
           );
 
         await expect(
@@ -472,13 +460,14 @@ describe('ChatService', () => {
       room = {
         id: '12345678-1234-5678-1234-567812345671',
         participant: member,
+        result,
       };
     });
 
     it('해당 아이디의 채팅방을 삭제할 수 있다.', async () => {
       const transactionMock = jest
         .spyOn(entityManager, 'transaction')
-        .mockImplementation(async () => await Promise.resolve());
+        .mockImplementation(async () => Promise.resolve());
 
       await expect(
         chatService.removeRoom(
@@ -496,11 +485,8 @@ describe('ChatService', () => {
 
         const transactionMock = jest
           .spyOn(entityManager, 'transaction')
-          .mockImplementation(
-            async () =>
-              await Promise.reject(
-                new CustomException(CHAT_CODEMAP.ROOM_NOT_FOUND),
-              ),
+          .mockImplementation(async () =>
+            Promise.reject(new CustomException(CHAT_CODEMAP.ROOM_NOT_FOUND)),
           );
 
         await expect(
@@ -522,11 +508,8 @@ describe('ChatService', () => {
 
         const transactionMock = jest
           .spyOn(entityManager, 'transaction')
-          .mockImplementation(
-            async () =>
-              await Promise.reject(
-                new CustomException(CHAT_CODEMAP.ROOM_FORBIDDEN),
-              ),
+          .mockImplementation(async () =>
+            Promise.reject(new CustomException(CHAT_CODEMAP.ROOM_FORBIDDEN)),
           );
 
         await expect(

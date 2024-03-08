@@ -1,5 +1,6 @@
 import { ChatLogContainer } from '@components/aiChatPage';
 import { Background, ChatContainer, Header } from '@components/common';
+import { KakaoLoginoutButton } from '@components/common/Buttons/KakaoLoginoutButton';
 import { SideBarButton } from '@components/common/SideBar';
 
 import { useAiChatMessage } from '@business/hooks/chatMessage';
@@ -26,6 +27,7 @@ export function AIChatPage({}: AIChatPageProps) {
           rightItems={
             data?.isAuthenticated
               ? [
+                  <KakaoLoginoutButton />,
                   <SideBarButton
                     onClick={toggleSidebar}
                     sideBarOpened={sidebarOpened}
@@ -34,7 +36,7 @@ export function AIChatPage({}: AIChatPageProps) {
               : []
           }
         />
-        <div className="w-h-full p-[5%] lg:pl-[25%] lg:pr-[25%]">
+        <div className="w-h-full pt-50 pl-[5%] pr-[5%] pb-[5%] lg:pl-[25%] lg:pr-[25%]">
           <ChatContainer
             messages={messages}
             inputDisabled={inputDisabled}

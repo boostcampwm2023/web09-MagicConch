@@ -2,10 +2,21 @@ FROM node:20
 
 RUN apt-get update && apt-get install -y tini
 
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci
+
+COPY packages ./
+RUN npm run build-prod:logger
+RUN npm run build-prod:event
+
 WORKDIR /app/was
 
 COPY was/package*.json ./
 RUN npm ci
+RUN mv ../socket-event/dist ./node_modules/socket-event
+RUN mv ../winston-logger/dist ./node_modules/winston-logger
 
 COPY was .
 RUN npm run build

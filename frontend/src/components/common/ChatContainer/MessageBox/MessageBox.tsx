@@ -1,10 +1,10 @@
-import { Message } from '.';
 import type { Message as MessageType } from '..';
-import { Link } from 'react-router-dom';
 
-import { Button, IconButton } from '@components/common/Buttons';
+import { Button } from '@components/common/Buttons';
 
 import { getTarotImageQuery } from '@stores/queries';
+
+import { Message } from './Message';
 
 interface MessageBoxProps extends MessageType {}
 
@@ -15,7 +15,7 @@ export function MessageBox({ tarotId, type, message, profile, button, shareLinkI
 
   return (
     <div className="relative w-full">
-      <div className={`relative ${type === 'left' ? 'left-75' : 'right-75'}`}>
+      <div className={`w-full flex pr-70 pl-70 ${type === 'left' ? 'justify-start' : 'justify-end'}`}>
         {tarotId && (
           <img
             className="w-120 h-200 min-w-120 rounded-lg"
@@ -24,28 +24,14 @@ export function MessageBox({ tarotId, type, message, profile, button, shareLinkI
           />
         )}
       </div>
-
       {message && (
-        <div className="flex flex-col">
+        <div className="flex flex-col w-full">
           <Message
             type={type}
             message={message}
             profile={profile}
+            shareLinkId={shareLinkId}
           />
-          {shareLinkId && (
-            <div className="absolute -right-50 bottom-5">
-              <Link
-                to={`/result/${shareLinkId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <IconButton
-                  icon="ion:share"
-                  buttonColor="transparent"
-                />
-              </Link>
-            </div>
-          )}
           {button && (
             <div className="relative left-70">
               <Button

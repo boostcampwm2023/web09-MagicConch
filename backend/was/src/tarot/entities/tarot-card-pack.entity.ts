@@ -1,4 +1,3 @@
-import { Member } from 'src/members/entities';
 import {
   Column,
   CreateDateColumn,
@@ -8,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Member } from '@members/entities';
 import { TarotCard } from './tarot-card.entity';
 
 /**

@@ -1,12 +1,20 @@
 import { Button, KakaoLoginButton } from '@components/common/Buttons';
 
+import { useOutSideClickEvent } from '@business/hooks';
+
 interface LoginPopupProps {
   moveAiChat: () => void;
+  closePopup: () => void;
 }
-export function LoginPopup({ moveAiChat }: LoginPopupProps) {
+export function LoginPopup({ moveAiChat, closePopup }: LoginPopupProps) {
+  const ref = useOutSideClickEvent(closePopup);
+
   return (
     <div className="w-[100vw] h-[100vh] flex-with-center">
-      <div className="flex flex-col gap-18 surface-content rounded p-24 shadow-popup">
+      <div
+        ref={ref}
+        className="flex flex-col gap-18 surface-content rounded p-24 shadow-popup"
+      >
         <div className="flex-with-center p-16 display-medium16 text-center">
           로그인을 하면
           <br />

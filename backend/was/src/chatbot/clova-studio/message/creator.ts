@@ -1,11 +1,11 @@
 import { WsException } from '@nestjs/websockets';
+import type { ClovaStudioMessage } from '@common/types/clova-studio';
 import {
   TALK_SYSTEM_MESSAGE,
   TAROTCARD_NAMES,
   TAROTREADING_SYSTEM_MESSAGE,
-} from 'src/common/constants/clova-studio';
-import { ERR_MSG } from 'src/common/constants/errors';
-import type { ClovaStudioMessage } from 'src/common/types/clova-studio';
+} from '@constants/clova-studio';
+import { ERR_MSG } from '@constants/errors';
 
 export function createTalkSystemMessage(): ClovaStudioMessage {
   return { role: 'system', content: TALK_SYSTEM_MESSAGE };

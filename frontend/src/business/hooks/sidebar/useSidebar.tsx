@@ -35,29 +35,27 @@ export function useSidebar() {
 
   const Sidebar = useMemo(
     () =>
-      ({ children }: PropsWithChildren) =>
-        (
-          <aside
-            ref={sidebarRef}
-            className={`fixed top-0 left-[100%] w-screen lg:w-360 h-full surface-alt z-10 transition-transform ease-in-out duration-500 p-15`}
-          >
-            {children}
-          </aside>
-        ),
+      ({ children }: PropsWithChildren) => (
+        <aside
+          ref={sidebarRef}
+          className={`fixed top-0 left-[100%] w-screen lg:w-360 h-full surface-alt z-10 transition-transform ease-in-out duration-500 p-15 pt-45`}
+        >
+          {children}
+        </aside>
+      ),
     [],
   );
 
   const SlideableContent = useMemo(
     () =>
-      ({ children }: PropsWithChildren) =>
-        (
-          <section
-            ref={mainRef}
-            className={`w-h-full transition-transform ease-in-out duration-500`}
-          >
-            {children}
-          </section>
-        ),
+      ({ children }: PropsWithChildren) => (
+        <section
+          ref={mainRef}
+          className={`w-h-full transition-transform ease-in-out duration-500`}
+        >
+          {children}
+        </section>
+      ),
     [],
   );
 

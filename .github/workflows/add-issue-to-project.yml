@@ -46,6 +46,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
       - uses: actions/add-to-project@v0.5.0
         with:
           project-url: https://github.com/orgs/boostcampwm2023/projects/${{ env.PROJECT_NUMBER }}

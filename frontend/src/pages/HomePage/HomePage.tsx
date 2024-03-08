@@ -21,7 +21,7 @@ export function HomePage() {
 
   return (
     <>
-      <Background />
+      <Background themeButton />
       <main className="w-screen h-dvh relative flex-with-center z-1">
         <div className="flex gap-36 mt-150">
           <Button onClick={openLoginPopup}>AI에게 타로보기</Button>

@@ -7,3 +7,4 @@ export const KAKAO_AUTH_URL =
   `&redirect_uri=${import.meta.env.VITE_KAKAO_REDIRECT_URI}`;
 
 export const KAKAO_LOGIN_URL = import.meta.env.VITE_WAS_URL + '/oauth/login/kakao';
+export const KAKAO_LOGOUT_URL = import.meta.env.VITE_WAS_URL + '/oauth/logout';

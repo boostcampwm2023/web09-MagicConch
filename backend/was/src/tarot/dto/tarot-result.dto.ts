@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsUrl } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 import { TarotResult } from '../entities';
 
 export class TarotResultDto {

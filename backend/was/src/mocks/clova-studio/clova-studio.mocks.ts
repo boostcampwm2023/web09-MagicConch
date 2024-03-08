@@ -1,10 +1,10 @@
 import { ConfigService } from '@nestjs/config';
-import { clovaStudioApi } from 'src/chatbot/clova-studio/api';
-import { CLOVA_API_KEY_NAMES } from 'src/common/constants/clova-studio';
 import {
   string2Uint8ArrayStream,
   uint8Array2String,
-} from 'src/common/utils/stream';
+} from '@common/utils/stream';
+import { CLOVA_API_KEY_NAMES } from '@constants/clova-studio';
+import { clovaStudioApi } from '@chatbot/clova-studio/api';
 
 export const eventIdMock = '123456-12345-123-12345-12345-1';
 
@@ -65,8 +65,8 @@ export async function vaildateTokenStream(
 export function vaildateEventString(chunk: string): boolean {
   const regx =
     `^id: ${eventIdMock}\n` +
-    `event: (token|result)\\n` +
-    `data: {"message": {"role": "assistant", "content": ".+" }}$`;
+    'event: (token|result)\\n' +
+    'data: {"message": {"role": "assistant", "content": ".+" }}$';
 
   return new RegExp(regx, 'm').test(chunk);
 }

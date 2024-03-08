@@ -1,11 +1,11 @@
-import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
 import * as dotenv from 'dotenv';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import { setupSentry } from '@config/sentry.setting';
+import { setupSwagger } from '@config/swagger.setting';
+import { LoggerService } from '@logger/logger.service';
 import { AppModule } from './app.module';
-import { setupSentry } from './common/config/sentry.setting';
-import { setupSwagger } from './common/config/swagger.setting';
-import { LoggerService } from './logger/logger.service';
 
 dotenv.config();
 

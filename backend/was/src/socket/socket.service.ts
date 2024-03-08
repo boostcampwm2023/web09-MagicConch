@@ -1,19 +1,20 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
-import { ChatService } from 'src/chat/chat.service';
-import { CreateChattingMessageDto } from 'src/chat/dto';
-import { ChatbotService } from 'src/chatbot/chatbot.interface';
-import { ERR_MSG } from 'src/common/constants/errors';
+import { ChatLog } from '@common/types/chatbot';
+import type { ExtendedAiSocket as AiSocket } from '@common/types/socket';
+import { readStream, string2Uint8ArrayStream } from '@common/utils/stream';
+import { ERR_MSG } from '@constants/errors';
 import {
   ASK_TAROTCARD_MESSAGE_CANDIDATES,
   WELCOME_MESSAGE,
-} from 'src/common/constants/socket';
-import { ChatLog } from 'src/common/types/chatbot';
-import type { AiSocket } from 'src/common/types/socket';
-import { readStream, string2Uint8ArrayStream } from 'src/common/utils/stream';
-import { LoggerService } from 'src/logger/logger.service';
-import { CreateTarotResultDto } from 'src/tarot/dto';
-import { TarotService } from 'src/tarot/tarot.service';
+} from '@constants/socket';
+import { LoggerService } from '@logger/logger.service';
+import { ChatService } from '@chat/chat.service';
+import { CreateChattingMessageDto } from '@chat/dto';
+import { ChatbotService } from '@chatbot/chatbot.interface';
+import { CreateTarotResultDto } from '@tarot/dto';
+import { TarotResult } from '@tarot/entities';
+import { TarotService } from '@tarot/tarot.service';
 
 @Injectable()
 export class SocketService {
@@ -81,12 +82,11 @@ export class SocketService {
       const sentMessage = await this.streamMessage(client, () =>
         this.chatbotService.generateTarotReading(client.chatLog, cardIdx),
       );
-
-      client.chatLog.push({ isHost: true, message: sentMessage });
-
       client.chatEnd = true;
 
-      const shareLinkId = await this.createShareLinkId(cardIdx, sentMessage);
+      client.result = await this.createResult(cardIdx, sentMessage);
+
+      const shareLinkId = client.result.id;
       client.emit('chatEnd', shareLinkId);
 
       const { memberId, roomId } = await this.createRoom(client);
@@ -122,7 +122,10 @@ export class SocketService {
 
   private async createRoom(client: AiSocket) {
     try {
-      const chattingInfo = await this.chatService.createRoom(client.user);
+      const chattingInfo = await this.chatService.createRoom(
+        client.result as TarotResult,
+        client.user,
+      );
       return chattingInfo;
     } catch (err) {
       if (err instanceof Error) {
@@ -160,10 +163,10 @@ export class SocketService {
     }
   }
 
-  private async createShareLinkId(
+  private async createResult(
     cardIdx: number,
     result: string,
-  ): Promise<string> {
+  ): Promise<TarotResult> {
     try {
       const tarotResult = CreateTarotResultDto.fromResult(cardIdx, result);
       return await this.tarotService.createTarotResult(tarotResult);

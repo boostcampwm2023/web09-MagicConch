@@ -1,5 +1,5 @@
-import type { ClovaStudioEvent } from 'src/common/types/clova-studio';
-import { string2Uint8Array, uint8Array2String } from 'src/common/utils/stream';
+import type { ClovaStudioEvent } from '@common/types/clova-studio';
+import { string2Uint8Array, uint8Array2String } from '@common/utils/stream';
 
 export function apiResponseStream2TokenStream(
   responseStream: ReadableStream<Uint8Array>,

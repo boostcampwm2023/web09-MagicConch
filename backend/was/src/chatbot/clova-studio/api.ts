@@ -1,13 +1,13 @@
+import type {
+  ClovaStudioApiKeys,
+  ClovaStudioMessage,
+} from '@common/types/clova-studio';
 import {
   CLOVA_API_DEFAULT_BODY_OPTIONS,
   CLOVA_API_DEFAULT_HEADER_OPTIONS,
   CLOVA_URL,
-} from 'src/common/constants/clova-studio';
-import { ERR_MSG } from 'src/common/constants/errors';
-import type {
-  ClovaStudioApiKeys,
-  ClovaStudioMessage,
-} from 'src/common/types/clova-studio';
+} from '@constants/clova-studio';
+import { ERR_MSG } from '@constants/errors';
 
 type APIOptions = {
   apiKeys: ClovaStudioApiKeys;

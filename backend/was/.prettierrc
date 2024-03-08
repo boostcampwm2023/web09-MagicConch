@@ -2,7 +2,20 @@
   "singleQuote": true,
   "trailingComma": "all",
   "plugins": ["@trivago/prettier-plugin-sort-imports"],
-  "importOrder": ["^@core/(.*)$", "^@server/(.*)$", "^@ui/(.*)$", "^[./]"],
+  "importOrder": [
+    "^@nestjs/(.*)$",
+    "^@core/(.*)$",
+    "^@server/(.*)$",
+    "^@ui/(.*)$",
+    "^@common/(.*)$",
+    "^@config/(.*)$",
+    "^@constants/(.*)$",
+    "^@interceptors/(.*)$",
+    "^@exceptions/(.*)$",
+    "^@logger/(.*)$",
+    "^@(.*)$",
+    "^[./]"
+  ],
   "importOrderParserPlugins": ["typescript", "decorators-legacy"],
   "importOrderSeparation": false,
   "importOrderSortSpecifiers": true

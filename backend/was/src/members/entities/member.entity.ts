@@ -1,6 +1,3 @@
-import { ChattingRoom } from 'src/chat/entities';
-import { ProviderIdEnum } from 'src/common/constants/etc';
-import { TarotCardPack } from 'src/tarot/entities';
 import {
   Column,
   CreateDateColumn,
@@ -10,6 +7,9 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ProviderIdEnum } from '@constants/etc';
+import { ChattingRoom } from '@chat/entities';
+import { TarotCardPack } from '@tarot/entities';
 import { CreateMemberDto } from '../dto';
 
 @Entity()

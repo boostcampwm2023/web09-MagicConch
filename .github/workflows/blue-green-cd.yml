@@ -12,9 +12,6 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./backend
 
     steps:
       - name: Checkout code
@@ -38,7 +35,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          source: "backend/.env,backend/deploy.sh,backend/send-slack-message.sh,backend/compose.blue-deploy.yml,backend/compose.green-deploy.yml,backend/Dockerfile.nginx"
+          source: "backend/.env,backend/*.sh,backend/compose*deploy.yml,backend/*nginx*"
           target: "~/app/"
           overwrite: true
 
@@ -60,6 +57,10 @@ jobs:
 
       - name: Build & Push Docker Images (Blue & Green)
         run: |
+          cp package.json backend/package.json
+          cp package-lock.json backend/package-lock.json
+          cp -r packages backend/packages
+          cd backend
           docker-compose -f compose.blue-build.yml build --builder buildx --build-arg BUILDKIT_INLINE_CACHE=1
           docker-compose -f compose.green-build.yml build --builder buildx --build-arg BUILDKIT_INLINE_CACHE=1
           docker-compose -f compose.blue-build.yml push

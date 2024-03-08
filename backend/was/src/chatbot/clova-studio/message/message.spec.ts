@@ -1,10 +1,10 @@
+import type { ChatLog } from '@common/types/chatbot';
+import type { ClovaStudioMessage } from '@common/types/clova-studio';
 import {
   TALK_SYSTEM_MESSAGE,
   TAROTCARD_NAMES,
   TAROTREADING_SYSTEM_MESSAGE,
-} from 'src/common/constants/clova-studio';
-import type { ChatLog } from 'src/common/types/chatbot';
-import type { ClovaStudioMessage } from 'src/common/types/clova-studio';
+} from '@constants/clova-studio';
 import { buildTalkMessages, buildTarotReadingMessages } from './builder';
 import { chatLog2clovaStudioMessages } from './converter';
 import { createTarotCardMessage, createUserMessage } from './creator';

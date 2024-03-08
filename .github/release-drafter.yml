@@ -4,10 +4,6 @@ template: |
   # Changes (v$RESOLVED_VERSION)
 
   $CHANGES
-footer: |
-  ### Contributors
-
-  $CONTRIBUTORS
 categories:
   - title: "🚀 Features"
     collapse-after: 15
@@ -22,7 +18,7 @@ categories:
     labels:
       - "refactor"
 change-template: "- $TITLE (#$NUMBER) @$AUTHOR"
-change-title-escapes: '\<*_&#/@[]'
+change-title-escapes: '\<*_&'
 version-resolver:
   major:
     labels:

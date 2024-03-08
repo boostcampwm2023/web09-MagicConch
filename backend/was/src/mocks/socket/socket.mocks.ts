@@ -1,9 +1,10 @@
 import { LoggerService } from '@nestjs/common';
-import { ChatService } from 'src/chat/chat.service';
-import { ChatbotService } from 'src/chatbot/chatbot.interface';
-import { Socket } from 'src/common/types/socket';
-import { string2Uint8ArrayStream } from 'src/common/utils/stream';
-import { TarotService } from 'src/tarot/tarot.service';
+import type { ExtendedAiSocket as AiSocket } from '@common/types/socket';
+import { string2Uint8ArrayStream } from '@common/utils/stream';
+import { ChatService } from '@chat/chat.service';
+import { ChatbotService } from '@chatbot/chatbot.interface';
+import { TarotResult } from '@tarot/entities';
+import { TarotService } from '@tarot/tarot.service';
 
 export const aiMessageMock = '인공지능입니다.';
 export const humanMessageMock = '사람입니다.';
@@ -32,4 +33,10 @@ export const clientMock = {
   chatLog: [],
   chatEnd: false,
   emit: jest.fn(),
-} as unknown as Socket;
+} as unknown as AiSocket;
+
+export const TarotResultMock: TarotResult = {
+  id: 'id',
+  cardUrl: 'cardUrl',
+  message: 'message',
+};

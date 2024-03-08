@@ -1,12 +1,12 @@
+import * as request from 'supertest';
+import { EntityManager } from 'typeorm';
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { BUCKET_URL, ExtEnum } from 'src/common/constants/etc';
-import { TarotCard, TarotCardPack, TarotResult } from 'src/tarot/entities';
-import { TarotController } from 'src/tarot/tarot.controller';
-import { TarotService } from 'src/tarot/tarot.service';
-import * as request from 'supertest';
-import { EntityManager } from 'typeorm';
+import { BUCKET_URL, ExtEnum } from '@constants/etc';
+import { TarotCard, TarotCardPack, TarotResult } from '@tarot/entities';
+import { TarotController } from '@tarot/tarot.controller';
+import { TarotService } from '@tarot/tarot.service';
 import { id, wrongId } from './common/constants';
 import { SqliteModule } from './common/database/sqlite.module';
 

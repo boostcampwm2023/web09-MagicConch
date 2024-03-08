@@ -1,17 +1,17 @@
 // socket.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ChattingMessage } from 'src/chat/entities/chatting-message.entity';
-import { ChattingRoom } from 'src/chat/entities/chatting-room.entity';
-import { ChatbotModule } from 'src/chatbot/chatbot.module';
-import { LoggerModule } from 'src/logger/logger.module';
-import { Member } from 'src/members/entities/member.entity';
-import { TarotCardPack } from 'src/tarot/entities/tarot-card-pack.entity';
-import { TarotCard } from 'src/tarot/entities/tarot-card.entity';
-import { TarotResult } from 'src/tarot/entities/tarot-result.entity';
-import { ChatService } from '../chat/chat.service';
-import { LoggerService } from '../logger/logger.service';
-import { TarotService } from '../tarot/tarot.service';
+import { LoggerModule } from '@logger/logger.module';
+import { LoggerService } from '@logger/logger.service';
+import { ChatService } from '@chat/chat.service';
+import { ChattingMessage } from '@chat/entities/chatting-message.entity';
+import { ChattingRoom } from '@chat/entities/chatting-room.entity';
+import { ChatbotModule } from '@chatbot/chatbot.module';
+import { Member } from '@members/entities/member.entity';
+import { TarotCardPack } from '@tarot/entities/tarot-card-pack.entity';
+import { TarotCard } from '@tarot/entities/tarot-card.entity';
+import { TarotResult } from '@tarot/entities/tarot-result.entity';
+import { TarotService } from '@tarot/tarot.service';
 import { SocketGateway } from './socket.gateway';
 import { SocketService } from './socket.service';
 

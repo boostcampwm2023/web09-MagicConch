@@ -1,8 +1,8 @@
+import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CustomException } from 'src/exceptions';
-import { TAROT_CODEMAP } from 'src/exceptions/codemap';
-import { Repository } from 'typeorm';
+import { TAROT_CODEMAP } from '@exceptions/codemap';
+import { CustomException } from '@exceptions/custom-exception';
 import { CreateTarotResultDto, TarotCardDto, TarotResultDto } from './dto';
 import { TarotCard, TarotResult } from './entities';
 
@@ -17,12 +17,10 @@ export class TarotService {
 
   async createTarotResult(
     createTarotResultDto: CreateTarotResultDto,
-  ): Promise<string> {
+  ): Promise<TarotResult> {
     const tarotResult: TarotResult = TarotResult.fromDto(createTarotResultDto);
     try {
-      const savedResult: TarotResult =
-        await this.tarotResultRepository.save(tarotResult);
-      return savedResult.id;
+      return await this.tarotResultRepository.save(tarotResult);
     } catch (err: unknown) {
       throw err;
     }
@@ -35,10 +33,7 @@ export class TarotService {
     try {
       const tarotCard: TarotCard | null =
         await this.tarotCardRepository.findOne({
-          where: {
-            cardNo: cardNo,
-            cardPack: undefined,
-          },
+          where: { cardNo, cardPack: undefined },
           select: ['cardNo', 'ext', 'cardPack'],
         });
 
@@ -55,7 +50,7 @@ export class TarotService {
     try {
       const tarotResult: TarotResult | null =
         await this.tarotResultRepository.findOne({
-          where: { id: id },
+          where: { id },
           select: ['cardUrl', 'message'],
         });
       if (!tarotResult) {

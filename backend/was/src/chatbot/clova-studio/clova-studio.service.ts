@@ -1,16 +1,16 @@
-import { Injectable } from '@nestjs/common';
 import * as dotenv from 'dotenv';
+import { Injectable } from '@nestjs/common';
+import type { ChatLog } from '@common/types/chatbot';
+import type {
+  ClovaStudioApiKeys,
+  ClovaStudioMessage,
+} from '@common/types/clova-studio';
 import {
   CHAT_MAX_TOKENS,
   CLOVA_API_KEY_NAMES,
   TAROT_MAX_TOKENS,
-} from 'src/common/constants/clova-studio';
-import { ERR_MSG } from 'src/common/constants/errors';
-import type { ChatLog } from 'src/common/types/chatbot';
-import type {
-  ClovaStudioApiKeys,
-  ClovaStudioMessage,
-} from 'src/common/types/clova-studio';
+} from '@constants/clova-studio';
+import { ERR_MSG } from '@constants/errors';
 import { ChatbotService } from '../chatbot.interface';
 import { clovaStudioApi } from './api';
 import {
@@ -57,7 +57,7 @@ export class ClovaStudioService implements ChatbotService {
     const options = { apiKeys: this.apiKeys, messages, maxTokens };
     const responseStream = await clovaStudioApi(options);
 
-    return await apiResponseStream2TokenStream(responseStream);
+    return apiResponseStream2TokenStream(responseStream);
   }
 }
 

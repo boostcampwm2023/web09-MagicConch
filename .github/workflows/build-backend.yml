@@ -3,7 +3,6 @@ name: Backend Build
 on:
   pull_request:
     types: [opened, edited]
-    paths: ["backend/**"]
 
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -12,9 +11,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     if: github.event.pull_request.base.ref == 'dev'
-    defaults:
-      run:
-        working-directory: ./backend
 
     steps:
       - name: Checkout code
@@ -41,5 +37,9 @@ jobs:
 
       - name: Build & Push Docker Cache
         run: |
+          cp package.json backend/package.json
+          cp package-lock.json backend/package-lock.json
+          cp -r packages backend/packages
+          cd backend
           docker-compose -f compose.cache-export.yml build --builder buildx --build-arg BUILDKIT_INLINE_CACHE=1
           docker-compose -f compose.cache-export.yml push

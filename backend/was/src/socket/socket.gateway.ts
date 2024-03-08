@@ -1,3 +1,9 @@
+import * as dotenv from 'dotenv';
+import type {
+  AiServer,
+  AiSocketClientEvent,
+  AiSocketClientEventParams,
+} from 'socket-event';
 import { UseGuards } from '@nestjs/common';
 import {
   OnGatewayConnection,
@@ -7,15 +13,9 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import * as dotenv from 'dotenv';
-import { SocketJwtAuthGuard } from 'src/auth/guard';
-import type {
-  AiServer,
-  AiSocket,
-  AiSocketClientEvent,
-  AiSocketClientEventParams,
-} from 'src/common/types/socket';
-import { LoggerService } from 'src/logger/logger.service';
+import type { ExtendedAiSocket as AiSocket } from '@common/types/socket';
+import { LoggerService } from '@logger/logger.service';
+import { SocketJwtAuthGuard } from '@auth/guard';
 import { SocketService } from './socket.service';
 
 dotenv.config();
