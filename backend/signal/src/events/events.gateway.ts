@@ -6,6 +6,7 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
+import * as dotenv from 'dotenv';
 import type {
   HumanServer,
   HumanSocket,
@@ -15,10 +16,12 @@ import type {
 import { LoggerService } from 'src/logger/logger.service';
 import { v4 } from 'uuid';
 
+dotenv.config();
+
 const MAXIMUM = 2;
 
 @WebSocketGateway({
-  cors: { origin: '*' },
+  cors: { origin: process.env.CORS_ALLOW_DOMAIN, credentials: true },
   path: '/signal',
 })
 export class EventsGateway

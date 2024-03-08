@@ -1,18 +1,22 @@
 import { NestFactory } from '@nestjs/core';
+import * as dotenv from 'dotenv';
 import { AppModule } from './app.module';
 import { LoggerService } from './logger/logger.service';
 
+dotenv.config();
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  const logger: LoggerService = app.get(LoggerService);
 
   app.enableCors({
     origin: process.env.CORS_ALLOW_DOMAIN,
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
     credentials: true,
-    allowedHeaders: ['Authorization', 'Content-type'],
+    allowedHeaders: ['Authorization', 'Content-type', 'samesite'],
   });
 
-  const logger: LoggerService = app.get(LoggerService);
   app.useLogger(logger);
 
   const port: number = parseInt(process.env.PORT || '3001');
