@@ -19,6 +19,7 @@ jobs:
 
       - name: Generate .env file and SSL files
         run: |
+          cd backend
           echo "${{ secrets.ENV_FILE }}" > .env
           echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
           echo "GITHUB_SHA=${{ github.sha }}" >> .env
