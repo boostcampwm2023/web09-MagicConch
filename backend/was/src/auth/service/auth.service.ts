@@ -107,10 +107,7 @@ export class AuthService {
   ): Promise<Member | null> {
     try {
       return await this.membersRepository.findOne({
-        where: {
-          email: email,
-          providerId: providerId,
-        },
+        where: { email, providerId },
         select: ['id'],
       });
     } catch (err: unknown) {

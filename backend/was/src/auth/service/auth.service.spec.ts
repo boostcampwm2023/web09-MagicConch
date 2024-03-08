@@ -134,10 +134,7 @@ describe('AuthService', () => {
         await expect(
           authService.login(id, providerId, profile, token),
         ).resolves.not.toThrow();
-        expect(memberUpdateMock).toHaveBeenCalledWith(
-          { id: id },
-          updateMemberDto,
-        );
+        expect(memberUpdateMock).toHaveBeenCalledWith({ id }, updateMemberDto);
       });
     });
   });

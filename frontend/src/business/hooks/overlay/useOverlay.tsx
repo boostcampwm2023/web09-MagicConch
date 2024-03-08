@@ -28,7 +28,7 @@ export function useOverlay() {
       openOverlay: (OverlayElement: CreateOverlayElement) => {
         mount(
           id,
-          <div className="fixed top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] z-10">
+          <div className="fixed top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] z-50">
             <OverlayElement
               key={String(new Date())}
               opened={opened}

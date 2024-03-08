@@ -33,10 +33,7 @@ export class TarotService {
     try {
       const tarotCard: TarotCard | null =
         await this.tarotCardRepository.findOne({
-          where: {
-            cardNo: cardNo,
-            cardPack: undefined,
-          },
+          where: { cardNo, cardPack: undefined },
           select: ['cardNo', 'ext', 'cardPack'],
         });
 
@@ -53,7 +50,7 @@ export class TarotService {
     try {
       const tarotResult: TarotResult | null =
         await this.tarotResultRepository.findOne({
-          where: { id: id },
+          where: { id },
           select: ['cardUrl', 'message'],
         });
       if (!tarotResult) {

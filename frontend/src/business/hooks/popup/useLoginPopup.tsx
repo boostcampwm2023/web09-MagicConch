@@ -17,7 +17,12 @@ export function useLoginPopup({ moveAiChat }: UseLoginPopupParams) {
       moveAiChat();
       return;
     }
-    openOverlay(() => <LoginPopup moveAiChat={moveAiChat}></LoginPopup>);
+    openOverlay(({ closeOverlay }) => (
+      <LoginPopup
+        moveAiChat={moveAiChat}
+        closePopup={closeOverlay}
+      ></LoginPopup>
+    ));
   };
 
   return { openLoginPopup };

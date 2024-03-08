@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsDate, IsString, IsUUID } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 import { ChattingRoom } from '../entities';
 
 export class ChattingRoomDto {

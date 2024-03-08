@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { MessageButton } from '@components/common/ChatContainer';
 
-import { ProfileInfo, useProfileInfo } from '@stores/zustandStores';
+import { ProfileInfo, useProfileInfo, useToastStore } from '@stores/zustandStores';
 
 import { arrayBuffer2Blob } from '@utils/array';
 
@@ -21,6 +21,10 @@ export function useHumanChatMessage() {
 
   const myProfileRef = useRef<ProfileInfo>();
   const remoteProfileRef = useRef<ProfileInfo>();
+
+  const { setToastMessage } = useToastStore(state => ({
+    setToastMessage: state.setMessage,
+  }));
 
   const { myProfile, remoteProfile } = useProfileInfo(state => ({
     myProfile: state.myProfile,
@@ -69,6 +73,7 @@ export function useHumanChatMessage() {
 
         if (message.type === CHAT_MESSAGE) {
           addMessage('left', { message: message.content });
+          setToastMessage(message.content);
         }
         if (message.type === PICK_CARD) {
           addMessage('right', { tarotId: message.content });
