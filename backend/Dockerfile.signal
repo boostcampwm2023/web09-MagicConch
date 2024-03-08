@@ -6,7 +6,6 @@ WORKDIR /app
 
 COPY package*.json ./
 RUN npm ci
-RUN ls node_modules
 
 COPY packages ./
 RUN npm run build-prod:logger
@@ -16,10 +15,7 @@ WORKDIR /app/signal
 
 COPY signal/package*.json ./
 RUN npm ci
-RUN mv ../socket-event/dist ./node_modules/socket-event
-RUN mv ../socket-event/node_modules ./node_modules/socket-event/node_modules
-RUN mv ../winston-logger/dist ./node_modules/winston-logger
-RUN mv ../winston-logger/node_modules ./node_modules/winston-logger/node_modules
+RUN npm run move:logger && npm run move:event
 
 COPY signal .
 RUN npm run build
