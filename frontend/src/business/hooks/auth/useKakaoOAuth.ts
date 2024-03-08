@@ -8,7 +8,7 @@ export function useKakaoOAuth() {
   };
 
   const logout = async () => {
-    const res = await axios.get(KAKAO_LOGOUT_URL);
+    const res = await axios.get(KAKAO_LOGOUT_URL, { withCredentials: true });
     if (res.status === 200) {
       window.location.reload();
     }
