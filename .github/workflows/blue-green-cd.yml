@@ -2,8 +2,8 @@ name: Blue/Green CD for Backend
 
 on:
   push:
-    paths: ["backend/**"]
-    branches: ["release", "*hotfix*"]
+    #paths: ["backend/**"]
+    #branches: ["release", "*hotfix*"]
 
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -19,6 +19,7 @@ jobs:
 
       - name: Generate .env file and SSL files
         run: |
+          cd backend
           echo "${{ secrets.ENV_FILE }}" > .env
           echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
           echo "GITHUB_SHA=${{ github.sha }}" >> .env
