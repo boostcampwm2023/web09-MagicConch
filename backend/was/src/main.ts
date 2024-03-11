@@ -12,17 +12,16 @@ dotenv.config();
 async function bootstrap() {
   const app: INestApplication = await NestFactory.create(AppModule);
 
-  const origin: string = process.env.CORS_ALLOW_DOMAIN ?? '';
   const port: number = parseInt(process.env.PORT || '3000');
   const dsn: string = process.env.SENTRY_DSN || '';
 
   const logger: LoggerService = app.get(LoggerService);
 
   app.enableCors({
-    origin: origin,
+    origin: process.env.CORS_ALLOW_DOMAIN,
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
     credentials: true,
-    allowedHeaders: ['Authorization', 'Content-type'],
+    allowedHeaders: ['Authorization', 'Content-type', 'samesite'],
   });
   app.enableShutdownHooks();
   app.use(cookieParser());

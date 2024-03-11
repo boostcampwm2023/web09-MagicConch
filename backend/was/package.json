@@ -12,6 +12,8 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
+    "move:logger": "mv ../winston-logger/dist ./node_modules/winston-logger && mv ../winston-logger/node_modules ./node_modules/winston-logger/node_modules",
+    "move:event": "mv ../socket-event/dist ./node_modules/socket-event && mv ../socket-event/node_modules ./node_modules/socket-event/node_modules",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest --config ./jest-unit.config.js --runInBand",
     "test:watch": "jest --watch",
