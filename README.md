@@ -66,11 +66,16 @@ https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/4d0f49fc-ed0
 ## 우당탕탕 이슈 해결기 💦
 > 타로 밀크티의 기술적 도전과 이슈 해결 기록
 
+### BE
 - [[BE] 야 너두 무중단 배포 할 수 있어 🫵](https://github.com/boostcampwm2023/web09-MagicConch/wiki/%EC%95%BC-%EB%84%88%EB%91%90-%EB%AC%B4%EC%A4%91%EB%8B%A8-%EB%B0%B0%ED%8F%AC-%ED%95%A0-%EC%88%98-%EC%9E%88%EC%96%B4-%F0%9F%AB%B5)
 - [[BE] SWAG하게 Swagger 사용하는 법 🤟 (Feat. Swagger 데코레이터를 위한 패키지 만들기)](https://github.com/boostcampwm2023/web09-MagicConch/wiki/SWAG%ED%95%98%EA%B2%8C-Swagger-%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94-%EB%B2%95-%F0%9F%A4%9F-(Feat.-Swagger-%EB%8D%B0%EC%BD%94%EB%A0%88%EC%9D%B4%ED%84%B0%EB%A5%BC-%EC%9C%84%ED%95%9C-%ED%8C%A8%ED%82%A4%EC%A7%80-%EB%A7%8C%EB%93%A4%EA%B8%B0))
+
+### FE
 - [[FE] 인터랙티브 웹: 카드 애니메이션](https://github.com/boostcampwm2023/web09-MagicConch/wiki/%EC%9D%B8%ED%84%B0%EB%9E%99%ED%8B%B0%EB%B8%8C-%EC%9B%B9:-%EC%B9%B4%EB%93%9C-%EC%95%A0%EB%8B%88%EB%A9%94%EC%9D%B4%EC%85%98)
 - [[FE] 🐻 Context API, Provider 지옥 그리고 귀여운 곰돌이 🐻](https://github.com/boostcampwm2023/web09-MagicConch/wiki/%F0%9F%90%BB-Context-API%EC%99%80-Provider-%EC%A7%80%EC%98%A5%EA%B3%BC-%EA%B7%80%EC%97%AC%EC%9A%B4-%EA%B3%B0%EB%8F%8C%EC%9D%B4-%F0%9F%90%BB)
 - [[FE] 🚀 복잡함을 단순하게, 더 나은 경험으로 🚀](https://github.com/boostcampwm2023/web09-MagicConch/wiki/%F0%9F%9A%80-useWebRTC%ED%9B%85-%EB%A6%AC%ED%8C%A9%ED%86%A0%EB%A7%81-%EC%97%AC%EC%A0%95:-%EB%B3%B5%EC%9E%A1%ED%95%A8%EC%9D%84-%EB%8B%A8%EC%88%9C%ED%95%98%EA%B2%8C,-%EB%8D%94-%EB%82%98%EC%9D%80-%EA%B2%BD%ED%97%98%EC%9C%BC%EB%A1%9C-%F0%9F%9A%80)
+
+### FE / BE
 - [[FE/BE] UX를 위해 AI 채팅 반응 속도를 84.87%까지 개선한 방법 😎](https://github.com/boostcampwm2023/web09-MagicConch/wiki/UX%EB%A5%BC-%EC%9C%84%ED%95%B4-AI-%EC%B1%84%ED%8C%85-%EB%B0%98%EC%9D%91-%EC%86%8D%EB%8F%84%EB%A5%BC-84.87%25%EA%B9%8C%EC%A7%80-%EA%B0%9C%EC%84%A0%ED%95%9C-%EB%B0%A9%EB%B2%95-%F0%9F%98%8E)
 - [[FE/BE] 소켓 아이고 😇 (Feat. socket.io는 파싱을 해)](https://github.com/boostcampwm2023/web09-MagicConch/wiki/%EC%86%8C%EC%BC%93-%EC%95%84%EC%9D%B4%EA%B3%A0-%F0%9F%98%87-(Feat.-socket.io%EB%8A%94-%ED%8C%8C%EC%8B%B1%EC%9D%84-%ED%95%B4))
 <br>
@@ -150,10 +155,172 @@ https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/4d0f49fc-ed0
     </td>
   </tr>
 </table>
-<p>
-    🔗 <a href="https://github.com/boostcampwm2023/web09-MagicConch/wiki/%EA%B8%B0%EC%88%A0-%EC%8A%A4%ED%83%9D#-%EA%B8%B0%EC%88%A0-%EC%84%A0%ED%83%9D-%EC%9D%B4%EC%9C%A0">기술 선택 이유</a>
-</p>
 <br>
+
+
+## 💬 기술 선택 이유
+
+### 공통
+
+<table> 
+  <th>기술</th>
+  <th>선택 이유</th>
+  <tr>
+    <td align="center"><b>socket.io</b></td>
+    <td>
+      <ul>
+        <li>웹소켓을 이용할 수 없는 환경에서 폴링 방식 등 다른 방식으로 연결을 시도함</li>
+        <li>연결이 끊어진 경우, 일정 기간 딜레이 후 재연결을 시도함</li>
+        <li>객체를 전송할 수 있고, 여러 개의 파라미터를 전송할 수 있음</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><b>Jest</b></td>
+    <td>
+      <ul>
+        <li>테스트를 병렬로 실행하기 때문에 테스트 실행 속도가 빠름</li>
+        <li>자동 목업과 spyOn을 제공하여 의존성을 쉽게 테스트할 수 있음</li>
+        <li>실패한 테스트를 먼저 실행하여 빠른 피드백을 제공함</li>
+        <li>다양한 기능을 내장하고 있기 때문에 별도의 라이브러리를 추가로 설치할 필요가 없음</li>
+        <li>NestJS에서 기본 테스트 프레임워크로 Jest를 지원하기 때문에 별도의 설정이 필요하지 않음</li>
+      </ul>
+    </td>
+  </tr>
+</table>
+
+
+### FE
+
+<table> 
+  <th>기술</th>
+  <th>선택 이유</th>
+  <tr>
+    <td align="center"><b>React</b></td>
+    <td>
+      <ul>
+        <li>Next.js를 도입하면 제한된 기한 내에 마무리를 할 수 없을 것이라 판단하여 React를 사용하기로 결정함</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><b>Vite</b></td>
+    <td>
+      <ul>
+        <li>빌드 속도가 빠름</li>
+        <li>Webpack과 비교해서 설정파일을 많이 만지지 않아도 괜찮음</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><b>Zustand</b></td>
+    <td>
+      <ul>
+        <li>ContextAPI로 전역 상태를 관리하다가 한계를 느끼고 도입함</li>
+        <li>Redux나 Recoil에 비해 러닝커브가 낮음</li>
+        <li>🔗<a href='https://github.com/boostcampwm2023/web09-MagicConch/wiki/%F0%9F%90%BB-Context-API%EC%99%80-Provider-%EC%A7%80%EC%98%A5%EA%B3%BC-%EA%B7%80%EC%97%AC%EC%9A%B4-%EA%B3%B0%EB%8F%8C%EC%9D%B4-%F0%9F%90%BB'>Zustand 도입과정(+ 다른 전역 상태 관리 라이브러리와의 비교)</a></li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><b>WebRTC</b></td>
+    <td>
+      <ul>
+        <li>P2P 커뮤니케이션을 지원하여 서버에 오버로드가 발생하지 않음</li>
+        <li>별도의 플러그인이나 서드 파티 어플리케이션이 필요하지 않음</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><b>TailwindCss</b></td>
+    <td>
+      <ul>
+        <li>스타일과 로직의 관심사 분리가 안된다는 단점이 존재하지만, 빠른 개발을 위해 도입함</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><b>Cloudflare</b></td>
+    <td>
+      <ul>
+        <li>무료로 사용할 수 있음</li>
+        <li>빠르게 배포할 수 있고, SSL 인증서도 자동으로 연결해줌</li>
+      </ul>
+    </td>
+  </tr>
+</table>
+
+
+### BE
+
+<table> 
+  <th>기술</th>
+  <th>선택 이유</th>
+  <tr>
+    <td align="center"><b>NestJS</b></td>
+    <td>
+      <ul>
+        <li>NestJS의 CLI를 사용하면 프로젝트, 모듈, 컨트롤러 생성 등의 작업을 간편하게 수행할 수 있음</li>
+        <li>기본적으로 express 위에서 동작하기 때문에 express의 모든 기능을 그대로 사용할 수 있음</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><b>TypeORM</b></td>
+    <td>
+      <ul>
+        <li>(ORM) 모델 클래스와 테이블을 매핑할 수 있기 때문에 유지보수가 용이함</li>
+        <li>(ORM) 개발자가 직접 SQL 쿼리를 작성하지 않기 때문에 SQL 인젝션을 예방할 수 있음</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><b>Nginx</b></td>
+    <td>
+      <ul>
+        <li>자체적으로 SSL/TLS를 지원하기 때문에 별도의 모듈을 설치할 필요없이 간단하게 HTTPS를 설정할 수 있음</li>
+        <li>무료로 SSL 인증서를 발급하는 Let's Encrypt 서비스와의 통합을 지원함</li>
+        <li>경로 기반 라우팅을 지원하기 때문에 단일 서버에서 여러 어플리케이션을 호스팅 할 수 있음</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><b>Docker</b></td>
+    <td>
+      <ul>
+        <li>컨테이너라는 독립된 공간을 사용하기 때문에 내부에서 일어나는 일이 호스트 서버에 영향을 미치지 않음</li>
+        <li>프로그램에 필요한 환경을 이미지로 빌드하기 때문에 더 이상 코드 변경사항을 pull 받아오지 않아도 되고, 어디서든 일관된 동작으로 프로그램을 수행할 수 있음</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><b>GitHub Actions</b></td>
+    <td>
+      <ul>
+        <li>Jenkins는 상대적으로 러닝 커브가 높아 프로젝트 마감에 영향을 미칠 것으로 판단했고, 주기적인 스케줄링의 필요도 느끼지 못함</li>
+        <li>GitHub Actions는 레포지토리와 통합되어 있기 때문에 소스코드와 CI/CD를 한 곳에서 관리할 수 있음</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><b>winston</b></td>
+    <td>
+      <ul>
+        <li>다양한 로깅 레벨을 지원하기 때문에 각 레벨에 따라 로그 메시지와 형식을 서로 다르게 지정할 수 있음</li>
+        <li>winston-daily-rotate-file을 이용하면 날짜별로 로그를 작성할 수 있고, 일정 기간 후 삭제하여 디스크 공간 낭비를 방지할 수 있음</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><b>Supertest</b></td>
+    <td>
+      <ul>
+        <li>다양한 HTTP 메서드를 제공하여 간편하게 HTTP 요청을 생성할 수 있기 때문에 API 테스가 용이함</li>
+        <li>체이닝을 통해 여러 동작을 한 번에 수행할 수 있음</li>
+      </ul>
+    </td>
+  </tr>
+</table>
 
 ## 🔮🥛 타로 밀크티 소개
 > 타로 밀크티는 **FE 3명 & BE 1명** 으로 구성되어 있어요!!
