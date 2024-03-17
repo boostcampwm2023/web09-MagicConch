@@ -47,7 +47,23 @@
 
 <br>
 
-### 우당탕탕 이슈 해결기 💦
+## 🚀 핵심기능
+### 친절한 AI가 고민상담을 들어줘요
+![Mar-17-2024 19-31-06](https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/431b4bb2-0637-48a7-a6b6-ce4ee7e4ff5a)
+
+### 화려한 애니메이션으로 카드를 뽑을 수 있어요
+https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/4d0f49fc-ed00-4083-8855-983b178779ea
+
+### 카드를 뽑은 후에는 결과를 들어볼 수 있어요
+![2](https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/13e7072a-3850-4b21-839e-506529008cb1)
+
+### 타로리더(사람)와 화상채팅으로 상담을 할 수 있어요
+
+### 화상채팅뿐 아니라 메세지를 보낼수도 있어요
+
+
+
+## 우당탕탕 이슈 해결기 💦
 > 타로 밀크티의 기술적 도전과 이슈 해결 기록
 
 - [[BE] 야 너두 무중단 배포 할 수 있어 🫵](https://github.com/boostcampwm2023/web09-MagicConch/wiki/%EC%95%BC-%EB%84%88%EB%91%90-%EB%AC%B4%EC%A4%91%EB%8B%A8-%EB%B0%B0%ED%8F%AC-%ED%95%A0-%EC%88%98-%EC%9E%88%EC%96%B4-%F0%9F%AB%B5)
