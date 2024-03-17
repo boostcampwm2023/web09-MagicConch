@@ -59,7 +59,7 @@
     - [인터렉티브한 애니메이션](#인터렉티브한-애니메이션)
 - [우당탕탕 이슈 해결기 💦](#우당탕탕-이슈-해결기-)
   - [BE](#be)
-    - [[BE] 야 너두 무중단 배포 할 수 있어 🫵](#0be-야-너두-무중단-배포-할-수-있어-)
+    - [[BE] 야 너두 무중단 배포 할 수 있어 🫵](#-be-야-너두-무중단-배포-할-수-있어-)
     - [[BE] SWAG하게 Swagger 사용하는 법 🤟 (Feat. Swagger 데코레이터를 위한 패키지 만들기)](#-be-swag하게-swagger-사용하는-법--feat-swagger-데코레이터를-위한-패키지-만들기)
   - [FE](#fe)
     - [[FE] 인터랙티브 웹: 카드 애니메이션](#-fe-인터랙티브-웹-카드-애니메이션)
@@ -157,7 +157,6 @@
       <img src="https://img.shields.io/badge/dotenv-ecd53f?style=flat&logo=dotenv&logoColor=white" />
       <img src="https://img.shields.io/badge/Socket.io-black?style=flat&logo=socket.io&badgeColor=010101" />
       <img src="https://img.shields.io/badge/Jest-%23C21325?style=flat&logo=jest&logoColor=white" />
-      <img src="https://img.shields.io/badge/npm-%23CB3837.svg?style=flat&logo=npm&logoColor=white" />
     </td>
   </tr>
   <tr>
