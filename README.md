@@ -143,7 +143,7 @@
 <br>
 
 ## 시스템 아키텍처
-![magic_conch-system architecture drawio](https://github.com/boostcampwm2023/web09-MagicConch/assets/70785620/c1f6ca2e-08db-486a-af2c-d6b115ecba3c)
+![magic_conch-system architecture drawio](https://github.com/boostcampwm2023/web09-MagicConch/assets/70785620/702bf135-c0fd-441a-9f92-5e4aba002007)
 
 <br>
 
