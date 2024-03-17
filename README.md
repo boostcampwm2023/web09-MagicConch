@@ -75,6 +75,7 @@
 
 
 
+
 ## 🚀 핵심기능
 ### 친절한 AI가 고민상담을 들어줘요
 ![Mar-17-2024 19-31-06](https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/431b4bb2-0637-48a7-a6b6-ce4ee7e4ff5a)
