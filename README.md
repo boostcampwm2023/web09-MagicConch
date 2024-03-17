@@ -79,11 +79,6 @@
 > 사용자가 AI에게 자신의 고민을 자유롭게 이야기하면, 고민 내용을 바탕으로 타로 상담을 진행합니다.  
 > 고민 상담 후 사용자가 타로 카드를 뽑으면, AI가 해당 결과를 설명합니다.  
 > 사용자는 타로점 결과를 링크나 카카오톡으로 공유할 수 있습니다.
-
-![Mar-17-2024 19-31-06](https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/431b4bb2-0637-48a7-a6b6-ce4ee7e4ff5a)
-
-https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/4d0f49fc-ed00-4083-8855-983b178779ea
-
 ![2](https://github.com/boostcampwm2023/web09-MagicConch/assets/43428643/13e7072a-3850-4b21-839e-506529008cb1)
 
 
