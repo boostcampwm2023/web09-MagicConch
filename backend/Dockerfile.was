@@ -15,8 +15,7 @@ WORKDIR /app/was
 
 COPY was/package*.json ./
 RUN npm ci
-RUN mv ../socket-event/dist ./node_modules/socket-event
-RUN mv ../winston-logger/dist ./node_modules/winston-logger
+RUN npm run move:logger && npm run move:event
 
 COPY was .
 RUN npm run build
